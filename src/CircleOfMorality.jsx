@@ -67,7 +67,7 @@ function useSoundEngine(rotation) {
   }, [rotation]);
 }
 
-export default function CircleOfMorality() {
+export default function CircleOfMorality({ onOpenTracker }) {
   const [active, setActive] = useState(null);
   const [mode, setMode] = useState("explore");
   const [profile, setProfile] = useState({});
@@ -113,6 +113,11 @@ export default function CircleOfMorality() {
       <div className="absolute top-6 left-6 flex gap-3">
         <button onClick={handleGuide} className="px-4 py-2 bg-white text-black rounded">Guide Me</button>
         <button onClick={handleScenario} className="px-4 py-2 bg-white/20 rounded">Scenario</button>
+        {onOpenTracker && (
+          <button onClick={onOpenTracker} className="px-4 py-2 bg-white/10 rounded text-white/70 hover:bg-white/20 hover:text-white transition-all text-sm">
+            Dev Room
+          </button>
+        )}
       </div>
 
       <div className="absolute inset-0 pointer-events-none">
