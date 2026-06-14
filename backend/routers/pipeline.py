@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, BackgroundTasks
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import database as db
-from pipeline.orchestrator import run_pipeline, get_queue, emit
+from pipeline.orchestrator import run_pipeline, get_queue, emit, ROUTING
 
 router = APIRouter(prefix="/api/pipeline", tags=["pipeline"])
 
@@ -30,9 +30,11 @@ async def resume_pipeline(episode_id: str, background_tasks: BackgroundTasks,
     # If in a review gate, determine which stage to resume from
     status = ep["status"]
     stage_map = {
-        "script_review": "seo",
-        "generation_review": "ken_burns",
-        "assembly_review": "shorts",
+        "script_review":      "seo",
+        "outline_review":     "script",
+        "generation_review":  "ken_burns",
+        "assembly_review":    "shorts",
+        "qa_gates_review":    None,
         "failed": None,
     }
     resume_from = from_stage or stage_map.get(status)
@@ -101,3 +103,62 @@ async def pipeline_status_stream(episode_id: str):
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no",
                  "Connection": "keep-alive"}
     )
+
+# ── Gate + Stage Run Endpoints ────────────────────────────────────────────────
+
+@router.get("/gates/{episode_id}")
+async def list_gates(episode_id: str):
+    ep = await db.get_episode(episode_id)
+    if not ep:
+        raise HTTPException(status_code=404, detail="Episode not found")
+    gates = await db.list_gate_decisions(episode_id)
+    remediations = await db.list_remediations(episode_id)
+    return {"gates": gates, "remediations": remediations}
+
+@router.get("/stage-runs/{episode_id}")
+async def list_stage_runs(episode_id: str):
+    ep = await db.get_episode(episode_id)
+    if not ep:
+        raise HTTPException(status_code=404, detail="Episode not found")
+    runs = await db.list_stage_runs(episode_id)
+    return {"stage_runs": runs, "routing": ROUTING}
+
+@router.get("/mutation-log/{episode_id}")
+async def get_mutation_log(episode_id: str, limit: int = 50):
+    ep = await db.get_episode(episode_id)
+    if not ep:
+        raise HTTPException(status_code=404, detail="Episode not found")
+    log = await db.get_mutation_log(episode_id, limit=limit)
+    return {"mutations": log}
+
+@router.get("/title-variants/{episode_id}")
+async def get_title_variants(episode_id: str):
+    ep = await db.get_episode(episode_id)
+    if not ep:
+        raise HTTPException(status_code=404, detail="Episode not found")
+    variants = await db.get_title_variants(episode_id)
+    return {"variants": variants}
+
+class GateOverrideRequest(BaseModel):
+    result: str      # "PASS" or "FAIL"
+    rationale: str
+    advance_to: str | None = None
+
+@router.post("/gate-override/{episode_id}/{gate_id}", status_code=202)
+async def gate_override(episode_id: str, gate_id: str, body: GateOverrideRequest,
+                        background_tasks: BackgroundTasks):
+    """Operator override for a gate decision (CHECKPOINT approval or remediation bypass)."""
+    ep = await db.get_episode(episode_id)
+    if not ep:
+        raise HTTPException(status_code=404, detail="Episode not found")
+    await db.write_gate_decision(
+        episode_id, gate_id, body.result,
+        rationale=f"[OPERATOR OVERRIDE] {body.rationale}",
+        decided_by="operator",
+    )
+    await db.log_mutation(episode_id, "gate_decisions", episode_id,
+                          "OPERATOR_OVERRIDE", {"gate": gate_id, "result": body.result})
+    if body.result == "PASS" and body.advance_to:
+        background_tasks.add_task(run_pipeline, episode_id, body.advance_to)
+        return {"status": "override_applied_advancing", "gate": gate_id, "advance_to": body.advance_to}
+    return {"status": "override_applied", "gate": gate_id}

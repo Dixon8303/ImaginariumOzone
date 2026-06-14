@@ -39,6 +39,15 @@ export const api = {
   finalVideoUrl: (episodeId) => `${BASE}/assets/episode/${episodeId}/final`,
   thumbnailUrl: (episodeId) => `${BASE}/assets/episode/${episodeId}/thumbnail`,
 
+  // Orchestration: gates, stage runs, mutation log, title variants
+  getGates: (id) => req('GET', `/pipeline/gates/${id}`),
+  getStageRuns: (id) => req('GET', `/pipeline/stage-runs/${id}`),
+  getMutationLog: (id, limit = 50) => req('GET', `/pipeline/mutation-log/${id}?limit=${limit}`),
+  getTitleVariants: (id) => req('GET', `/pipeline/title-variants/${id}`),
+  gateOverride: (id, gateId, result, rationale, advanceTo) =>
+    req('POST', `/pipeline/gate-override/${id}/${gateId}`,
+        { result, rationale, advance_to: advanceTo }),
+
   // Analytics
   recordPerformance: (episodeId, metrics) =>
     req('POST', `/analytics/performance/${episodeId}`, metrics),

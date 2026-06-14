@@ -8,6 +8,7 @@ import AssetGallery from './components/production/AssetGallery'
 import VideoPreview from './components/production/VideoPreview'
 import UploadPanel from './components/production/UploadPanel'
 import WarRoom from './components/production/WarRoom'
+import ControlRoom from './components/production/ControlRoom'
 
 function Nav() {
   const loc = useLocation()
@@ -28,6 +29,9 @@ function Nav() {
         <Link to="/circle" className="text-stone-600 hover:text-stone-400 border-none transition-colors">
           Circle
         </Link>
+        <Link to="/control-room" className="text-stone-600 hover:text-violet-400 border-none transition-colors">
+          Control Room
+        </Link>
       </div>
     </nav>
   )
@@ -47,7 +51,11 @@ export default function App() {
         <Route path="/episodes/:id/assets" element={<AssetGallery />} />
         <Route path="/episodes/:id/preview" element={<VideoPreview />} />
         <Route path="/episodes/:id/upload" element={<UploadPanel />} />
+        <Route path="/episodes/:id/control-room" element={<ControlRoom />} />
         <Route path="/episodes/:id" element={<PipelineMonitor />} />
+        <Route path="/control-room" element={<div className="max-w-xl mx-auto px-4 py-16 text-center text-stone-600 font-ui text-sm">
+          Open an episode to view its Control Room.
+        </div>} />
       </Routes>
     </div>
   )
