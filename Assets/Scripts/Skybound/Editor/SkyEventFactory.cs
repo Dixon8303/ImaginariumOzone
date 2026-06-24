@@ -57,7 +57,7 @@ namespace Skybound.Editor
             EditorUtility.SetDirty(encounter);
 
             var evt = CreateOrReplace<SkyEvent>($"{OutputRoot}/{id}.asset");
-            SetEventBase(evt, id, EventType.Combat, probability, new[] { layer }, encounter);
+            SetEventBase(evt, id, SkyEventType.Combat, probability, new[] { layer }, encounter);
             EditorUtility.SetDirty(evt);
         }
 
@@ -73,7 +73,7 @@ namespace Skybound.Editor
             EditorUtility.SetDirty(encounter);
 
             var evt = CreateOrReplace<SkyEvent>($"{OutputRoot}/{id}.asset");
-            SetEventBase(evt, id, EventType.Discovery, probability, new[] { layer }, encounter);
+            SetEventBase(evt, id, SkyEventType.Discovery, probability, new[] { layer }, encounter);
             EditorUtility.SetDirty(evt);
         }
 
@@ -88,7 +88,7 @@ namespace Skybound.Editor
             EditorUtility.SetDirty(encounter);
 
             var evt = CreateOrReplace<SkyEvent>($"{OutputRoot}/{id}.asset");
-            SetEventBase(evt, id, EventType.Environmental, probability, new[] { layer }, encounter);
+            SetEventBase(evt, id, SkyEventType.Environmental, probability, new[] { layer }, encounter);
             EditorUtility.SetDirty(evt);
         }
 
@@ -100,7 +100,7 @@ namespace Skybound.Editor
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        private static void SetEventBase(SkyEvent evt, string id, EventType type,
+        private static void SetEventBase(SkyEvent evt, string id, SkyEventType type,
             float probability, SkyLayer[] layers, EncounterData encounter)
         {
             var so = new SerializedObject(evt);

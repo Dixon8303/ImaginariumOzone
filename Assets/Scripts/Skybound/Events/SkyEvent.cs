@@ -13,7 +13,7 @@ namespace Skybound.Events
     {
         [Header("Identity")]
         [SerializeField] private string eventId = "evt_unnamed";
-        [SerializeField] private EventType eventType;
+        [SerializeField] private SkyEventType eventType;
 
         [Header("Selection Weighting")]
         [SerializeField, Range(0f, 100f)] private float baseProbability = 10f;
@@ -26,7 +26,7 @@ namespace Skybound.Events
         [SerializeField] private EncounterData encounter;
 
         public string EventId => eventId;
-        public EventType Type => eventType;
+        public SkyEventType Type => eventType;
         public float BaseProbability => baseProbability;
         public EncounterData Encounter => encounter;
 
@@ -37,7 +37,7 @@ namespace Skybound.Events
         public bool CanTrigger(ShipState state)
         {
             if (state.ShipLevel < minShipLevel) return false;
-            if (eventType == EventType.Combat && state.HullIntegrity01 <= 0f) return false;
+            if (eventType == SkyEventType.Combat && state.HullIntegrity01 <= 0f) return false;
             if (!IsLayerEligible(state.Layer)) return false;
             return true;
         }

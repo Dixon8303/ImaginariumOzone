@@ -5,7 +5,7 @@ namespace Skybound.Core
     /// Extend here when introducing new tiers (e.g. Mythic, Rift). Selection and
     /// presentation are type-agnostic, so adding a value requires no manager changes.
     /// </summary>
-    public enum EventType
+    public enum SkyEventType
     {
         Combat,
         Discovery,
