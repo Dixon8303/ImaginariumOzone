@@ -56,7 +56,7 @@ namespace Skybound.Editor
             // Bootstrap (keyboard test controls: Space=check, Enter=resolve)
             var bootstrap = systemsGO.AddComponent<SkyboundBootstrap>();
             SetField(bootstrap, "director", director);
-            SetField(bootstrap, "ship", shipGO.GetComponent<Skybound.Systems.DebugShipManager>());
+            SetField(bootstrap, "ship", shipManager);
 
             // Wire director → UIManager later after UI is built
 

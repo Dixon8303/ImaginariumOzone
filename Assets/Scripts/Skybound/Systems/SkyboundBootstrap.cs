@@ -1,4 +1,5 @@
 using UnityEngine;
+using Skybound.Ship;
 
 namespace Skybound.Systems
 {
@@ -12,7 +13,7 @@ namespace Skybound.Systems
     public class SkyboundBootstrap : MonoBehaviour
     {
         [SerializeField] private GameDirector director;
-        [SerializeField] private DebugShipManager ship;
+        [SerializeField] private ShipManager ship;
 
         [Header("Test Controls")]
         [SerializeField] private KeyCode checkKey = KeyCode.Space;
@@ -22,7 +23,7 @@ namespace Skybound.Systems
         {
             if (director == null || ship == null)
             {
-                Debug.LogError("[SkyboundBootstrap] Assign GameDirector and DebugShipManager in the inspector.");
+                Debug.LogError("[SkyboundBootstrap] Assign GameDirector and ShipManager in the inspector.");
                 return;
             }
             director.Initialize(ship);
