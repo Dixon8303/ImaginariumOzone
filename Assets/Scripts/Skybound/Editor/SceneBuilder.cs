@@ -7,45 +7,61 @@ using Skybound.Ship;
 using Skybound.Systems;
 using Skybound.Save;
 using Skybound.UI;
+using Skybound.World;
+using Skybound.Combat;
+using Skybound.Discovery;
+using Skybound.Crew;
+using Skybound.Airship;
 
 namespace Skybound.Editor
 {
     /// <summary>
-    /// Builds the full Skybound scene from scratch with one menu click.
+    /// Builds the complete connected Skybound scene with one menu click.
+    /// All 5 core systems are instantiated and wired: World, Airship, Combat, Discovery, Crew.
     /// Run: Tools > Skybound > Build Scene
-    /// Safe to re-run — clears old Skybound root first.
-    /// After running: hit Play and press Space to roll for events, Enter to resolve.
+    /// Controls in Play mode:
+    ///   WASD        — move airship
+    ///   Space       — roll for event
+    ///   Enter       — resolve active encounter
+    ///   1-6         — combat actions (Fire, Evade, Ascend, Descend, Synergy, Flee)
     /// </summary>
     public static class SceneBuilder
     {
         [MenuItem("Tools/Skybound/Build Scene")]
         public static void BuildScene()
         {
-            // Remove previous Skybound root so re-runs are clean
             var old = GameObject.Find("[Skybound]");
             if (old != null) Object.DestroyImmediate(old);
 
             var root = new GameObject("[Skybound]");
 
-            // ── Game Systems ────────────────────────────────────────────────
+            // ── Systems ──────────────────────────────────────────────────────
             var systemsGO = Child(root, "Systems");
 
-            var shipGO = Child(systemsGO, "Ship");
+            // Ship
+            var shipGO      = Child(systemsGO, "Ship");
             var shipManager = shipGO.AddComponent<ShipManager>();
             var crewManager = shipGO.AddComponent<ShipCrewManager>();
             var saveManager = shipGO.AddComponent<SaveManager>();
             SetField(saveManager, "ship", shipManager);
             SetField(saveManager, "crew", crewManager);
 
-            var directorGO = Child(systemsGO, "GameDirector");
-            var director = directorGO.AddComponent<GameDirector>();
+            // World
+            var worldGO      = Child(systemsGO, "World");
+            var worldManager = worldGO.AddComponent<SkyWorldManager>();
 
-            // Load any SkyEvent assets from Assets/Data/SkyEvents/ into the pool
+            // Airship
+            var airshipGO = Child(systemsGO, "Airship");
+            var airship   = airshipGO.AddComponent<AirshipMovement>();
+            SetField(airship, "world", worldManager);
+
+            // GameDirector
+            var directorGO = Child(systemsGO, "GameDirector");
+            var director   = directorGO.AddComponent<GameDirector>();
             var eventAssets = LoadAllAssets<Skybound.Events.SkyEvent>("Assets/Data/SkyEvents");
-            var eventPoolProp = new SerializedObject(director).FindProperty("eventPool");
             if (eventAssets.Length > 0)
             {
-                var so = new SerializedObject(director);
+                var so   = new SerializedObject(director);
                 var pool = so.FindProperty("eventPool");
                 pool.arraySize = eventAssets.Length;
                 for (int i = 0; i < eventAssets.Length; i++)
@@ -53,95 +69,132 @@ namespace Skybound.Editor
                 so.ApplyModifiedPropertiesWithoutUndo();
             }
 
-            // Bootstrap (keyboard test controls: Space=check, Enter=resolve)
-            var bootstrap = systemsGO.AddComponent<SkyboundBootstrap>();
-            SetField(bootstrap, "director", director);
-            SetField(bootstrap, "ship", shipManager);
+            // Combat
+            var combatGO     = Child(systemsGO, "Combat");
+            var combatManager = combatGO.AddComponent<CombatManager>();
 
-            // Wire director → UIManager later after UI is built
+            // Discovery
+            var atlasGO = Child(systemsGO, "DiscoveryAtlas");
+            var atlas   = atlasGO.AddComponent<DiscoveryAtlas>();
 
-            // ── Canvas ──────────────────────────────────────────────────────
+            // Crew
+            var rosterGO    = Child(systemsGO, "CrewRoster");
+            var crewRoster  = rosterGO.AddComponent<CrewRosterManager>();
+
+            // UIManager
+            var uiManagerGO = Child(systemsGO, "UIManager");
+            var uiManager   = uiManagerGO.AddComponent<UIManager>();
+            SetField(uiManager, "director", director);
+
+            // ── Canvas ───────────────────────────────────────────────────────
             var canvasGO = Child(root, "Canvas");
-            var canvas = canvasGO.AddComponent<Canvas>();
+            var canvas   = canvasGO.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvasGO.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasGO.AddComponent<GraphicRaycaster>();
 
-            // Exploration HUD layer
-            var hudLayer = MakeCanvasGroup(canvasGO, "ExplorationHUD");
-            var hullSlider = MakeSlider(hudLayer, "HullSlider", new Vector2(0, -30), new Vector2(300, 20));
-            var layerLabel = MakeLabel(hudLayer, "LayerLabel", "LowSky", new Vector2(0, -60));
-            var crewLabel  = MakeLabel(hudLayer, "CrewLabel",  "Crew 0/4", new Vector2(0, -90));
-            var checkBtn   = MakeButton(hudLayer, "CheckEventBtn", "Roll Event", new Vector2(0, -130));
+            // Exploration HUD
+            var hudLayer   = MakeCanvasGroup(canvasGO, "ExplorationHUD");
+            var hullSlider = MakeSlider(hudLayer, "HullSlider",   new Vector2(0, -30),  new Vector2(300, 20));
+            var layerLabel = MakeLabel(hudLayer,  "LayerLabel",   "LowSky",             new Vector2(0, -60));
+            var crewLabel  = MakeLabel(hudLayer,  "CrewLabel",    "Crew 0/4",           new Vector2(0, -90));
+            var posLabel   = MakeLabel(hudLayer,  "PosLabel",     "Grid (0,0)",         new Vector2(0, -120));
+            var checkBtn   = MakeButton(hudLayer, "CheckEventBtn","Roll Event",         new Vector2(0, -165));
 
             var explorationHUD = hudLayer.AddComponent<ExplorationHUD>();
-            SetField(explorationHUD, "ship", shipManager);
-            SetField(explorationHUD, "director", director);
-            SetField(explorationHUD, "hullSlider", hullSlider);
-            SetField(explorationHUD, "layerLabel", layerLabel.GetComponent<TextMeshProUGUI>());
+            SetField(explorationHUD, "ship",           shipManager);
+            SetField(explorationHUD, "director",       director);
+            SetField(explorationHUD, "hullSlider",     hullSlider);
+            SetField(explorationHUD, "layerLabel",     layerLabel.GetComponent<TextMeshProUGUI>());
             SetField(explorationHUD, "crewCountLabel", crewLabel.GetComponent<TextMeshProUGUI>());
             SetField(explorationHUD, "checkEventButton", checkBtn.GetComponent<Button>());
 
-            // Encounter overlay layer (hidden by default)
+            SetField(uiManager, "explorationHud", hudLayer.GetComponent<CanvasGroup>());
+
+            // Combat action bar (shown during combat)
+            var combatLayer = MakeCanvasGroup(canvasGO, "CombatHUD");
+            combatLayer.GetComponent<CanvasGroup>().alpha = 0f;
+            combatLayer.GetComponent<CanvasGroup>().interactable = false;
+            combatLayer.GetComponent<CanvasGroup>().blocksRaycasts = false;
+
+            MakeLabel(combatLayer, "CombatHelp",
+                "1=Fire  2=Evade  3=Ascend  4=Descend  5=Synergy  6=Flee",
+                new Vector2(0, 120), 14);
+
+            // Encounter overlay
             var overlayLayer = MakeCanvasGroup(canvasGO, "EncounterOverlay");
             overlayLayer.GetComponent<CanvasGroup>().alpha = 0f;
             overlayLayer.GetComponent<CanvasGroup>().interactable = false;
             overlayLayer.GetComponent<CanvasGroup>().blocksRaycasts = false;
 
-            var titleLabel   = MakeLabel(overlayLayer, "TitleLabel",   "Encounter Title", new Vector2(0, 100), fontSize: 28);
-            var introLabel   = MakeLabel(overlayLayer, "IntroLabel",   "Intro text here.", new Vector2(0, 40));
-            var outcomeLabel = MakeLabel(overlayLayer, "OutcomeLabel", "",                 new Vector2(0, -20));
-            var resolveBtn   = MakeButton(overlayLayer, "ResolveBtn", "Engage",            new Vector2(0, -80));
+            var titleLabel   = MakeLabel(overlayLayer,  "TitleLabel",   "Encounter",   new Vector2(0,  100), 28);
+            var introLabel   = MakeLabel(overlayLayer,  "IntroLabel",   "",            new Vector2(0,   40));
+            var outcomeLabel = MakeLabel(overlayLayer,  "OutcomeLabel", "",            new Vector2(0,  -20));
+            var resolveBtn   = MakeButton(overlayLayer, "ResolveBtn",   "Engage",      new Vector2(0,  -80));
 
             var encounterPanel = overlayLayer.AddComponent<EncounterPanel>();
-            SetField(encounterPanel, "director", director);
+            SetField(encounterPanel, "director",          director);
             SetField(encounterPanel, "titleLabel",        titleLabel.GetComponent<TextMeshProUGUI>());
             SetField(encounterPanel, "introLabel",        introLabel.GetComponent<TextMeshProUGUI>());
             SetField(encounterPanel, "outcomeLabel",      outcomeLabel.GetComponent<TextMeshProUGUI>());
             SetField(encounterPanel, "resolveButton",     resolveBtn.GetComponent<Button>());
-            SetField(encounterPanel, "resolveButtonLabel", resolveBtn.GetComponentInChildren<TextMeshProUGUI>());
+            SetField(encounterPanel, "resolveButtonLabel",resolveBtn.GetComponentInChildren<TextMeshProUGUI>());
 
-            // Feed (scrolling log — sits below HUD)
-            var feedGO = Child(canvasGO, "FeedView");
-            var feedRect = feedGO.AddComponent<RectTransform>();
-            feedRect.anchorMin = new Vector2(0, 0);
-            feedRect.anchorMax = new Vector2(0.4f, 0.35f);
+            SetField(uiManager, "encounterOverlay", overlayLayer.GetComponent<CanvasGroup>());
+
+            // Discovery feed (scrolling log, bottom-left)
+            var feedGO      = Child(canvasGO, "FeedView");
+            var feedRect    = feedGO.AddComponent<RectTransform>();
+            feedRect.anchorMin = new Vector2(0f, 0f);
+            feedRect.anchorMax = new Vector2(0.42f, 0.32f);
             feedRect.offsetMin = feedRect.offsetMax = Vector2.zero;
 
             var scrollRect = feedGO.AddComponent<ScrollRect>();
             var feedContent = Child(feedGO, "Content");
             feedContent.AddComponent<RectTransform>();
             var feedText = feedContent.AddComponent<TextMeshProUGUI>();
-            feedText.fontSize = 14;
-            feedText.color = Color.white;
-            scrollRect.content = feedContent.GetComponent<RectTransform>();
-            scrollRect.vertical = true;
+            feedText.fontSize = 13;
+            feedText.color = new Color(0.85f, 0.95f, 1f);
+            scrollRect.content    = feedContent.GetComponent<RectTransform>();
+            scrollRect.vertical   = true;
             scrollRect.horizontal = false;
 
-            var uiManagerGO = Child(systemsGO, "UIManager");
-            var uiManager = uiManagerGO.AddComponent<UIManager>();
-            SetField(uiManager, "director", director);
-            SetField(uiManager, "explorationHud", hudLayer.GetComponent<CanvasGroup>());
-            SetField(uiManager, "encounterOverlay", overlayLayer.GetComponent<CanvasGroup>());
-
             var feedView = feedGO.AddComponent<FeedView>();
-            SetField(feedView, "uiManager", uiManager);
-            SetField(feedView, "feedText", feedText);
+            SetField(feedView, "uiManager",  uiManager);
+            SetField(feedView, "feedText",   feedText);
             SetField(feedView, "scrollRect", scrollRect);
 
-            // ── Background ──────────────────────────────────────────────────
-            var bgGO = Child(root, "Background");
-            var cam = bgGO.AddComponent<Camera>();
-            cam.backgroundColor = new Color(0.05f, 0.07f, 0.15f);
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.orthographic = true;
+            // ── GameBootstrap (wires runtime events) ─────────────────────────
+            var bootstrapGO = Child(systemsGO, "GameBootstrap");
+            var bootstrap   = bootstrapGO.AddComponent<GameBootstrap>();
+            SetField(bootstrap, "ship",         shipManager);
+            SetField(bootstrap, "crew",         crewManager);
+            SetField(bootstrap, "director",     director);
+            SetField(bootstrap, "uiManager",    uiManager);
+            SetField(bootstrap, "worldManager", worldManager);
+            SetField(bootstrap, "airship",      airship);
+            SetField(bootstrap, "combatManager",combatManager);
+            SetField(bootstrap, "atlas",        atlas);
+            SetField(bootstrap, "crewRoster",   crewRoster);
+
+            // ── Camera ───────────────────────────────────────────────────────
+            var camGO = Child(root, "Camera");
+            var cam   = camGO.AddComponent<Camera>();
+            cam.backgroundColor = new Color(0.04f, 0.06f, 0.14f);
+            cam.clearFlags      = CameraClearFlags.SolidColor;
+            cam.orthographic    = true;
+            cam.orthographicSize = 5f;
+            camGO.transform.position = new Vector3(0, 0, -10f);
 
             EditorUtility.SetDirty(root);
             Selection.activeGameObject = root;
-            Debug.Log("[SceneBuilder] Scene built. Hit Play, then Space to roll events, Enter to resolve.");
+
+            int evtCount = eventAssets.Length;
+            Debug.Log($"[SceneBuilder] Scene built. {evtCount} events loaded. " +
+                      "Play → WASD=move, Space=roll, Enter=resolve, 1-6=combat actions.");
         }
 
-        // ── Helpers ─────────────────────────────────────────────────────────
+        // ── Helpers ──────────────────────────────────────────────────────────
 
         static GameObject Child(GameObject parent, string name)
         {
@@ -166,7 +219,7 @@ namespace Skybound.Editor
         {
             var go = Child(parent, name);
             var rt = go.AddComponent<RectTransform>();
-            rt.sizeDelta = new Vector2(400, 40);
+            rt.sizeDelta = new Vector2(500, 40);
             rt.anchoredPosition = anchoredPos;
             var tmp = go.AddComponent<TextMeshProUGUI>();
             tmp.text = text;
@@ -183,7 +236,7 @@ namespace Skybound.Editor
             rt.sizeDelta = new Vector2(200, 50);
             rt.anchoredPosition = anchoredPos;
             var img = go.AddComponent<Image>();
-            img.color = new Color(0.2f, 0.4f, 0.8f);
+            img.color = new Color(0.18f, 0.36f, 0.72f);
             var btn = go.AddComponent<Button>();
             btn.targetGraphic = img;
 
@@ -209,12 +262,12 @@ namespace Skybound.Editor
 
             var bg = Child(go, "Background");
             bg.AddComponent<RectTransform>().sizeDelta = size;
-            bg.AddComponent<Image>().color = new Color(0.3f, 0.1f, 0.1f);
+            bg.AddComponent<Image>().color = new Color(0.25f, 0.08f, 0.08f);
 
             var fill = Child(go, "Fill");
             fill.AddComponent<RectTransform>().sizeDelta = size;
             var fillImg = fill.AddComponent<Image>();
-            fillImg.color = new Color(0.8f, 0.2f, 0.2f);
+            fillImg.color = new Color(0.75f, 0.18f, 0.18f);
 
             var slider = go.AddComponent<Slider>();
             slider.fillRect = fill.GetComponent<RectTransform>();
@@ -234,9 +287,10 @@ namespace Skybound.Editor
 
         static void SetField(Object target, string field, Object value)
         {
-            var so = new SerializedObject(target);
+            var so   = new SerializedObject(target);
             var prop = so.FindProperty(field);
             if (prop != null) { prop.objectReferenceValue = value; so.ApplyModifiedPropertiesWithoutUndo(); }
+            else Debug.LogWarning($"[SceneBuilder] Field '{field}' not found on {target.GetType().Name}");
         }
     }
 }
