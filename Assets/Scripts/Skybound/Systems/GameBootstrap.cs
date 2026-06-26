@@ -117,13 +117,26 @@ namespace Skybound.Systems
 
         private void Update()
         {
-            // Space = roll for encounter, Enter = resolve active encounter
-            if (Input.GetKeyDown(KeyCode.Space) && director != null && !director.HasActiveEncounter)
-                director.CheckForEvent();
+            // Space = roll for encounter
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (director == null)        { Feed("[ERR] Director missing."); }
+                else if (director.HasActiveEncounter) { Feed("[Nav] Encounter already active — press Enter to resolve."); }
+                else
+                {
+                    Feed("[Nav] Scanning sky...");
+                    bool fired = director.CheckForEvent();
+                    if (!fired) Feed("[Nav] Nothing detected this pass.");
+                }
+            }
 
-            if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-                && director != null && director.HasActiveEncounter)
-                director.ResolveActiveEncounter();
+            // Enter = resolve active encounter
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                if (director == null)              { Feed("[ERR] Director missing."); }
+                else if (!director.HasActiveEncounter) { Feed("[Nav] No active encounter to resolve."); }
+                else director.ResolveActiveEncounter();
+            }
 
             // WASD movement — blocked while moving or in active encounter
             if (airship != null && !airship.IsMoving && !director.HasActiveEncounter)
