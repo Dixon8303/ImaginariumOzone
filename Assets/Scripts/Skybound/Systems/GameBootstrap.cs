@@ -117,14 +117,24 @@ namespace Skybound.Systems
 
         private void Update()
         {
-            if (airship == null || airship.IsMoving) return;
+            // Space = roll for encounter, Enter = resolve active encounter
+            if (Input.GetKeyDown(KeyCode.Space) && director != null && !director.HasActiveEncounter)
+                director.CheckForEvent();
 
-            if (Input.GetKeyDown(KeyCode.W)) airship.TryMove(Vector2Int.up);
-            if (Input.GetKeyDown(KeyCode.S)) airship.TryMove(Vector2Int.down);
-            if (Input.GetKeyDown(KeyCode.A)) airship.TryMove(Vector2Int.left);
-            if (Input.GetKeyDown(KeyCode.D)) airship.TryMove(Vector2Int.right);
+            if ((Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                && director != null && director.HasActiveEncounter)
+                director.ResolveActiveEncounter();
 
-            // Combat actions when in combat
+            // WASD movement — blocked while moving or in active encounter
+            if (airship != null && !airship.IsMoving && !director.HasActiveEncounter)
+            {
+                if (Input.GetKeyDown(KeyCode.W)) airship.TryMove(Vector2Int.up);
+                if (Input.GetKeyDown(KeyCode.S)) airship.TryMove(Vector2Int.down);
+                if (Input.GetKeyDown(KeyCode.A)) airship.TryMove(Vector2Int.left);
+                if (Input.GetKeyDown(KeyCode.D)) airship.TryMove(Vector2Int.right);
+            }
+
+            // 1-6 combat actions
             if (combatManager != null && combatManager.InCombat)
             {
                 if (Input.GetKeyDown(KeyCode.Alpha1)) combatManager.SubmitAction(Skybound.Combat.TacticalAction.FireCannons);

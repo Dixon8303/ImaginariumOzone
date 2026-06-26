@@ -34,7 +34,18 @@ namespace Skybound.UI
         {
             if (feedText == null) return;
             feedText.text += (feedText.text.Length > 0 ? "\n" : "") + line;
+
+            // Force TMP to recalculate, then resize content rect to fit text height
+            // so ScrollRect has something to scroll against
             Canvas.ForceUpdateCanvases();
+            feedText.ForceMeshUpdate();
+
+            var contentRect = feedText.GetComponent<RectTransform>();
+            if (contentRect != null)
+                contentRect.sizeDelta = new Vector2(
+                    contentRect.sizeDelta.x,
+                    feedText.preferredHeight + 10f);
+
             if (scrollRect != null)
                 scrollRect.verticalNormalizedPosition = 0f;
         }
