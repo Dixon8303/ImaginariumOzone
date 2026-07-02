@@ -33,6 +33,11 @@ OLLAMA_MODEL    = os.getenv("OLLAMA_MODEL", "mistral")
 ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY", "")
 ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "pNInz6obpgDQGcFmaJgB")  # Adam
 
+# ── vidIQ (real YouTube intelligence; all features degrade if unset) ──────
+VIDIQ_API_KEY = os.getenv("VIDIQ_API_KEY", "")
+VIDIQ_BASE_URL = os.getenv("VIDIQ_BASE_URL", "https://api.vidiq.com")
+YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID", "")
+
 PROMPTS_DIR  = Path(__file__).parent / "prompts"
 WORKFLOWS_DIR = Path(__file__).parent / "workflows"
 MUSIC_DIR    = Path(__file__).parent / "assets" / "music"

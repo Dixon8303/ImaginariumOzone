@@ -52,7 +52,8 @@ async def complete(system: str, user: str, max_tokens: int = 4096) -> str:
 
 # ── P1 Ideation + Score (Opus) ───────────────────────────────────────────────
 
-async def ideate_and_score(topic: str, candidate_titles: list[str] = None) -> dict:
+async def ideate_and_score(topic: str, candidate_titles: list[str] = None,
+                            keyword_data: dict = None) -> dict:
     """G1 Editorial Perspective + G2 100-pt Score — both evaluated by Opus."""
     system = _load_bible()
     candidates_block = ""
@@ -60,8 +61,14 @@ async def ideate_and_score(topic: str, candidate_titles: list[str] = None) -> di
         candidates_block = "\n\nCandidate titles from pre-work:\n" + "\n".join(
             f"  {i+1}. {t}" for i, t in enumerate(candidate_titles)
         )
+    keyword_block = ""
+    if keyword_data:
+        keyword_block = (
+            "\n\nREAL keyword data from vidIQ (use this instead of estimating):\n"
+            + json.dumps(keyword_data, indent=2)
+        )
     user = (
-        f"Topic: {topic}{candidates_block}\n\n"
+        f"Topic: {topic}{candidates_block}{keyword_block}\n\n"
         "Run the full P1 Ideation gate sequence:\n\n"
         "G1 EDITORIAL PERSPECTIVE — binary check:\n"
         "  - Names a real institution or documented individual (not archetype)?\n"
@@ -161,16 +168,23 @@ async def generate_shorts(title: str, script_json: list) -> list:
 # ── P10 QA Gates G3-G5 (Opus) ────────────────────────────────────────────────
 
 async def evaluate_qa_gates(episode_id: str, script_data: dict,
-                             research_data: dict, seo_data: dict) -> dict:
+                             research_data: dict, seo_data: dict,
+                             vidiq_benchmarks: dict = None) -> dict:
     """G3 Hook Diagnostic + G4 Predictive + G5 Monetization/Ethics — decided by Opus."""
     system = _load_bible()
+    benchmark_block = ""
+    if vidiq_benchmarks:
+        benchmark_block = (
+            f"\nREAL vidIQ signals (weight these heavily in G4):\n"
+            f"{json.dumps(vidiq_benchmarks, indent=2)}\n"
+        )
     user = (
         f"Run P10 Quality Assurance gate evaluation.\n\n"
         f"Script title: {script_data.get('title', '')}\n"
         f"Opening beat: {json.dumps(script_data.get('scenes', [{}])[0], indent=2)}\n\n"
         f"Research claim count: {len(research_data.get('claims', []))}\n"
         f"Bibliography entries: {len(research_data.get('sources', []))}\n\n"
-        f"SEO package: {json.dumps(seo_data, indent=2)}\n\n"
+        f"SEO package: {json.dumps(seo_data, indent=2)}\n{benchmark_block}\n"
         "Evaluate:\n\n"
         "G3 HOOK DIAGNOSTIC (/50, ≥28 to pass):\n"
         "  B1 cold_open_hook (/15) — auto-fail if ≤4\n"

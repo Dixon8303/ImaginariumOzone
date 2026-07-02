@@ -21,7 +21,14 @@ async def upscale_clip(input_path: Path, output_path: Path) -> Path:
     return output_path
 
 async def generate_narration(text: str, output_path: Path, voice: str = "Alex", rate: int = 160) -> Path:
-    """Generate TTS audio using macOS say command."""
+    """Generate TTS audio. Tries ElevenLabs first (if configured);
+    falls back to macOS say."""
+    from services import elevenlabs_client
+
+    result = await elevenlabs_client.synthesize(text, output_path)
+    if result is not None:
+        return result
+
     output_path.parent.mkdir(parents=True, exist_ok=True)
     aiff_path = output_path.with_suffix(".aiff")
     say_cmd = ["say", "-v", voice, "-r", str(rate), "-o", str(aiff_path), text]

@@ -470,13 +470,18 @@ async def get_mutation_log(episode_id: str, limit: int = 50) -> list:
 # ── Title Variants ───────────────────────────────────────────────────────────
 
 async def save_title_variants(episode_id: str, titles: list, source: str = "ollama"):
+    """Accepts plain strings or dicts {title, score}."""
     now = datetime.utcnow().isoformat()
     async with aiosqlite.connect(DB) as db:
         for title in titles:
             tid = str(uuid.uuid4())
+            if isinstance(title, str):
+                text, score = title, None
+            else:
+                text, score = title.get("title", ""), title.get("score")
             await db.execute(
-                "INSERT INTO title_variants (id, episode_id, title, source, created_at) VALUES (?,?,?,?,?)",
-                (tid, episode_id, title if isinstance(title, str) else title.get("title",""), source, now)
+                "INSERT INTO title_variants (id, episode_id, title, source, score, created_at) VALUES (?,?,?,?,?,?)",
+                (tid, episode_id, text, source, score, now)
             )
         await db.commit()
 

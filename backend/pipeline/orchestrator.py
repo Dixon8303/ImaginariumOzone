@@ -182,18 +182,27 @@ async def _hard_halt(episode_id: str, gate_id: str, rationale: str,
 async def _stage_topic_scoring(episode_id: str, output_dir: Path, mode: str) -> dict:
     from services import claude_client
     from services import ollama_client
+    from services import vidiq_client
     episode = await db.get_episode(episode_id)
     topic = episode["topic"]
 
-    # Pre-work: Ollama generates candidate titles
+    # Pre-work: Ollama + vidIQ generate candidate titles
     candidates = await ollama_client.generate_title_candidates(topic, n=8)
     if candidates:
         await db.save_title_variants(episode_id, candidates, source="ollama")
         await db.log_mutation(episode_id, "title_variants", episode_id,
                               "INSERT", {"source": "ollama", "count": len(candidates)}, "topic_scoring")
 
+    vidiq_titles = await vidiq_client.generate_titles(topic, n=5)
+    if vidiq_titles:
+        await db.save_title_variants(episode_id, vidiq_titles, source="vidiq")
+        candidates = candidates + vidiq_titles
+
+    # Real keyword data replaces Opus's volume estimate
+    keyword_data = await vidiq_client.keyword_research(topic)
+
     # Opus: G1 + G2 evaluation
-    result = await claude_client.ideate_and_score(topic, candidates)
+    result = await claude_client.ideate_and_score(topic, candidates, keyword_data)
 
     g1 = result.get("g1", {})
     g2 = result.get("g2", {})
@@ -215,9 +224,15 @@ async def _stage_topic_scoring(episode_id: str, output_dir: Path, mode: str) -> 
         await _hard_halt(episode_id, "G2",
                          f"Score {g2.get('score')}/100 — below 60 kill threshold. {g2.get('rationale', '')}")
 
-    # Save Opus-scored title variants
+    # Save Opus title variants, CTR-scored by vidIQ when available
     if result.get("title_variants"):
-        await db.save_title_variants(episode_id, result["title_variants"], source="opus")
+        from services import vidiq_client as _vq
+        scored = await _vq.score_titles(result["title_variants"])
+        if scored:
+            await db.save_title_variants(episode_id, scored, source="opus")
+            result["title_scores"] = scored
+        else:
+            await db.save_title_variants(episode_id, result["title_variants"], source="opus")
 
     await db.update_episode(
         episode_id,
@@ -522,7 +537,15 @@ async def _stage_qa_gates(episode_id: str, output_dir: Path, mode: str) -> dict:
         except FileNotFoundError:
             seo_data = {}
 
-    result = await claude_client.evaluate_qa_gates(episode_id, script_data, research_data, seo_data)
+    # Real CTR-predictive signals for G4: vidIQ score on the final title
+    from services import vidiq_client
+    vidiq_benchmarks = None
+    title_score = await vidiq_client.score_title(script_data.get("title", ""))
+    if title_score:
+        vidiq_benchmarks = {"title_ctr_score": title_score}
+
+    result = await claude_client.evaluate_qa_gates(
+        episode_id, script_data, research_data, seo_data, vidiq_benchmarks)
 
     # Write all gate decisions
     for gate_id in ("g3", "g4", "g5"):

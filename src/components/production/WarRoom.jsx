@@ -25,6 +25,34 @@ export default function WarRoom() {
   const [selectedEp, setSelectedEp] = useState(null)
   const [metrics, setMetrics] = useState({ ctr_24h: '', ctr_48h: '', retention_30: '', retention_70: '', watch_time_sec: '', session_depth: '', shorts_views: '' })
   const [submitting, setSubmitting] = useState(false)
+  const [pulling, setPulling] = useState(false)
+  const [pullStatus, setPullStatus] = useState(null)
+
+  async function handlePullVidiq() {
+    setPulling(true)
+    setPullStatus(null)
+    try {
+      const res = await api.getChannelAnalytics()
+      if (!res.configured) {
+        setPullStatus('vidIQ not connected — add VIDIQ_API_KEY to backend/.env')
+      } else if (!res.data) {
+        setPullStatus('vidIQ returned no data for this channel')
+      } else {
+        const d = res.data
+        setMetrics(prev => ({
+          ...prev,
+          ctr_48h: d.ctr ?? prev.ctr_48h,
+          retention_30: d.retention_pct ?? prev.retention_30,
+          watch_time_sec: d.avg_view_duration ?? prev.watch_time_sec,
+        }))
+        setPullStatus('Pulled live channel data — review and run the decision engine')
+      }
+    } catch (e) {
+      setPullStatus(e.message)
+    } finally {
+      setPulling(false)
+    }
+  }
 
   useEffect(() => {
     Promise.all([api.getWarRoom(), api.listEpisodes()]).then(([wr, eps]) => {
@@ -169,9 +197,23 @@ export default function WarRoom() {
       {/* Metrics input panel */}
       {selectedEp && (
         <div className="mb-10 border border-amber-900/30 bg-stone-950 p-6">
-          <h3 className="font-display text-xl text-amber-200 tracking-wide mb-5">
-            LOG PERFORMANCE METRICS
-          </h3>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="font-display text-xl text-amber-200 tracking-wide">
+              LOG PERFORMANCE METRICS
+            </h3>
+            <button
+              disabled={pulling}
+              onClick={handlePullVidiq}
+              className="px-4 py-2 border border-violet-800/60 text-violet-400 text-[10px]
+                         font-mono tracking-widest uppercase hover:border-violet-500
+                         hover:text-violet-300 transition-colors disabled:opacity-50"
+            >
+              {pulling ? 'Pulling…' : '⇣ Pull from vidIQ'}
+            </button>
+          </div>
+          {pullStatus && (
+            <p className="text-xs font-mono text-stone-500 mb-4 -mt-2">{pullStatus}</p>
+          )}
           <div className="grid grid-cols-4 gap-4 mb-5">
             {[
               { key: 'ctr_24h', label: 'CTR 24h %' },

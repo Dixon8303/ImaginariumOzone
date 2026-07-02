@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { api } from './api/client'
 
 const MODES = [
@@ -10,7 +10,8 @@ const MODES = [
 
 export default function EpisodeManager() {
   const navigate = useNavigate()
-  const [topic, setTopic] = useState('')
+  const location = useLocation()
+  const [topic, setTopic] = useState(location.state?.topic || '')
   const [mode, setMode] = useState('ASSISTED')
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)

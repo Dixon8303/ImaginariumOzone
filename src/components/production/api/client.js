@@ -54,4 +54,9 @@ export const api = {
   getPerformance: (episodeId) => req('GET', `/analytics/performance/${episodeId}`),
   getInterventions: (episodeId) => req('GET', `/analytics/interventions/${episodeId}`),
   getWarRoom: () => req('GET', '/analytics/war-room'),
+
+  // Discovery
+  getDiscoveryFeed: () => req('GET', '/discovery/feed'),
+  lookupKeyword: (kw) => req('GET', `/discovery/keyword/${encodeURIComponent(kw)}`),
+  getChannelAnalytics: () => req('GET', '/discovery/analytics'),
 }

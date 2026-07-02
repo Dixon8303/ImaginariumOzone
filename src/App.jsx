@@ -9,6 +9,7 @@ import VideoPreview from './components/production/VideoPreview'
 import UploadPanel from './components/production/UploadPanel'
 import WarRoom from './components/production/WarRoom'
 import ControlRoom from './components/production/ControlRoom'
+import DiscoveryFeed from './components/production/DiscoveryFeed'
 
 function Nav() {
   const loc = useLocation()
@@ -22,6 +23,9 @@ function Nav() {
       <div className="flex items-center gap-6 text-xs font-mono tracking-widest uppercase">
         <Link to="/" className={`border-none transition-colors ${!isCircle ? 'text-amber-400' : 'text-stone-600 hover:text-stone-400'}`}>
           Production
+        </Link>
+        <Link to="/discover" className="text-stone-600 hover:text-amber-600 border-none transition-colors">
+          Discover
         </Link>
         <Link to="/war-room" className="text-stone-600 hover:text-amber-600 border-none transition-colors">
           War Room
@@ -44,6 +48,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<ProductionDashboard />} />
         <Route path="/new" element={<EpisodeManager />} />
+        <Route path="/discover" element={<DiscoveryFeed />} />
         <Route path="/war-room" element={<WarRoom />} />
         <Route path="/circle" element={<CircleOfMorality />} />
         <Route path="/episodes/:id/pipeline" element={<PipelineMonitor />} />
