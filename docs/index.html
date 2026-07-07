@@ -244,10 +244,20 @@
   /* Print */
   @media print{
     html,body{background:#fff !important; color:#000 !important;}
-    header, .prog, .btn, .btnrow, details, .stagecount{display:none !important;}
+    header, .prog, .btn, .btnrow, .stagecount, .wtip{display:none !important;}
     .book{background:#fff !important; color:#000 !important; border-color:#999 !important; margin:0 !important; padding:14px 0 !important; break-inside:avoid;}
     .wrap{max-width:100%; padding:0;}
     .submitstatus{display:none !important;}
+    /* Pilot data is for study coordination, not the reader's chart — keep it hidden. */
+    details.pilot{display:none !important;}
+    /* Evidence Ledger / A·B·C explainer are force-opened via JS (beforeprint, see boot) —
+       CSS alone can't override Chromium's internal collapsed-<details> rendering. Just
+       strip the now-pointless disclosure triangle since paper isn't interactive. */
+    details.ev summary .ct::after{content:"" !important;}
+    details.abc summary{list-style:none !important;}
+    details.abc summary::-webkit-details-marker, details.abc summary::marker{display:none !important; content:"" !important;}
+    /* The domain bars were designed for the dark-mode chrome; recolor the track for paper. */
+    .barrow .trk{background:#00000014 !important;}
   }
   /* The one signature motion moment: gold braid thread draws in on the Constellation. */
   @media (prefers-reduced-motion: no-preference){
@@ -1407,7 +1417,7 @@ function results(){
    <div class="btnrow">
     <button class="btn book-ghost" onclick="if(confirm('Reset and clear this session?')) location.reload()">Take it again</button>
    </div>
-   <details>
+   <details class="pilot">
     <summary>Pilot data (for study participants)</summary>
     <p class="small" style="color:var(--book-dim);margin:8px 0">If the automatic upload didn't go through, copy this block and send it to the study coordinator.</p>
     <textarea class="export" id="exp" readonly>${esc(JSON.stringify(exportObj))}</textarea>
@@ -1561,6 +1571,14 @@ document.addEventListener("keydown",e=>{
  if(!back && !next) return;
  if(e.key==="ArrowLeft" && back && !back.disabled){ e.preventDefault(); goBack(); }
  else if(e.key==="ArrowRight" && next && !next.disabled){ e.preventDefault(); goNext(); }
+});
+// Force the Evidence Ledger / A·B·C explainer open for print — CSS alone can't override
+// Chromium's internal collapsed-<details> rendering, so toggle the real `open` state.
+window.addEventListener("beforeprint",()=>{
+ document.querySelectorAll("details.ev, details.abc").forEach(d=>{ d.dataset.wasOpen = d.open?"1":"0"; d.open = true; });
+});
+window.addEventListener("afterprint",()=>{
+ document.querySelectorAll("details.ev, details.abc").forEach(d=>{ d.open = d.dataset.wasOpen==="1"; delete d.dataset.wasOpen; });
 });
 intro();
 </script>
