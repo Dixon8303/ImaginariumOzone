@@ -1,10 +1,10 @@
 /**
- * The Genius Index — validation data collector.
+ * The Genius Index - validation data collector.
  *
  * Receives one anonymized result per assessment and appends it as a row to a
  * Google Sheet you own. No name, email, or account is collected.
  *
- * SETUP (about 10 minutes, one time) — see docs/data-collection-setup.md:
+ * SETUP (about 10 minutes, one time) -- see docs/data-collection-setup.md:
  *   1. Create a Google Sheet. Note its ID from the URL
  *      (docs.google.com/spreadsheets/d/<THIS_IS_THE_ID>/edit).
  *   2. Paste SHEET_ID below.
@@ -13,6 +13,8 @@
  *   4. Paste that URL into SUBMIT_URL in docs/index.html and redeploy the site.
  */
 
+// Use STRAIGHT quotes ' ' and paste ONLY the ID (the part between /d/ and /edit),
+// not the whole spreadsheet URL. Smart/curly quotes here cause a deploy syntax error.
 var SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
 var SHEET_NAME = 'results';
 
@@ -47,7 +49,7 @@ function doPost(e) {
       data.minutes || '',
       data.braid || '',
       data.braidTier || '',
-      (data.braidPair || []).join('·'),
+      (data.braidPair || []).join('-'),
       data.signature || '',
       (data.adjacent || []).join(' '),
       s('KIN'), s('SEN'), s('ADP'), s('ANL'), s('MEM'), s('GEN'), s('REL'), s('EXP'), s('PER'),

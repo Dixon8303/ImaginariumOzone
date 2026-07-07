@@ -69,6 +69,22 @@ That's it. From now on, each completed assessment (with consent left on) appends
 
 ---
 
+## Troubleshooting
+
+**"Syntax error: Invalid or unexpected token" (often on the `SHEET_ID` line) when you Save or Deploy.**
+This almost always means the quotes around your Sheet ID became *curly* quotes
+(`'` `'`) during copy-paste, or the whole spreadsheet URL got pasted in place of the ID.
+Fix it inside the Apps Script editor (which never auto-curls quotes):
+
+1. Delete the whole `var SHEET_ID = '...';` line and **retype** it by hand.
+2. Use **straight** single quotes `'` and put **only the ID** between them — the segment
+   between `/d/` and `/edit` in the sheet URL, e.g.
+   `https://docs.google.com/spreadsheets/d/`**`1AbC…XyZ`**`/edit`.
+3. Save, then Deploy again.
+
+The committed `Code.gs` is plain ASCII, so if you paste it fresh and edit only the ID
+line as above, it will compile.
+
 ## Fallback / alternatives
 
 - **Manual copy** — always available. The results screen has a *Pilot data* section with
