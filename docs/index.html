@@ -111,9 +111,17 @@
   .book .brule{width:56px; height:2px; background:var(--brass); border:none; margin:12px auto 20px;}
   .book .bfoot{font-family:'Literata',Georgia,serif; font-style:italic; font-size:12.5px; line-height:1.5; color:var(--book-dim); border-top:1px solid var(--book-line); margin-top:22px; padding-top:14px;}
   /* Braid hero card */
-  .braidcard{text-align:center; padding:8px 0 4px;}
-  .braidcard .yb{font-family:'Archivo',sans-serif; font-size:11px; letter-spacing:.26em; font-weight:700; text-transform:uppercase; color:var(--gold-ink);}
-  .braidcard .bname{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(38px,11vw,60px); line-height:1.02; color:var(--book-ink); margin:6px 0 12px; letter-spacing:.01em;}
+  /* Hero: the cover object, elevated. Radial paper-glow behind the lit-grid motif. */
+  .book--hero{position:relative; overflow:hidden;}
+  .book--hero::before{content:""; position:absolute; top:-10%; left:50%; transform:translateX(-50%);
+    width:340px; height:340px; border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, rgba(195,154,91,.20) 0%, rgba(195,154,91,.06) 42%, transparent 70%);}
+  .braidcard{text-align:center; padding:8px 0 4px; position:relative;}
+  .braidcard .yb{font-family:'Archivo',sans-serif; font-size:11px; letter-spacing:.3em; font-weight:700; text-transform:uppercase; color:var(--gold-ink);}
+  .heroglyph{width:150px; margin:16px auto 6px;}
+  .heroglyph svg{display:block; width:100%; height:auto; overflow:visible;
+    filter:drop-shadow(0 6px 18px rgba(154,116,64,.28));}
+  .braidcard .bname{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(40px,12vw,64px); line-height:1.0; color:var(--book-ink); margin:8px 0 12px; letter-spacing:-.005em;}
   .braidcard .bpair{display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin:12px 0;}
   .domchip{display:inline-flex; align-items:center; gap:7px; padding:7px 14px 7px 11px; border-radius:20px; font-family:'Fraunces',serif; font-weight:600; font-size:15px; background:rgba(0,0,0,.03);}
   .domchip .dot{width:11px; height:11px; border-radius:50%;}
@@ -891,6 +899,26 @@ function computeReadNext(R, band, sorted, topUnclaimed){
  return out.slice(0,5);
 }
 
+/* Hero motif: the book's 3×3 cover grid (nine domains by realm row), with the
+   reader's two braid domains lit in gold and a gold thread linking them. */
+function buildHeroGlyph(braidDoms){
+ const lit = braidDoms.map(d=>d.id);
+ const cells = [...DOMAINS].sort((a,b)=>a.cell-b.cell); // 0..8 => 3×3, rows = SOMA/MIND/FIELD
+ const cellSvg = cells.map((d,i)=>{
+  const col=realmHex(d.meta), x=(i%3), y=Math.floor(i/3);
+  const cx=30+x*62, cy=30+y*62, on=lit.includes(d.id);
+  const box = on
+   ? `<rect x="${cx-26}" y="${cy-26}" width="52" height="52" rx="9" fill="#C39A5B" stroke="#9A7440" stroke-width="1.5"/>`
+   : `<rect x="${cx-26}" y="${cy-26}" width="52" height="52" rx="9" fill="${col}" fill-opacity="0.05" stroke="${col}" stroke-opacity="0.28" stroke-width="1.3"/>`;
+  const txt = `<text x="${cx}" y="${cy+5}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="15" fill="${on?'#2A2118':col}" fill-opacity="${on?1:0.72}">${d.code}</text>`;
+  return box+txt;
+ }).join("");
+ // gold thread between the two lit cells
+ const p=braidDoms.map(d=>{ const i=cells.findIndex(c=>c.id===d.id); return [30+(i%3)*62, 30+Math.floor(i/3)*62]; });
+ const thread = p.length===2 ? `<line x1="${p[0][0]}" y1="${p[0][1]}" x2="${p[1][0]}" y2="${p[1][1]}" stroke="#B4832E" stroke-width="3" stroke-linecap="round" stroke-opacity="0.9" class="braid-draw" pathLength="1"/>` : "";
+ return `<div class="heroglyph"><svg viewBox="0 0 184 184" aria-hidden="true">${thread}${cellSvg}</svg></div>`;
+}
+
 /* ============ RESULTS ============ */
 function results(){
  setProg(1); litCells(9); busy=false;
@@ -954,11 +982,12 @@ function results(){
  h(`
   <div class="stagecount" style="margin-top:8px">Your result · complete</div>
 
-  <div class="book">
+  <div class="book book--hero">
    <div class="braidcard">
     <div class="yb">Your braid</div>
+    ${buildHeroGlyph(braidDoms)}
     <div class="bname">${primary?primary.name:code}</div>
-    <div class="bpair">${chip(braidDoms[0])}<span class="amp">&amp;</span>${chip(braidDoms[1])}</div>
+    <div class="bpair">${chip(braidDoms[0])}<span class="amp">×</span>${chip(braidDoms[1])}</div>
     ${tm?`<div class="tierbadge tier-${primary.tier}">${tm.label}${primary.rare?" · Rarest":""}</div>
     <div class="tiersub">${tm.sub}</div>`:""}
     <div class="braiddesc">${primary?esc(primary.desc):""}</div>
