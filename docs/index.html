@@ -201,6 +201,18 @@
   .rn-chip{display:inline-flex; align-items:center; gap:6px; background:rgba(195,154,91,.12); border:1px solid rgba(195,154,91,.4); border-radius:16px; padding:5px 12px; font-family:'Fraunces',serif; font-weight:600; font-size:13px; color:var(--book-ink);}
   .rn-chip .rn-ch{font-family:'Archivo',sans-serif; font-weight:700; font-size:9.5px; letter-spacing:.06em; color:var(--gold-ink); text-transform:uppercase;}
   .rn-chip .rn-note{font-family:'Literata',Georgia,serif; font-style:italic; font-weight:400; font-size:11px; color:var(--book-dim);}
+  /* ── R4 interpretive modules ── */
+  .shapediag{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:6px 0 14px;}
+  .shapemini{margin:0; padding:8px 6px; border-radius:6px; border:1.5px solid var(--book-line); background:rgba(0,0,0,.02); text-align:center;}
+  .shapemini.on{border-color:var(--brass); background:rgba(195,154,91,.12); box-shadow:0 0 0 2px rgba(195,154,91,.18);}
+  .shapemini .sbars{display:flex; align-items:flex-end; justify-content:center; gap:2px; height:44px;}
+  .shapemini .sbar{width:5px; background:var(--paper-dim); border-radius:1px;}
+  .shapemini.on .sbar{background:var(--brass);}
+  .shapemini .sname{font-family:'Archivo',sans-serif; font-size:9.5px; letter-spacing:.03em; font-weight:700; text-transform:uppercase; color:var(--book-dim); margin-top:6px;}
+  .shapemini.on .sname{color:var(--gold-ink);}
+  @media (max-width:420px){ .shapemini .sname{font-size:8.5px;} }
+  .portrait{font-family:'Fraunces',serif; font-size:clamp(17px,4.6vw,20px); line-height:1.5; color:var(--book-ink); margin:16px 0 4px;}
+  .portrait strong{font-weight:700;}
   .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
   .consentline{display:flex; gap:10px; align-items:flex-start; margin:14px 0 4px; font-size:12.5px; line-height:1.45;}
   .consentline input{width:20px; height:20px; accent-color:var(--brass); flex:0 0 auto; margin-top:1px;}
@@ -899,6 +911,70 @@ function computeShape(R, sorted){
  return "Plateau";
 }
 
+/* Shape metadata + the vertical nine-bar profile diagram (R2 §3.2). */
+const SHAPE_META = {
+ Tower:   {bars:[10,3,2,3,2,2,3,2,2], line:"one tall bar, the rest low",        move:"give this one peak a partner"},
+ Ridge:   {bars:[9,9,3,3,2,3,2,3,2],  line:"two tall bars together",            move:"decide which strand leads"},
+ Anchored:{bars:[10,6,6,6,3,3,2,2,3], line:"one tall bar, several mid-height",   move:"choose one strand and braid it on purpose"},
+ Plateau: {bars:[6,5,6,5,6,5,6,5,5],  line:"an even, flat cluster",             move:"develop broadly before you specialise"}
+};
+function buildShapeDiagram(current){
+ return `<div class="shapediag">`+["Tower","Ridge","Anchored","Plateau"].map(name=>{
+  const on=name===current;
+  const bars=SHAPE_META[name].bars.map(v=>`<span class="sbar" style="height:${v*10}%"></span>`).join("");
+  return `<figure class="shapemini ${on?'on':''}"><div class="sbars">${bars}</div><figcaption class="sname">${name}${on?" · you":""}</figcaption></figure>`;
+ }).join("")+`</div>`;
+}
+/* Portrait opener + gap headline + one synthesis line (Round 1 §6.1 / §7.2). */
+function portraitHTML(m){
+ const s0=m.sorted[0].name;
+ const supp=DOMAINS.filter(d=>m.band(d)==="Supporting").slice(0,2).map(d=>d.name);
+ let opener;
+ if(m.shape==="Tower") opener=`You are a <strong>${s0}</strong> genius in the fullest sense — a single, clear peak that runs well ahead of everything else in your profile. The task ahead is not to broaden immediately, but to give this peak a partner.`;
+ else if(m.shape==="Ridge") opener=`You are a <strong>${m.braidDoms[0].name}</strong> genius and a <strong>${m.braidDoms[1].name}</strong> genius at once — two gifts standing at nearly the same height. Most people have to build a braid; yours is already standing. The only real decision is which strand leads.`;
+ else if(m.shape==="Anchored") opener=`You are a <strong>${s0}</strong> genius anchored by real support — one clear peak, buttressed by strength in ${supp.join(" and ")||"your supporting domains"}. The task ahead is not to build more support; it's to choose one strand and braid it on purpose.`;
+ else opener=`Your profile reads even rather than peaked — no domain yet stands clearly above the rest. That isn't an absence of genius; it usually means your Signature lives somewhere this instrument under-measures, or it's real but still latent. The task ahead is developmental before it's strategic.`;
+ const headline = m.topUnclaimed ? ` And your record already outruns your self-image in <strong>${m.topUnclaimed.name}</strong> — you undersell it by ${m.gapOf(m.topUnclaimed)} points, the clearest unclaimed gift on this page.` : "";
+ const synth = m.topUnclaimed ? ` If there is one true thing here, it is that you are more than you give yourself credit for.` : (m.shape==="Ridge" ? ` Lead with whichever strand the moment rewards, and let the other carry it.` : ` Name it, and it starts to grow.`);
+ return `<p class="portrait">${opener}${headline}${synth}</p>`;
+}
+function spotlightHTML(m){
+ if(m.topUnclaimed){ const d=m.topUnclaimed;
+  return `<div class="callout callout--moss"><span class="ct">The one to act on first</span><strong>${d.name}.</strong> You rate yourself at ${Math.round(m.R[d.id].A)}, but you performed at ${Math.round(m.R[d.id].B)} — a ${m.gapOf(d)}-point gap in your favour. Of everything on this page, start here: it's a real capability you're not yet claiming.</div>`;
+ }
+ return `<div class="callout callout--slate"><span class="ct">A rare agreement</span>Your self-view and your record line up closely across the board — rarer than it sounds. What would you attempt if you trusted that agreement completely?</div>`;
+}
+function microHTML(m){
+ const d=m.sig[0], w1=PROTOCOL_DOMAIN[d.id][0];
+ return `<div class="callout callout--brass"><span class="ct">This week's micro-challenge</span>No month-long commitment — just the first move. In the next 24 hours: <strong>${w1}</strong> <span style="color:var(--book-dim)">(${d.name})</span>. That's day one of the protocol below.</div>`;
+}
+function reflectionHTML(m){
+ if(m.topUnclaimed){ const d=m.topUnclaimed;
+  return `<div class="callout callout--slate"><span class="ct">A question to sit with</span>You rated ${d.name} at ${Math.round(m.R[d.id].A)} but performed at ${Math.round(m.R[d.id].B)}. Think of one moment in the last month where this showed up and you didn't give yourself credit for it. What would change if you did?</div>`;
+ }
+ return `<div class="callout callout--slate"><span class="ct">A question to sit with</span>Your self-image and your record agree closely across the board — what would you attempt if you trusted that agreement completely?</div>`;
+}
+function cautionsHTML(m){
+ const d=DOMAINS.find(x=>m.band(x)==="Dormant" && !m.R[x.id].skipped && (m.R[x.id].B-m.R[x.id].A)<=-30);
+ if(!d) return "";
+ const extra = d.id==="ADP" ? " With Adaptive especially: defer to a professional before testing physical limits — do not self-test." : "";
+ return `<div class="callout callout--oxblood"><span class="ct">A caution</span><strong>${d.name}.</strong> Your self-image sits well ahead of the record here, and the domain reads dormant. Not a verdict — a training map.${extra}</div>`;
+}
+/* The interpretation-first block that meets the reader before the taxonomy. */
+function interpTop(m){
+ return `
+  <div class="book">
+   <div class="eyebrow-b">Before the taxonomy — you</div>
+   <h2 class="bt">Your Shape</h2>
+   <p class="btsub">Your profile is a <strong>${m.shape}</strong> — ${SHAPE_META[m.shape].line}.</p>
+   <hr class="brule">
+   ${buildShapeDiagram(m.shape)}
+   <div class="callout callout--brass"><span class="ct">${m.shape}</span>The strategic move for your shape: ${SHAPE_META[m.shape].move}.</div>
+   ${portraitHTML(m)}
+   ${spotlightHTML(m)}
+  </div>`;
+}
+
 /* Reachable next braids (Round 1 §4.3): canonical pairs where one member is
    Signature and the other is Supporting+, ranked by summed score; fall back to
    Strong Pairs to fill two slots. Excludes the reader's primary braid. */
@@ -1130,7 +1206,7 @@ function bookModules(m){
    <div class="eyebrow-b">What to do with it</div>
    <h2 class="bt">Grow it on purpose</h2>
    <hr class="brule">
-   ${protocol}${reach}${team}${readnext}
+   ${microHTML(m)}${protocol}${reach}${team}${readnext}${reflectionHTML(m)}
   </div>`;
 }
 
@@ -1173,6 +1249,7 @@ function results(){
  const reachable = computeReachable(R, band, primaryKey);
  const readNext = computeReadNext(R, band, sorted, topUnclaimed);
  const topDoms = sorted.slice(0,2); // for hobbies/dates blend
+ const m = {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf};
  const sdrFlag = S.respSDR[0]>=3 && S.respSDR[1]>=3;
  const compTop3=sorted.slice(0,3).map(d=>d.id);
  const overlap=S.ranksTop.filter(x=>compTop3.includes(x)).length;
@@ -1211,6 +1288,8 @@ function results(){
    <div class="bfoot">Rarity comes from combination. Genius is rarely a single gift — it is almost always two of the nine domains braided together, and the pairing, not either strand alone, is what makes a person rare.</div>
   </div>
 
+  ${interpTop(m)}
+
   <div class="book">
    <div class="eyebrow-b">Your place in the field</div>
    <h2 class="bt">The Constellation</h2>
@@ -1240,10 +1319,11 @@ function results(){
    ${sdrFlag?`<div class="callout callout--oxblood"><span class="ct">Honesty check</span>Your answers to the two check items suggest a flattering read. Answer for how things actually happen, not how you'd like them to — the Index is only useful unclouded. A re-take is recommended.</div>`:""}
    ${unclaimed.length?`<div class="callout callout--moss"><span class="ct">Unclaimed genius${topUnclaimed?` · ${topUnclaimed.name} +${gapOf(topUnclaimed)}`:""}</span>${unclaimed.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: you performed well ahead of how you rate yourself. This is the Index's most valuable finding — explore it first. Chapter ${topUnclaimed?chapterOf(topUnclaimed.id):"—"} shows what to do with it.</div>`:""}
    ${aspir.length?`<div class="callout callout--oxblood"><span class="ct">Aspirational gap</span>${aspir.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: your self-image outruns the record. Not a verdict — a training map.</div>`:""}
+   ${cautionsHTML(m)}
    <div class="card small" style="background:#F5EFE2;color:var(--book-ink);border-color:var(--book-line)">Forced-rank convergence: your top-3 picks matched <strong>${overlap} of 3</strong> computed leaders.</div>
   </div>
 
-  ${bookModules({sig, topDoms, R, band, primary, braidDoms, reachable, readNext, shape})}
+  ${bookModules(m)}
 
   <div class="book" style="text-align:center">
    <div class="eyebrow-b">The full field</div>
