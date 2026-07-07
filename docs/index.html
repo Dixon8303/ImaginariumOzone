@@ -1394,9 +1394,21 @@ function results(){
   </div>
 
   <div class="book">
+   <div class="eyebrow-b">Track it over time</div>
+   <h2 class="bt">Baseline &amp; Retake</h2>
+   <hr class="brule">
+   ${baselineHTML(exportObj)}
+   <p class="small" style="color:var(--book-dim);margin-top:8px">Saved only on this device — nothing is uploaded when you save a baseline.</p>
+  </div>
+
+  <div class="book">
    <p class="submitstatus" id="submitStatus"></p>
+   <p class="submitstatus" id="shareStatus"></p>
    <div class="btnrow">
-    <button class="btn book-primary" onclick="window.print()">Save / print my chart</button>
+    <button class="btn book-primary" id="shareBtn">Download share card</button>
+    <button class="btn book-ghost" onclick="window.print()">Save / print my chart</button>
+   </div>
+   <div class="btnrow">
     <button class="btn book-ghost" onclick="if(confirm('Reset and clear this session?')) location.reload()">Take it again</button>
    </div>
    <details>
@@ -1417,6 +1429,81 @@ function results(){
  };
  if(!S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render
  wireWheelTooltip();
+ const shareBtn=$("shareBtn");
+ if(shareBtn) shareBtn.onclick=()=>{ const st=$("shareStatus"); if(st) st.textContent="Generating your share card…";
+  try{ downloadShareCard(m); if(st) st.textContent="✓ Downloaded. Share it anywhere."; }
+  catch(e){ if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; } };
+ const wireSaveBaseline=()=>{ const b=$("saveBaselineBtn"); if(b) b.onclick=()=>{ saveBaseline(exportObj); b.textContent="Saved ✓"; b.disabled=true; }; };
+ wireSaveBaseline();
+}
+
+/* ============ SHARE CARD (R6) ============ */
+/* Self-contained 1080×1080 SVG -> canvas -> PNG download. No external libs. */
+function buildShareCardSVG(m){
+ const W=1080,H=1080, primary=domById(m.braidDoms[0].id), other=domById(m.braidDoms[1].id);
+ const braidName = m.primary?m.primary.name:"Your Braid";
+ const fs = braidName.length>16?66:braidName.length>11?78:92;
+ const top3 = m.sorted.slice(0,3);
+ const barY0=660, barH=30, barGap=62;
+ const bars = top3.map((d,i)=>{ const y=barY0+i*barGap, w=520*d_score(m,d)/100, col=realmHex(d.meta);
+   return `<rect x="330" y="${y}" width="520" height="${barH}" rx="7" fill="#00000012"/>
+           <rect x="330" y="${y}" width="${w.toFixed(1)}" height="${barH}" rx="7" fill="${col}"/>
+           <text x="310" y="${y+barH-8}" text-anchor="end" font-family="Archivo,sans-serif" font-size="22" font-weight="700" fill="#2A2118">${d.name}</text>
+           <text x="${330+520+16}" y="${y+barH-8}" text-anchor="start" font-family="Archivo,sans-serif" font-size="22" font-weight="700" fill="${col}">${Math.round(d_score(m,d))}</text>`;
+ }).join("");
+ const chip=(d,x)=>`<g transform="translate(${x} 470)"><rect x="-118" y="-30" width="236" height="60" rx="30" fill="#FFFFFF55" stroke="${realmHex(d.meta)}" stroke-width="2"/><circle cx="-96" cy="0" r="8" fill="${realmHex(d.meta)}"/><text x="-76" y="8" font-family="Fraunces,serif" font-weight="600" font-size="26" fill="${realmHex(d.meta)}">${d.name}</text></g>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+  <rect width="${W}" height="${H}" fill="#EDE4D4"/>
+  <rect width="${W}" height="14" fill="#C39A5B"/>
+  <text x="${W/2}" y="150" text-anchor="middle" font-family="Archivo,sans-serif" font-size="26" font-weight="700" letter-spacing="7" fill="#7A5B31">THE GENIUS INDEX</text>
+  <text x="${W/2}" y="215" text-anchor="middle" font-family="Archivo,sans-serif" font-size="20" letter-spacing="3" fill="#7A5B31">YOUR BRAID</text>
+  <text x="${W/2}" y="${215+fs}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="${fs}" fill="#2A2118">${esc(braidName)}</text>
+  ${chip(primary,W/2-135)}${chip(other,W/2+135)}
+  <text x="${W/2}" y="590" text-anchor="middle" font-family="Archivo,sans-serif" font-size="22" font-weight="700" letter-spacing="2" fill="#6B6258">SHAPE · ${m.shape.toUpperCase()}</text>
+  ${bars}
+  <text x="${W/2}" y="960" text-anchor="middle" font-family="Literata,Georgia,serif" font-style="italic" font-size="26" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
+  <rect y="${H-14}" width="${W}" height="14" fill="#C39A5B"/>
+ </svg>`;
+}
+function d_score(m,d){ return m.R[d.id].score; }
+function downloadShareCard(m){
+ const svgStr = buildShareCardSVG(m);
+ const svgBlob = new Blob([svgStr], {type:"image/svg+xml;charset=utf-8"});
+ const url = URL.createObjectURL(svgBlob);
+ const img = new Image();
+ img.onload = ()=>{
+  const canvas=document.createElement("canvas"); canvas.width=1080; canvas.height=1080;
+  const ctx=canvas.getContext("2d"); ctx.drawImage(img,0,0,1080,1080);
+  URL.revokeObjectURL(url);
+  canvas.toBlob(blob=>{
+   const dl=document.createElement("a"); dl.href=URL.createObjectURL(blob);
+   dl.download=`genius-index-${(m.primary?m.primary.name:"result").replace(/\s+/g,"-").toLowerCase()}.png`;
+   document.body.appendChild(dl); dl.click(); dl.remove();
+  }, "image/png");
+ };
+ img.onerror = ()=>{ const st=$("shareStatus"); if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; };
+ img.src = url;
+}
+
+/* ============ RETAKE & BASELINE (R6, localStorage — per device only) ============ */
+const BASELINE_KEY = "gi_baseline_v1";
+function loadBaseline(){ try{ return JSON.parse(localStorage.getItem(BASELINE_KEY)); }catch(e){ return null; } }
+function saveBaseline(exportObj){
+ try{ localStorage.setItem(BASELINE_KEY, JSON.stringify({ts:Date.now(), braid:exportObj.braid, shape:exportObj.shape, domains:exportObj.domains})); return true; }
+ catch(e){ return false; }
+}
+function baselineHTML(exportObj){
+ const b = loadBaseline();
+ if(!b){ return `<div class="callout callout--slate"><span class="ct">Baseline</span>No saved baseline yet on this device. Save this result to compare against a future retake.
+   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Save this as my baseline</button></div></div>`; }
+ const days = Math.max(0, Math.round((Date.now()-b.ts)/86400000));
+ const deltas = DOMAINS.map(d=>({d, delta: Math.round((exportObj.domains[d.id]?.score||0) - (b.domains[d.id]?.score||0))}))
+   .filter(x=>Math.abs(x.delta)>=5).sort((a,c)=>Math.abs(c.delta)-Math.abs(a.delta)).slice(0,4);
+ const deltaList = deltas.length ? deltas.map(x=>`${x.d.name} ${x.delta>0?"+":""}${x.delta}`).join(", ") : "no domain moved more than a few points";
+ const nudge = days>=90 ? ` It's been ${days} days since your last baseline — right on schedule for a check-in.` : ` Next check-in around day 90 (in ${90-days} days).`;
+ return `<div class="callout callout--slate"><span class="ct">Since your last baseline · ${days} day${days===1?"":"s"} ago</span>
+   Braid then: <strong>${b.braid||"—"}</strong> (${b.shape||"—"}). Braid now: <strong>${exportObj.braid||"—"}</strong> (${exportObj.shape}). Biggest moves: ${deltaList}.${nudge}
+   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Update my baseline to today</button></div></div>`;
 }
 
 /* Constellation hover/focus tooltip: name, score, one-line definition. */
