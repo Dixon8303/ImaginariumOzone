@@ -243,6 +243,8 @@
   .portrait strong{font-weight:700;}
   .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
   .consentnote{font-size:10.5px; line-height:1.4; color:var(--paper-dim); opacity:.75; margin-top:6px;}
+  .archivedbanner{font-family:Arial,sans-serif; font-size:12.5px; line-height:1.5; color:var(--gold-ink);
+    background:rgba(195,154,91,.14); border:1px solid var(--book-line); border-radius:6px; padding:10px 14px; margin:8px 0 4px;}
   /* Print */
   @media print{
     html,body{background:#fff !important; color:#000 !important;}
@@ -288,6 +290,9 @@
 /* Paste your Google Apps Script Web-App URL here to collect anonymized results.
    Leave empty ("") and submission is skipped silently. See data-collection-setup.md. */
 const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9Lj6Cbi3HL_nhcLe2yPSvTOzutv35GJknxVh2wbqUXDDFcQ4/exec";
+/* Paste the book's purchase link here once it's live. Leave empty ("") and the
+   intro screen shows a disabled "coming soon" placeholder instead of a dead link. */
+const BOOK_URL = "";
 
 /* ============ DATA ============ */
 const DOMAINS = [
@@ -462,11 +467,69 @@ function setProg(p){ $("prog").hidden=false; $("progFill").style.width=(p*100).t
 function litCells(n){ const g=$("glyphHead").children; for(let i=0;i<9;i++) g[i].classList.toggle("lit", i<n); }
 (function(){ const g=$("glyphHead"); for(let i=0;i<9;i++) g.appendChild(document.createElement("div")); })();
 
+/* ============ INTRO: book-grounding content (for links shared without the book) ============ */
+/* Static domain map -- no scores yet at this point, just the framework itself.
+   Reuses the .glyph.big grid component (defined in CSS, otherwise unused on
+   this screen) so it reads as the same visual language as the results page. */
+function buildDomainMapHTML(){
+ const cells=[...DOMAINS].sort((a,b)=>a.cell-b.cell);
+ const grid = cells.map(d=>{
+  const col=realmHex(d.meta);
+  return `<div style="background:${col}1f; border-color:${col}77;">
+    <span class="code" style="color:${col}">${d.code.toUpperCase()}</span>
+    <span class="pct" style="color:var(--paper-dim)">${d.name}</span>
+   </div>`;
+ }).join("");
+ return `<div class="glyph big" style="margin:16px auto; justify-content:center">${grid}</div>
+  <p class="small dim" style="text-align:center;line-height:1.7">
+   <span style="color:${realmHex("soma")}">■</span> SOMA — the body &nbsp;&nbsp;
+   <span style="color:${realmHex("mind")}">■</span> MIND — the mind &nbsp;&nbsp;
+   <span style="color:${realmHex("field")}">■</span> FIELD — the field
+  </p>`;
+}
+/* A worked, non-personal example so a first-time visitor can see the shape of
+   the output before answering anything. Reuses the exact .book/.braidcard
+   markup the real results page renders, so it's an honest preview, not a mockup. */
+function sampleBraidCardHTML(){
+ return `<div class="book" style="margin:14px 0 2px">
+   <div class="braidcard">
+    <div class="yb">Example result</div>
+    <div class="bname">The Storyteller</div>
+    <div class="bpair"><span class="domchip mind"><span class="dot"></span>Generative</span><span class="amp">×</span><span class="domchip field"><span class="dot"></span>Expressive</span></div>
+    <div class="tierbadge tier-C">Canonical Ten</div>
+    <div class="tiersub">One of the ten combinations distinct enough to carry a name of its own.</div>
+    <div class="braiddesc">Makes the new thing and transmits it.</div>
+   </div>
+  </div>
+  <p class="small dim" style="text-align:center;margin:6px 0 2px">Illustrative only — your own result depends entirely on your own answers.</p>`;
+}
+
 /* ============ SCREEN: INTRO ============ */
 function intro(){
  h(`
   <h1>Everybody carries a genius.<br>This locates yours.</h1>
   <p class="dim" style="margin:14px 0 4px">81 items and nine short stations. About 25–35 minutes. Nothing here measures intelligence — the Index locates where ability comes easiest to you, so it can be named and grown. <em>Identify to amplify.</em></p>
+
+  <div class="card">
+    <h3>What this measures, and why</h3>
+    <p class="small dim">This is the companion assessment to <strong>The Genius Index</strong>, the book that this instrument is built from. The book's premise: intelligence isn't one number — everybody is genuinely gifted somewhere, and the task is finding where, naming it, and growing it on purpose.</p>
+    <p class="small dim" style="margin-top:8px">It maps ability into <strong>nine domains</strong> across three realms — <strong>SOMA</strong> (the body), <strong>MIND</strong> (the mind), and <strong>FIELD</strong> (people and the world around you).</p>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h3>The nine domains</h3>
+    ${buildDomainMapHTML()}
+  </div>
+
+  <div class="card">
+    <h3>Why a "braid"</h3>
+    <p class="small dim">Genius is rarely a single gift — it's almost always two domains standing out together. The book names all thirty-six of those pairings <strong>braids</strong>, from The Craftsman (Kinetic × Sensory) to The Diplomat (Relational × Perceptive). This instrument scores your nine domains from what you report and how you actually perform, then resolves and explains your own braid — the same material the book covers, personalized to your answers.</p>
+    ${sampleBraidCardHTML()}
+    ${BOOK_URL
+      ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
+      : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
+  </div>
+
   <div class="card">
     <h3>How to take it honestly</h3>
     <p class="small">1 · Answer for how things <strong>actually happen</strong>, not how you'd like them to.<br>
@@ -1075,6 +1138,36 @@ function computeReadNext(R, band, sorted, topUnclaimed){
  return out.slice(0,5);
 }
 
+/* Shared compute layer: derives the full interpretation context (m) from a
+   domain-score map R alone. Used by both a live completion (results()) and the
+   archived "view" replay (renderArchived()), so a stored submission's original
+   scores always run through the exact same braid/shape/gap logic as a live one. */
+function computeM(R){
+ const sorted=[...DOMAINS].sort((x,y)=>R[y.id].score-R[x.id].score);
+ const scores=sorted.map(d=>R[d.id].score);
+ const median=scores.slice().sort((a,b)=>a-b)[4];
+ const isSig=d=> R[d.id].score>=70 && R[d.id].score>=median+10;
+ let sig=sorted.filter(isSig).slice(0,2);
+ if(sig.length===0) sig.push(sorted[0]);
+ const braidDoms = sig.length>=2 ? [sig[0],sig[1]] : [sorted[0], sorted[1]];
+ const primary = braidFor(braidDoms[0].id, braidDoms[1].id);
+ const primaryKey = braidKey(braidDoms[0].id, braidDoms[1].id);
+ const top3=sorted.slice(0,3);
+ const adjKeys=new Set();
+ for(let i=0;i<top3.length;i++) for(let j=i+1;j<top3.length;j++){ const k=braidKey(top3[i].id,top3[j].id); if(k!==primaryKey) adjKeys.add(k); }
+ const band=d=>{ if(sig.includes(d)) return "Signature";
+  if(R[d.id].score>=55) return "Supporting"; if(R[d.id].score<40) return "Dormant"; return "Developing"; };
+ const gapOf = d => R[d.id].skipped ? null : Math.round(R[d.id].B - R[d.id].A);
+ const unclaimed = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)>=30).sort((a,b)=>gapOf(b)-gapOf(a));
+ const aspir = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)<=-30).sort((a,b)=>gapOf(a)-gapOf(b));
+ const topUnclaimed = unclaimed[0] || null;
+ const shape = computeShape(R, sorted);
+ const reachable = computeReachable(R, band, primaryKey);
+ const readNext = computeReadNext(R, band, sorted, topUnclaimed);
+ const topDoms = sorted.slice(0,2);
+ return {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf};
+}
+
 /* ============ CONTENT LIBRARY (condensed from the book; per-domain / per-braid) ============ */
 const CAREERS = {
  KIN:"Performance trades (dance, music, acting, athletics) · precision trades (surgery, watchmaking, luthiery) · skilled trades (welding, carpentry, culinary knife work) · teaching of movement (coaching, PT, choreography)",
@@ -1294,49 +1387,71 @@ function results(){
   const score = skipped ? Math.round((0.5*A100+0.2*C100)/0.7) : Math.round(0.5*A100+0.3*B100+0.2*C100);
   R[d.id]={A:A100,B:B100,C:C100,score,skipped};
  });
- const sorted=[...DOMAINS].sort((x,y)=>R[y.id].score-R[x.id].score);
- const scores=sorted.map(d=>R[d.id].score);
- const median=scores.slice().sort((a,b)=>a-b)[4];
- const isSig=d=> R[d.id].score>=70 && R[d.id].score>=median+10;
- let sig=sorted.filter(isSig).slice(0,2);
- if(sig.length===0) sig.push(sorted[0]);
- const braidDoms = sig.length>=2 ? [sig[0],sig[1]] : [sorted[0], sorted[1]];
- const primary = braidFor(braidDoms[0].id, braidDoms[1].id);
- const primaryKey = braidKey(braidDoms[0].id, braidDoms[1].id);
- const top3=sorted.slice(0,3);
- const adjKeys=new Set();
- for(let i=0;i<top3.length;i++) for(let j=i+1;j<top3.length;j++){ const k=braidKey(top3[i].id,top3[j].id); if(k!==primaryKey) adjKeys.add(k); }
- const band=d=>{ if(sig.includes(d)) return "Signature";
-  if(R[d.id].score>=55) return "Supporting"; if(R[d.id].score<40) return "Dormant"; return "Developing"; };
- /* Gaps are performance (B) minus self-report (A). Domains with a skipped station
-    have no B and are excluded. Unclaimed = you did better than you claim. */
- const gapOf = d => R[d.id].skipped ? null : Math.round(R[d.id].B - R[d.id].A);
- const unclaimed = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)>=30)
-   .sort((a,b)=>gapOf(b)-gapOf(a));
- const aspir = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)<=-30)
-   .sort((a,b)=>gapOf(a)-gapOf(b));
- const topUnclaimed = unclaimed[0] || null;
- const shape = computeShape(R, sorted);
- const reachable = computeReachable(R, band, primaryKey);
- const readNext = computeReadNext(R, band, sorted, topUnclaimed);
- const topDoms = sorted.slice(0,2); // for hobbies/dates blend
- const m = {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf};
+ const m = computeM(R);
  const sdrFlag = S.respSDR[0]>=3 && S.respSDR[1]>=3;
- const compTop3=sorted.slice(0,3).map(d=>d.id);
+ const compTop3=m.sorted.slice(0,3).map(d=>d.id);
  const overlap=S.ranksTop.filter(x=>compTop3.includes(x)).length;
- const code = sig.map(d=>d.code).join("·") + (unclaimed.length?` (+${unclaimed.map(d=>d.code.toLowerCase()).join(",")})`:"");
-
- const bars=sorted.map(d=>`<div class="barrow ${d.meta}"><span class="lbl">${d.name}</span>
-   <span class="trk"><i style="width:${R[d.id].score}%"></i></span><span class="val">${R[d.id].score}</span></div>`).join("");
+ const code = m.sig.map(d=>d.code).join("·") + (m.unclaimed.length?` (+${m.unclaimed.map(d=>d.code.toLowerCase()).join(",")})`:"");
+ m.sdrFlag=sdrFlag; m.overlap=overlap;
 
  const exportObj={v:"GI-1.0",event:"complete",code:S.code||null,consent:S.consent,ts:new Date().toISOString(),
   minutes:Math.round((Date.now()-S.started)/60000),
   A:S.respA,C:S.respC,SDR:S.respSDR,B:S.Braw,Bnorm:S.B,
   ranksTop:S.ranksTop,ranksBot:S.ranksBot,
   domains:Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
-  signature:code, braid:primary?primary.name:null, braidPair:braidDoms.map(d=>d.id), braidTier:primary?primary.tier:null,
-  adjacent:[...adjKeys], shape, reachable:reachable.map(b=>b.name),
-  flags:{sdr:sdrFlag, unclaimed:unclaimed.map(d=>d.id), aspirational:aspir.map(d=>d.id), topUnclaimed:topUnclaimed?topUnclaimed.id:null, rankOverlap:overlap}};
+  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id), braidTier:m.primary?m.primary.tier:null,
+  adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
+  flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}};
+
+ renderResultsPage(m, exportObj, {archived:false});
+}
+
+/* Archived-result replay: rebuilds a stored submission's domain scores and runs
+   them through the exact same computeM()/renderResultsPage() path as a live
+   completion, so a Sheet row always opens to the current scoring model's read
+   of that submission -- not a frozen snapshot of whatever the code did at the
+   time it was collected. Triggered by #view=<encodeURIComponent(raw_json)>. */
+let ARCHIVED_PAYLOAD = null;
+function domainsFromPayload(payload){
+ const R={};
+ DOMAINS.forEach(d=>{
+  const dd = payload.domains && payload.domains[d.id];
+  R[d.id] = dd ? {A:+dd.A||0, B:+dd.B||0, C:+dd.C||0, score:Math.round(dd.score||0), skipped:!!dd.skipped} : {A:0,B:0,C:0,score:0,skipped:true};
+ });
+ return R;
+}
+function renderArchived(payload){
+ ARCHIVED_PAYLOAD = payload;
+ const R = domainsFromPayload(payload);
+ const m = computeM(R);
+ const sdrFlag = !!(payload.flags && payload.flags.sdr);
+ const ranksTop = payload.ranksTop||[];
+ const compTop3 = m.sorted.slice(0,3).map(d=>d.id);
+ const overlap = ranksTop.filter(x=>compTop3.includes(x)).length;
+ m.sdrFlag=sdrFlag; m.overlap=overlap;
+ const code = m.sig.map(d=>d.code).join("·") + (m.unclaimed.length?` (+${m.unclaimed.map(d=>d.code.toLowerCase()).join(",")})`:"");
+ const exportObj = {
+  v:payload.v||"", event:"complete", code:payload.code||null, consent:payload.consent!==false,
+  ts:payload.ts||"", minutes:payload.minutes||0,
+  domains:payload.domains||Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
+  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id), braidTier:m.primary?m.primary.tier:null,
+  adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
+  flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}
+ };
+ renderResultsPage(m, exportObj, {archived:true});
+}
+function archivedBannerHTML(exportObj){
+ return `<div class="archivedbanner">Archived result${exportObj.code?` · code <strong>${esc(exportObj.code)}</strong>`:""}${exportObj.ts?` · submitted ${new Date(exportObj.ts).toLocaleString()}`:""} — recomputed from the stored answers using the <strong>current</strong> scoring model.</div>`;
+}
+
+/* Shared renderer: builds the full results page HTML from a computed m/exportObj.
+   opts.archived suppresses the submit-once POST and the baseline/retake UI (this
+   isn't the viewer's own session) and swaps a couple of labels accordingly. */
+function renderResultsPage(m, exportObj, opts){
+ opts = opts || {};
+ const {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf, sdrFlag=false, overlap=0} = m;
+ const bars=sorted.map(d=>`<div class="barrow ${d.meta}"><span class="lbl">${d.name}</span>
+   <span class="trk"><i style="width:${R[d.id].score}%"></i></span><span class="val">${R[d.id].score}</span></div>`).join("");
 
  const tm = primary?TIER_META[primary.tier]:null;
  const chip = d => `<span class="domchip ${d.meta}"><span class="dot"></span>${d.name}</span>`;
@@ -1344,13 +1459,14 @@ function results(){
  S.ctx={R, primaryKey, adjKeys, primary, m};
 
  h(`
+  ${opts.archived?archivedBannerHTML(exportObj):""}
   <div class="stagecount" style="margin-top:8px">Your result · complete</div>
 
   <div class="book book--hero">
    <div class="braidcard">
     <div class="yb">Your braid</div>
     ${buildHeroGlyph(braidDoms)}
-    <div class="bname">${primary?primary.name:code}</div>
+    <div class="bname">${primary?primary.name:exportObj.signature}</div>
     <div class="bpair">${chip(braidDoms[0])}<span class="amp">×</span>${chip(braidDoms[1])}</div>
     ${tm?`<div class="tierbadge tier-${primary.tier}">${tm.label}${primary.rare?" · Rarest":""}</div>
     <div class="tiersub">${tm.sub}</div>`:""}
@@ -1410,13 +1526,14 @@ function results(){
    <button class="btn book-primary" style="max-width:340px;margin:6px auto 0" onclick="showAllBraids()">Explore all 36 braids →</button>
   </div>
 
+  ${opts.archived?"":`
   <div class="book">
    <div class="eyebrow-b">Track it over time</div>
    <h2 class="bt">Baseline &amp; Retake</h2>
    <hr class="brule">
    ${baselineHTML(exportObj)}
    <p class="small" style="color:var(--book-dim);margin-top:8px">Saved only on this device — nothing is uploaded when you save a baseline.</p>
-  </div>
+  </div>`}
 
   <div class="book">
    <p class="submitstatus" id="submitStatus"></p>
@@ -1426,11 +1543,13 @@ function results(){
     <button class="btn book-ghost" onclick="window.print()">Save / print my chart</button>
    </div>
    <div class="btnrow">
-    <button class="btn book-ghost" onclick="if(confirm('Reset and clear this session?')) location.reload()">Take it again</button>
+    ${opts.archived
+      ?`<button class="btn book-ghost" onclick="location.href='./'">Take the assessment →</button>`
+      :`<button class="btn book-ghost" onclick="if(confirm('Reset and clear this session?')) location.reload()">Take it again</button>`}
    </div>
    <details class="pilot">
-    <summary>Pilot data (for study participants)</summary>
-    <p class="small" style="color:var(--book-dim);margin:8px 0">If the automatic upload didn't go through, copy this block and send it to the study coordinator.</p>
+    <summary>${opts.archived?"Raw submission data":"Pilot data (for study participants)"}</summary>
+    <p class="small" style="color:var(--book-dim);margin:8px 0">${opts.archived?"The exact JSON this archived view was recomputed from.":"If the automatic upload didn't go through, copy this block and send it to the study coordinator."}</p>
     <textarea class="export" id="exp" readonly>${esc(JSON.stringify(exportObj))}</textarea>
     <button class="btn book-ghost" id="copyBtn" style="margin-top:8px">Copy results block</button>
    </details>
@@ -1444,14 +1563,16 @@ function results(){
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,()=>{ $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }); }
   else { $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }
  };
- if(!S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render
+ if(!opts.archived && !S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render; never for an archived replay
  wireWheelTooltip();
  const shareBtn=$("shareBtn");
  if(shareBtn) shareBtn.onclick=()=>{ const st=$("shareStatus"); if(st) st.textContent="Generating your share card…";
   try{ downloadShareCard(m); if(st) st.textContent="✓ Downloaded. Share it anywhere."; }
   catch(e){ if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; } };
- const wireSaveBaseline=()=>{ const b=$("saveBaselineBtn"); if(b) b.onclick=()=>{ saveBaseline(exportObj); b.textContent="Saved ✓"; b.disabled=true; }; };
- wireSaveBaseline();
+ if(!opts.archived){
+  const wireSaveBaseline=()=>{ const b=$("saveBaselineBtn"); if(b) b.onclick=()=>{ saveBaseline(exportObj); b.textContent="Saved ✓"; b.disabled=true; }; };
+  wireSaveBaseline();
+ }
 }
 
 /* ============ SHARE CARD (R6) ============ */
@@ -1567,9 +1688,19 @@ function showAllBraids(){
   </div>
  `);
 }
-function backToResults(){ try{ history.pushState(null,"","#results"); }catch(e){} results(); }
-// Browser Back from the reference view returns to the results.
-window.addEventListener("hashchange",()=>{ if(location.hash!=="#all-braids" && !/^#chapter-/.test(location.hash) && S.ctx && $("stage") && /all thirty-six|^Chapter /.test($("stage").textContent||"")) results(); });
+function backToResults(){ try{ history.pushState(null,"","#results"); }catch(e){} if(ARCHIVED_PAYLOAD) renderArchived(ARCHIVED_PAYLOAD); else results(); }
+// Browser Back from the reference view returns to the results (live or archived).
+// A hash-only navigation to a *different* #view=... payload (e.g. pasting another
+// archived link into the same open tab) is a same-document navigation in Chromium --
+// it never re-runs the boot script, so handle it explicitly here too.
+window.addEventListener("hashchange",()=>{
+ const hs=location.hash;
+ if(hs.indexOf("#view=")===0){
+  try{ renderArchived(JSON.parse(decodeURIComponent(hs.slice(6)))); }catch(e){}
+  return;
+ }
+ if(hs!=="#all-braids" && !/^#chapter-/.test(hs) && S.ctx && $("stage") && /all thirty-six|^Chapter /.test($("stage").textContent||"")) { if(ARCHIVED_PAYLOAD) renderArchived(ARCHIVED_PAYLOAD); else results(); }
+});
 
 /* ============ CHAPTER PAGES (Read Next targets) ============ */
 /* Compiles the content library already written for R3/R4 into a standalone
@@ -1653,7 +1784,20 @@ window.addEventListener("beforeprint",()=>{
 window.addEventListener("afterprint",()=>{
  document.querySelectorAll("details.ev, details.abc").forEach(d=>{ d.open = d.dataset.wasOpen==="1"; delete d.dataset.wasOpen; });
 });
-intro();
+function bootFromHash(){
+ const hs=location.hash;
+ if(hs.indexOf("#view=")===0){
+  try{
+   const payload=JSON.parse(decodeURIComponent(hs.slice(6)));
+   renderArchived(payload);
+  }catch(e){
+   h(`<div class="card"><h3>Couldn't open this archived result</h3><p class="small">The link may be corrupted or truncated. <a href="./">Take the assessment →</a></p></div>`);
+  }
+  return true;
+ }
+ return false;
+}
+if(!bootFromHash()) intro();
 </script>
 </body>
 </html>
