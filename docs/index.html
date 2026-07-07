@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Genius Index — Find Your Braid</title>
+<meta name="description" content="Everybody carries a genius. This locates yours. 81 items and nine short stations map your nine domains, then name the braid they make — free, anonymous, on your device.">
+<meta property="og:title" content="The Genius Index — Find Your Braid">
+<meta property="og:description" content="Everybody carries a genius. This locates yours. Nine domains, nine stations, thirty-six braids. Free and anonymous.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%23231B15'/%3E%3Cg fill='none' stroke='%23C39A5B' stroke-width='2'%3E%3Crect x='6' y='6' width='10' height='10'/%3E%3Crect x='19' y='6' width='10' height='10'/%3E%3Crect x='32' y='6' width='10' height='10'/%3E%3Crect x='6' y='19' width='10' height='10'/%3E%3Crect x='19' y='19' width='10' height='10' fill='%23C39A5B'/%3E%3Crect x='32' y='19' width='10' height='10'/%3E%3Crect x='6' y='32' width='10' height='10'/%3E%3Crect x='19' y='32' width='10' height='10'/%3E%3Crect x='32' y='32' width='10' height='10'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#231B15; --ink2:#2E241B; --paper:#EDE4D4; --paper-dim:#B9AD98;
+    --brass:#C39A5B; --brass-deep:#9A7440; --oxblood:#8C3B2E; --moss:#5E7367;
+    --line:rgba(237,228,212,.14);
+    /* Book realm palette (from Braid Constellations) */
+    --soma:#8C3B2E; --mind:#54687C; --field:#4E6156;
+    --gold-ink:#7A5B31; --gold-chord:#6E6150;
+    --book-paper:#EDE4D4; --book-ink:#2A2118; --book-dim:#6B6258; --book-line:rgba(42,33,24,.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--ink); color:var(--paper); font-family:'Archivo',sans-serif; -webkit-font-smoothing:antialiased;}
+  body{min-height:100vh; display:flex; flex-direction:column; align-items:center;}
+  .wrap{width:100%; max-width:660px; padding:20px 18px 64px;}
+  header{display:flex; justify-content:space-between; align-items:center; padding:14px 2px 10px; border-bottom:1px solid var(--line); margin-bottom:22px;}
+  .eyebrow{font-size:11px; letter-spacing:.22em; color:var(--brass); font-weight:600; text-transform:uppercase;}
+  .sub{font-size:10px; letter-spacing:.14em; color:var(--paper-dim); text-transform:uppercase; margin-top:3px;}
+  h1{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(30px,7vw,44px); line-height:1.06; letter-spacing:-0.01em;}
+  h2{font-family:'Fraunces',serif; font-weight:600; font-size:24px; line-height:1.15; margin-bottom:10px;}
+  h3{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--brass); margin-bottom:8px; font-weight:600;}
+  p{line-height:1.55; font-size:15px;}
+  .dim{color:var(--paper-dim);}
+  .small{font-size:12.5px; line-height:1.5;}
+  /* Grid glyph */
+  .glyph{display:grid; grid-template-columns:repeat(3,12px); grid-template-rows:repeat(3,12px); gap:3px;}
+  .glyph div{background:transparent; border:1px solid var(--brass-deep); transition:background .5s ease;}
+  .glyph div.lit{background:var(--brass);}
+  .glyph.big{grid-template-columns:repeat(3,64px); grid-template-rows:repeat(3,64px); gap:8px; margin:18px auto;}
+  .glyph.big div{border:1px solid var(--line); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; letter-spacing:.06em; transition:background .5s;}
+  .glyph.big .code{font-weight:700; font-size:14px; font-family:'Fraunces',serif;}
+  .glyph.big .pct{font-size:10px; color:var(--ink); opacity:.85;}
+  /* Buttons */
+  .btn{display:block; width:100%; padding:15px 16px; margin:8px 0; background:var(--ink2); border:1px solid var(--line); color:var(--paper); font-family:'Archivo',sans-serif; font-size:15px; text-align:left; cursor:pointer; transition:border-color .15s, background .15s;}
+  .btn:hover, .btn:focus-visible{border-color:var(--brass); outline:none;}
+  .btn.sel{border-color:var(--brass); background:#3A2E20;}
+  .btn.primary{background:var(--brass); color:var(--ink); font-weight:700; text-align:center; border:none; letter-spacing:.04em;}
+  .btn.primary:hover{background:#D3AC6C;}
+  .btn.ghost{text-align:center; color:var(--paper-dim);}
+  .btn:disabled{opacity:.35; cursor:default;}
+  .btnrow{display:flex; gap:8px;} .btnrow .btn{margin:8px 0;}
+  /* Progress */
+  .prog{height:3px; background:var(--ink2); margin:0 0 20px; position:relative;}
+  .prog i{position:absolute; left:0; top:0; bottom:0; background:var(--brass); transition:width .3s;}
+  .stagecount{font-size:11px; letter-spacing:.16em; color:var(--paper-dim); text-transform:uppercase; margin-bottom:14px;}
+  /* Cards & misc */
+  .card{background:var(--ink2); border:1px solid var(--line); padding:18px; margin:14px 0;}
+  .rule{border:none; border-top:1px solid var(--line); margin:18px 0;}
+  .qtext{font-family:'Fraunces',serif; font-size:21px; line-height:1.32; font-weight:600; margin:6px 0 18px;}
+  .flag{border-left:3px solid var(--oxblood); padding:10px 12px; background:rgba(140,59,46,.12); margin:10px 0; font-size:13.5px; line-height:1.5;}
+  .pass{border-left:3px solid var(--moss); padding:10px 12px; background:rgba(94,115,103,.12); margin:10px 0; font-size:13.5px; line-height:1.5;}
+  .timer{font-family:'Fraunces',serif; font-size:40px; font-weight:700; text-align:center; margin:10px 0; font-variant-numeric:tabular-nums;}
+  textarea, input[type=text]{width:100%; background:var(--ink2); border:1px solid var(--line); color:var(--paper); padding:12px; font-family:'Archivo'; font-size:15px;}
+  textarea:focus, input:focus{border-color:var(--brass); outline:none;}
+  .padgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:280px; margin:16px auto;}
+  .pad{aspect-ratio:1; font-size:30px; background:var(--ink2); border:1px solid var(--line); color:var(--paper); cursor:pointer;}
+  .pad.flash{background:var(--brass); color:var(--ink);}
+  .memgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:14px 0;}
+  .memgrid .btn{margin:0; text-align:center; padding:12px 6px; font-size:14px;}
+  .bars{margin:16px 0;}
+  .barrow{display:flex; align-items:center; gap:10px; margin:7px 0;}
+  .barrow .lbl{width:96px; font-size:12px; letter-spacing:.04em;}
+  .barrow .trk{flex:1; height:12px; background:var(--ink2); position:relative;}
+  .barrow .trk i{position:absolute; left:0; top:0; bottom:0;}
+  .barrow .val{width:34px; text-align:right; font-size:12px; font-variant-numeric:tabular-nums;}
+  .soma i{background:var(--brass);} .mind i{background:#A9B4A6;} .field i{background:#7E93A8;}
+  .sig{font-family:'Fraunces',serif; font-size:clamp(34px,9vw,52px); font-weight:700; text-align:center; color:var(--brass); margin:10px 0 2px; letter-spacing:.02em;}
+  .sigsub{text-align:center; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:14px;}
+  .checkline{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:14.5px;}
+  .checkline input{width:20px; height:20px; accent-color:var(--brass);}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0;}
+  td,th{padding:7px 6px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top;}
+  th{color:var(--brass); font-size:11px; letter-spacing:.12em; text-transform:uppercase;}
+  .export{font-size:11px; height:120px; word-break:break-all;}
+  /* ============ RESULTS · BOOK PAGES ============ */
+  .book{background:var(--book-paper); color:var(--book-ink); margin:22px -18px 0; padding:26px 20px 30px; border-top:2px solid var(--brass);}
+  .book + .book{margin-top:0; border-top:1px solid var(--book-line);}
+  .book .eyebrow-b{font-family:'Archivo',sans-serif; font-size:10.5px; letter-spacing:.28em; font-weight:700; text-transform:uppercase; color:var(--gold-ink); text-align:center;}
+  .book h2.bt{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(24px,6vw,32px); line-height:1.08; text-align:center; color:var(--book-ink); margin:4px 0 6px; letter-spacing:-.01em;}
+  .book .btsub{font-family:'Literata',Georgia,serif; font-style:italic; font-size:14px; line-height:1.4; text-align:center; color:var(--book-dim); max-width:44ch; margin:0 auto 4px;}
+  .book .brule{width:56px; height:2px; background:var(--brass); border:none; margin:12px auto 20px;}
+  .book .bfoot{font-family:'Literata',Georgia,serif; font-style:italic; font-size:12.5px; line-height:1.5; color:var(--book-dim); border-top:1px solid var(--book-line); margin-top:22px; padding-top:14px;}
+  /* Braid hero card */
+  .braidcard{text-align:center; padding:8px 0 4px;}
+  .braidcard .yb{font-family:'Archivo',sans-serif; font-size:11px; letter-spacing:.26em; font-weight:700; text-transform:uppercase; color:var(--gold-ink);}
+  .braidcard .bname{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(38px,11vw,60px); line-height:1.02; color:var(--book-ink); margin:6px 0 12px; letter-spacing:.01em;}
+  .braidcard .bpair{display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin:12px 0;}
+  .domchip{display:inline-flex; align-items:center; gap:7px; padding:7px 14px 7px 11px; border-radius:20px; font-family:'Fraunces',serif; font-weight:600; font-size:15px; background:rgba(0,0,0,.03);}
+  .domchip .dot{width:11px; height:11px; border-radius:50%;}
+  .domchip.soma{color:var(--soma); box-shadow:inset 0 0 0 1.5px rgba(140,59,46,.45);} .domchip.soma .dot{background:var(--soma);}
+  .domchip.mind{color:var(--mind); box-shadow:inset 0 0 0 1.5px rgba(84,104,124,.45);} .domchip.mind .dot{background:var(--mind);}
+  .domchip.field{color:var(--field); box-shadow:inset 0 0 0 1.5px rgba(78,97,86,.45);} .domchip.field .dot{background:var(--field);}
+  .bpair .amp{font-family:'Fraunces',serif; font-size:19px; color:var(--book-dim);}
+  .tierbadge{display:inline-block; margin:8px auto 2px; padding:6px 16px; border-radius:4px; font-family:'Archivo',sans-serif; font-size:11px; letter-spacing:.18em; font-weight:700; text-transform:uppercase;}
+  .tier-C{background:var(--brass); color:#2A2118;}
+  .tier-S{background:rgba(78,97,86,.16); color:var(--field); box-shadow:inset 0 0 0 1.5px rgba(78,97,86,.5);}
+  .tier-R{background:rgba(140,59,46,.13); color:var(--soma); box-shadow:inset 0 0 0 1.5px rgba(140,59,46,.5);}
+  .tier-Q{background:rgba(84,104,124,.13); color:var(--mind); box-shadow:inset 0 0 0 1.5px rgba(84,104,124,.5);}
+  .tiersub{font-family:'Literata',Georgia,serif; font-style:italic; font-size:13.5px; color:var(--book-dim); margin:8px auto 0; max-width:42ch;}
+  .braiddesc{font-family:'Fraunces',serif; font-size:18px; line-height:1.4; color:var(--book-ink); margin:14px auto 0; max-width:40ch;}
+  /* Constellation wheel */
+  .wheelwrap{margin:6px auto 0; max-width:520px;}
+  .wheelwrap svg{display:block; width:100%; height:auto; overflow:visible;}
+  /* Index grid */
+  .gridscroll{overflow-x:auto; margin:6px -20px 0; padding:0 20px 6px;}
+  .igrid{border-collapse:separate; border-spacing:3px; margin:0 auto; min-width:min-content;}
+  .igrid td{padding:0; border:none;}
+  .gcell{width:62px; height:40px; border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; line-height:1.05;}
+  .gcell .gn{font-family:'Archivo',sans-serif; font-size:8.5px; font-weight:600; letter-spacing:.01em;}
+  .gcell .gs{font-family:'Fraunces',serif; font-size:12px; font-weight:700;}
+  .gcell .gt{font-size:7px; letter-spacing:.05em;}
+  .gcell.mine{outline:2.5px solid var(--brass); outline-offset:1px; box-shadow:0 0 0 3px rgba(195,154,91,.28);}
+  .gcell.adj{outline:1.5px solid rgba(195,154,91,.6);}
+  /* Field guide */
+  .fgcols{columns:2; column-gap:26px; margin-top:4px;}
+  @media (max-width:520px){ .fgcols{columns:1;} }
+  .fgrow{break-inside:avoid; display:flex; align-items:baseline; gap:8px; padding:7px 8px; border-bottom:1px solid var(--book-line); border-radius:3px;}
+  .fgrow .fgdot{width:7px; height:7px; border-radius:50%; flex:0 0 auto; margin-top:5px; background:transparent; box-shadow:inset 0 0 0 1px var(--book-dim);}
+  .fgrow.canon .fgdot{background:var(--brass); box-shadow:none;}
+  .fgrow .fgn{font-family:'Fraunces',serif; font-weight:600; font-size:14px; color:var(--book-ink);}
+  .fgrow .fgp{font-family:'Archivo',sans-serif; font-size:9.5px; letter-spacing:.04em; color:var(--book-dim); font-weight:600;}
+  .fgrow .fgd{font-family:'Literata',Georgia,serif; font-size:11.5px; color:var(--book-dim); line-height:1.35; display:block; width:100%;}
+  .fgrow.mine{background:rgba(195,154,91,.22); box-shadow:inset 0 0 0 1.5px var(--brass);}
+  .fgrow.adj{background:rgba(195,154,91,.08);}
+  .fgtxt{flex:1;}
+  /* Result action buttons */
+  .book .btn.book-primary{background:var(--brass); color:#2A2118; border:none; font-weight:700; text-align:center; letter-spacing:.03em;}
+  .book .btn.book-ghost{background:transparent; color:var(--gold-ink); border:1px solid rgba(122,91,49,.4); text-align:center;}
+  .submitstatus{font-family:'Archivo',sans-serif; font-size:12.5px; text-align:center; margin:12px 0 0; color:var(--book-dim);}
+  .submitstatus.ok{color:var(--field);} .submitstatus.err{color:var(--soma);}
+  .book details{margin-top:16px;} .book details summary{cursor:pointer; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--book-dim); font-weight:600;}
+  .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
+  .consentline{display:flex; gap:10px; align-items:flex-start; margin:14px 0 4px; font-size:12.5px; line-height:1.45;}
+  .consentline input{width:20px; height:20px; accent-color:var(--brass); flex:0 0 auto; margin-top:1px;}
+  /* Print */
+  @media print{
+    html,body{background:#fff !important; color:#000 !important;}
+    header, .prog, .btn, .btnrow, details, .stagecount{display:none !important;}
+    .book{background:#fff !important; color:#000 !important; border-color:#999 !important; margin:0 !important; padding:14px 0 !important; break-inside:avoid;}
+    .wrap{max-width:100%; padding:0;}
+    .submitstatus{display:none !important;}
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">The Genius Index</div>
+      <div class="sub">Pilot Instrument v1.0 · E.A.T. Media</div>
+    </div>
+    <div class="glyph" id="glyphHead" aria-hidden="true"></div>
+  </header>
+  <div class="prog" id="prog" hidden><i id="progFill" style="width:0%"></i></div>
+  <div id="stage" aria-live="polite"></div>
+</div>
+
+<script>
+"use strict";
+/* ============ CONFIG ============ */
+/* Paste your Google Apps Script Web-App URL here to collect anonymized results.
+   Leave empty ("") and submission is skipped silently. See data-collection-setup.md. */
+const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9Lj6Cbi3HL_nhcLe2yPSvTOzutv35GJknxVh2wbqUXDDFcQ4/exec";
+
+/* ============ DATA ============ */
+const DOMAINS = [
+ {id:"KIN", code:"KI", name:"Kinetic",    meta:"soma",  cell:0},
+ {id:"SEN", code:"SE", name:"Sensory",    meta:"soma",  cell:1},
+ {id:"ADP", code:"AD", name:"Adaptive",   meta:"soma",  cell:2},
+ {id:"ANL", code:"AN", name:"Analytic",   meta:"mind",  cell:3},
+ {id:"MEM", code:"ME", name:"Mnemonic",   meta:"mind",  cell:4},
+ {id:"GEN", code:"GE", name:"Generative", meta:"mind",  cell:5},
+ {id:"REL", code:"RE", name:"Relational", meta:"field", cell:6},
+ {id:"EXP", code:"EX", name:"Expressive", meta:"field", cell:7},
+ {id:"PER", code:"PE", name:"Perceptive", meta:"field", cell:8},
+];
+const FREQ = ["Never","Rarely","Sometimes","Often","Almost always"];
+const AGREE = ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"];
+
+const A = { // 5 per domain; index 3 = reverse-keyed
+ KIN:["After seeing a physical sequence once — a dance step, a golf swing, a handshake — you reproduce it accurately within two attempts.",
+  "A physical skill you haven't touched in years comes back to your body within minutes, not weeks.",
+  "Learning a new sport or movement, you need far fewer repetitions than the people around you to get the basics.",
+  "You feel clumsy copying physical movements and have to be shown several times.",
+  "People remark that you \u201cpick things up fast\u201d physically — an instrument, a tool, a technique."],
+ SEN:["You notice when a cover song, karaoke track, or live singer is pitched slightly off from the original.",
+  "You detect subtle differences others miss — near shades of color, flavors in a dish, faint background sounds.",
+  "You can identify a song within its first second or two.",
+  "Fine sensory differences — close colors, faint off-notes, subtle flavors — generally pass you by.",
+  "A specific smell, taste, or sound instantly returns you to a precise memory."],
+ ADP:["People are surprised by how far your joints (wrists, elbows, fingers, or more) bend.",
+  "You recover from hard physical exertion faster than the people you did it with.",
+  "You hold your breath, sustain wind, or control your breathing notably longer than peers.",
+  "Physically, you tire or need recovery sooner than others doing the same activity.",
+  "You tolerate conditions others struggle with — heat, cold, discomfort, long duration."],
+ ANL:["You spot the error — in a bill, a spreadsheet, a schedule, an argument — that everyone else missed.",
+  "You see several moves ahead: you anticipate how a situation or system will play out.",
+  "You run multi-step math or estimates in your head faster than others reach for a calculator.",
+  "Number-heavy or highly complex problems make you want to hand them to someone else.",
+  "You naturally find the more efficient route, process, or solution."],
+ MEM:["You recall conversations, pages, or details close to word-for-word after one exposure.",
+  "You remember specific dates and days — and what happened on them — going years back.",
+  "You lock a name to a face after meeting someone once.",
+  "Names, numbers, and details slip away soon after you hear them.",
+  "You memorize sequences — numbers, routes, steps, lyrics — with little effort."],
+ GEN:["You produce more ideas than you can use, without trying hard.",
+  "You connect ideas from completely different fields into something new.",
+  "You improvise well on the spot — words, music, solutions, jokes.",
+  "Faced with a blank page or an open brief, you struggle to generate options.",
+  "You reshape or remix existing things into something that feels original."],
+ REL:["Within ten minutes of meeting you, strangers tell you things they say they \u201cdon't usually tell people.\u201d",
+  "You read the mood or tension in a room within moments of entering.",
+  "You calm charged situations and bring the temperature down between people.",
+  "You're often surprised by how people were really feeling — you missed the signals.",
+  "You sense what someone actually wants, beneath what they say."],
+ EXP:["When you speak to a group, you feel them lock in and follow you.",
+  "You make complicated things clear and simple for other people.",
+  "You're at ease and effective on camera or on a stage.",
+  "Speaking in front of others, your delivery tends to lose people.",
+  "You can make an audience feel a specific emotion you intend — laugh, still, moved."],
+ PER:["You keep your orientation — you know which way is which and can retrace a route — without a map.",
+  "You notice small changes in a space: what moved, what's new, what's off.",
+  "You accurately sense how much time has passed without checking a clock.",
+  "You get turned around easily and lose track of where things are around you.",
+  "You pick up when \u201csomething isn't right\u201d in a place or situation before others do."]
+};
+const C = { // 3 per domain, Likert
+ KIN:["I'm comfortable performing physical skills while people watch.","I'd rather learn by doing with my body than by reading about it.","I stick with physical practice until my body gets it right."],
+ SEN:["I get absorbed in fine sensory detail — sound, color, taste, texture.","Small imperfections in what I see or hear bother me until they're fixed.","I seek out rich sensory experiences on purpose."],
+ ADP:["I push my body's limits and enjoy the challenge.","I keep going physically when others tap out.","I build physical capacity through steady, progressive effort."],
+ ANL:["I enjoy taking complex problems apart to see how they work.","I double-check logic and numbers others take on faith.","I look for the underlying system behind what I'm seeing."],
+ MEM:["I trust my memory over my notes.","I enjoy drilling things until I can recall them cold.","I naturally build tricks and associations to remember things."],
+ GEN:["I'd rather make something new than perfect something that exists.","My mind jumps between unrelated ideas and links them.","Constraints make me more inventive, not less."],
+ REL:["I'm energized by reading and connecting with people.","I naturally attend to how others are feeling.","I adjust my approach to fit whoever I'm with."],
+ EXP:["I come alive with an audience in front of me.","I care about how a message is delivered, not just what it says.","I'll take the mic or the stage when the moment calls for it."],
+ PER:["I scan and stay aware of my surroundings by default.","I notice when the details of a place don't add up.","I keep a running mental map of where I am."]
+};
+const SDR = ["I have never exaggerated a skill to impress someone.","Every new skill I've tried, I've been good at immediately."];
+
+/* Micro-test fixtures (deterministic for pilot comparability) */
+const KIN_SEQ = [2,0,3,1,2,1]; // pad indices: 0↑ 1→ 2↓ 3←
+const PITCH_TRIALS = [ {base:440,cents:50},{base:392,cents:-30},{base:330,cents:20},{base:494,cents:-10},{base:262,cents:0} ];
+const MEM_TARGETS = ["river","candle","hammer","orange","window","thunder","basket","mirror","garden","pillow","rocket","bridge"];
+const MEM_RECOG = ["lantern","river","shovel","candle","lemon","hammer","window","curtain","thunder","lightning","basket","bucket","mirror","shadow","orange","garden","meadow","pillow","blanket","rocket","engine","bridge","tunnel","forest"];
+const ANL_ITEMS = [
+ {q:"2, 6, 12, 20, 30, ?", opts:["36","40","42","44"], k:2},
+ {q:"3, 5, 9, 17, 33, ?", opts:["63","65","66","67"], k:1},
+ {q:"A, C, F, J, O, ?", opts:["S","T","U","V"], k:2},
+ {q:"81, 27, 9, 3, ?", opts:["0","1","2","1.5"], k:1}
+];
+const REL_ITEMS = [
+ {q:"A teammate who usually jokes around goes short-answer all day, keeps their camera off, and says \u201cit's fine\u201d after being passed over for a lead role. Most likely, they are:",
+  opts:["Just busy today","Hurt and pulling back","Angry specifically at you","Relaxed and content"], k:1},
+ {q:"At a dinner, one guest keeps glancing at the door and answers questions a beat late. Most likely, they are:",
+  opts:["Bored by the company","Expecting someone or preoccupied with something outside the room","Offended by the host","Feeling ill"], k:1},
+ {q:"In a meeting, two colleagues trade a quick glance every time a third person pitches an idea. Most likely, the two:",
+  opts:["Share a prior opinion about those ideas","Are checking the time","Haven't met each other","Agree enthusiastically with the pitch"], k:0},
+ {q:"A friend says \u201cI'm over it\u201d — while retelling the story, in detail, for the third time. Most likely, they are:",
+  opts:["Truly over it","Not over it","Testing your memory","Talking about something else"], k:1},
+ {q:"A new coworker laughs at every joke, agrees with everything, and asks no questions. Most likely, they are:",
+  opts:["Fully confident","Seeking acceptance and reading the room nervously","Uninterested in the job","Naturally silent"], k:1}
+];
+
+/* ============ BRAIDS (36 pairings from "The thirty-six braids") ============ */
+/* tier: C=Canonical Ten (gold) · S=Strong Pair · R=Rarest · Q=Quiet Few */
+const TIER_META = {
+ C:{label:"Canonical Ten", sub:"One of the ten combinations distinct enough to carry a name of its own."},
+ S:{label:"Strong Pair", sub:"One of twelve dependable braids — common enough to build on purpose."},
+ R:{label:"Rarest", sub:"One of the eleven you will meet least often — rarity is what makes it valuable."},
+ Q:{label:"Quiet Few", sub:"One of four subtle braids that live on the body and often pass without notice."}
+};
+const BRAIDS = [
+ {name:"The Craftsman",     pair:["KIN","SEN"], tier:"C", desc:"Skilled motion that makes a thing."},
+ {name:"The Performer",     pair:["KIN","EXP"], tier:"C", desc:"The body that communicates."},
+ {name:"The Connoisseur",   pair:["SEN","ANL"], tier:"C", rare:true, desc:"Detects the faint signal, then decodes it."},
+ {name:"The Translator",    pair:["ANL","EXP"], tier:"C", desc:"Turns the structure so other people see it."},
+ {name:"The Diagnostician", pair:["ANL","PER"], tier:"C", desc:"The anomaly, and the system it lives in."},
+ {name:"The Connector",     pair:["MEM","REL"], tier:"C", desc:"Never forgets a person; reads them too."},
+ {name:"The Storyteller",   pair:["GEN","EXP"], tier:"C", desc:"Makes the new thing and transmits it."},
+ {name:"The Leader",        pair:["REL","EXP"], tier:"C", desc:"Reads people and moves them."},
+ {name:"The Instrument",    pair:["ADP","EXP"], tier:"C", desc:"Bodily capacity serving the voice."},
+ {name:"The Documentarian", pair:["PER","EXP"], tier:"C", desc:"Sees what others miss; makes you see it."},
+ {name:"The Natural",       pair:["KIN","ADP"], tier:"S", desc:"Outlasts the room; fast skill uptake."},
+ {name:"The Tactician",     pair:["KIN","ANL"], tier:"S", desc:"Moves while reading the play."},
+ {name:"The Virtuoso",      pair:["KIN","MEM"], tier:"S", desc:"Skilled motion, memorized repertoire."},
+ {name:"The Healer",        pair:["KIN","REL"], tier:"S", desc:"Skilled hands reading the body."},
+ {name:"The Composer",      pair:["SEN","GEN"], tier:"S", desc:"Invents new sensory forms."},
+ {name:"The Empath",        pair:["SEN","REL"], tier:"S", desc:"Reads human signal at high resolution."},
+ {name:"The Stylist",       pair:["SEN","EXP"], tier:"S", desc:"Transmits through refined sensory craft."},
+ {name:"The Tracker",       pair:["SEN","PER"], tier:"S", desc:"The faint sign within the whole scene."},
+ {name:"The Optimizer",     pair:["ADP","ANL"], tier:"S", desc:"Systematically engineers the body."},
+ {name:"The Caregiver",     pair:["ADP","REL"], tier:"S", desc:"Endurance in service of reading people."},
+ {name:"The Explorer",      pair:["ADP","PER"], tier:"S", desc:"Endures and reads harsh terrain."},
+ {name:"The Witness",       pair:["MEM","PER"], tier:"S", desc:"Sees the scene, records it exactly."},
+ {name:"The Maker",         pair:["KIN","GEN"], tier:"R", desc:"Invents in physical media."},
+ {name:"The Athlete",       pair:["KIN","PER"], tier:"R", desc:"Reads the field, answers with the body."},
+ {name:"The Scholar",       pair:["ANL","MEM"], tier:"R", desc:"Structured mastery of a knowledge domain."},
+ {name:"The Inventor",      pair:["ANL","GEN"], tier:"R", desc:"Novel ideas disciplined by analysis."},
+ {name:"The Negotiator",    pair:["ANL","REL"], tier:"R", desc:"Reads the situation and the people."},
+ {name:"The Synthesizer",   pair:["MEM","GEN"], tier:"R", desc:"Remembers a vast store, mixes the new."},
+ {name:"The Bard",          pair:["MEM","EXP"], tier:"R", desc:"Holds and transmits a deep well."},
+ {name:"The Entertainer",   pair:["GEN","REL"], tier:"R", desc:"Invents in real time, to the crowd."},
+ {name:"The Visionary",     pair:["GEN","PER"], tier:"R", desc:"Reads the emerging field, invents in it."},
+ {name:"The Diplomat",      pair:["REL","PER"], tier:"R", desc:"Reads the person and the whole social field."},
+ {name:"The Adept",         pair:["SEN","ADP"], tier:"Q", desc:"Reflex-fast tuning, held with control."},
+ {name:"The Aesthete",      pair:["SEN","MEM"], tier:"Q", desc:"Deep memory for sensory signatures."},
+ {name:"The Veteran",       pair:["ADP","MEM"], tier:"Q", desc:"Durability plus accumulated memory."},
+ {name:"The Daredevil",     pair:["ADP","GEN"], tier:"Q", desc:"Invents at the body's edge."}
+];
+const braidKey = (a,b)=> [a,b].sort().join("|");
+const BRAID_BY_KEY = {};
+BRAIDS.forEach(br=>{ BRAID_BY_KEY[braidKey(br.pair[0],br.pair[1])] = br; });
+function braidFor(a,b){ return BRAID_BY_KEY[braidKey(a,b)] || null; }
+
+/* ============ STATE ============ */
+const S = {
+ code:"", consent:true, respA:{}, respC:{}, respSDR:[null,null],
+ B:{}, Braw:{}, ranksTop:[], ranksBot:[],
+ flowIdx:0, started:Date.now()
+};
+DOMAINS.forEach(d=>{S.respA[d.id]=[null,null,null,null,null]; S.respC[d.id]=[null,null,null];});
+
+/* Inventory flow: round-robin A (rows), SDR inserted, then round-robin C */
+const FLOW = [];
+for(let i=0;i<5;i++){ DOMAINS.forEach(d=>FLOW.push({t:"A",d:d.id,i})); }
+FLOW.splice(22,0,{t:"S",i:0}); FLOW.splice(53,0,{t:"S",i:1});
+for(let i=0;i<3;i++){ DOMAINS.forEach(d=>FLOW.push({t:"C",d:d.id,i})); }
+
+/* ============ HELPERS ============ */
+const $ = id=>document.getElementById(id);
+const stage = ()=>$("stage");
+function h(html){ stage().innerHTML = html; window.scrollTo({top:0}); }
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function setProg(p){ $("prog").hidden=false; $("progFill").style.width=(p*100).toFixed(1)+"%"; }
+function litCells(n){ const g=$("glyphHead").children; for(let i=0;i<9;i++) g[i].classList.toggle("lit", i<n); }
+(function(){ const g=$("glyphHead"); for(let i=0;i<9;i++) g.appendChild(document.createElement("div")); })();
+
+/* ============ SCREEN: INTRO ============ */
+function intro(){
+ h(`
+  <h1>Everybody carries a genius.<br>This locates yours.</h1>
+  <p class="dim" style="margin:14px 0 4px">81 items and nine short stations. About 25–35 minutes. Nothing here measures intelligence — the Index locates where ability comes easiest to you, so it can be named and grown. <em>Identify to amplify.</em></p>
+  <div class="card">
+    <h3>How to take it honestly</h3>
+    <p class="small">1 · Answer for how things <strong>actually happen</strong>, not how you'd like them to.<br>
+    2 · \u201cAlmost always\u201d should be rare. If everything is a strength, nothing is.<br>
+    3 · The stations check your answers against performance. Gaps aren't failure — they're findings.<br>
+    4 · There are no good or bad domains. There is only yours, named or unnamed.</p>
+  </div>
+  <label class="small dim" for="pcode">Participant code (optional — for pilot tracking)</label>
+  <input type="text" id="pcode" placeholder="e.g., ABE-014" autocomplete="off" style="margin:6px 0 14px">
+  <label class="checkline" style="border:none; padding:4px 0 12px; align-items:flex-start">
+    <input type="checkbox" id="consent" checked style="margin-top:2px">
+    <span class="small">Contribute my <strong>anonymized</strong> results to the Genius Index validation study. No name, email, or account is collected — only your answers and computed scores. Uncheck to keep everything on this device.</span>
+  </label>
+  <button class="btn primary" onclick="S.code=$('pcode').value.trim(); S.consent=$('consent').checked; part1();">Begin Part 1 · The Inventory</button>
+  <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and, with your consent above, are added anonymously to the study":""}. You'll get your full results chart at the end.</p>
+ `);
+}
+
+/* ============ SCREEN: PART 1 INVENTORY ============ */
+function part1(){ S.flowIdx=0; busy=true; renderQ(); }
+function renderQ(){
+ if(S.flowIdx>=FLOW.length){ stationIntro(); return; }
+ const f=FLOW[S.flowIdx];
+ setProg(S.flowIdx/FLOW.length*0.55);
+ const domDone = Math.floor(S.flowIdx/FLOW.length*9); litCells(Math.min(domDone, 4));
+ let text, scale;
+ if(f.t==="A"){ text=A[f.d][f.i]; scale=FREQ; }
+ else if(f.t==="C"){ text=C[f.d][f.i]; scale=AGREE; }
+ else { text=SDR[f.i]; scale=AGREE; }
+ const cur = f.t==="A"?S.respA[f.d][f.i] : f.t==="C"?S.respC[f.d][f.i] : S.respSDR[f.i];
+ h(`
+  <div class="stagecount">Part 1 · Item ${S.flowIdx+1} of ${FLOW.length}</div>
+  <div class="qtext">${esc(text)}</div>
+  ${scale.map((s,v)=>`<button class="btn ${cur===v?'sel':''}" onclick="answer(${v})">${s}</button>`).join("")}
+  <div class="btnrow">
+   <button class="btn ghost" ${S.flowIdx===0?"disabled":""} onclick="S.flowIdx--; renderQ();">Back</button>
+  </div>
+ `);
+}
+function answer(v){
+ const f=FLOW[S.flowIdx];
+ if(f.t==="A") S.respA[f.d][f.i]=v;
+ else if(f.t==="C") S.respC[f.d][f.i]=v;
+ else S.respSDR[f.i]=v;
+ S.flowIdx++; renderQ();
+}
+
+/* ============ STATIONS ============ */
+const STATION_SEQ = ["KIN","SEN","MEMSTUDY","ANL","MEMRECALL","GEN","REL","EXP","ADP","PER"];
+let stIdx=0;
+function stationIntro(){
+ setProg(0.56); litCells(4);
+ h(`
+  <h2>Part 2 · The Nine Stations</h2>
+  <p class="dim">Short performance probes — one per domain. These verify Part 1 against what your body, memory, and senses actually do. Find a quiet spot. No preparation, no retries.</p>
+  <div class="card small"><strong>Note:</strong> two stations involve light physical checks. Stop at any discomfort. Never attempt the breath-hold in water or while standing.</div>
+  <button class="btn primary" onclick="stIdx=0; nextStation();">Start stations</button>
+ `);
+}
+function nextStation(){
+ if(stIdx>=STATION_SEQ.length){ ranking(); return; }
+ setProg(0.56 + 0.34*(stIdx/STATION_SEQ.length));
+ litCells(4 + Math.floor(stIdx/10*5));
+ const s=STATION_SEQ[stIdx];
+ ({KIN:stKIN,SEN:stSEN,MEMSTUDY:stMEMstudy,ANL:stANL,MEMRECALL:stMEMrecall,GEN:stGEN,REL:stREL,EXP:stEXP,ADP:stADP,PER:stPER})[s]();
+}
+function completeStation(dom, norm, raw){
+ S.B[dom]=Math.max(0,Math.min(1,norm)); S.Braw[dom]=raw;
+ stIdx++; nextStation();
+}
+function skipStation(dom){ // leaves S.B[dom] undefined -> results() falls back to self-report weighting
+ S.Braw[dom]="skipped"; stIdx++; nextStation();
+}
+
+/* --- KIN: sequence reproduction --- */
+function stKIN(){
+ h(`
+  <div class="stagecount">Station 1 of 9 · Kinetic</div>
+  <h2>Sequence reproduction</h2>
+  <p class="dim small">A 6-step pattern will flash on the pad — twice. Then repeat it from memory by tapping.</p>
+  <div class="padgrid" id="pad"></div>
+  <button class="btn primary" id="kinGo">Show the pattern</button>
+  <p class="small dim" id="kinMsg"></p>
+ `);
+ const arrows=["\u2191","\u2192","\u2193","\u2190"]; const pad=$("pad");
+ arrows.forEach((a,i)=>{ const b=document.createElement("button"); b.className="pad"; b.textContent=a; b.dataset.i=i; b.disabled=true; pad.appendChild(b); });
+ let input=[];
+ $("kinGo").onclick=()=>{
+  $("kinGo").disabled=true; $("kinMsg").textContent="Watch\u2026";
+  let seq=[...KIN_SEQ,...KIN_SEQ], t=0;
+  const play=()=>{ if(t>=seq.length){ inputPhase(); return; }
+   const b=pad.children[seq[t]]; b.classList.add("flash");
+   setTimeout(()=>{ b.classList.remove("flash"); t++; setTimeout(play, t===KIN_SEQ.length?700:200); },550); };
+  play();
+ };
+ function inputPhase(){
+  $("kinMsg").textContent="Your turn — tap the 6 steps in order.";
+  [...pad.children].forEach(b=>{ b.disabled=false; b.onclick=()=>{ input.push(+b.dataset.i);
+   b.classList.add("flash"); setTimeout(()=>b.classList.remove("flash"),150);
+   if(input.length===6){ let c=0; for(let i=0;i<6;i++) if(input[i]===KIN_SEQ[i]) c++;
+    [...pad.children].forEach(x=>x.disabled=true);
+    $("kinMsg").innerHTML=`Recorded: <strong>${c}/6</strong> in position.`;
+    setTimeout(()=>completeStation("KIN", c/6, c+"/6"), 900); } }; });
+ }
+}
+
+/* --- SEN: pitch match (Web Audio) --- */
+function stSEN(){
+ let trial=0, correct=0, ctx=null;
+ function tone(f,when,dur){ const o=ctx.createOscillator(), g=ctx.createGain();
+  o.type="sine"; o.frequency.value=f; o.connect(g); g.connect(ctx.destination);
+  g.gain.setValueAtTime(0.0001,when); g.gain.exponentialRampToValueAtTime(0.25,when+0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001,when+dur); o.start(when); o.stop(when+dur+0.05); }
+ function render(){
+  if(trial>=PITCH_TRIALS.length){ completeStation("SEN", correct/5, correct+"/5"); return; }
+  h(`
+   <div class="stagecount">Station 2 of 9 · Sensory</div>
+   <h2>Pitch match · trial ${trial+1} of 5</h2>
+   <p class="dim small">Two tones will play. Use earphones or a quiet room. Was the second tone higher, lower, or the same?</p>
+   <button class="btn primary" id="playT">Play tones</button>
+   <div class="btnrow">
+    <button class="btn" id="hi" disabled>Higher</button>
+    <button class="btn" id="same" disabled>Same</button>
+    <button class="btn" id="lo" disabled>Lower</button>
+   </div>
+   <p class="small dim" id="senMsg"></p>
+   <button class="btn ghost" id="senSkip">No sound on this device — skip station</button>
+  `);
+  $("senSkip").onclick=()=>skipStation("SEN");
+  $("playT").onclick=()=>{
+   try{
+    if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+    ctx.resume && ctx.resume();
+    const t=PITCH_TRIALS[trial], f2=t.base*Math.pow(2,t.cents/1200), now=ctx.currentTime+0.05;
+    tone(t.base,now,0.7); tone(f2,now+1.0,0.7);
+    ["hi","same","lo"].forEach(id=>$(id).disabled=false);
+   }catch(err){ $("senMsg").textContent="Audio isn't available in this browser — use “skip station” below."; }
+  };
+  const key = PITCH_TRIALS[trial].cents>0?"hi":PITCH_TRIALS[trial].cents<0?"lo":"same";
+  ["hi","same","lo"].forEach(id=>{ $(id).onclick=()=>{ if(id===key) correct++; trial++; render(); }; });
+ }
+ render();
+}
+
+/* --- MEM study --- */
+function stMEMstudy(){
+ let t=45;
+ h(`
+  <div class="stagecount">Station 3 of 9 · Mnemonic — part one</div>
+  <h2>Study these twelve words</h2>
+  <p class="dim small">You'll be asked about them after the next station. 45 seconds.</p>
+  <div class="memgrid">${MEM_TARGETS.map(w=>`<div class="btn" style="cursor:default">${w}</div>`).join("")}</div>
+  <div class="timer" id="memT">45</div>
+  <button class="btn ghost" onclick="clearInterval(window._memI); stIdx++; nextStation();">I'm ready early</button>
+ `);
+ window._memI=setInterval(()=>{ t--; $("memT").textContent=t;
+  if(t<=0){ clearInterval(window._memI); stIdx++; nextStation(); } },1000);
+}
+
+/* --- ANL: pattern set (doubles as MEM distractor) --- */
+function stANL(){
+ let i=0, correct=0, t=90;
+ function render(){
+  if(i>=ANL_ITEMS.length){ clearInterval(window._anlI); completeStation("ANL", correct/4, correct+"/4"); return; }
+  const it=ANL_ITEMS[i];
+  h(`
+   <div class="stagecount">Station 4 of 9 · Analytic</div>
+   <h2>What comes next?</h2>
+   <div class="timer" id="anlT">${t}</div>
+   <div class="qtext" style="text-align:center; letter-spacing:.06em">${it.q}</div>
+   ${it.opts.map((o,v)=>`<button class="btn" onclick="window._anlA(${v})">${o}</button>`).join("")}
+  `);
+ }
+ window._anlA=(v)=>{ if(v===ANL_ITEMS[i].k) correct++; i++; render(); };
+ window._anlI=setInterval(()=>{ t--; const el=$("anlT"); if(el) el.textContent=t;
+  if(t<=0){ clearInterval(window._anlI); completeStation("ANL", correct/4, correct+"/4 (time)"); } },1000);
+ render();
+}
+
+/* --- MEM recall (recognition w/ false-alarm penalty) --- */
+function stMEMrecall(){
+ const picked=new Set();
+ h(`
+  <div class="stagecount">Station 5 of 9 · Mnemonic — part two</div>
+  <h2>Which words did you study?</h2>
+  <p class="dim small">Tap every word you saw earlier. Twelve were shown; twelve are new. Guessing costs you.</p>
+  <div class="memgrid" id="recog">${MEM_RECOG.map(w=>`<button class="btn" data-w="${w}">${w}</button>`).join("")}</div>
+  <button class="btn primary" id="memDone">Lock answers</button>
+ `);
+ [...$("recog").children].forEach(b=>{ b.onclick=()=>{ const w=b.dataset.w;
+  picked.has(w)?picked.delete(w):picked.add(w); b.classList.toggle("sel"); }; });
+ $("memDone").onclick=()=>{
+  let hits=0, fa=0; picked.forEach(w=> MEM_TARGETS.includes(w)?hits++:fa++);
+  const score=Math.max(0,hits-fa);
+  completeStation("MEM", score/12, `hits ${hits} · false ${fa}`);
+ };
+}
+
+/* --- GEN: alternative uses --- */
+function stGEN(){
+ let t=90;
+ h(`
+  <div class="stagecount">Station 6 of 9 · Generative</div>
+  <h2>Uses for a brick</h2>
+  <p class="dim small">90 seconds. List as many <em>different</em> uses for a brick as you can — one per line. Distinct ideas count; repeats don't.</p>
+  <div class="timer" id="genT">90</div>
+  <textarea id="genBox" rows="8" placeholder="doorstop&#10;paperweight&#10;\u2026"></textarea>
+  <button class="btn ghost" onclick="window._genEnd()">Stop early</button>
+ `);
+ $("genBox").focus();
+ window._genEnd=()=>{ clearInterval(window._genI);
+  const lines=[...new Set($("genBox").value.split("\n").map(x=>x.trim().toLowerCase()).filter(Boolean))];
+  completeStation("GEN", Math.min(lines.length,12)/12, lines.length+" uses"); };
+ window._genI=setInterval(()=>{ t--; const el=$("genT"); if(el) el.textContent=t; if(t<=0) window._genEnd(); },1000);
+}
+
+/* --- REL: cue reading vignettes --- */
+function stREL(){
+ let i=0, correct=0;
+ function render(){
+  if(i>=REL_ITEMS.length){ completeStation("REL", correct/5, correct+"/5"); return; }
+  const it=REL_ITEMS[i];
+  h(`
+   <div class="stagecount">Station 7 of 9 · Relational</div>
+   <h2>Read the moment · ${i+1} of 5</h2>
+   <div class="qtext" style="font-size:18px">${esc(it.q)}</div>
+   ${it.opts.map((o,v)=>`<button class="btn" onclick="window._relA(${v})">${o}</button>`).join("")}
+   <p class="small dim">Scored against consensus reads. Text-based v1 — media version follows the pilot.</p>
+  `);
+ }
+ window._relA=(v)=>{ if(v===REL_ITEMS[i].k) correct++; i++; render(); };
+ render();
+}
+
+/* --- EXP: 60-second impromptu --- */
+function stEXP(){
+ let t=60, phase=0;
+ function ratePhase(){
+  h(`
+   <div class="stagecount">Station 8 of 9 · Expressive</div>
+   <h2>Rate your run — honestly</h2>
+   <p class="dim small">The Index only works unclouded. Score what happened, not what you hoped.</p>
+   <h3>Clarity</h3>
+   <button class="btn" onclick="window._expC(0)">0 · I wandered or didn't finish the idea</button>
+   <button class="btn" onclick="window._expC(1)">1 · Mostly clear, some stumbles</button>
+   <button class="btn" onclick="window._expC(2)">2 · Clear from first line to last</button>
+   <div id="holdBlock" hidden>
+    <h3 style="margin-top:14px">Hold</h3>
+    <button class="btn" onclick="window._expH(0)">0 · Flat — a listener would drift</button>
+    <button class="btn" onclick="window._expH(1)">1 · Some pull</button>
+    <button class="btn" onclick="window._expH(2)">2 · A listener would stay with me</button>
+   </div>
+  `);
+  let c=null;
+  window._expC=(v)=>{ c=v; $("holdBlock").hidden=false; };
+  window._expH=(hv)=>{ completeStation("EXP",(c+hv)/4,`clarity ${c} · hold ${hv} (self)`); };
+ }
+ h(`
+  <div class="stagecount">Station 8 of 9 · Expressive</div>
+  <h2>Sixty seconds, out loud</h2>
+  <p class="dim small">Prompt: <strong>Explain to a ten-year-old why the sky is blue.</strong> Speak aloud — to the room, a mirror, or a voice memo. Start the clock when you start talking.</p>
+  <div class="timer" id="expT">60</div>
+  <button class="btn primary" id="expGo">Start the clock</button>
+ `);
+ $("expGo").onclick=function(){
+  this.disabled=true;
+  window._expI=setInterval(()=>{ t--; $("expT").textContent=t;
+   if(t<=0){ clearInterval(window._expI); ratePhase(); } },1000);
+ };
+}
+
+/* --- ADP: hypermobility + breath --- */
+function stADP(){
+ const checks=["Left little finger bends back past 90\u00b0","Right little finger bends back past 90\u00b0","Left thumb touches forearm","Right thumb touches forearm","Left elbow extends beyond straight","Right elbow extends beyond straight","Left knee extends beyond straight","Right knee extends beyond straight","Palms flat on floor, knees straight"];
+ let hold=0, holding=false, hi=null;
+ h(`
+  <div class="stagecount">Station 9a · Adaptive</div>
+  <h2>Body screen</h2>
+  <p class="dim small">Check what's true for you (gently — never force a joint):</p>
+  <div id="bx">${checks.map((c,i)=>`<label class="checkline"><input type="checkbox" data-i="${i}"> ${c}</label>`).join("")}</div>
+  <h3 style="margin-top:16px">Breath-hold</h3>
+  <p class="small dim">Seated. Normal breath in, hold, stop at the first strong urge. \u26a0 Never in water, never standing, never past discomfort.</p>
+  <div class="timer" id="bhT">0.0</div>
+  <button class="btn" id="bhBtn">Start hold</button>
+  <button class="btn primary" id="adpDone">Finish station</button>
+ `);
+ $("bhBtn").onclick=function(){
+  if(!holding){ holding=true; this.textContent="Stop — I breathed"; const t0=Date.now();
+   hi=setInterval(()=>{ hold=(Date.now()-t0)/1000; $("bhT").textContent=hold.toFixed(1); },100);
+  } else { holding=false; clearInterval(hi); this.disabled=true; }
+ };
+ $("adpDone").onclick=()=>{
+  if(holding){ clearInterval(hi); }
+  const b=[...document.querySelectorAll("#bx input")].filter(x=>x.checked).length;
+  const norm=0.6*(b/9)+0.4*(Math.min(hold,90)/90);
+  completeStation("ADP", norm, `Beighton ${b}/9 · hold ${hold.toFixed(0)}s`);
+ };
+}
+
+/* --- PER: orientation + time sense --- */
+function stPER(){
+ let north=null, exit=null, est=null, t0=null;
+ function score(){
+  if(north===null||exit===null||est===null) return;
+  const err=Math.abs(est-30), pts=(err<=2?2:err<=5?1:0)+north+exit;
+  completeStation("PER", pts/4, `north ${north} · exit ${exit} · est ${est.toFixed(1)}s`);
+ }
+ h(`
+  <div class="stagecount">Station 9b · Perceptive</div>
+  <h2>Orientation & time</h2>
+  <h3>1 · Point north</h3>
+  <p class="small dim">Physically point where you believe north is. Then check a compass app.</p>
+  <div class="btnrow">
+   <button class="btn" onclick="window._pn(1,this)">I was right (\u00b145\u00b0)</button>
+   <button class="btn" onclick="window._pn(0,this)">Off / unsure</button>
+  </div>
+  <h3 style="margin-top:14px">2 · The last building</h3>
+  <p class="small dim">Picture the last building you were in, other than home. From where you sat or stood — where was the nearest exit? Verify from memory or a map.</p>
+  <div class="btnrow">
+   <button class="btn" onclick="window._px(1,this)">Placed it correctly</button>
+   <button class="btn" onclick="window._px(0,this)">Couldn't place it</button>
+  </div>
+  <h3 style="margin-top:14px">3 · Thirty seconds, no counting</h3>
+  <p class="small dim">Press start, look away from the screen, press stop when you feel 30 seconds have passed. Don't count.</p>
+  <button class="btn" id="perT">Start</button>
+  <p class="small dim" id="perMsg"></p>
+ `);
+ window._pn=(v,el)=>{ north=v; [...el.parentElement.children].forEach(b=>b.classList.remove("sel")); el.classList.add("sel"); score(); };
+ window._px=(v,el)=>{ exit=v; [...el.parentElement.children].forEach(b=>b.classList.remove("sel")); el.classList.add("sel"); score(); };
+ $("perT").onclick=function(){
+  if(t0===null){ t0=Date.now(); this.textContent="Stop at 30"; }
+  else { est=(Date.now()-t0)/1000; this.disabled=true;
+   $("perMsg").textContent=`You stopped at ${est.toFixed(1)}s.`; score(); }
+ };
+}
+
+/* ============ RANKING ============ */
+function ranking(){
+ setProg(0.93); litCells(9);
+ const desc={KIN:"Body & movement",SEN:"Senses & perception",ADP:"Physical adaptation",ANL:"Analysis & systems",MEM:"Memory",GEN:"Idea generation",REL:"Reading people",EXP:"Expression & performance",PER:"Environmental awareness"};
+ let phase="top";
+ function render(){
+  const pool=DOMAINS.filter(d=>!S.ranksTop.includes(d.id)&&!S.ranksBot.includes(d.id));
+  h(`
+   <div class="stagecount">Part 3 · Forced ranking</div>
+   <h2>${phase==="top"?"Pick your TOP 3":"Now your BOTTOM 3"}</h2>
+   <p class="dim small">${phase==="top"?"The three that describe you most.":"The three that describe you least."} You can't rate everything high — that's the point.</p>
+   ${pool.map(d=>`<button class="btn" onclick="window._rk('${d.id}')">${d.name} — ${desc[d.id]}</button>`).join("")}
+   <p class="small dim">${phase==="top"?S.ranksTop.length:S.ranksBot.length} of 3 selected</p>
+  `);
+ }
+ window._rk=(id)=>{
+  if(phase==="top"){ S.ranksTop.push(id); if(S.ranksTop.length===3) phase="bot"; }
+  else { S.ranksBot.push(id); if(S.ranksBot.length===3){ results(); return; } }
+  render();
+ };
+ render();
+}
+
+/* ============ RESULTS HELPERS ============ */
+const realmColor = meta => meta==="soma"?"var(--soma)" : meta==="mind"?"var(--mind)" : "var(--field)";
+const realmHex   = meta => meta==="soma"?"#8C3B2E"     : meta==="mind"?"#54687C"     : "#4E6156";
+const domById = id => DOMAINS.find(d=>d.id===id);
+
+/* Personal constellation wheel (SVG). R = scores map, primaryKey + adjKeys highlight braids. */
+function buildWheel(R, primaryKey, adjKeys, primaryBraid){
+ const cx=312, cy=340, Rr=185;
+ const order=["EXP","PER","KIN","SEN","ADP","ANL","MEM","GEN","REL"];
+ const ang={}; order.forEach((id,i)=> ang[id]=-90+i*40);
+ const pos={}; order.forEach(id=>{ const a=ang[id]*Math.PI/180; pos[id]=[cx+Rr*Math.cos(a), cy+Rr*Math.sin(a)]; });
+ const polar=(r,deg)=>{ const a=deg*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
+ const arc=(r,a0,a1)=>{ const [x0,y0]=polar(r,a0),[x1,y1]=polar(r,a1); return `M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 ${(a1-a0)>180?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`; };
+ let svg=`<svg viewBox="0 0 624 640" role="img" aria-label="Your genius constellation">`;
+ svg+=`<path d="${arc(Rr+40,-30,90)}" fill="none" stroke="#8C3B2E" stroke-width="7" stroke-opacity=".75" stroke-linecap="round"/>`;
+ svg+=`<path d="${arc(Rr+40,90,210)}" fill="none" stroke="#54687C" stroke-width="7" stroke-opacity=".75" stroke-linecap="round"/>`;
+ svg+=`<path d="${arc(Rr+40,210,330)}" fill="none" stroke="#4E6156" stroke-width="7" stroke-opacity=".75" stroke-linecap="round"/>`;
+ const lbl=(txt,deg,col)=>{ const [x,y]=polar(Rr+62,deg); return `<text x="${x.toFixed(1)}" y="${(y+5).toFixed(1)}" text-anchor="middle" font-family="Archivo,sans-serif" font-size="15" font-weight="700" letter-spacing="3" fill="${col}">${txt}</text>`; };
+ svg+=lbl("SOMA",30,"#8C3B2E")+lbl("MIND",150,"#54687C")+lbl("FIELD",270,"#4E6156");
+ const chord=(k,br)=>{ const [a,b]=k.split("|"); const [x0,y0]=pos[a],[x1,y1]=pos[b];
+  let stroke="#8C7E69",w=1,op=.22;
+  if(br.tier==="C"){ stroke="#6E6150"; w=1.5; op=.42; }
+  if(adjKeys.has(k)){ stroke="#9A7440"; w=2.4; op=.72; }
+  if(k===primaryKey){ stroke="#B4832E"; w=4.5; op=.98; }
+  return {svg:`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${stroke}" stroke-width="${w}" stroke-opacity="${op}" stroke-linecap="round"/>`, top:(k===primaryKey||adjKeys.has(k))}; };
+ const cs=BRAIDS.map(br=>chord(braidKey(br.pair[0],br.pair[1]),br));
+ svg+=cs.filter(c=>!c.top).map(c=>c.svg).join("")+cs.filter(c=>c.top).map(c=>c.svg).join("");
+ if(primaryBraid){ const [a,b]=primaryKey.split("|"); const mx=(pos[a][0]+pos[b][0])/2, my=(pos[a][1]+pos[b][1])/2;
+  const w=primaryBraid.name.length*7.2+16;
+  svg+=`<g transform="translate(${mx.toFixed(1)} ${my.toFixed(1)})"><rect x="${(-w/2).toFixed(1)}" y="-11" width="${w.toFixed(1)}" height="22" rx="5" fill="#EFE7D6" stroke="#B4832E" stroke-width="1.3"/><text x="0" y="4.5" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="12.5" fill="#7A5B31">${primaryBraid.name}</text></g>`; }
+ order.forEach(id=>{ const d=domById(id), [x,y]=pos[id], sc=R[id].score;
+  const col=realmHex(d.meta), r=22+sc/100*7, op=(0.12+0.5*sc/100).toFixed(2);
+  const isTop=(id===primaryKey.split("|")[0]||id===primaryKey.split("|")[1]);
+  svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}" fill-opacity="${op}" stroke="${col}" stroke-width="${isTop?3:1.5}"/>`;
+  svg+=`<text x="${x.toFixed(1)}" y="${(y+1).toFixed(1)}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="13" fill="${col}">${d.code}</text>`;
+  svg+=`<text x="${x.toFixed(1)}" y="${(y+14).toFixed(1)}" text-anchor="middle" font-family="Archivo,sans-serif" font-size="9" font-weight="700" fill="${col}">${sc}</text>`;
+ });
+ svg+=`</svg>`;
+ return svg;
+}
+
+/* Triangular Complete Index Grid, personalized. */
+function buildGrid(R, primaryKey, adjKeys){
+ let rows="";
+ for(let r=0;r<9;r++){
+  let cells="";
+  for(let c=0;c<=r;c++){
+   if(c===r){ const d=DOMAINS[r];
+    cells+=`<td><div class="gcell" style="background:${realmColor(d.meta)};color:#EDE4D4"><span class="gn" style="opacity:.85">${d.code}</span><span class="gs">${R[d.id].score}</span></div></td>`;
+   } else { const br=braidFor(DOMAINS[r].id,DOMAINS[c].id), k=braidKey(DOMAINS[r].id,DOMAINS[c].id);
+    const canon=br.tier==="C"; const mine=k===primaryKey, adj=adjKeys.has(k);
+    const bg = mine?"rgba(195,154,91,.35)": canon?"rgba(195,154,91,.16)":"rgba(0,0,0,.03)";
+    const dotc = br.tier==="C"?"#B4832E":br.tier==="S"?"#4E6156":br.tier==="R"?"#8C3B2E":"#54687C";
+    cells+=`<td><div class="gcell ${mine?'mine':adj?'adj':''}" style="background:${bg}"><span class="gn" style="color:var(--book-ink)">${br.name.replace(/^The /,"")}</span><span class="gt" style="color:${dotc}">●</span></div></td>`;
+   }
+  }
+  rows+=`<tr>${cells}</tr>`;
+ }
+ return `<div class="gridscroll"><table class="igrid">${rows}</table></div>`;
+}
+
+/* Field guide: all 36, grouped by tier, personalized. */
+function buildFieldGuide(R, primaryKey, adjKeys){
+ const groups=[["C","The Canonical Ten"],["S","The Strong Pairs"],["R","The Rarest"],["Q","The Quiet Few"]];
+ let out="";
+ groups.forEach(([t,title])=>{
+  const items=BRAIDS.filter(b=>b.tier===t);
+  out+=`<div class="eyebrow-b" style="text-align:left;margin:14px 0 4px">${title}</div><div class="fgcols">`;
+  items.forEach(br=>{ const k=braidKey(br.pair[0],br.pair[1]);
+   const mine=k===primaryKey, adj=adjKeys.has(k);
+   const ps=(R[br.pair[0]].score+R[br.pair[1]].score)/2;
+   const op=mine?1:(0.5+0.5*ps/100).toFixed(2);
+   const codes=br.pair.map(id=>domById(id).code).join("·");
+   out+=`<div class="fgrow ${t==="C"?'canon':''} ${mine?'mine':adj?'adj':''}" style="opacity:${op}">
+     <span class="fgdot"></span><div class="fgtxt"><span class="fgn">${br.name}</span> <span class="fgp">${codes}</span><span class="fgd">${br.desc}${br.rare?" · also among the rarest":""}</span></div></div>`;
+  });
+  out+=`</div>`;
+ });
+ return out;
+}
+
+/* Anonymized submission to the study endpoint. */
+function submitResult(payload){
+ const el=$("submitStatus");
+ if(!SUBMIT_URL){ if(el){ el.textContent="This device only — no study endpoint configured yet."; } return; }
+ if(!S.consent){ if(el){ el.textContent="Not contributed — you opted out. Everything stayed on your device."; } return; }
+ if(el) el.textContent="Contributing anonymized results…";
+ fetch(SUBMIT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)})
+  .then(()=>{ if(el){ el.textContent="✓ Anonymized results contributed to the validation study. Thank you."; el.className="submitstatus ok"; } })
+  .catch(()=>{ if(el){ el.textContent="✗ Couldn't reach the study server. Your results are safe below — copy the data block and send it manually."; el.className="submitstatus err"; } });
+}
+
+/* ============ RESULTS ============ */
+function results(){
+ setProg(1); litCells(9); busy=false;
+ const R={};
+ DOMAINS.forEach(d=>{
+  const a=S.respA[d.id].map((v,i)=> i===3 ? 4-v : v).reduce((x,y)=>x+y,0); // reverse-key item 4
+  const c=S.respC[d.id].reduce((x,y)=>x+y,0);
+  const A100=a/20*100, C100=c/12*100;
+  const skipped = S.B[d.id]==null; // station skipped -> self-report only
+  const B100=(S.B[d.id]??0)*100;
+  const score = skipped ? Math.round((0.5*A100+0.2*C100)/0.7) : Math.round(0.5*A100+0.3*B100+0.2*C100);
+  R[d.id]={A:A100,B:B100,C:C100,score,skipped};
+ });
+ const sorted=[...DOMAINS].sort((x,y)=>R[y.id].score-R[x.id].score);
+ const scores=sorted.map(d=>R[d.id].score);
+ const median=scores.slice().sort((a,b)=>a-b)[4];
+ const isSig=d=> R[d.id].score>=70 && R[d.id].score>=median+10;
+ let sig=sorted.filter(isSig).slice(0,2);
+ if(sig.length===0) sig.push(sorted[0]);
+ const braidDoms = sig.length>=2 ? [sig[0],sig[1]] : [sorted[0], sorted[1]];
+ const primary = braidFor(braidDoms[0].id, braidDoms[1].id);
+ const primaryKey = braidKey(braidDoms[0].id, braidDoms[1].id);
+ const top3=sorted.slice(0,3);
+ const adjKeys=new Set();
+ for(let i=0;i<top3.length;i++) for(let j=i+1;j<top3.length;j++){ const k=braidKey(top3[i].id,top3[j].id); if(k!==primaryKey) adjKeys.add(k); }
+ const band=d=>{ if(sig.includes(d)) return "Signature";
+  if(R[d.id].score>=55) return "Supporting"; if(R[d.id].score<40) return "Dormant"; return "Developing"; };
+ const latent=DOMAINS.filter(d=> R[d.id].A-R[d.id].C>=35);
+ const aspir =DOMAINS.filter(d=> R[d.id].C-R[d.id].A>=35);
+ const diverg=DOMAINS.filter(d=> !R[d.id].skipped && Math.abs(R[d.id].A-R[d.id].B)>30);
+ const sdrFlag = S.respSDR[0]>=3 && S.respSDR[1]>=3;
+ const compTop3=sorted.slice(0,3).map(d=>d.id);
+ const overlap=S.ranksTop.filter(x=>compTop3.includes(x)).length;
+ const code = sig.map(d=>d.code).join("·") + (latent.length?` (+${latent.map(d=>d.code.toLowerCase()).join(",")})`:"");
+
+ const bars=sorted.map(d=>`<div class="barrow ${d.meta}"><span class="lbl">${d.name}</span>
+   <span class="trk"><i style="width:${R[d.id].score}%"></i></span><span class="val">${R[d.id].score}</span></div>`).join("");
+
+ const exportObj={v:"GI-1.0",code:S.code||null,consent:S.consent,ts:new Date().toISOString(),
+  minutes:Math.round((Date.now()-S.started)/60000),
+  A:S.respA,C:S.respC,SDR:S.respSDR,B:S.Braw,Bnorm:S.B,
+  ranksTop:S.ranksTop,ranksBot:S.ranksBot,
+  domains:Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
+  signature:code, braid:primary?primary.name:null, braidPair:braidDoms.map(d=>d.id), braidTier:primary?primary.tier:null,
+  adjacent:[...adjKeys],
+  flags:{sdr:sdrFlag,latent:latent.map(d=>d.id),aspirational:aspir.map(d=>d.id),diverge:diverg.map(d=>d.id),rankOverlap:overlap}};
+
+ const tm = primary?TIER_META[primary.tier]:null;
+ const chip = d => `<span class="domchip ${d.meta}"><span class="dot"></span>${d.name}</span>`;
+
+ h(`
+  <div class="stagecount" style="margin-top:8px">Your result · complete</div>
+
+  <div class="book">
+   <div class="braidcard">
+    <div class="yb">Your braid</div>
+    <div class="bname">${primary?primary.name:code}</div>
+    <div class="bpair">${chip(braidDoms[0])}<span class="amp">&amp;</span>${chip(braidDoms[1])}</div>
+    ${tm?`<div class="tierbadge tier-${primary.tier}">${tm.label}${primary.rare?" · Rarest":""}</div>
+    <div class="tiersub">${tm.sub}</div>`:""}
+    <div class="braiddesc">${primary?esc(primary.desc):""}</div>
+   </div>
+   <div class="bfoot">Rarity comes from combination. Genius is rarely a single gift — it is almost always two of the nine domains braided together, and the pairing, not either strand alone, is what makes a person rare.</div>
+  </div>
+
+  <div class="book">
+   <div class="eyebrow-b">Your place in the field</div>
+   <h2 class="bt">The Constellation</h2>
+   <p class="btsub">All nine domains, sized by your score. Your braid is drawn in gold.</p>
+   <hr class="brule">
+   <div class="wheelwrap">${buildWheel(R, primaryKey, adjKeys, primary)}</div>
+   <div class="bfoot">The bold gold thread is your braid. The lighter gold threads are the neighbouring pairings among your three strongest domains; the faint web is every other combination.</div>
+  </div>
+
+  <div class="book">
+   <div class="eyebrow-b">Every pairing, side by side</div>
+   <h2 class="bt">The Complete Index Grid</h2>
+   <p class="btsub">Nine domains down the diagonal; every square is the braid two of them make. Yours is ringed in gold.</p>
+   <hr class="brule">
+   ${buildGrid(R, primaryKey, adjKeys)}
+   <div class="bfoot">The diagonal shows each domain and your score in it. Gold-dotted squares are the canonical ten; your braid is outlined, its neighbours lightly marked.</div>
+  </div>
+
+  <div class="book">
+   <div class="eyebrow-b">The complete catalogue</div>
+   <h2 class="bt">The Field Guide</h2>
+   <p class="btsub">All thirty-six braids — the two domains behind each, and what it looks like in a person. Your region of the field reads brightest.</p>
+   <hr class="brule">
+   ${buildFieldGuide(R, primaryKey, adjKeys)}
+  </div>
+
+  <div class="book">
+   <div class="eyebrow-b">The measurements</div>
+   <h2 class="bt">Your Nine Domains</h2>
+   <hr class="brule">
+   <div class="bars">${bars}</div>
+   <table style="color:var(--book-ink)"><tr><th style="color:var(--gold-ink)">Domain</th><th style="color:var(--gold-ink)">Band</th><th style="color:var(--gold-ink)">A · B · C</th></tr>
+    ${sorted.map(d=>`<tr><td>${d.name}</td><td>${band(d)}</td><td style="color:var(--book-dim)">${Math.round(R[d.id].A)} · ${R[d.id].skipped?"—":Math.round(R[d.id].B)} · ${Math.round(R[d.id].C)}${R[d.id].skipped?' <span style="font-size:10px">(self-report)</span>':""}</td></tr>`).join("")}
+   </table>
+   ${sdrFlag?`<div class="flag"><strong>Honesty check.</strong> Your answers to the two check items suggest a flattering read. Answer for how things actually happen, not how you'd like them to — the Index is only useful unclouded. A re-take is recommended.</div>`:""}
+   ${latent.length?`<div class="pass"><strong>Unclaimed genius.</strong> ${latent.map(d=>d.name).join(", ")}: your track record outruns your self-image here. This is the Index's most valuable finding — explore it first.</div>`:""}
+   ${aspir.length?`<div class="flag"><strong>Aspirational gap.</strong> ${aspir.map(d=>d.name).join(", ")}: your self-image outruns the record. Not a verdict — a training map.</div>`:""}
+   ${diverg.length?`<div class="flag"><strong>Self-view vs performance.</strong> ${diverg.map(d=>d.name).join(", ")}: inventory and station diverge by 30+ points — worth exploring, not concluding.</div>`:""}
+   <div class="card small" style="background:#F5EFE2;color:var(--book-ink);border-color:var(--book-line)">Forced-rank convergence: your top-3 picks matched <strong>${overlap} of 3</strong> computed leaders.</div>
+
+   <p class="submitstatus" id="submitStatus"></p>
+   <div class="btnrow" style="margin-top:14px">
+    <button class="btn book-primary" onclick="window.print()">Save / print my chart</button>
+    <button class="btn book-ghost" onclick="if(confirm('Reset and clear this session?')) location.reload()">Take it again</button>
+   </div>
+
+   <details>
+    <summary>Pilot data (for study participants)</summary>
+    <p class="small" style="color:var(--book-dim);margin:8px 0">If the automatic upload didn't go through, copy this block and send it to the study coordinator.</p>
+    <textarea class="export" id="exp" readonly>${esc(JSON.stringify(exportObj))}</textarea>
+    <button class="btn book-ghost" id="copyBtn" style="margin-top:8px">Copy results block</button>
+   </details>
+
+   <div class="bfoot" style="text-align:center">The Genius Index is a reflective and developmental tool. It is not a test, a diagnosis, or a measure of intelligence. <em>Identify to amplify.</em></div>
+  </div>
+ `);
+
+ const cb=$("copyBtn");
+ if(cb) cb.onclick=()=>{ const t=$("exp").value;
+  const done=()=>{ cb.textContent="Copied ✓"; };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,()=>{ $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }); }
+  else { $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }
+ };
+ submitResult(exportObj);
+}
+
+/* ============ BOOT ============ */
+let busy=false;
+window.addEventListener("beforeunload",e=>{ if(busy){ e.preventDefault(); e.returnValue=""; } });
+intro();
+</script>
+</body>
+</html>
