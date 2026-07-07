@@ -5,9 +5,9 @@ automatic, anonymized collection into a **Google Sheet you own** — free, no su
 cap, no third-party service. Every completed assessment becomes one row.
 
 **What's collected:** the nine domain scores (A/B/C and composite), the resolved braid,
-flags, timing, forced-rank picks, and the raw answers — as JSON. **No name, email, IP,
-or account.** Takers see a checked-by-default consent line on the first screen and can
-opt out; opting out keeps everything on their device and sends nothing.
+shape, flags, timing, forced-rank picks, and the raw answers — as JSON. **No name,
+email, IP, or account.** Starting the assessment implies consent to this (stated on the
+first screen); nothing is uploaded before that.
 
 ---
 
@@ -45,7 +45,7 @@ opt out; opting out keeps everything on their device and sends nothing.
    ```
 3. Commit and let the site redeploy (GitHub Pages picks it up automatically).
 
-That's it. From now on, each completed assessment (with consent left on) appends a row.
+That's it. From now on, every started and every completed assessment appends a row.
 
 > **Test it:** open the live site, complete a run, and watch a row appear in the sheet.
 > If the network call fails, the taker still sees their full chart and a copyable data
@@ -53,9 +53,32 @@ That's it. From now on, each completed assessment (with consent left on) appends
 
 ---
 
+## Updating an existing deployment
+
+If you already set this up once and `Code.gs` changes later (like this update — it added
+funnel tracking and the public stats endpoint below):
+
+1. Open your script (**Extensions → Apps Script** from the Sheet, or script.google.com).
+2. Select all, delete, and paste in the new [`apps-script/Code.gs`](./apps-script/Code.gs).
+   Your `SHEET_ID` is near the top — copy your existing value over before saving if you
+   pasted the placeholder.
+3. **Deploy → Manage deployments** → pencil icon on your existing deployment → **Version:
+   New version** → **Deploy**.
+
+The Web-app URL stays the same, so **`SUBMIT_URL` in `index.html` does not change** —
+this is a script-only update. Editing `Code.gs` without redeploying a new version has no
+effect on the live endpoint; the "New version" step is what actually publishes it.
+
+Already-collected rows are never reordered or renamed — new fields are always added as
+new columns at the end, so nothing you've collected so far shifts or breaks.
+
+---
+
 ## Tracking toward 150
 
-- Put `=COUNTA(A:A)-1` in any empty cell to show your live count (minus the header row).
+- Put `=COUNTA(A:A)-1` in any empty cell to show your live count (minus the header row) —
+  note this now includes **start** rows too; filter the `event` column to `complete` for
+  a true completions count (or just use the public stats page below, which does this for you).
 - Useful validation columns are already broken out per row, so you can check without
   parsing JSON:
   - **A-vs-station convergence** per domain (are self-report `A` and performance `B`
@@ -64,8 +87,30 @@ That's it. From now on, each completed assessment (with consent left on) appends
   - **Test length** (`minutes` column) distribution — spot rushed sessions.
   - **Braid distribution** (`braid` column) — are all 36 reachable, or does scoring
     collapse everyone into a few?
+  - **Shape distribution** (`shape` column) — Tower/Ridge/Anchored/Plateau spread.
+  - **Unclaimed-genius rate** (`flag_unclaimed` / `top_unclaimed` columns) — how often the
+    Index surfaces a real B-over-A gap, and which domain most often carries it.
   - **Forced-rank convergence** (`rank_overlap`, 0–3) — do people's self-ranking and the
     computed leaders agree?
+  - `flag_latent` and `flag_diverge` are retired columns from an earlier scoring model —
+    they stay blank going forward; ignore them.
+
+## Funnel & live stats
+
+Every time someone clicks **Begin Part 1**, a lightweight anonymous **start** ping is
+sent (timestamp + participant code only — no answers yet). Every completed run still
+sends the full **complete** row as before. This lets you see drop-off, not just finishes.
+
+The site also has a public **Live stats** page (linked from the intro screen, or
+`your-site-url/#stats`) showing aggregate-only numbers — total completions, start→finish
+conversion, average completion time, most common braids, and shape distribution. It reads
+from the same Apps Script endpoint via `GET ?stats=1`, which returns **counts only**:
+never a raw row, a participant code, or anything traceable to one person. No setup needed
+beyond the redeploy above — it works automatically once your `Code.gs` is updated.
+
+> Conversion is only meaningful from the point this feature was deployed — completions
+> collected before it existed have no matching start row, so the site's very first
+> "Start → finish" percentage will look low until enough post-update data accumulates.
 
 ---
 
