@@ -11,6 +11,11 @@
  *   3. Deploy this script: Deploy > New deployment > Web app >
  *      Execute as: Me,  Who has access: Anyone.  Copy the Web-App URL.
  *   4. Paste that URL into SUBMIT_URL in docs/index.html and redeploy the site.
+ *
+ * UPDATING an existing deployment (this file changed after you first set up)?
+ * Paste this whole file over your old one, then Deploy > Manage deployments >
+ * pick your deployment > pencil icon > Version: New version > Deploy. The
+ * Web-App URL does NOT change, so you do not need to touch SUBMIT_URL again.
  */
 
 // Use STRAIGHT quotes ' ' and paste ONLY the ID (the part between /d/ and /edit),
@@ -18,24 +23,50 @@
 var SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
 var SHEET_NAME = 'results';
 
-// Header written once, on the first submission into an empty sheet.
+// Original columns, in their original order -- NEVER reorder or rename these.
+// Any sheet already collecting data has this exact header row on row 1, and
+// reordering would misalign every row already collected.
 var HEADERS = [
   'received_at', 'version', 'code', 'consent', 'client_ts', 'minutes',
   'braid', 'braid_tier', 'braid_pair', 'signature', 'adjacent',
   // per-domain composite scores
   'KIN', 'SEN', 'ADP', 'ANL', 'MEM', 'GEN', 'REL', 'EXP', 'PER',
+  // flag_latent and flag_diverge are retired (the gap model changed upstream) and
+  // stay blank going forward -- kept only so older rows' columns don't shift.
   'flag_sdr', 'flag_latent', 'flag_aspirational', 'flag_diverge', 'rank_overlap',
   'ranks_top', 'ranks_bot',
-  'raw_json'
+  'raw_json',
+  // Added later -- always append new fields HERE, at the end, never in the
+  // middle, so no already-collected row ever shifts columns.
+  'event', 'shape', 'reachable', 'flag_unclaimed', 'top_unclaimed'
 ];
+
+// Ensure the header row has every column in HEADERS, appending any that are
+// missing (for a sheet that already has the older, shorter header row) without
+// touching or reordering columns that already exist.
+function ensureHeaders_(sheet) {
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(HEADERS);
+    return;
+  }
+  var lastCol = sheet.getLastColumn();
+  var existing = lastCol > 0 ? sheet.getRange(1, 1, 1, lastCol).getValues()[0] : [];
+  var missing = HEADERS.filter(function (h) { return existing.indexOf(h) === -1; });
+  if (missing.length) {
+    sheet.getRange(1, existing.length + 1, 1, missing.length).setValues([missing]);
+  }
+}
 
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME)
              || SpreadsheetApp.openById(SHEET_ID).insertSheet(SHEET_NAME);
-    if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
+    ensureHeaders_(sheet);
 
+    // Rows sent before this update had no "event" field at all -- treat those,
+    // and any row that omits it, as a completed submission.
+    var event = data.event || 'complete';
     var dom = data.domains || {};
     var s = function (id) { return dom[id] ? dom[id].score : ''; };
     var f = data.flags || {};
@@ -54,13 +85,18 @@ function doPost(e) {
       (data.adjacent || []).join(' '),
       s('KIN'), s('SEN'), s('ADP'), s('ANL'), s('MEM'), s('GEN'), s('REL'), s('EXP'), s('PER'),
       f.sdr ? 'yes' : 'no',
-      (f.latent || []).join(' '),
+      '', // flag_latent -- retired, see HEADERS comment
       (f.aspirational || []).join(' '),
-      (f.diverge || []).join(' '),
+      '', // flag_diverge -- retired, see HEADERS comment
       f.rankOverlap != null ? f.rankOverlap : '',
       (data.ranksTop || []).join(' '),
       (data.ranksBot || []).join(' '),
-      JSON.stringify(data)
+      JSON.stringify(data),
+      event,
+      data.shape || '',
+      (data.reachable || []).join(' | '),
+      (f.unclaimed || []).join(' '),
+      f.topUnclaimed || ''
     ]);
 
     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
@@ -71,7 +107,63 @@ function doPost(e) {
   }
 }
 
-// Optional: lets you open the Web-App URL in a browser to confirm it's live.
-function doGet() {
+// GET with no params: a plain healthcheck you can open in a browser.
+// GET with ?stats=1: aggregate-only JSON for the site's public "Live stats"
+// page -- counts and averages only, never a raw row, a code, or per-person data.
+function doGet(e) {
+  if (e && e.parameter && e.parameter.stats) {
+    return ContentService.createTextOutput(JSON.stringify(computeStats_()))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
   return ContentService.createTextOutput('Genius Index collector is running.');
+}
+
+function computeStats_() {
+  var empty = {
+    totalStarts: 0, totalCompletes: 0, conversionRate: null,
+    topBraids: [], shapeCounts: { Tower: 0, Ridge: 0, Anchored: 0, Plateau: 0 },
+    avgMinutes: null, updatedAt: new Date().toISOString()
+  };
+  var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
+  if (!sheet || sheet.getLastRow() < 2) return empty;
+
+  var values = sheet.getDataRange().getValues();
+  var headerRow = values[0];
+  var col = {};
+  headerRow.forEach(function (h, i) { col[h] = i; });
+
+  var totalStarts = 0, totalCompletes = 0, minutesSum = 0, minutesCount = 0;
+  var braidCounts = {};
+  var shapeCounts = { Tower: 0, Ridge: 0, Anchored: 0, Plateau: 0 };
+
+  for (var r = 1; r < values.length; r++) {
+    var row = values[r];
+    var event = col.hasOwnProperty('event') ? row[col.event] : '';
+    if (event === 'start') { totalStarts++; continue; }
+    // 'complete', or blank for rows collected before the event column existed.
+    totalCompletes++;
+    var braid = col.hasOwnProperty('braid') ? row[col.braid] : '';
+    if (braid) braidCounts[braid] = (braidCounts[braid] || 0) + 1;
+    var shape = col.hasOwnProperty('shape') ? row[col.shape] : '';
+    if (shape && shapeCounts.hasOwnProperty(shape)) shapeCounts[shape]++;
+    var minutes = col.hasOwnProperty('minutes') ? row[col.minutes] : '';
+    if (typeof minutes === 'number' && minutes > 0) { minutesSum += minutes; minutesCount++; }
+  }
+
+  var topBraids = Object.keys(braidCounts)
+    .map(function (name) { return { name: name, count: braidCounts[name] }; })
+    .sort(function (a, b) { return b.count - a.count; })
+    .slice(0, 10);
+
+  return {
+    totalStarts: totalStarts,
+    totalCompletes: totalCompletes,
+    // Meaningful only from the point this feature shipped -- older completions
+    // have no matching 'start' row, so conversion undercounts historical data.
+    conversionRate: totalStarts > 0 ? Math.round((totalCompletes / totalStarts) * 100) : null,
+    topBraids: topBraids,
+    shapeCounts: shapeCounts,
+    avgMinutes: minutesCount > 0 ? Math.round((minutesSum / minutesCount) * 10) / 10 : null,
+    updatedAt: new Date().toISOString()
+  };
 }

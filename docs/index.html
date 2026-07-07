@@ -239,6 +239,15 @@
   .shapemini .sname{font-family:'Archivo',sans-serif; font-size:9.5px; letter-spacing:.03em; font-weight:700; text-transform:uppercase; color:var(--book-dim); margin-top:6px;}
   .shapemini.on .sname{color:var(--gold-ink);}
   @media (max-width:420px){ .shapemini .sname{font-size:8.5px;} }
+  /* Live stats page */
+  .statgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:10px 0;}
+  .statbig{display:flex; flex-direction:column; align-items:center; padding:14px 6px; border-radius:6px; background:rgba(195,154,91,.08); border:1px solid var(--book-line);}
+  .statbig .sv{font-family:'Fraunces',serif; font-weight:700; font-size:28px; color:var(--gold-ink); line-height:1.1;}
+  .statbig .sl{font-family:'Archivo',sans-serif; font-size:10px; letter-spacing:.05em; text-transform:uppercase; color:var(--book-dim); margin-top:4px; text-align:center;}
+  .statshapes{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+  .statshape{display:flex; flex-direction:column; align-items:center; padding:10px 4px; border-radius:6px; background:rgba(0,0,0,.02); border:1px solid var(--book-line);}
+  .statshape .ssv{font-family:'Fraunces',serif; font-weight:700; font-size:20px; color:var(--book-ink);}
+  .statshape .ssn{font-family:'Archivo',sans-serif; font-size:9px; letter-spacing:.04em; text-transform:uppercase; color:var(--book-dim); margin-top:3px;}
   .portrait{font-family:'Fraunces',serif; font-size:clamp(17px,4.6vw,20px); line-height:1.5; color:var(--book-ink); margin:16px 0 4px;}
   .portrait strong{font-weight:700;}
   .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
@@ -479,11 +488,21 @@ function intro(){
   <button class="btn primary" onclick="S.code=$('pcode').value.trim(); S.consent=true; part1();">Begin Part 1 · The Inventory</button>
   <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and are added anonymously to the study — no name, email, or account is collected":""}. You'll get your full results chart at the end.</p>
   <p class="consentnote">By taking this assessment, you agree to the anonymous, no-account use of your answers described above.</p>
+  <p class="small dim" style="margin-top:10px"><a href="#stats" onclick="showStats(); return false;" style="color:var(--brass)">See live stats from the study so far →</a></p>
  `);
 }
 
 /* ============ SCREEN: PART 1 INVENTORY ============ */
-function part1(){ S.flowIdx=0; busy=true; renderQ(); }
+function part1(){ S.flowIdx=0; busy=true; pingStart(); renderQ(); }
+/* Anonymous funnel ping — a start is recorded distinct from a completed
+   submission, so drop-off can be measured. Fire-and-forget; never blocks. */
+function pingStart(){
+ if(!SUBMIT_URL) return;
+ try{
+  fetch(SUBMIT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+   body:JSON.stringify({v:"GI-1.0", event:"start", ts:new Date().toISOString(), code:S.code||null})}).catch(()=>{});
+ }catch(e){}
+}
 function renderQ(){
  if(S.flowIdx>=FLOW.length){ stationIntro(); return; }
  const f=FLOW[S.flowIdx];
@@ -1320,7 +1339,7 @@ function results(){
  const bars=sorted.map(d=>`<div class="barrow ${d.meta}"><span class="lbl">${d.name}</span>
    <span class="trk"><i style="width:${R[d.id].score}%"></i></span><span class="val">${R[d.id].score}</span></div>`).join("");
 
- const exportObj={v:"GI-1.0",code:S.code||null,consent:S.consent,ts:new Date().toISOString(),
+ const exportObj={v:"GI-1.0",event:"complete",code:S.code||null,consent:S.consent,ts:new Date().toISOString(),
   minutes:Math.round((Date.now()-S.started)/60000),
   A:S.respA,C:S.respC,SDR:S.respSDR,B:S.Braw,Bnorm:S.B,
   ranksTop:S.ranksTop,ranksBot:S.ranksBot,
@@ -1624,6 +1643,51 @@ function showChapter(entryId){
  h(`<div class="stagecount" style="margin-top:8px">Chapter ${title.ch} · ${title.name}</div>${body}`);
 }
 
+/* ============ PUBLIC LIVE STATS ============ */
+/* Aggregate-only (counts, no individual data) fetched from the same Apps
+   Script endpoint via a GET ?stats=1 request. Reachable from the intro
+   screen and directly via #stats. */
+function showStats(){
+ try{ history.pushState(null,"","#stats"); }catch(e){}
+ h(`
+  <div class="stagecount" style="margin-top:8px">Live stats</div>
+  <div class="book">
+   <button class="btn book-ghost" style="max-width:180px" onclick="location.hash=''; intro();">← Back</button>
+   <div class="eyebrow-b" style="margin-top:14px">The validation study</div>
+   <h2 class="bt">So Far</h2>
+   <p class="btsub">Anonymized and aggregate-only — no individual result is ever shown here.</p>
+   <hr class="brule">
+   <div id="statsBody"><p class="small" style="color:var(--book-dim)">Loading…</p></div>
+  </div>
+ `);
+ if(!SUBMIT_URL){ const el=$("statsBody"); if(el) el.innerHTML=`<p class="small" style="color:var(--book-dim)">Stats aren't available yet — no study endpoint is configured.</p>`; return; }
+ fetch(SUBMIT_URL + (SUBMIT_URL.indexOf("?")>-1?"&":"?") + "stats=1")
+  .then(r=>r.json())
+  .then(renderStats)
+  .catch(()=>{ const el=$("statsBody"); if(el) el.innerHTML=`<p class="small" style="color:var(--book-dim)">Couldn't load live stats right now — try again later.</p>`; });
+}
+function renderStats(d){
+ const el=$("statsBody"); if(!el) return;
+ const top=(d.topBraids||[]).slice(0,10);
+ const maxCount=Math.max(1, ...top.map(b=>b.count));
+ const braidBars = top.length ? top.map(b=>`<div class="barrow"><span class="lbl" style="width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis">${esc(b.name)}</span>
+   <span class="trk"><i style="width:${(b.count/maxCount*100).toFixed(0)}%; background:var(--brass)"></i></span><span class="val">${b.count}</span></div>`).join("")
+   : `<p class="small" style="color:var(--book-dim)">No completions yet — be the first.</p>`;
+ const shapeRow = ["Tower","Ridge","Anchored","Plateau"].map(name=>
+   `<div class="statshape"><span class="ssv">${(d.shapeCounts&&d.shapeCounts[name])||0}</span><span class="ssn">${name}</span></div>`).join("");
+ el.innerHTML = `
+  <div class="statgrid">
+   <div class="statbig"><span class="sv">${d.totalCompletes??0}</span><span class="sl">Completions</span></div>
+   <div class="statbig"><span class="sv">${d.conversionRate!=null?d.conversionRate+"%":"—"}</span><span class="sl">Start → finish</span></div>
+   <div class="statbig"><span class="sv">${d.avgMinutes!=null?d.avgMinutes:"—"}</span><span class="sl">Avg. minutes</span></div>
+  </div>
+  <div class="eyebrow-b" style="text-align:left;margin:18px 0 4px">Most common braids</div>
+  <div class="bars">${braidBars}</div>
+  <div class="eyebrow-b" style="text-align:left;margin:18px 0 4px">Shape distribution</div>
+  <div class="statshapes">${shapeRow}</div>
+  <p class="small" style="color:var(--book-dim);margin-top:14px">Updated ${d.updatedAt?new Date(d.updatedAt).toLocaleString():"just now"}. Conversion is measured only from starts recorded after this feature shipped.</p>`;
+}
+
 /* ============ BOOT ============ */
 let busy=false;
 window.addEventListener("beforeunload",e=>{ if(busy){ e.preventDefault(); e.returnValue=""; } });
@@ -1644,7 +1708,7 @@ window.addEventListener("beforeprint",()=>{
 window.addEventListener("afterprint",()=>{
  document.querySelectorAll("details.ev, details.abc").forEach(d=>{ d.open = d.dataset.wasOpen==="1"; delete d.dataset.wasOpen; });
 });
-intro();
+if(location.hash==="#stats") showStats(); else intro();
 </script>
 </body>
 </html>
