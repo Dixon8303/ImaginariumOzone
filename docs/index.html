@@ -224,7 +224,9 @@
   .reachdesc{font-size:13px; color:var(--book-ink); margin:2px 0;}
   .reachproof{font-size:12px; color:var(--book-dim); margin-top:4px;} .reachproof span{font-family:'Archivo',sans-serif; font-weight:700; letter-spacing:.03em; color:var(--gold-ink); text-transform:uppercase; font-size:10px;}
   .rnrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
-  .rn-chip{display:inline-flex; align-items:center; gap:6px; background:rgba(195,154,91,.12); border:1px solid rgba(195,154,91,.4); border-radius:16px; padding:5px 12px; font-family:'Fraunces',serif; font-weight:600; font-size:13px; color:var(--book-ink);}
+  .rn-chip{display:inline-flex; align-items:center; gap:6px; background:rgba(195,154,91,.12); border:1px solid rgba(195,154,91,.4); border-radius:16px; padding:5px 12px; font-family:'Fraunces',serif; font-weight:600; font-size:13px; color:var(--book-ink); cursor:pointer; -webkit-appearance:none; appearance:none; text-align:left;}
+  @media (hover:hover){ .rn-chip:hover{background:rgba(195,154,91,.24); border-color:var(--brass);} }
+  .rn-chip:focus-visible{outline:none; border-color:var(--brass); box-shadow:0 0 0 2px rgba(195,154,91,.3);}
   .rn-chip .rn-ch{font-family:'Archivo',sans-serif; font-weight:700; font-size:9.5px; letter-spacing:.06em; color:var(--gold-ink); text-transform:uppercase;}
   .rn-chip .rn-note{font-family:'Literata',Georgia,serif; font-style:italic; font-weight:400; font-size:11px; color:var(--book-dim);}
   /* ── R4 interpretive modules ── */
@@ -1250,9 +1252,9 @@ function bookModules(m){
  const team = `<div class="callout callout--slate"><span class="ct">Who to pair with</span>
    <p style="margin:2px 0">Not who to become — who complements you. For ${m.primary?`<strong>${m.primary.name}</strong>`:"your braid"}: ${teamFitFor(m.primary)}.</p></div>`;
 
- // Read next
+ // Read next — real links into the chapter pages built from this same content library
  const readnext = `<div class="callout callout--brass"><span class="ct">Read next</span>
-   <div class="rnrow">${m.readNext.map(e=>`<span class="rn-chip"><span class="rn-ch">Ch ${e.ch}</span>${e.name}${e.note?`<span class="rn-note"> · ${e.note}</span>`:""}</span>`).join("")}</div></div>`;
+   <div class="rnrow">${m.readNext.map(e=>`<button class="rn-chip" onclick="showChapter('${e.id}')"><span class="rn-ch">Ch ${e.ch}</span>${e.name}${e.note?`<span class="rn-note"> · ${e.note}</span>`:""}</button>`).join("")}</div></div>`;
 
  return `
   <div class="book">
@@ -1329,8 +1331,8 @@ function results(){
 
  const tm = primary?TIER_META[primary.tier]:null;
  const chip = d => `<span class="domchip ${d.meta}"><span class="dot"></span>${d.name}</span>`;
- // Stash context so the all-36 reference view can highlight the reader's braid.
- S.ctx={R, primaryKey, adjKeys, primary};
+ // Stash context so the all-36 reference view and chapter pages can personalize.
+ S.ctx={R, primaryKey, adjKeys, primary, m};
 
  h(`
   <div class="stagecount" style="margin-top:8px">Your result · complete</div>
@@ -1558,7 +1560,69 @@ function showAllBraids(){
 }
 function backToResults(){ try{ history.pushState(null,"","#results"); }catch(e){} results(); }
 // Browser Back from the reference view returns to the results.
-window.addEventListener("hashchange",()=>{ if(location.hash!=="#all-braids" && S.ctx && $("stage") && /all thirty-six/.test($("stage").textContent||"")) results(); });
+window.addEventListener("hashchange",()=>{ if(location.hash!=="#all-braids" && !/^#chapter-/.test(location.hash) && S.ctx && $("stage") && /all thirty-six|^Chapter /.test($("stage").textContent||"")) results(); });
+
+/* ============ CHAPTER PAGES (Read Next targets) ============ */
+/* Compiles the content library already written for R3/R4 into a standalone
+   page per domain (Ch 7-15), plus a general Stacking & Protocol chapter
+   (17-18) — so the Read Next chips go somewhere real instead of being labels. */
+function chapterTitle(entryId){
+ return entryId==="_stack" ? {ch:"17–18", name:"Stacking & the Protocol"} : {ch:String(chapterOf(entryId)), name:domById(entryId).name};
+}
+const backChapBtn = `<button class="btn book-ghost" style="max-width:220px" onclick="backToResults()">← Back to my results</button>`;
+function buildDomainChapter(id, ctx){
+ const d=domById(id), m=ctx.m, sc=Math.round(m.R[id].score), band=m.band(d);
+ const isSig = m.sig.some(x=>x.id===id);
+ const isTop = m.topUnclaimed && m.topUnclaimed.id===id;
+ const roleNote = isTop
+  ? `Your unclaimed pivot — you performed at ${Math.round(m.R[id].B)} but rated yourself at ${Math.round(m.R[id].A)}. This is the one to act on first.`
+  : isSig ? `One of your Signature domains, scoring <strong>${sc}</strong> on your profile.`
+  : `Scoring <strong>${sc}</strong> on your profile — currently ${band}.`;
+ return `
+  <div class="book">
+   ${backChapBtn}
+   <div class="eyebrow-b" style="margin-top:14px">Chapter ${chapterOf(id)}</div>
+   <h2 class="bt">${d.name}</h2>
+   <p class="btsub">${DOMAIN_DEF[id]}</p>
+   <hr class="brule">
+   <div class="callout callout--slate"><span class="ct">On your profile</span>${roleNote}</div>
+   <div class="callout" style="--accent:var(--sage); --accent-tint:rgba(169,180,166,.16)"><span class="ct">The evidence</span><p style="margin:2px 0">${EVIDENCE[id]}</p></div>
+   <div class="callout callout--brass"><span class="ct">Where this pays</span><p style="margin:2px 0">${CAREERS[id]}</p></div>
+   <div class="callout callout--moss"><span class="ct">Where it comes alive</span>
+    <table class="hobt"><tr><th>Hobbies</th><th>A date or outing</th><th>An event to seek</th></tr>
+    <tr><td>${HOBBIES[id][0]}</td><td>${HOBBIES[id][1]}</td><td>${HOBBIES[id][2]}</td></tr></table></div>
+   <div class="callout callout--oxblood"><span class="ct">Friction points &amp; growth edges</span>
+    <table class="chalt"><tr><th>The shadow</th><th>The edge you'd enjoy</th></tr>
+    <tr><td>${CHALLENGES[id][0]}</td><td>${CHALLENGES[id][1]}</td></tr></table></div>
+   <div class="callout callout--brass"><span class="ct">Your 30-day development protocol</span>
+    <div class="weekstrip">${PROTOCOL_DOMAIN[id].map((w,i)=>`<div class="wk"><span class="wkn">Week ${i+1}</span>${w}</div>`).join("")}</div></div>
+   <div style="margin-top:10px">${backChapBtn}</div>
+  </div>`;
+}
+function buildStackChapter(ctx){
+ const m=ctx.m;
+ return `
+  <div class="book">
+   ${backChapBtn}
+   <div class="eyebrow-b" style="margin-top:14px">Chapter 17–18</div>
+   <h2 class="bt">Stacking &amp; the Protocol</h2>
+   <p class="btsub">How a two-domain braid becomes a working practice — and when a third strand earns its place.</p>
+   <hr class="brule">
+   <p style="font-size:14.5px;line-height:1.55;color:var(--book-ink)">A braid names the pairing. <strong>Stacking</strong> is what you do with it: repeating the pairing on purpose until it becomes a reliable practice, then deciding whether a third domain deserves a place alongside it. The right move depends on your shape.</p>
+   ${buildShapeDiagram(m.shape)}
+   <div class="callout callout--brass"><span class="ct">${m.shape} — your shape</span>Your profile is ${SHAPE_META[m.shape].line}. The strategic move: ${SHAPE_META[m.shape].move}.</div>
+   ${m.reachable.length?`<div class="callout callout--slate"><span class="ct">Your candidates for a third strand</span>${m.reachable.map(b=>b.name).join(" or ")} — the braids you're already closest to building alongside ${m.primary?m.primary.name:"your braid"}.</div>`:""}
+   <div class="callout callout--moss"><span class="ct">Who to pair with instead</span>Not every gap needs to become your own skill. ${teamFitFor(m.primary)}</div>
+   <div style="margin-top:10px">${backChapBtn}</div>
+  </div>`;
+}
+function showChapter(entryId){
+ const c=S.ctx; if(!c || !c.m) return;
+ try{ history.pushState(null,"","#chapter-"+entryId); }catch(e){}
+ const title=chapterTitle(entryId);
+ const body = entryId==="_stack" ? buildStackChapter(c) : buildDomainChapter(entryId, c);
+ h(`<div class="stagecount" style="margin-top:8px">Chapter ${title.ch} · ${title.name}</div>${body}`);
+}
 
 /* ============ BOOT ============ */
 let busy=false;
