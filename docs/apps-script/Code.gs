@@ -108,10 +108,18 @@ function doPost(e) {
 }
 
 // GET with no params: a plain healthcheck you can open in a browser.
-// GET with ?stats=1: aggregate-only JSON for the site's public "Live stats"
-// page -- counts and averages only, never a raw row, a code, or per-person data.
+// GET with ?stats=1&key=YOUR_SECRET: aggregate-only JSON (counts and averages
+// only -- never a raw row, a code, or per-person data) for YOUR EYES ONLY.
+// This is not linked from the public site. The key lives in Script Properties
+// (Project Settings > Script Properties in the Apps Script editor), never in
+// this file, so it never ends up in the public GitHub repo. Without the
+// correct key, this behaves exactly like a plain GET -- the feature is
+// invisible to anyone who doesn't already have the key.
 function doGet(e) {
-  if (e && e.parameter && e.parameter.stats) {
+  var wantsStats = e && e.parameter && e.parameter.stats;
+  var suppliedKey = e && e.parameter && e.parameter.key;
+  var realKey = PropertiesService.getScriptProperties().getProperty('STATS_KEY');
+  if (wantsStats && realKey && suppliedKey === realKey) {
     return ContentService.createTextOutput(JSON.stringify(computeStats_()))
       .setMimeType(ContentService.MimeType.JSON);
   }
