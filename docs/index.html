@@ -948,6 +948,8 @@ function results(){
 
  const tm = primary?TIER_META[primary.tier]:null;
  const chip = d => `<span class="domchip ${d.meta}"><span class="dot"></span>${d.name}</span>`;
+ // Stash context so the all-36 reference view can highlight the reader's braid.
+ S.ctx={R, primaryKey, adjKeys, primary};
 
  h(`
   <div class="stagecount" style="margin-top:8px">Your result · complete</div>
@@ -973,21 +975,11 @@ function results(){
    <div class="bfoot">The bold gold thread is your braid. The lighter gold threads are the neighbouring pairings among your three strongest domains; the faint web is every other combination.</div>
   </div>
 
-  <div class="book">
-   <div class="eyebrow-b">Every pairing, side by side</div>
-   <h2 class="bt">The Complete Index Grid</h2>
-   <p class="btsub">Nine domains down the diagonal; every square is the braid two of them make. Yours is ringed in gold.</p>
-   <hr class="brule">
-   ${buildGrid(R, primaryKey, adjKeys)}
-   <div class="bfoot">The diagonal shows each domain and your score in it. Gold-dotted squares are the canonical ten; your braid is outlined, its neighbours lightly marked.</div>
-  </div>
-
-  <div class="book">
-   <div class="eyebrow-b">The complete catalogue</div>
-   <h2 class="bt">The Field Guide</h2>
-   <p class="btsub">All thirty-six braids — the two domains behind each, and what it looks like in a person. Your region of the field reads brightest.</p>
-   <hr class="brule">
-   ${buildFieldGuide(R, primaryKey, adjKeys)}
+  <div class="book" style="text-align:center">
+   <div class="eyebrow-b">The full field</div>
+   <h2 class="bt">All thirty-six braids</h2>
+   <p class="btsub">Your report stays on your own braid and the ones you're closest to building. The complete catalogue — every pairing, the index grid, the field guide — lives on its own page.</p>
+   <button class="btn book-primary" style="max-width:340px;margin:6px auto 0" onclick="showAllBraids()">Explore all 36 braids →</button>
   </div>
 
   <div class="book">
@@ -1035,8 +1027,38 @@ function results(){
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,()=>{ $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }); }
   else { $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }
  };
- submitResult(exportObj);
+ if(!S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render
 }
+
+/* ============ REFERENCE VIEW: all 36 braids ============ */
+function showAllBraids(){
+ const c=S.ctx; if(!c) return;
+ try{ history.pushState(null,"","#all-braids"); }catch(e){}
+ const backBtn=`<button class="btn book-ghost" style="max-width:220px" onclick="backToResults()">← Back to my results</button>`;
+ h(`
+  <div class="stagecount" style="margin-top:8px">Reference · all thirty-six braids</div>
+  <div class="book">
+   ${backBtn}
+   <div class="eyebrow-b" style="margin-top:14px">Every pairing, side by side</div>
+   <h2 class="bt">The Complete Index Grid</h2>
+   <p class="btsub">Nine domains down the diagonal; every square is the braid two of them make. Yours is ringed in gold.</p>
+   <hr class="brule">
+   ${buildGrid(c.R, c.primaryKey, c.adjKeys)}
+   <div class="bfoot">The diagonal shows each domain and your score in it. Gold-dotted squares are the canonical ten; your braid is outlined, its neighbours lightly marked.</div>
+  </div>
+  <div class="book">
+   <div class="eyebrow-b">The complete catalogue</div>
+   <h2 class="bt">The Field Guide</h2>
+   <p class="btsub">All thirty-six braids — the two domains behind each, and what it looks like in a person. Your region of the field reads brightest.</p>
+   <hr class="brule">
+   ${buildFieldGuide(c.R, c.primaryKey, c.adjKeys)}
+   <div style="margin-top:16px">${backBtn}</div>
+  </div>
+ `);
+}
+function backToResults(){ try{ history.pushState(null,"","#results"); }catch(e){} results(); }
+// Browser Back from the reference view returns to the results.
+window.addEventListener("hashchange",()=>{ if(location.hash!=="#all-braids" && S.ctx && $("stage") && /all thirty-six/.test($("stage").textContent||"")) results(); });
 
 /* ============ BOOT ============ */
 let busy=false;
