@@ -48,10 +48,13 @@
   .glyph.big .pct{font-size:10px; color:var(--ink); opacity:.85;}
   /* Buttons */
   .btn{display:block; width:100%; padding:15px 16px; margin:8px 0; background:var(--ink2); border:1px solid var(--line); color:var(--paper); font-family:'Archivo',sans-serif; font-size:15px; text-align:left; cursor:pointer; transition:border-color .15s, background .15s;}
-  .btn:hover, .btn:focus-visible{border-color:var(--brass); outline:none;}
+  /* Keyboard focus always highlights; hover only on real pointers so a tapped
+     position doesn't stay "stuck" looking selected on the next question (touch fix). */
+  .btn:focus-visible{border-color:var(--brass); outline:none;}
+  @media (hover:hover){ .btn:hover{border-color:var(--brass); outline:none;} }
   .btn.sel{border-color:var(--brass); background:#3A2E20;}
   .btn.primary{background:var(--brass); color:var(--ink); font-weight:700; text-align:center; border:none; letter-spacing:.04em;}
-  .btn.primary:hover{background:#D3AC6C;}
+  @media (hover:hover){ .btn.primary:hover{background:#D3AC6C;} }
   .btn.ghost{text-align:center; color:var(--paper-dim);}
   .btn:disabled{opacity:.35; cursor:default;}
   .btnrow{display:flex; gap:8px;} .btnrow .btn{margin:8px 0;}
@@ -408,16 +411,21 @@ function renderQ(){
   <div class="qtext">${esc(text)}</div>
   ${scale.map((s,v)=>`<button class="btn ${cur===v?'sel':''}" onclick="answer(${v})">${s}</button>`).join("")}
   <div class="btnrow">
-   <button class="btn ghost" ${S.flowIdx===0?"disabled":""} onclick="S.flowIdx--; renderQ();">Back</button>
+   <button class="btn ghost" id="navBack" ${S.flowIdx===0?"disabled":""} onclick="goBack()">← Back</button>
+   <button class="btn ghost" id="navNext" ${cur==null?"disabled":""} onclick="goNext()">Next →</button>
   </div>
  `);
 }
+function curAnswer(){ const f=FLOW[S.flowIdx];
+ return f.t==="A"?S.respA[f.d][f.i] : f.t==="C"?S.respC[f.d][f.i] : S.respSDR[f.i]; }
+function goBack(){ if(S.flowIdx>0){ S.flowIdx--; renderQ(); } }
+function goNext(){ if(curAnswer()!=null && S.flowIdx<FLOW.length){ S.flowIdx++; renderQ(); } }
 function answer(v){
  const f=FLOW[S.flowIdx];
  if(f.t==="A") S.respA[f.d][f.i]=v;
  else if(f.t==="C") S.respC[f.d][f.i]=v;
  else S.respSDR[f.i]=v;
- S.flowIdx++; renderQ();
+ S.flowIdx++; renderQ(); // fast path: tapping an answer auto-advances
 }
 
 /* ============ STATIONS ============ */
@@ -961,6 +969,15 @@ function results(){
 /* ============ BOOT ============ */
 let busy=false;
 window.addEventListener("beforeunload",e=>{ if(busy){ e.preventDefault(); e.returnValue=""; } });
+// Inventory keyboard nav: ←/→ = Back/Next. Only when the nav buttons are on screen
+// and focus isn't in a text field. Acts through the buttons so disabled-state is honored.
+document.addEventListener("keydown",e=>{
+ if(/^(INPUT|TEXTAREA)$/.test((e.target&&e.target.tagName)||"")) return;
+ const back=$("navBack"), next=$("navNext");
+ if(!back && !next) return;
+ if(e.key==="ArrowLeft" && back && !back.disabled){ e.preventDefault(); goBack(); }
+ else if(e.key==="ArrowRight" && next && !next.disabled){ e.preventDefault(); goNext(); }
+});
 intro();
 </script>
 </body>
