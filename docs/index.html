@@ -137,10 +137,36 @@
   .tiersub{font-family:'Literata',Georgia,serif; font-style:italic; font-size:13.5px; color:var(--book-dim); margin:8px auto 0; max-width:42ch;}
   .braiddesc{font-family:'Fraunces',serif; font-size:18px; line-height:1.4; color:var(--book-ink); margin:14px auto 0; max-width:40ch;}
   /* Constellation wheel */
-  .wheelwrap{margin:6px auto 0; max-width:520px;}
+  .wheelwrap{margin:6px auto 0; max-width:520px; position:relative;}
   .wheelwrap svg{display:block; width:100%; height:auto; overflow:visible;}
+  .wnode{cursor:pointer;} .wnode:focus{outline:none;}
+  .wnode:focus .wdot, .wnode:hover .wdot{stroke-width:3.5; filter:drop-shadow(0 0 4px rgba(195,154,91,.6));}
+  .wtip{position:absolute; z-index:5; pointer-events:none; background:#2A2118; color:#EDE4D4; font-family:'Archivo',sans-serif;
+    font-size:12.5px; line-height:1.4; padding:7px 11px; border-radius:5px; max-width:220px; box-shadow:0 6px 18px rgba(0,0,0,.28);
+    transform:translate(-50%,-115%); white-space:normal;}
+  .wtip strong{color:var(--brass-light);}
+  .wlegend{display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:center; margin:14px 0 2px; font-family:'Archivo',sans-serif; font-size:11px; color:var(--book-dim);}
+  .wl-item{display:inline-flex; align-items:center; gap:5px;}
+  .wl-swatch{width:12px; height:12px; border-radius:3px; display:inline-block; flex:0 0 auto;}
+  .wl-gold-strong{background:#B4832E;} .wl-gold-soft{background:#9A7440; opacity:.6;} .wl-faint{background:#8C7E69; opacity:.35;}
   /* Index grid */
   .gridscroll{overflow-x:auto; margin:6px -20px 0; padding:0 20px 6px;}
+  /* Mobile fallback: below 640px the 9x9 grid is unreadable even with scroll —
+     show the accordion instead. Above it, show the table and hide the accordion. */
+  .grid-mobile{display:none;}
+  @media (max-width:640px){ .grid-desktop{display:none;} .grid-mobile{display:block;} }
+  .gaItem{border:1px solid var(--book-line); border-radius:6px; margin:6px 0; background:rgba(0,0,0,.015); overflow:hidden;}
+  .gaItem summary{display:flex; align-items:center; gap:10px; padding:11px 12px; cursor:pointer; font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--book-ink); list-style:none;}
+  .gaItem summary::-webkit-details-marker{display:none;}
+  .gaSum{display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:5px; color:#EDE4D4; font-family:'Archivo',sans-serif; font-weight:700; font-size:11px; flex:0 0 auto;}
+  .gaScore{margin-left:auto; font-family:'Archivo',sans-serif; font-size:13px; color:var(--gold-ink); font-weight:700;}
+  .gaBody{padding:0 12px 10px 50px;}
+  .gaRow{display:flex; align-items:baseline; gap:8px; padding:5px 0; border-bottom:1px solid var(--book-line); font-size:12.5px;}
+  .gaRow:last-child{border-bottom:none;}
+  .gaDot{width:7px; height:7px; border-radius:50%; flex:0 0 auto;}
+  .gaOther{color:var(--book-dim); min-width:78px;}
+  .gaBraid{font-family:'Fraunces',serif; font-weight:600; color:var(--book-ink);}
+  .gaRow.mine{background:rgba(195,154,91,.22);} .gaRow.adj{background:rgba(195,154,91,.08);}
   .igrid{border-collapse:separate; border-spacing:3px; margin:0 auto; min-width:min-content;}
   .igrid td{padding:0; border:none;}
   .gcell{width:62px; height:40px; border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; line-height:1.05;}
@@ -798,6 +824,13 @@ function ranking(){
 const realmColor = meta => meta==="soma"?"var(--soma)" : meta==="mind"?"var(--mind)" : "var(--field)";
 const realmHex   = meta => meta==="soma"?"#8C3B2E"     : meta==="mind"?"#54687C"     : "#4E6156";
 const domById = id => DOMAINS.find(d=>d.id===id);
+const DOMAIN_DEF = {
+ KIN:"Learns and reproduces physical movement fast.", SEN:"Notices fine sensory detail others miss.",
+ ADP:"Body tolerates and recovers from extremes.", ANL:"Finds the pattern, the error, the system.",
+ MEM:"Recalls detail, sequence, and faces with ease.", GEN:"Produces new ideas readily and often.",
+ REL:"Reads people and rooms accurately.", EXP:"Transmits — an audience follows and feels it.",
+ PER:"Notices change and orientation in a space."
+};
 
 /* Personal constellation wheel (SVG). R = scores map, primaryKey + adjKeys highlight braids. */
 function buildWheel(R, primaryKey, adjKeys, primaryBraid){
@@ -830,9 +863,13 @@ function buildWheel(R, primaryKey, adjKeys, primaryBraid){
  order.forEach(id=>{ const d=domById(id), [x,y]=pos[id], sc=R[id].score;
   const col=realmHex(d.meta), r=22+sc/100*7, op=(0.12+0.5*sc/100).toFixed(2);
   const isTop=(id===primaryKey.split("|")[0]||id===primaryKey.split("|")[1]);
-  svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}" fill-opacity="${op}" stroke="${col}" stroke-width="${isTop?3:1.5}"/>`;
-  svg+=`<text x="${x.toFixed(1)}" y="${(y+1).toFixed(1)}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="13" fill="${col}">${d.code}</text>`;
-  svg+=`<text x="${x.toFixed(1)}" y="${(y+14).toFixed(1)}" text-anchor="middle" font-family="Archivo,sans-serif" font-size="9" font-weight="700" fill="${col}">${sc}</text>`;
+  const tipName=esc(d.name), tipBody=esc(`${sc} · ${DOMAIN_DEF[id]}`);
+  svg+=`<g class="wnode" tabindex="0" role="button" aria-label="${tipName} — ${tipBody}" data-name="${tipName}" data-body="${tipBody}">`;
+  svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r+8).toFixed(1)}" fill="transparent"/>`; // larger invisible hit target
+  svg+=`<circle class="wdot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}" fill-opacity="${op}" stroke="${col}" stroke-width="${isTop?3:1.5}"/>`;
+  svg+=`<text x="${x.toFixed(1)}" y="${(y+1).toFixed(1)}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="13" fill="${col}" style="pointer-events:none">${d.code}</text>`;
+  svg+=`<text x="${x.toFixed(1)}" y="${(y+14).toFixed(1)}" text-anchor="middle" font-family="Archivo,sans-serif" font-size="9" font-weight="700" fill="${col}" style="pointer-events:none">${sc}</text>`;
+  svg+=`</g>`;
  });
  svg+=`</svg>`;
  return svg;
@@ -855,7 +892,24 @@ function buildGrid(R, primaryKey, adjKeys){
   }
   rows+=`<tr>${cells}</tr>`;
  }
- return `<div class="gridscroll"><table class="igrid">${rows}</table></div>`;
+ const desktop = `<div class="gridscroll grid-desktop"><table class="igrid">${rows}</table></div>`;
+ return desktop + buildGridAccordion(R, primaryKey, adjKeys);
+}
+
+/* Mobile fallback: a 9×9 triangular table doesn't work at phone width — an
+   accordion, one entry per domain, listing the braid it forms with every
+   other domain. Same data as the desktop grid, browsable without pinch-zoom. */
+function buildGridAccordion(R, primaryKey, adjKeys){
+ const rows = DOMAINS.map(d=>{
+  const others = DOMAINS.filter(o=>o.id!==d.id).map(o=>{
+   const br=braidFor(d.id,o.id), k=braidKey(d.id,o.id);
+   const mine=k===primaryKey, adj=adjKeys.has(k);
+   const dotc = br.tier==="C"?"#B4832E":br.tier==="S"?"#4E6156":br.tier==="R"?"#8C3B2E":"#54687C";
+   return `<div class="gaRow ${mine?'mine':adj?'adj':''}"><span class="gaDot" style="background:${dotc}"></span><span class="gaOther">${o.name}</span><span class="gaBraid">${br.name}</span></div>`;
+  }).join("");
+  return `<details class="gaItem"><summary><span class="gaSum" style="background:${realmColor(d.meta)}">${d.code}</span>${d.name}<span class="gaScore">${R[d.id].score}</span></summary><div class="gaBody">${others}</div></details>`;
+ }).join("");
+ return `<div class="grid-mobile">${rows}</div>`;
 }
 
 /* Field guide: all 36, grouped by tier, personalized. */
@@ -1293,10 +1347,17 @@ function results(){
   <div class="book">
    <div class="eyebrow-b">Your place in the field</div>
    <h2 class="bt">The Constellation</h2>
-   <p class="btsub">All nine domains, sized by your score. Your braid is drawn in gold.</p>
+   <p class="btsub">All nine domains, sized by your score. Your braid is drawn in gold. Hover or tab through a domain for its score and definition.</p>
    <hr class="brule">
-   <div class="wheelwrap">${buildWheel(R, primaryKey, adjKeys, primary)}</div>
-   <div class="bfoot">The bold gold thread is your braid. The lighter gold threads are the neighbouring pairings among your three strongest domains; the faint web is every other combination.</div>
+   <div class="wheelwrap" id="wheelWrap">${buildWheel(R, primaryKey, adjKeys, primary)}<div class="wtip" id="wheelTip" hidden></div></div>
+   <div class="wlegend">
+    <span class="wl-item"><i class="wl-swatch wl-gold-strong"></i>Your braid</span>
+    <span class="wl-item"><i class="wl-swatch wl-gold-soft"></i>Neighbouring pairs</span>
+    <span class="wl-item"><i class="wl-swatch wl-faint"></i>Every other combination</span>
+    <span class="wl-item"><i class="wl-swatch" style="background:var(--soma)"></i>SOMA</span>
+    <span class="wl-item"><i class="wl-swatch" style="background:var(--mind)"></i>MIND</span>
+    <span class="wl-item"><i class="wl-swatch" style="background:var(--field)"></i>FIELD</span>
+   </div>
   </div>
 
   <div class="book">
@@ -1355,6 +1416,25 @@ function results(){
   else { $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }
  };
  if(!S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render
+ wireWheelTooltip();
+}
+
+/* Constellation hover/focus tooltip: name, score, one-line definition. */
+function wireWheelTooltip(){
+ const wrap=$("wheelWrap"), tip=$("wheelTip");
+ if(!wrap||!tip) return;
+ const show=node=>{ const wr=wrap.getBoundingClientRect(), nr=node.getBoundingClientRect();
+  tip.innerHTML=`<strong>${node.dataset.name}</strong> — ${node.dataset.body}`;
+  tip.style.left=(nr.left+nr.width/2-wr.left)+"px";
+  tip.style.top=(nr.top-wr.top)+"px";
+  tip.hidden=false; };
+ const hide=()=>{ tip.hidden=true; };
+ wrap.querySelectorAll(".wnode").forEach(node=>{
+  node.addEventListener("pointerenter",()=>show(node));
+  node.addEventListener("pointerleave",hide);
+  node.addEventListener("focus",()=>show(node));
+  node.addEventListener("blur",hide);
+ });
 }
 
 /* ============ REFERENCE VIEW: all 36 braids ============ */
