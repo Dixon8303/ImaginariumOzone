@@ -290,6 +290,9 @@
 /* Paste your Google Apps Script Web-App URL here to collect anonymized results.
    Leave empty ("") and submission is skipped silently. See data-collection-setup.md. */
 const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9Lj6Cbi3HL_nhcLe2yPSvTOzutv35GJknxVh2wbqUXDDFcQ4/exec";
+/* Paste the book's purchase link here once it's live. Leave empty ("") and the
+   intro screen shows a disabled "coming soon" placeholder instead of a dead link. */
+const BOOK_URL = "";
 
 /* ============ DATA ============ */
 const DOMAINS = [
@@ -464,11 +467,69 @@ function setProg(p){ $("prog").hidden=false; $("progFill").style.width=(p*100).t
 function litCells(n){ const g=$("glyphHead").children; for(let i=0;i<9;i++) g[i].classList.toggle("lit", i<n); }
 (function(){ const g=$("glyphHead"); for(let i=0;i<9;i++) g.appendChild(document.createElement("div")); })();
 
+/* ============ INTRO: book-grounding content (for links shared without the book) ============ */
+/* Static domain map -- no scores yet at this point, just the framework itself.
+   Reuses the .glyph.big grid component (defined in CSS, otherwise unused on
+   this screen) so it reads as the same visual language as the results page. */
+function buildDomainMapHTML(){
+ const cells=[...DOMAINS].sort((a,b)=>a.cell-b.cell);
+ const grid = cells.map(d=>{
+  const col=realmHex(d.meta);
+  return `<div style="background:${col}1f; border-color:${col}77;">
+    <span class="code" style="color:${col}">${d.code.toUpperCase()}</span>
+    <span class="pct" style="color:var(--paper-dim)">${d.name}</span>
+   </div>`;
+ }).join("");
+ return `<div class="glyph big" style="margin:16px auto; justify-content:center">${grid}</div>
+  <p class="small dim" style="text-align:center;line-height:1.7">
+   <span style="color:${realmHex("soma")}">■</span> SOMA — the body &nbsp;&nbsp;
+   <span style="color:${realmHex("mind")}">■</span> MIND — the mind &nbsp;&nbsp;
+   <span style="color:${realmHex("field")}">■</span> FIELD — the field
+  </p>`;
+}
+/* A worked, non-personal example so a first-time visitor can see the shape of
+   the output before answering anything. Reuses the exact .book/.braidcard
+   markup the real results page renders, so it's an honest preview, not a mockup. */
+function sampleBraidCardHTML(){
+ return `<div class="book" style="margin:14px 0 2px">
+   <div class="braidcard">
+    <div class="yb">Example result</div>
+    <div class="bname">The Storyteller</div>
+    <div class="bpair"><span class="domchip mind"><span class="dot"></span>Generative</span><span class="amp">×</span><span class="domchip field"><span class="dot"></span>Expressive</span></div>
+    <div class="tierbadge tier-C">Canonical Ten</div>
+    <div class="tiersub">One of the ten combinations distinct enough to carry a name of its own.</div>
+    <div class="braiddesc">Makes the new thing and transmits it.</div>
+   </div>
+  </div>
+  <p class="small dim" style="text-align:center;margin:6px 0 2px">Illustrative only — your own result depends entirely on your own answers.</p>`;
+}
+
 /* ============ SCREEN: INTRO ============ */
 function intro(){
  h(`
   <h1>Everybody carries a genius.<br>This locates yours.</h1>
   <p class="dim" style="margin:14px 0 4px">81 items and nine short stations. About 25–35 minutes. Nothing here measures intelligence — the Index locates where ability comes easiest to you, so it can be named and grown. <em>Identify to amplify.</em></p>
+
+  <div class="card">
+    <h3>What this measures, and why</h3>
+    <p class="small dim">This is the companion assessment to <strong>The Genius Index</strong>, the book that this instrument is built from. The book's premise: intelligence isn't one number — everybody is genuinely gifted somewhere, and the task is finding where, naming it, and growing it on purpose.</p>
+    <p class="small dim" style="margin-top:8px">It maps ability into <strong>nine domains</strong> across three realms — <strong>SOMA</strong> (the body), <strong>MIND</strong> (the mind), and <strong>FIELD</strong> (people and the world around you).</p>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h3>The nine domains</h3>
+    ${buildDomainMapHTML()}
+  </div>
+
+  <div class="card">
+    <h3>Why a "braid"</h3>
+    <p class="small dim">Genius is rarely a single gift — it's almost always two domains standing out together. The book names all thirty-six of those pairings <strong>braids</strong>, from The Craftsman (Kinetic × Sensory) to The Diplomat (Relational × Perceptive). This instrument scores your nine domains from what you report and how you actually perform, then resolves and explains your own braid — the same material the book covers, personalized to your answers.</p>
+    ${sampleBraidCardHTML()}
+    ${BOOK_URL
+      ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
+      : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
+  </div>
+
   <div class="card">
     <h3>How to take it honestly</h3>
     <p class="small">1 · Answer for how things <strong>actually happen</strong>, not how you'd like them to.<br>
