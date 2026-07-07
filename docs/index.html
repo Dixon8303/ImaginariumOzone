@@ -159,6 +159,11 @@
   .submitstatus{font-family:'Archivo',sans-serif; font-size:12.5px; text-align:center; margin:12px 0 0; color:var(--book-dim);}
   .submitstatus.ok{color:var(--field);} .submitstatus.err{color:var(--soma);}
   .book details{margin-top:16px;} .book details summary{cursor:pointer; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--book-dim); font-weight:600;}
+  details.abc{background:#F5EFE2; border:1px solid var(--book-line); border-radius:4px; padding:10px 14px; margin:14px 0;}
+  details.abc summary{color:var(--gold-ink); font-family:'Archivo',sans-serif;}
+  details.abc[open] summary{margin-bottom:6px;}
+  .abclist{list-style:none; margin:6px 0; padding:0;}
+  .abclist li{font-size:13px; line-height:1.5; color:var(--book-ink); padding:6px 0 6px 14px; border-left:2px solid var(--brass); margin:6px 0; background:rgba(195,154,91,.06);}
   .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
   .consentline{display:flex; gap:10px; align-items:flex-start; margin:14px 0 4px; font-size:12.5px; line-height:1.45;}
   .consentline input{width:20px; height:20px; accent-color:var(--brass); flex:0 0 auto; margin-top:1px;}
@@ -835,6 +840,57 @@ function submitResult(payload){
   .catch(()=>{ if(el){ el.textContent="✗ Couldn't reach the study server. Your results are safe below — copy the data block and send it manually."; el.className="submitstatus err"; } });
 }
 
+/* ============ INTERPRETATION COMPUTE LAYER ============ */
+/* Domain -> book chapter (Ch 7 Kinetic … Ch 15 Perceptive; 17–18 = stacking + protocol) */
+const chapterOf = id => 7 + DOMAINS.findIndex(d=>d.id===id);
+const CH_STACK = 18; // the amplification/protocol chapter
+const BAND_RANK = {Signature:3, Supporting:2, Developing:1, Dormant:0};
+
+/* Shape classifier (Round 1 §4.1). Uses the TRUE signature count from scores
+   (the same isSig rule results() uses), not the display band — which force-names
+   a top domain even on a flat profile and would mask a real Plateau. */
+function computeShape(R, sorted){
+ const scores = sorted.map(d=>R[d.id].score);
+ const median = scores.slice().sort((a,b)=>a-b)[4];
+ const isSig = v => v>=70 && v>=median+10;
+ const sig = scores.filter(isSig).length;
+ const sup = sorted.filter(d=> R[d.id].score>=55 && !isSig(R[d.id].score)).length;
+ const gap = R[sorted[0].id].score - R[sorted[1].id].score;
+ if(sig===1 && gap>=15) return "Tower";
+ if(sig>=2) return "Ridge";
+ if(sig===1 && sup>=2) return "Anchored";
+ return "Plateau";
+}
+
+/* Reachable next braids (Round 1 §4.3): canonical pairs where one member is
+   Signature and the other is Supporting+, ranked by summed score; fall back to
+   Strong Pairs to fill two slots. Excludes the reader's primary braid. */
+function computeReachable(R, band, primaryKey){
+ const eligible = list => list
+  .filter(b=>{ const bx=band(domById(b.pair[0])), by=band(domById(b.pair[1]));
+    return (bx==="Signature" && BAND_RANK[by]>=2) || (by==="Signature" && BAND_RANK[bx]>=2); })
+  .sort((a,b)=> (R[b.pair[0]].score+R[b.pair[1]].score) - (R[a.pair[0]].score+R[a.pair[1]].score));
+ const notPrimary = b => braidKey(b.pair[0],b.pair[1])!==primaryKey;
+ let picks = eligible(BRAIDS.filter(b=>b.tier==="C" && notPrimary(b))).slice(0,2);
+ if(picks.length<2){
+  const more = eligible(BRAIDS.filter(b=>b.tier==="S" && notPrimary(b) && !picks.includes(b)));
+  picks = picks.concat(more).slice(0,2);
+ }
+ return picks;
+}
+
+/* Read Next ordering (Round 1 §4.4) — labels only, capped at 5. */
+function computeReadNext(R, band, sorted, topUnclaimed){
+ const out=[], seen=new Set();
+ const add=(id,note)=>{ if(id && !seen.has(id)){ seen.add(id); out.push({id, ch:chapterOf(id), name:domById(id).name, note}); } };
+ sorted.filter(d=>band(d)==="Signature").forEach(d=>add(d.id,"your Signature"));
+ if(topUnclaimed) add(topUnclaimed.id,"the unclaimed pivot");
+ const dormantAspir = DOMAINS.find(d=>band(d)==="Dormant" && !R[d.id].skipped && (R[d.id].B-R[d.id].A)<=-30);
+ if(dormantAspir) add(dormantAspir.id,"the caution chapter");
+ out.push({id:"_stack", ch:`17–18`, name:"Stacking & the protocol", note:"how to braid on purpose"});
+ return out.slice(0,5);
+}
+
 /* ============ RESULTS ============ */
 function results(){
  setProg(1); litCells(9); busy=false;
@@ -862,13 +918,21 @@ function results(){
  for(let i=0;i<top3.length;i++) for(let j=i+1;j<top3.length;j++){ const k=braidKey(top3[i].id,top3[j].id); if(k!==primaryKey) adjKeys.add(k); }
  const band=d=>{ if(sig.includes(d)) return "Signature";
   if(R[d.id].score>=55) return "Supporting"; if(R[d.id].score<40) return "Dormant"; return "Developing"; };
- const latent=DOMAINS.filter(d=> R[d.id].A-R[d.id].C>=35);
- const aspir =DOMAINS.filter(d=> R[d.id].C-R[d.id].A>=35);
- const diverg=DOMAINS.filter(d=> !R[d.id].skipped && Math.abs(R[d.id].A-R[d.id].B)>30);
+ /* Gaps are performance (B) minus self-report (A). Domains with a skipped station
+    have no B and are excluded. Unclaimed = you did better than you claim. */
+ const gapOf = d => R[d.id].skipped ? null : Math.round(R[d.id].B - R[d.id].A);
+ const unclaimed = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)>=30)
+   .sort((a,b)=>gapOf(b)-gapOf(a));
+ const aspir = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)<=-30)
+   .sort((a,b)=>gapOf(a)-gapOf(b));
+ const topUnclaimed = unclaimed[0] || null;
+ const shape = computeShape(R, sorted);
+ const reachable = computeReachable(R, band, primaryKey);
+ const readNext = computeReadNext(R, band, sorted, topUnclaimed);
  const sdrFlag = S.respSDR[0]>=3 && S.respSDR[1]>=3;
  const compTop3=sorted.slice(0,3).map(d=>d.id);
  const overlap=S.ranksTop.filter(x=>compTop3.includes(x)).length;
- const code = sig.map(d=>d.code).join("·") + (latent.length?` (+${latent.map(d=>d.code.toLowerCase()).join(",")})`:"");
+ const code = sig.map(d=>d.code).join("·") + (unclaimed.length?` (+${unclaimed.map(d=>d.code.toLowerCase()).join(",")})`:"");
 
  const bars=sorted.map(d=>`<div class="barrow ${d.meta}"><span class="lbl">${d.name}</span>
    <span class="trk"><i style="width:${R[d.id].score}%"></i></span><span class="val">${R[d.id].score}</span></div>`).join("");
@@ -879,11 +943,13 @@ function results(){
   ranksTop:S.ranksTop,ranksBot:S.ranksBot,
   domains:Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
   signature:code, braid:primary?primary.name:null, braidPair:braidDoms.map(d=>d.id), braidTier:primary?primary.tier:null,
-  adjacent:[...adjKeys],
-  flags:{sdr:sdrFlag,latent:latent.map(d=>d.id),aspirational:aspir.map(d=>d.id),diverge:diverg.map(d=>d.id),rankOverlap:overlap}};
+  adjacent:[...adjKeys], shape, reachable:reachable.map(b=>b.name),
+  flags:{sdr:sdrFlag, unclaimed:unclaimed.map(d=>d.id), aspirational:aspir.map(d=>d.id), topUnclaimed:topUnclaimed?topUnclaimed.id:null, rankOverlap:overlap}};
 
  const tm = primary?TIER_META[primary.tier]:null;
  const chip = d => `<span class="domchip ${d.meta}"><span class="dot"></span>${d.name}</span>`;
+ // Stash context so the all-36 reference view can highlight the reader's braid.
+ S.ctx={R, primaryKey, adjKeys, primary};
 
  h(`
   <div class="stagecount" style="margin-top:8px">Your result · complete</div>
@@ -909,21 +975,11 @@ function results(){
    <div class="bfoot">The bold gold thread is your braid. The lighter gold threads are the neighbouring pairings among your three strongest domains; the faint web is every other combination.</div>
   </div>
 
-  <div class="book">
-   <div class="eyebrow-b">Every pairing, side by side</div>
-   <h2 class="bt">The Complete Index Grid</h2>
-   <p class="btsub">Nine domains down the diagonal; every square is the braid two of them make. Yours is ringed in gold.</p>
-   <hr class="brule">
-   ${buildGrid(R, primaryKey, adjKeys)}
-   <div class="bfoot">The diagonal shows each domain and your score in it. Gold-dotted squares are the canonical ten; your braid is outlined, its neighbours lightly marked.</div>
-  </div>
-
-  <div class="book">
-   <div class="eyebrow-b">The complete catalogue</div>
-   <h2 class="bt">The Field Guide</h2>
-   <p class="btsub">All thirty-six braids — the two domains behind each, and what it looks like in a person. Your region of the field reads brightest.</p>
-   <hr class="brule">
-   ${buildFieldGuide(R, primaryKey, adjKeys)}
+  <div class="book" style="text-align:center">
+   <div class="eyebrow-b">The full field</div>
+   <h2 class="bt">All thirty-six braids</h2>
+   <p class="btsub">Your report stays on your own braid and the ones you're closest to building. The complete catalogue — every pairing, the index grid, the field guide — lives on its own page.</p>
+   <button class="btn book-primary" style="max-width:340px;margin:6px auto 0" onclick="showAllBraids()">Explore all 36 braids →</button>
   </div>
 
   <div class="book">
@@ -934,10 +990,18 @@ function results(){
    <table style="color:var(--book-ink)"><tr><th style="color:var(--gold-ink)">Domain</th><th style="color:var(--gold-ink)">Band</th><th style="color:var(--gold-ink)">A · B · C</th></tr>
     ${sorted.map(d=>`<tr><td>${d.name}</td><td>${band(d)}</td><td style="color:var(--book-dim)">${Math.round(R[d.id].A)} · ${R[d.id].skipped?"—":Math.round(R[d.id].B)} · ${Math.round(R[d.id].C)}${R[d.id].skipped?' <span style="font-size:10px">(self-report)</span>':""}</td></tr>`).join("")}
    </table>
-   ${sdrFlag?`<div class="flag"><strong>Honesty check.</strong> Your answers to the two check items suggest a flattering read. Answer for how things actually happen, not how you'd like them to — the Index is only useful unclouded. A re-take is recommended.</div>`:""}
-   ${latent.length?`<div class="pass"><strong>Unclaimed genius.</strong> ${latent.map(d=>d.name).join(", ")}: your track record outruns your self-image here. This is the Index's most valuable finding — explore it first.</div>`:""}
-   ${aspir.length?`<div class="flag"><strong>Aspirational gap.</strong> ${aspir.map(d=>d.name).join(", ")}: your self-image outruns the record. Not a verdict — a training map.</div>`:""}
-   ${diverg.length?`<div class="flag"><strong>Self-view vs performance.</strong> ${diverg.map(d=>d.name).join(", ")}: inventory and station diverge by 30+ points — worth exploring, not concluding.</div>`:""}
+   <details class="abc"><summary>How to read A · B · C</summary>
+    <p class="small" style="color:var(--book-ink);margin:8px 0 2px">Every domain score blends three different questions into one number.</p>
+    <ul class="abclist">
+     <li><strong>A — What you say happens.</strong> Your answers about real-life frequency. Carries the most weight (<strong>50%</strong>) — repeated behavior is the strongest single signal of a genuine gift.</li>
+     <li><strong>B — What you did when tested.</strong> A short live task, scored on the spot — the check on A (<strong>30%</strong>). Skip a station and the domain is computed from A and C alone, reweighted to fill the gap; skipping never zeroes a domain out.</li>
+     <li><strong>C — How you're wired to train it.</strong> A short disposition reading (<strong>20%</strong>) — not ability, but whether your temperament makes this a natural domain to develop. High C with low A/B isn't a gift yet; it's an aptitude waiting to become one.</li>
+    </ul>
+    <p class="small" style="color:var(--book-ink);margin:8px 0 0"><strong>The real insight is in the gaps, not the average.</strong> B ahead of A means you're underselling a real capability — an <em>unclaimed genius</em>. A ahead of B means your self-image has outpaced the record — an <em>aspirational gap</em>: not a failure, an honest map of where the work still is.</p>
+   </details>
+   ${sdrFlag?`<div class="callout callout--oxblood"><span class="ct">Honesty check</span>Your answers to the two check items suggest a flattering read. Answer for how things actually happen, not how you'd like them to — the Index is only useful unclouded. A re-take is recommended.</div>`:""}
+   ${unclaimed.length?`<div class="callout callout--moss"><span class="ct">Unclaimed genius${topUnclaimed?` · ${topUnclaimed.name} +${gapOf(topUnclaimed)}`:""}</span>${unclaimed.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: you performed well ahead of how you rate yourself. This is the Index's most valuable finding — explore it first. Chapter ${topUnclaimed?chapterOf(topUnclaimed.id):"—"} shows what to do with it.</div>`:""}
+   ${aspir.length?`<div class="callout callout--oxblood"><span class="ct">Aspirational gap</span>${aspir.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: your self-image outruns the record. Not a verdict — a training map.</div>`:""}
    <div class="card small" style="background:#F5EFE2;color:var(--book-ink);border-color:var(--book-line)">Forced-rank convergence: your top-3 picks matched <strong>${overlap} of 3</strong> computed leaders.</div>
 
    <p class="submitstatus" id="submitStatus"></p>
@@ -963,8 +1027,38 @@ function results(){
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,()=>{ $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }); }
   else { $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }
  };
- submitResult(exportObj);
+ if(!S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render
 }
+
+/* ============ REFERENCE VIEW: all 36 braids ============ */
+function showAllBraids(){
+ const c=S.ctx; if(!c) return;
+ try{ history.pushState(null,"","#all-braids"); }catch(e){}
+ const backBtn=`<button class="btn book-ghost" style="max-width:220px" onclick="backToResults()">← Back to my results</button>`;
+ h(`
+  <div class="stagecount" style="margin-top:8px">Reference · all thirty-six braids</div>
+  <div class="book">
+   ${backBtn}
+   <div class="eyebrow-b" style="margin-top:14px">Every pairing, side by side</div>
+   <h2 class="bt">The Complete Index Grid</h2>
+   <p class="btsub">Nine domains down the diagonal; every square is the braid two of them make. Yours is ringed in gold.</p>
+   <hr class="brule">
+   ${buildGrid(c.R, c.primaryKey, c.adjKeys)}
+   <div class="bfoot">The diagonal shows each domain and your score in it. Gold-dotted squares are the canonical ten; your braid is outlined, its neighbours lightly marked.</div>
+  </div>
+  <div class="book">
+   <div class="eyebrow-b">The complete catalogue</div>
+   <h2 class="bt">The Field Guide</h2>
+   <p class="btsub">All thirty-six braids — the two domains behind each, and what it looks like in a person. Your region of the field reads brightest.</p>
+   <hr class="brule">
+   ${buildFieldGuide(c.R, c.primaryKey, c.adjKeys)}
+   <div style="margin-top:16px">${backBtn}</div>
+  </div>
+ `);
+}
+function backToResults(){ try{ history.pushState(null,"","#results"); }catch(e){} results(); }
+// Browser Back from the reference view returns to the results.
+window.addEventListener("hashchange",()=>{ if(location.hash!=="#all-braids" && S.ctx && $("stage") && /all thirty-six/.test($("stage").textContent||"")) results(); });
 
 /* ============ BOOT ============ */
 let busy=false;
