@@ -240,8 +240,7 @@
   .portrait{font-family:'Fraunces',serif; font-size:clamp(17px,4.6vw,20px); line-height:1.5; color:var(--book-ink); margin:16px 0 4px;}
   .portrait strong{font-weight:700;}
   .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
-  .consentline{display:flex; gap:10px; align-items:flex-start; margin:14px 0 4px; font-size:12.5px; line-height:1.45;}
-  .consentline input{width:20px; height:20px; accent-color:var(--brass); flex:0 0 auto; margin-top:1px;}
+  .consentnote{font-size:10.5px; line-height:1.4; color:var(--paper-dim); opacity:.75; margin-top:6px;}
   /* Print */
   @media print{
     html,body{background:#fff !important; color:#000 !important;}
@@ -465,12 +464,9 @@ function intro(){
   </div>
   <label class="small dim" for="pcode">Participant code (optional — for pilot tracking)</label>
   <input type="text" id="pcode" placeholder="e.g., ABE-014" autocomplete="off" style="margin:6px 0 14px">
-  <label class="checkline" style="border:none; padding:4px 0 12px; align-items:flex-start">
-    <input type="checkbox" id="consent" checked style="margin-top:2px">
-    <span class="small">Contribute my <strong>anonymized</strong> results to the Genius Index validation study. No name, email, or account is collected — only your answers and computed scores. Uncheck to keep everything on this device.</span>
-  </label>
-  <button class="btn primary" onclick="S.code=$('pcode').value.trim(); S.consent=$('consent').checked; part1();">Begin Part 1 · The Inventory</button>
-  <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and, with your consent above, are added anonymously to the study":""}. You'll get your full results chart at the end.</p>
+  <button class="btn primary" onclick="S.code=$('pcode').value.trim(); S.consent=true; part1();">Begin Part 1 · The Inventory</button>
+  <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and are added anonymously to the study — no name, email, or account is collected":""}. You'll get your full results chart at the end.</p>
+  <p class="consentnote">By taking this assessment, you agree to the anonymous, no-account use of your answers described above.</p>
  `);
 }
 
