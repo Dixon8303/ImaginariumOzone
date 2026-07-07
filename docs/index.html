@@ -172,6 +172,35 @@
   details.abc[open] summary{margin-bottom:6px;}
   .abclist{list-style:none; margin:6px 0; padding:0;}
   .abclist li{font-size:13px; line-height:1.5; color:var(--book-ink); padding:6px 0 6px 14px; border-left:2px solid var(--brass); margin:6px 0; background:rgba(195,154,91,.06);}
+  /* ── R3 content modules (all inside .callout cards) ── */
+  .callout p{font-size:13.5px; line-height:1.5; color:var(--book-ink);}
+  .modfoot{font-family:'Literata',Georgia,serif; font-style:italic; font-size:12.5px; color:var(--book-dim); margin-top:10px !important; border-top:1px solid var(--book-line); padding-top:8px;}
+  .dot.soma{background:var(--soma);} .dot.mind{background:var(--mind);} .dot.field{background:var(--field);}
+  details.ev{margin:0 0 12px;} details.ev summary{list-style:none;} details.ev summary::-webkit-details-marker{display:none;}
+  details.ev summary .ct{cursor:pointer;} details.ev summary .ct::after{content:" ▸"; font-size:11px;} details.ev[open] summary .ct::after{content:" ▾";}
+  .evrow{padding:8px 0; border-bottom:1px solid var(--book-line);} .evrow:last-of-type{border-bottom:none;}
+  .evrow .evh{display:flex; align-items:center; gap:8px; font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--book-ink); margin-bottom:3px;}
+  .evrow .evh .dot{width:9px; height:9px; border-radius:50%;}
+  .evrow p{font-size:12.5px; line-height:1.5; color:var(--book-dim);}
+  .evfoot{font-family:'Literata',Georgia,serif; font-style:italic; font-size:12px; color:var(--book-dim); margin-top:8px;}
+  table.hobt, table.chalt{width:100%; border-collapse:collapse; margin:4px 0 2px; font-size:12px;}
+  table.hobt th, table.chalt th{color:var(--gold-ink); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; text-align:left; padding:4px 6px; border-bottom:1px solid var(--book-line); vertical-align:bottom;}
+  table.hobt td, table.chalt td{padding:7px 6px; border-bottom:1px solid var(--book-line); color:var(--book-ink); vertical-align:top; line-height:1.4;}
+  td.hobd{font-family:'Fraunces',serif; font-weight:600; white-space:nowrap; color:var(--gold-ink);}
+  .protowrap{margin:8px 0;} .protohd{font-family:'Fraunces',serif; font-weight:600; font-size:14px; color:var(--book-ink); margin-bottom:6px;}
+  .weekstrip{display:grid; grid-template-columns:repeat(4,1fr); gap:6px;}
+  @media (max-width:480px){ .weekstrip{grid-template-columns:1fr 1fr;} }
+  .wk{background:rgba(195,154,91,.10); border:1px solid rgba(195,154,91,.3); border-radius:5px; padding:7px 8px; font-size:11.5px; line-height:1.35; color:var(--book-ink);}
+  .wk .wkn{display:block; font-family:'Archivo',sans-serif; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-ink); font-weight:700; margin-bottom:3px;}
+  .reachcard{background:#F5EFE2; border:1px solid var(--book-line); border-radius:6px; padding:12px 14px; margin:8px 0;}
+  .reachname{font-family:'Fraunces',serif; font-weight:700; font-size:18px; color:var(--book-ink);}
+  .reachpair{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:6px 0;}
+  .reachdesc{font-size:13px; color:var(--book-ink); margin:2px 0;}
+  .reachproof{font-size:12px; color:var(--book-dim); margin-top:4px;} .reachproof span{font-family:'Archivo',sans-serif; font-weight:700; letter-spacing:.03em; color:var(--gold-ink); text-transform:uppercase; font-size:10px;}
+  .rnrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
+  .rn-chip{display:inline-flex; align-items:center; gap:6px; background:rgba(195,154,91,.12); border:1px solid rgba(195,154,91,.4); border-radius:16px; padding:5px 12px; font-family:'Fraunces',serif; font-weight:600; font-size:13px; color:var(--book-ink);}
+  .rn-chip .rn-ch{font-family:'Archivo',sans-serif; font-weight:700; font-size:9.5px; letter-spacing:.06em; color:var(--gold-ink); text-transform:uppercase;}
+  .rn-chip .rn-note{font-family:'Literata',Georgia,serif; font-style:italic; font-weight:400; font-size:11px; color:var(--book-dim);}
   .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
   .consentline{display:flex; gap:10px; align-items:flex-start; margin:14px 0 4px; font-size:12.5px; line-height:1.45;}
   .consentline input{width:20px; height:20px; accent-color:var(--brass); flex:0 0 auto; margin-top:1px;}
@@ -899,6 +928,123 @@ function computeReadNext(R, band, sorted, topUnclaimed){
  return out.slice(0,5);
 }
 
+/* ============ CONTENT LIBRARY (condensed from the book; per-domain / per-braid) ============ */
+const CAREERS = {
+ KIN:"Performance trades (dance, music, acting, athletics) · precision trades (surgery, watchmaking, luthiery) · skilled trades (welding, carpentry, culinary knife work) · teaching of movement (coaching, PT, choreography)",
+ SEN:"Ear trades (audio engineering, sound design) · palate trades (culinary, sommelier, perfumery) · eye trades (photography, colour grading, design) · QA / inspection trades",
+ ADP:"Endurance & strength trades · flexibility trades (dance, gymnastics, yoga) · breath trades (vocal, wind instruments, free-diving) · physical-labour professions — medical self-knowledge is the prerequisite throughout",
+ ANL:"Building trades of the mind (software, data science, quant finance) · diagnostic trades (medicine, debugging, forensic accounting) · strategy trades (consulting, investing) · structural trades (law, research)",
+ MEM:"Knowledge-dense professions (medicine, law, academia) · language trades (interpretation, translation) · performance-of-memory (acting, competitive memory) · relationship trades (sales, hospitality, diplomacy)",
+ GEN:"Making trades (writing, music, film, design) · invention trades (product, R&D, entrepreneurship) · idea trades (advertising, branding, content) · problem trades (innovation, consulting)",
+ REL:"Helping professions (therapy, coaching, teaching) · deal professions (sales, negotiation, biz dev) · leading professions (management, executive leadership) · service professions (hospitality, healthcare)",
+ EXP:"Platform trades (speaking, podcasting, broadcasting) · teaching trades · performance trades (acting, singing) · persuasion trades (sales, law, ministry, marketing) · leadership trades",
+ PER:"Watching trades (security, investigation) · inspection trades (QC, building & safety, aviation) · frame trades (cinematography, continuity, editing) · field trades (guiding, tracking, SAR) · experience trades (UX research, venue design)"
+};
+const HOBBIES = {
+ KIN:["A new sport from scratch, martial arts, dance","A partner-dance lesson, axe-throwing, a hands-on cooking class","A maker faire, a movement workshop"],
+ SEN:["Home barista training, tasting practice, ear-training apps","A blind tasting menu, a paint-your-own-pottery night","A tasting festival, a sound-design meetup"],
+ ADP:["Yoga & mobility training, breathwork (with a professional screen first)","A hike matched to real capacity, partner yoga","A guided (not solo) endurance event"],
+ ANL:["Chess & strategy games, cryptic puzzles","An escape room, a trivia night","A hackathon, a strategy-game tournament"],
+ MEM:["Memory-palace practice, language learning, genealogy","A trivia date, revisiting a shared place and comparing recall","A history walking tour, a storytelling night"],
+ GEN:["Sketchbook practice, songwriting, a maker project","An art-supply date, an improv class together","A hackathon, an open-mic"],
+ REL:["Hosting small gatherings, deep-listening practice","A phones-down walk, comparing reads after a show","A communal dinner series"],
+ EXP:["Public-speaking practice, a podcast habit, karaoke","Karaoke, teaching your date something you love","An open-mic, a theatre workshop"],
+ PER:["Photography walks, geocaching, birdwatching","A photo-walk date, a scavenger hunt in a new neighbourhood","A nature & wildlife tour, an urban-sketching meetup"]
+};
+const CHALLENGES = {
+ KIN:["Impatience with purely verbal instruction; the gift reads as “not real intelligence” to others","A new physical skill, no manual — figure it out by feel"],
+ SEN:["Comes across as overly particular; genuinely bothered by low-quality environments others don't notice","Any task where getting the fine detail exactly right is the whole point"],
+ ADP:["Tolerance can mask real cost — risk of ignoring true limits","An honest physical ceiling to find, safely, with guidance"],
+ ANL:["“Always finds the problem” fatigues people who wanted enthusiasm, not an audit","The genuinely broken system nobody else could untangle"],
+ MEM:["The group leans on you as its memory and never builds their own","Mastering a body of material most people wouldn't attempt"],
+ GEN:["Idea volume looks like flakiness without visible follow-through","A genuinely open brief with no existing answer"],
+ REL:["Absorbing everyone's state is exhausting; risk of becoming free therapy","Walking into a tense room and being the one who can read it"],
+ EXP:["Can look like performing even when sincere; drained by unresponsive rooms","Any audience, any size, with something worth saying"],
+ PER:["Noticing everything is quietly tiring (the book's own hypervigilance caution)","The one detail everyone else missed, waiting to be found"]
+};
+const PROTOCOL_DOMAIN = {
+ KIN:["Baseline: film the skill cold, score it","Spacing + interleaving practice","Remove a sense / add a variable","Retention test + filmed delta"],
+ SEN:["Baseline + build a reference vocabulary","A/B discrimination drills","Blind identification","Speed trial + retest"],
+ ADP:["Baseline + professional screen","Graded load, 60–70% of ceiling","Progressive overload, log recovery","Consolidate + retest"],
+ ANL:["Baseline + name the pattern in words","Decomposition drills, find the flaw","Estimation & forecasting (Fermi)","Speed trial + retest"],
+ MEM:["Baseline + build a memory palace","Encoding systems (numbers / names / text)","Spaced retrieval practice","Volume push + retest"],
+ GEN:["Baseline + quantity reps, no judging","Cross-domain input, force a connection","Constraint & blend","Select / refine + retest"],
+ REL:["Baseline + silent reads (predict, check)","Learn people's real baselines","Active verification, check it out loud","Response practice + retest"],
+ EXP:["Baseline + 60-second transmissions","One charismatic tactic per day","Emotional transmission, check it landed","Live reps + retest"],
+ PER:["Baseline + the room audit","Change detection (the delta drill)","Field vigilance, the baseline book","The unaided day + retest"]
+};
+const EVIDENCE = {
+ KIN:"Folklore says fast physical learners are simply “born that way” and that muscle memory is permanent once earned. The record is messier — cellular retention of trained muscle (myonuclei) is a contested, unsettled hypothesis in humans. What's real: rate of skill acquisition varies and is measurable — the permanence story is the part still unproven.",
+ SEN:"Folklore says perfect pitch and fine sensory acuity are fixed gifts you're born with. The record shows absolute pitch is strongly tied to a critical early window plus tonal-language exposure — a genetic-only origin has been ruled out. What's real: acuity is substantially built by early demand, not issued at birth.",
+ ADP:"Folklore treats extreme endurance, flexibility, or low sleep need as superhuman willpower. The record shows these are often rare population- or mutation-level adaptations (documented spleen adaptation in free-diving populations; an inherited gene variant behind true natural short sleep) — not something to train your way into. What's real: the capacity is genuine, but overriding your own limits on purpose can be dangerous. See a professional before you test this one.",
+ ANL:"Folklore says “math people” are born, not made. The record shows expert pattern-recognition (a chess master's board-reading) is built through structured practice and exposure, not raw innate ability — though mindset-effect sizes are genuinely debated. What's real: this domain is trainable further than the folklore admits.",
+ MEM:"Folklore promises true photographic memory. The record: no well-documented adult case has ever been replicated, and the one famous claim is compromised by conflict of interest in its own research. What's real: exceptional memory is genuine but works through dense association, not mental photography — and it is highly trainable by technique.",
+ GEN:"Folklore says creative genius waits for rare, superior flashes of inspiration. The record (the equal-odds rule) says quality tracks quantity — the most creative people are also the most prolific, misfires included. What's real: output volume is the lever, not waiting for the “right” idea.",
+ REL:"Folklore says some people can just read minds. The record: even trained professionals barely beat chance at lie detection, though rapid “thin-slice” judgments are surprisingly accurate on other things. What's real: this is a genuine, measurable skill on subtle cues — keep the confidence calibrated; it isn't mind-reading.",
+ EXP:"Folklore says charisma is innate — you have it or you don't. The record identifies specific, learnable verbal and nonverbal tactics that reliably increase perceived charisma. What's real: this is substantially trainable technique, not fixed birthright.",
+ PER:"Folklore claims a paranormal “sixth sense” for danger or being watched. Controlled testing finds no reliable effect above chance. What's real: what reads as a sixth sense is usually fast, often subconscious integration of real cues (peripheral motion, sound, pattern deviation) — trainable through deliberate attention, not paranormal."
+};
+/* Currency of proof, keyed by braid name (all 36). */
+const CURRENCY = {
+ "The Craftsman":"a finished, technically precise piece — a dish, a recording, a built object",
+ "The Performer":"a recorded or live performance that visibly moves an audience",
+ "The Connoisseur":"a judgment or rating that experts independently confirm as correct",
+ "The Translator":"writing or a talk that makes a hard idea click for a lay audience",
+ "The Diagnostician":"a documented catch — a bug, error, or anomaly found and explained",
+ "The Connector":"a network of real relationships you can actually call on",
+ "The Storyteller":"a finished, shipped narrative work",
+ "The Leader":"a team or room that visibly moved because of you, with a result to show",
+ "The Instrument":"a recorded vocal or physical performance demonstrating range and control",
+ "The Documentarian":"a published observational piece that makes others see what you saw",
+ "The Natural":"a skill picked up from scratch, demonstrated on camera in a short window",
+ "The Tactician":"a match / game record showing anticipation, not just execution",
+ "The Virtuoso":"a performed repertoire executed from memory",
+ "The Maker":"a physical object or prototype invented and built by hand",
+ "The Healer":"client outcomes or testimonials from hands-on practice",
+ "The Athlete":"game footage showing reads and reactions under real conditions",
+ "The Composer":"an original sensory work released — music, a dish, a fragrance",
+ "The Empath":"documented cases of correctly reading and meeting an unspoken need",
+ "The Stylist":"a body of stylistically distinctive published work",
+ "The Tracker":"a documented find — the clue or subject others missed",
+ "The Optimizer":"a measurable before / after improvement in a trained physical outcome",
+ "The Caregiver":"a sustained caregiving or crisis-work record with real outcomes",
+ "The Explorer":"a completed expedition or route log showing endurance and navigation",
+ "The Scholar":"a demonstrated body of expertise — publication, credential, teaching",
+ "The Inventor":"a shipped invention or prototype that solves a real problem",
+ "The Negotiator":"closed deals or resolved disputes with documented terms",
+ "The Synthesizer":"an original work that visibly recombines disparate source material",
+ "The Bard":"a delivered oral performance from memory, well received",
+ "The Witness":"an accurate, detailed account of an event that held up under scrutiny",
+ "The Entertainer":"a live, improvised, or hosted performance that read the room and landed",
+ "The Visionary":"a documented early call on a trend, later validated by events",
+ "The Diplomat":"a resolved multi-party situation with all sides satisfied, on record",
+ "The Adept":"a demonstrated controlled response under real sensory / physical stress",
+ "The Aesthete":"a portfolio of precisely recalled or reproduced sensory signatures",
+ "The Veteran":"a multi-year track record with detailed recall of specifics across it",
+ "The Daredevil":"a novel physical feat performed and documented, safely"
+};
+/* Team-fit partner, for the ten canonical braids; others fall back to Expressive/Analytic. */
+const TEAMFIT = {
+ "The Craftsman":"An Expressive collaborator, to carry the work to an audience",
+ "The Performer":"An Analytic collaborator, to build the structure around the performance",
+ "The Connoisseur":"A Relational collaborator, to turn the judgment into relationships",
+ "The Translator":"A Generative collaborator, to keep fresh material coming",
+ "The Diagnostician":"An Expressive collaborator, to report findings persuasively",
+ "The Connector":"A Generative or Analytic collaborator, to give the network something to rally around",
+ "The Storyteller":"An Analytic or Perceptive collaborator, to keep the story grounded and well-timed",
+ "The Leader":"An Analytic collaborator, to pressure-test the plan behind the vision",
+ "The Instrument":"A Generative collaborator, to keep writing new material for the voice",
+ "The Documentarian":"An Analytic collaborator, to turn observations into a structured argument"
+};
+function teamFitFor(primary){
+ if(!primary) return "An Expressive or Analytic collaborator, to communicate and structure the work.";
+ if(TEAMFIT[primary.name]) return TEAMFIT[primary.name];
+ const ids=primary.pair;
+ if(!ids.includes("EXP")) return "An Expressive collaborator, to communicate the work.";
+ if(!ids.includes("ANL")) return "An Analytic collaborator, to structure and scale the work.";
+ return "A Relational collaborator, to widen the work's reach.";
+}
+
 /* Hero motif: the book's 3×3 cover grid (nine domains by realm row), with the
    reader's two braid domains lit in gold and a gold thread linking them. */
 function buildHeroGlyph(braidDoms){
@@ -917,6 +1063,75 @@ function buildHeroGlyph(braidDoms){
  const p=braidDoms.map(d=>{ const i=cells.findIndex(c=>c.id===d.id); return [30+(i%3)*62, 30+Math.floor(i/3)*62]; });
  const thread = p.length===2 ? `<line x1="${p[0][0]}" y1="${p[0][1]}" x2="${p[1][0]}" y2="${p[1][1]}" stroke="#B4832E" stroke-width="3" stroke-linecap="round" stroke-opacity="0.9" class="braid-draw" pathLength="1"/>` : "";
  return `<div class="heroglyph"><svg viewBox="0 0 184 184" aria-hidden="true">${thread}${cellSvg}</svg></div>`;
+}
+
+/* Book-sourced result modules (R3). All built on the .callout component.
+   m = { sig, topDoms, R, band, primary, braidDoms, reachable, readNext, shape } */
+function bookModules(m){
+ const chDom = id => chapterOf(id);
+ const domChip = d => `<span class="domchip ${d.meta}" style="font-size:13px;padding:5px 11px 5px 9px"><span class="dot"></span>${d.name}</span>`;
+ const sigChapters = m.sig.map(d=>chDom(d.id));
+ const chList = ids => (ids.length>1?"Chapters ":"Chapter ")+ids.join(" & ");
+
+ // Evidence Ledger — one accordion entry per Signature domain
+ const evidence = `<details class="ev"><summary><span class="ct" style="color:var(--gold-ink)">The evidence ledger</span></summary>
+   ${m.sig.map(d=>`<div class="evrow"><div class="evh"><span class="dot ${d.meta}"></span>${d.name}</div><p>${EVIDENCE[d.id]}</p></div>`).join("")}
+   <p class="evfoot">The Index measures what folklore only asserts. ${chList(sigChapters)} carries each full ledger.</p></details>`;
+
+ // Careers
+ const careers = `<div class="callout callout--brass"><span class="ct">Where this pays</span>
+   ${m.sig.map(d=>`<p style="margin:2px 0 8px"><strong>${d.name}.</strong> ${CAREERS[d.id]}</p>`).join("")}
+   <p class="modfoot">None of these hire the marker — they hire it demonstrated. ${chList(sigChapters)} names the specific proof each field reads.</p></div>`;
+
+ // Hobbies / dates — blend top 1–2 domains
+ const hob = `<div class="callout callout--moss"><span class="ct">Where your genius comes alive</span>
+   <table class="hobt"><tr><th></th><th>Hobbies</th><th>A date or outing</th><th>An event to seek</th></tr>
+   ${m.topDoms.map(d=>`<tr><td class="hobd">${d.name}</td><td>${HOBBIES[d.id][0]}</td><td>${HOBBIES[d.id][1]}</td><td>${HOBBIES[d.id][2]}</td></tr>`).join("")}</table>
+   <p class="modfoot">${chList(m.topDoms.map(d=>chDom(d.id)))} has more on why these domains crave this kind of exercise, not just work.</p></div>`;
+
+ // Challenges
+ const chal = `<div class="callout callout--oxblood"><span class="ct">Friction points & growth edges</span>
+   <table class="chalt"><tr><th>Domain</th><th>The shadow</th><th>The edge you'd enjoy</th></tr>
+   ${m.sig.map(d=>`<tr><td class="hobd">${d.name}</td><td>${CHALLENGES[d.id][0]}</td><td>${CHALLENGES[d.id][1]}</td></tr>`).join("")}</table></div>`;
+
+ // 30-Day domain protocol
+ const proto = m.sig.map(d=>`<div class="protowrap"><div class="protohd">${d.name} · 30 days</div>
+   <div class="weekstrip">${PROTOCOL_DOMAIN[d.id].map((w,i)=>`<div class="wk"><span class="wkn">Week ${i+1}</span>${w}</div>`).join("")}</div></div>`).join("");
+ const protocol = `<div class="callout callout--brass"><span class="ct">Your 30-day development protocol</span>
+   ${proto}
+   <p class="modfoot">This is the compressed version. ${chList(sigChapters)} runs the full day-by-day — what to log, and why each week builds on the last.</p></div>`;
+
+ // Braids you could build next
+ const reach = m.reachable.length ? `<div class="callout callout--brass"><span class="ct">Braids you could build next</span>
+   ${m.reachable.map(br=>{ const d0=domById(br.pair[0]), d1=domById(br.pair[1]);
+     return `<div class="reachcard"><div class="reachname">${br.name}</div>
+       <div class="reachpair">${domChip(d0)} <span style="color:var(--book-dim)">${Math.round(m.R[br.pair[0]].score)}</span> × ${domChip(d1)} <span style="color:var(--book-dim)">${Math.round(m.R[br.pair[1]].score)}</span></div>
+       <p class="reachdesc">${br.desc}</p>
+       <p class="reachproof"><span>Currency of proof:</span> ${CURRENCY[br.name]||"a finished, demonstrated piece of work"}.</p></div>`; }).join("")}
+   <p class="modfoot">You already carry one strand of each. The other is within reach — that's what makes these the next braids to build.</p></div>` : "";
+
+ // Team fit
+ const team = `<div class="callout callout--slate"><span class="ct">Who to pair with</span>
+   <p style="margin:2px 0">Not who to become — who complements you. For ${m.primary?`<strong>${m.primary.name}</strong>`:"your braid"}: ${teamFitFor(m.primary)}.</p></div>`;
+
+ // Read next
+ const readnext = `<div class="callout callout--brass"><span class="ct">Read next</span>
+   <div class="rnrow">${m.readNext.map(e=>`<span class="rn-chip"><span class="rn-ch">Ch ${e.ch}</span>${e.name}${e.note?`<span class="rn-note"> · ${e.note}</span>`:""}</span>`).join("")}</div></div>`;
+
+ return `
+  <div class="book">
+   <div class="eyebrow-b">What your genius is for</div>
+   <h2 class="bt">Where it lives in a life</h2>
+   <p class="btsub">Your Signature ${m.sig.length>1?"domains":"domain"} — ${m.sig.map(d=>d.name).join(" & ")} — read into work, play, and the edges between.</p>
+   <hr class="brule">
+   ${evidence}${careers}${hob}${chal}
+  </div>
+  <div class="book">
+   <div class="eyebrow-b">What to do with it</div>
+   <h2 class="bt">Grow it on purpose</h2>
+   <hr class="brule">
+   ${protocol}${reach}${team}${readnext}
+  </div>`;
 }
 
 /* ============ RESULTS ============ */
@@ -957,6 +1172,7 @@ function results(){
  const shape = computeShape(R, sorted);
  const reachable = computeReachable(R, band, primaryKey);
  const readNext = computeReadNext(R, band, sorted, topUnclaimed);
+ const topDoms = sorted.slice(0,2); // for hobbies/dates blend
  const sdrFlag = S.respSDR[0]>=3 && S.respSDR[1]>=3;
  const compTop3=sorted.slice(0,3).map(d=>d.id);
  const overlap=S.ranksTop.filter(x=>compTop3.includes(x)).length;
@@ -1004,13 +1220,6 @@ function results(){
    <div class="bfoot">The bold gold thread is your braid. The lighter gold threads are the neighbouring pairings among your three strongest domains; the faint web is every other combination.</div>
   </div>
 
-  <div class="book" style="text-align:center">
-   <div class="eyebrow-b">The full field</div>
-   <h2 class="bt">All thirty-six braids</h2>
-   <p class="btsub">Your report stays on your own braid and the ones you're closest to building. The complete catalogue — every pairing, the index grid, the field guide — lives on its own page.</p>
-   <button class="btn book-primary" style="max-width:340px;margin:6px auto 0" onclick="showAllBraids()">Explore all 36 braids →</button>
-  </div>
-
   <div class="book">
    <div class="eyebrow-b">The measurements</div>
    <h2 class="bt">Your Nine Domains</h2>
@@ -1032,20 +1241,29 @@ function results(){
    ${unclaimed.length?`<div class="callout callout--moss"><span class="ct">Unclaimed genius${topUnclaimed?` · ${topUnclaimed.name} +${gapOf(topUnclaimed)}`:""}</span>${unclaimed.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: you performed well ahead of how you rate yourself. This is the Index's most valuable finding — explore it first. Chapter ${topUnclaimed?chapterOf(topUnclaimed.id):"—"} shows what to do with it.</div>`:""}
    ${aspir.length?`<div class="callout callout--oxblood"><span class="ct">Aspirational gap</span>${aspir.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: your self-image outruns the record. Not a verdict — a training map.</div>`:""}
    <div class="card small" style="background:#F5EFE2;color:var(--book-ink);border-color:var(--book-line)">Forced-rank convergence: your top-3 picks matched <strong>${overlap} of 3</strong> computed leaders.</div>
+  </div>
 
+  ${bookModules({sig, topDoms, R, band, primary, braidDoms, reachable, readNext, shape})}
+
+  <div class="book" style="text-align:center">
+   <div class="eyebrow-b">The full field</div>
+   <h2 class="bt">All thirty-six braids</h2>
+   <p class="btsub">Your report stays on your own braid and the ones you're closest to building. The complete catalogue — every pairing, the index grid, the field guide — lives on its own page.</p>
+   <button class="btn book-primary" style="max-width:340px;margin:6px auto 0" onclick="showAllBraids()">Explore all 36 braids →</button>
+  </div>
+
+  <div class="book">
    <p class="submitstatus" id="submitStatus"></p>
-   <div class="btnrow" style="margin-top:14px">
+   <div class="btnrow">
     <button class="btn book-primary" onclick="window.print()">Save / print my chart</button>
     <button class="btn book-ghost" onclick="if(confirm('Reset and clear this session?')) location.reload()">Take it again</button>
    </div>
-
    <details>
     <summary>Pilot data (for study participants)</summary>
     <p class="small" style="color:var(--book-dim);margin:8px 0">If the automatic upload didn't go through, copy this block and send it to the study coordinator.</p>
     <textarea class="export" id="exp" readonly>${esc(JSON.stringify(exportObj))}</textarea>
     <button class="btn book-ghost" id="copyBtn" style="margin-top:8px">Copy results block</button>
    </details>
-
    <div class="bfoot" style="text-align:center">The Genius Index is a reflective and developmental tool. It is not a test, a diagnosis, or a measure of intelligence. <em>Identify to amplify.</em></div>
   </div>
  `);
