@@ -13,10 +13,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400&display=swap" rel="stylesheet">
 <style>
   :root{
+    /* — Material world (shared with the book + print system) — */
     --ink:#231B15; --ink2:#2E241B; --paper:#EDE4D4; --paper-dim:#B9AD98;
-    --brass:#C39A5B; --brass-deep:#9A7440; --oxblood:#8C3B2E; --moss:#5E7367;
+    --brass:#C39A5B; --brass-deep:#9A7440; --brass-light:#D3AC6C; /* the Glow */
+    --oxblood:#8C3B2E; --moss:#5E7367; --slate:#7E93A8; --sage:#A9B4A6;
     --line:rgba(237,228,212,.14);
-    /* Book realm palette (from Braid Constellations) */
+    /* Realm colours (Braid Constellations figure) — source of truth for SOMA/MIND/FIELD.
+       Note: --mind (#54687C) is the FAMILY colour; --slate (#7E93A8) is the lighter
+       band/tint tone. Keep them distinct. */
     --soma:#8C3B2E; --mind:#54687C; --field:#4E6156;
     --gold-ink:#7A5B31; --gold-chord:#6E6150;
     --book-paper:#EDE4D4; --book-ink:#2A2118; --book-dim:#6B6258; --book-line:rgba(42,33,24,.14);
@@ -59,8 +63,19 @@
   .card{background:var(--ink2); border:1px solid var(--line); padding:18px; margin:14px 0;}
   .rule{border:none; border-top:1px solid var(--line); margin:18px 0;}
   .qtext{font-family:'Fraunces',serif; font-size:21px; line-height:1.32; font-weight:600; margin:6px 0 18px;}
-  .flag{border-left:3px solid var(--oxblood); padding:10px 12px; background:rgba(140,59,46,.12); margin:10px 0; font-size:13.5px; line-height:1.5;}
-  .pass{border-left:3px solid var(--moss); padding:10px 12px; background:rgba(94,115,103,.12); margin:10px 0; font-size:13.5px; line-height:1.5;}
+  /* ── Callout card: the single reusable module component (colored left border).
+     Set --accent + --accent-tint; every new results module is built on this. ── */
+  .callout{--accent:var(--brass); --accent-tint:rgba(195,154,91,.12);
+    border-left:3px solid var(--accent); padding:12px 14px; margin:12px 0;
+    background:var(--accent-tint); font-size:13.5px; line-height:1.5; border-radius:0 4px 4px 0;}
+  .callout .ct{display:block; font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--accent); margin-bottom:3px; letter-spacing:.01em;}
+  .callout--oxblood{--accent:var(--oxblood); --accent-tint:rgba(140,59,46,.12);}
+  .callout--moss{--accent:var(--moss); --accent-tint:rgba(94,115,103,.12);}
+  .callout--slate{--accent:var(--slate); --accent-tint:rgba(126,147,168,.14);}
+  .callout--brass{--accent:var(--brass-deep); --accent-tint:rgba(195,154,91,.14);}
+  /* Legacy aliases (existing markup) now share the component look */
+  .flag{border-left:3px solid var(--oxblood); padding:10px 12px; background:rgba(140,59,46,.12); margin:10px 0; font-size:13.5px; line-height:1.5; border-radius:0 4px 4px 0;}
+  .pass{border-left:3px solid var(--moss); padding:10px 12px; background:rgba(94,115,103,.12); margin:10px 0; font-size:13.5px; line-height:1.5; border-radius:0 4px 4px 0;}
   .timer{font-family:'Fraunces',serif; font-size:40px; font-weight:700; text-align:center; margin:10px 0; font-variant-numeric:tabular-nums;}
   textarea, input[type=text]{width:100%; background:var(--ink2); border:1px solid var(--line); color:var(--paper); padding:12px; font-family:'Archivo'; font-size:15px;}
   textarea:focus, input:focus{border-color:var(--brass); outline:none;}
@@ -152,7 +167,12 @@
     .wrap{max-width:100%; padding:0;}
     .submitstatus{display:none !important;}
   }
-  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+  /* The one signature motion moment: gold braid thread draws in on the Constellation. */
+  @media (prefers-reduced-motion: no-preference){
+    .braid-draw{ stroke-dasharray:1; stroke-dashoffset:1; animation:braidDraw 1.15s cubic-bezier(.6,.02,.2,1) .25s forwards; }
+    @keyframes braidDraw{ to{ stroke-dashoffset:0; } }
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} .braid-draw{stroke-dasharray:none; stroke-dashoffset:0;} }
 </style>
 </head>
 <body>
@@ -735,8 +755,11 @@ function buildWheel(R, primaryKey, adjKeys, primaryBraid){
   let stroke="#8C7E69",w=1,op=.22;
   if(br.tier==="C"){ stroke="#6E6150"; w=1.5; op=.42; }
   if(adjKeys.has(k)){ stroke="#9A7440"; w=2.4; op=.72; }
-  if(k===primaryKey){ stroke="#B4832E"; w=4.5; op=.98; }
-  return {svg:`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${stroke}" stroke-width="${w}" stroke-opacity="${op}" stroke-linecap="round"/>`, top:(k===primaryKey||adjKeys.has(k))}; };
+  const isPrimary=(k===primaryKey);
+  if(isPrimary){ stroke="#B4832E"; w=4.5; op=.98; }
+  // The one orchestrated moment: the primary braid thread draws itself in on load.
+  const extra = isPrimary ? ` class="braid-draw" pathLength="1"` : "";
+  return {svg:`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${stroke}" stroke-width="${w}" stroke-opacity="${op}" stroke-linecap="round"${extra}/>`, top:(k===primaryKey||adjKeys.has(k))}; };
  const cs=BRAIDS.map(br=>chord(braidKey(br.pair[0],br.pair[1]),br));
  svg+=cs.filter(c=>!c.top).map(c=>c.svg).join("")+cs.filter(c=>c.top).map(c=>c.svg).join("");
  if(primaryBraid){ const [a,b]=primaryKey.split("|"); const mx=(pos[a][0]+pos[b][0])/2, my=(pos[a][1]+pos[b][1])/2;
