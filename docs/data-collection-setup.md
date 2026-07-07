@@ -95,21 +95,39 @@ new columns at the end, so nothing you've collected so far shifts or breaks.
   - `flag_latent` and `flag_diverge` are retired columns from an earlier scoring model —
     they stay blank going forward; ignore them.
 
-## Funnel & live stats
+## Funnel tracking (in-house only, not on the public site)
 
 Every time someone clicks **Begin Part 1**, a lightweight anonymous **start** ping is
 sent (timestamp + participant code only — no answers yet). Every completed run still
 sends the full **complete** row as before. This lets you see drop-off, not just finishes.
 
-The site also has a public **Live stats** page (linked from the intro screen, or
-`your-site-url/#stats`) showing aggregate-only numbers — total completions, start→finish
-conversion, average completion time, most common braids, and shape distribution. It reads
-from the same Apps Script endpoint via `GET ?stats=1`, which returns **counts only**:
-never a raw row, a participant code, or anything traceable to one person. No setup needed
-beyond the redeploy above — it works automatically once your `Code.gs` is updated.
+There is **no public stats page** — this data is for you only. Aggregate stats (counts
+and averages, never a raw row, a participant code, or anything traceable to one person)
+are available from your Apps Script endpoint at `GET ?stats=1&key=YOUR_SECRET`, gated by
+a private key that lives only in Apps Script's Script Properties — **never in this repo**,
+so it's never publicly visible even though the repo itself is public.
+
+### One-time: set your private key
+1. In the Apps Script editor: **Project Settings** (gear icon, left sidebar) → scroll to
+   **Script Properties** → **Add script property**.
+2. Property: `STATS_KEY`. Value: any secret string only you know (e.g. a password
+   generator's output). **Save.**
+3. Redeploy a new version (see above) if you haven't already for this update.
+
+Without a `STATS_KEY` property set, or with a wrong/missing key, the endpoint behaves
+exactly like a plain healthcheck — the stats feature is invisible to anyone probing it
+without the key.
+
+### Viewing your stats
+Use the private viewer file (`genius-index-private-stats.html`) that was generated and
+sent to you directly — it is intentionally **not** part of this repo, so it never becomes
+public. Open it locally (double-click, no server needed), paste in your Web-app URL and
+your `STATS_KEY` once — it remembers them on your device — and it renders completions,
+start→finish conversion, average completion time, most common braids, and shape
+distribution. Keep this file off any public web host.
 
 > Conversion is only meaningful from the point this feature was deployed — completions
-> collected before it existed have no matching start row, so the site's very first
+> collected before it existed have no matching start row, so your very first
 > "Start → finish" percentage will look low until enough post-update data accumulates.
 
 ---
