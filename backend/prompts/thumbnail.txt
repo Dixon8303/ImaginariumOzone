@@ -1,0 +1,44 @@
+Generate a complete thumbnail system for the following Black Genius Files episode.
+
+VIDEO TITLE: {title}
+TOPIC SUMMARY: {summary}
+
+Produce the following:
+
+BASE CONCEPT A:
+- composition: describe layout and focal point
+- subject: who or what is the central image
+- text_overlay: 3–4 words maximum (punchy, curiosity-driving)
+- emotional_trigger: which emotion does this thumbnail activate?
+- comfyui_prompt: full generation prompt for this thumbnail image
+
+BASE CONCEPT B (alternative angle/approach):
+- composition
+- subject
+- text_overlay
+- emotional_trigger
+- comfyui_prompt
+
+THREE VARIANTS OF CONCEPT A:
+For each variant, change ONE element: expression, crop, or color intensity
+- variant_a1: change description + updated comfyui_prompt
+- variant_a2: change description + updated comfyui_prompt
+- variant_a3: change description + updated comfyui_prompt
+
+THREE VARIANTS OF CONCEPT B:
+Same approach — one element changed per variant.
+
+DISRUPTION VERSION:
+- Unexpected visual that breaks the pattern of typical history thumbnails
+- Extreme contrast or conceptual surprise
+- Must trigger curiosity in under 2 seconds without any text
+- comfyui_prompt
+
+THUMBNAIL RULES:
+- The image must work WITHOUT text — text is secondary
+- No clutter, no more than 2 visual elements
+- Must be legible at 168x94 pixels (mobile thumbnail size)
+- Avoid generic stock-photo aesthetics
+- Evoke: power, revelation, injustice, or triumph
+
+Output as JSON with keys: concept_a, concept_b, variants_a (array), variants_b (array), disruption

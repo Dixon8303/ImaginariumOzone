@@ -1,0 +1,49 @@
+Generate a complete Shorts package from the following Black Genius Files episode script.
+
+EPISODE TITLE: {title}
+
+SCRIPT INPUT:
+{script_json}
+
+Produce the following Shorts. Each Short must be completely self-contained — a viewer who has never seen the full episode must understand and be gripped by it.
+
+SHORT FORMAT (output as JSON array):
+- short_id: e.g., "core_1", "variant_2", "micro_3", "exp_1"
+- short_type: one of [core, hook_variant, micro, experimental]
+- title: punchy 3–6 word title for this Short
+- hook_line: the exact opening sentence (spoken in first 3 seconds)
+- narration: full script text for this Short
+- duration_seconds: target length
+- visual_notes: brief description of visuals for this Short
+- captions: array of caption strings (synced to narration rhythm)
+- cta: the call to action (3 words maximum)
+
+PRODUCE:
+5 CORE SHORTS (30–45 seconds each):
+- Each tells a complete mini-story with hook, build, and payoff
+- Drawn from the most emotionally powerful moments in the full script
+
+3 HOOK VARIANTS (of the best-performing core short concept):
+- Identical story and body
+- Different opening 3 seconds only — vary the hook approach
+
+3 MICRO SHORTS (under 30 seconds):
+- Single statistic, quote, or revelation
+- No context needed — just the punch
+
+2 EXPERIMENTAL SHORTS:
+- Format 1: reverse reveal (start with the conclusion, then explain how we got there)
+- Format 2: silent opener (5 seconds of striking visual, then narration begins) or fast-cut montage
+
+STRUCTURE FOR ALL SHORTS:
+- 0–3s: Hook (stop the scroll)
+- 70% of duration: Tension build
+- 20% of duration: Twist or revelation
+- Final 10%: Payoff + CTA (3 words max)
+
+RULES:
+- Payoff must land in the final 8 seconds
+- Every Short must stand alone — no "as I mentioned in the full video" references
+- Captions must be punchy, 3–5 words per line, timed to spoken rhythm
+
+Output: JSON array of Short objects only.

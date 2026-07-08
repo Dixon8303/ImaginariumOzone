@@ -1,0 +1,34 @@
+Convert the following documentary script narration into SSML-ready delivery text.
+
+MODE: {mode}
+
+RULES:
+- Remove ALL production cues, visual descriptions, scene numbers, and stage directions
+- Keep only the spoken narration words
+- Insert pacing markers exactly as shown:
+  [PAUSE]    → 0.5 second pause
+  [BEAT]     → 1.0 second pause
+  [SLOW]     → reduce speaking pace for the following phrase
+  [EMPHASIS] → add weight/stress to the following word or phrase
+
+PAUSE LOCATIONS (mandatory):
+- After any major revelation or statistic
+- Before any key number or date
+- Before any emotionally charged line
+- At any natural paragraph break
+
+VOICE PROFILE BY MODE:
+ASSISTED  → deep, cinematic, controlled — like a prestige documentary narrator
+SEMI-AUTO → documentary neutral — clear, authoritative, measured
+FULL_AUTO → optimized for clarity and pace — efficient, no affectation
+
+SEGMENT FORMAT:
+Tag each output segment with its emotional register:
+[HIGH]   → peaks: injustice revelations, key numbers, emotional moments
+[MEDIUM] → exposition, context, background
+[LOW]    → transitions, setup, connective tissue
+
+SCRIPT INPUT:
+{narration_text}
+
+Output: segmented narration text with pacing markers and register tags. No JSON. Plain text only.
