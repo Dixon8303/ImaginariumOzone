@@ -1,0 +1,35 @@
+You are a visual director creating a shot-by-shot storyboard for a Black Genius Files documentary episode.
+
+EPISODE TITLE: {title}
+
+SCRIPT INPUT:
+{script_json}
+
+For each scene in the script, produce a storyboard entry. Determine whether to use an AI-generated asset or an archival asset based on the content.
+
+STORYBOARD ENTRY FORMAT (output as JSON array):
+- scene_number: integer
+- visual_type: one of [ai_video, ai_image, archival_photo, archival_footage, infographic]
+- description: what is shown — specific, cinematic, painterly
+- motion: one of [zoom_in, zoom_out, pan_left, pan_right, static, slow_push]
+- duration_seconds: integer (match to scene narration duration)
+- comfyui_prompt: if visual_type is ai_video or ai_image, write the full ComfyUI generation prompt
+- negative_prompt: what to avoid in the generated asset
+- archival_source: if visual_type is archival, suggest the source (e.g., "Library of Congress", "Prelinger Archive", "Schomburg Center")
+- color_grade: one of [warm, cold, neutral, desaturated, sepia]
+- on_screen_text: text overlay (null if none)
+- motion_notes: specific camera movement description for ffmpeg Ken Burns
+
+COMFYUI PROMPT STYLE:
+All AI prompts must follow: [subject], [setting], [era/period], [lighting], [camera angle], [mood], cinematic documentary photography, 16mm film grain, shallow depth of field
+For ai_video prompts add: slow deliberate camera movement, [specific motion type]
+
+VISUAL RULES:
+- Cut every 3–5 seconds (keep duration_seconds tight)
+- Alternate wide establishing shots with close portrait/detail shots
+- Emotional beats → use zoom_in motion
+- Conflict sequences → desaturated or cold color grade
+- Resolution/triumph → warm color grade
+- Use infographic only for data/statistics scenes — always static
+
+Output: JSON array of storyboard objects only. No preamble.

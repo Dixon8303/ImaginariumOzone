@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Genius Index — Find Your Braid</title>
+<meta name="description" content="Everybody carries a genius. This locates yours. 81 items and nine short stations map your nine domains, then name the braid they make — free, anonymous, on your device.">
+<meta property="og:title" content="The Genius Index — Find Your Braid">
+<meta property="og:description" content="Everybody carries a genius. This locates yours. Nine domains, nine stations, thirty-six braids. Free and anonymous.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%23231B15'/%3E%3Cg fill='none' stroke='%23C39A5B' stroke-width='2'%3E%3Crect x='6' y='6' width='10' height='10'/%3E%3Crect x='19' y='6' width='10' height='10'/%3E%3Crect x='32' y='6' width='10' height='10'/%3E%3Crect x='6' y='19' width='10' height='10'/%3E%3Crect x='19' y='19' width='10' height='10' fill='%23C39A5B'/%3E%3Crect x='32' y='19' width='10' height='10'/%3E%3Crect x='6' y='32' width='10' height='10'/%3E%3Crect x='19' y='32' width='10' height='10'/%3E%3Crect x='32' y='32' width='10' height='10'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Archivo:wght@400;500;600;700&family=Literata:ital,opsz,wght@0,7..72,400;1,7..72,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* — Material world (shared with the book + print system) — */
+    --ink:#231B15; --ink2:#2E241B; --paper:#EDE4D4; --paper-dim:#B9AD98;
+    --brass:#C39A5B; --brass-deep:#9A7440; --brass-light:#D3AC6C; /* the Glow */
+    --oxblood:#8C3B2E; --moss:#5E7367; --slate:#7E93A8; --sage:#A9B4A6;
+    --line:rgba(237,228,212,.14);
+    /* Realm colours (Braid Constellations figure) — source of truth for SOMA/MIND/FIELD.
+       Note: --mind (#54687C) is the FAMILY colour; --slate (#7E93A8) is the lighter
+       band/tint tone. Keep them distinct. */
+    --soma:#8C3B2E; --mind:#54687C; --field:#4E6156;
+    --gold-ink:#7A5B31; --gold-chord:#6E6150;
+    --book-paper:#EDE4D4; --book-ink:#2A2118; --book-dim:#6B6258; --book-line:rgba(42,33,24,.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{background:var(--ink); color:var(--paper); font-family:'Archivo',sans-serif; -webkit-font-smoothing:antialiased;}
+  body{min-height:100vh; display:flex; flex-direction:column; align-items:center;}
+  .wrap{width:100%; max-width:660px; padding:20px 18px 64px;}
+  header{display:flex; justify-content:space-between; align-items:center; padding:14px 2px 10px; border-bottom:1px solid var(--line); margin-bottom:22px;}
+  .eyebrow{font-size:11px; letter-spacing:.22em; color:var(--brass); font-weight:600; text-transform:uppercase;}
+  .sub{font-size:10px; letter-spacing:.14em; color:var(--paper-dim); text-transform:uppercase; margin-top:3px;}
+  h1{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(30px,7vw,44px); line-height:1.06; letter-spacing:-0.01em;}
+  h2{font-family:'Fraunces',serif; font-weight:600; font-size:24px; line-height:1.15; margin-bottom:10px;}
+  h3{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--brass); margin-bottom:8px; font-weight:600;}
+  p{line-height:1.55; font-size:15px;}
+  .dim{color:var(--paper-dim);}
+  .small{font-size:12.5px; line-height:1.5;}
+  /* Grid glyph */
+  .glyph{display:grid; grid-template-columns:repeat(3,12px); grid-template-rows:repeat(3,12px); gap:3px;}
+  .glyph div{background:transparent; border:1px solid var(--brass-deep); transition:background .5s ease;}
+  .glyph div.lit{background:var(--brass);}
+  .glyph.big{grid-template-columns:repeat(3,64px); grid-template-rows:repeat(3,64px); gap:8px; margin:18px auto;}
+  .glyph.big div{border:1px solid var(--line); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:11px; letter-spacing:.06em; transition:background .5s;}
+  .glyph.big .code{font-weight:700; font-size:14px; font-family:'Fraunces',serif;}
+  .glyph.big .pct{font-size:10px; color:var(--ink); opacity:.85;}
+  /* Buttons */
+  .btn{display:block; width:100%; padding:15px 16px; margin:8px 0; background:var(--ink2); border:1px solid var(--line); color:var(--paper); font-family:'Archivo',sans-serif; font-size:15px; text-align:left; cursor:pointer; transition:border-color .15s, background .15s;}
+  /* Keyboard focus always highlights; hover only on real pointers so a tapped
+     position doesn't stay "stuck" looking selected on the next question (touch fix). */
+  .btn:focus-visible{border-color:var(--brass); outline:none;}
+  @media (hover:hover){ .btn:hover{border-color:var(--brass); outline:none;} }
+  .btn.sel{border-color:var(--brass); background:#3A2E20;}
+  .btn.primary{background:var(--brass); color:var(--ink); font-weight:700; text-align:center; border:none; letter-spacing:.04em;}
+  @media (hover:hover){ .btn.primary:hover{background:#D3AC6C;} }
+  .btn.ghost{text-align:center; color:var(--paper-dim);}
+  .btn:disabled{opacity:.35; cursor:default;}
+  .btnrow{display:flex; gap:8px;} .btnrow .btn{margin:8px 0;}
+  /* Progress */
+  .prog{height:3px; background:var(--ink2); margin:0 0 20px; position:relative;}
+  .prog i{position:absolute; left:0; top:0; bottom:0; background:var(--brass); transition:width .3s;}
+  .stagecount{font-size:11px; letter-spacing:.16em; color:var(--paper-dim); text-transform:uppercase; margin-bottom:14px;}
+  /* Cards & misc */
+  .card{background:var(--ink2); border:1px solid var(--line); padding:18px; margin:14px 0;}
+  .rule{border:none; border-top:1px solid var(--line); margin:18px 0;}
+  .qtext{font-family:'Fraunces',serif; font-size:21px; line-height:1.32; font-weight:600; margin:6px 0 18px;}
+  /* ── Callout card: the single reusable module component (colored left border).
+     Set --accent + --accent-tint; every new results module is built on this. ── */
+  .callout{--accent:var(--brass); --accent-tint:rgba(195,154,91,.12);
+    border-left:3px solid var(--accent); padding:12px 14px; margin:12px 0;
+    background:var(--accent-tint); font-size:13.5px; line-height:1.5; border-radius:0 4px 4px 0;}
+  .callout .ct{display:block; font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--accent); margin-bottom:3px; letter-spacing:.01em;}
+  .callout--oxblood{--accent:var(--oxblood); --accent-tint:rgba(140,59,46,.12);}
+  .callout--moss{--accent:var(--moss); --accent-tint:rgba(94,115,103,.12);}
+  .callout--slate{--accent:var(--slate); --accent-tint:rgba(126,147,168,.14);}
+  .callout--brass{--accent:var(--brass-deep); --accent-tint:rgba(195,154,91,.14);}
+  /* Legacy aliases (existing markup) now share the component look */
+  .flag{border-left:3px solid var(--oxblood); padding:10px 12px; background:rgba(140,59,46,.12); margin:10px 0; font-size:13.5px; line-height:1.5; border-radius:0 4px 4px 0;}
+  .pass{border-left:3px solid var(--moss); padding:10px 12px; background:rgba(94,115,103,.12); margin:10px 0; font-size:13.5px; line-height:1.5; border-radius:0 4px 4px 0;}
+  .timer{font-family:'Fraunces',serif; font-size:40px; font-weight:700; text-align:center; margin:10px 0; font-variant-numeric:tabular-nums;}
+  textarea, input[type=text]{width:100%; background:var(--ink2); border:1px solid var(--line); color:var(--paper); padding:12px; font-family:'Archivo'; font-size:15px;}
+  textarea:focus, input:focus{border-color:var(--brass); outline:none;}
+  .padgrid{display:grid; grid-template-columns:1fr 1fr; gap:10px; max-width:280px; margin:16px auto;}
+  .pad{aspect-ratio:1; font-size:30px; background:var(--ink2); border:1px solid var(--line); color:var(--paper); cursor:pointer;}
+  .pad.flash{background:var(--brass); color:var(--ink);}
+  .memgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:14px 0;}
+  .memgrid .btn{margin:0; text-align:center; padding:12px 6px; font-size:14px;}
+  .bars{margin:16px 0;}
+  .barrow{display:flex; align-items:center; gap:10px; margin:7px 0;}
+  .barrow .lbl{width:96px; font-size:12px; letter-spacing:.04em;}
+  .barrow .trk{flex:1; height:12px; background:var(--ink2); position:relative;}
+  .barrow .trk i{position:absolute; left:0; top:0; bottom:0;}
+  .barrow .val{width:34px; text-align:right; font-size:12px; font-variant-numeric:tabular-nums;}
+  .soma i{background:var(--brass);} .mind i{background:#A9B4A6;} .field i{background:#7E93A8;}
+  .sig{font-family:'Fraunces',serif; font-size:clamp(34px,9vw,52px); font-weight:700; text-align:center; color:var(--brass); margin:10px 0 2px; letter-spacing:.02em;}
+  .sigsub{text-align:center; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--paper-dim); margin-bottom:14px;}
+  .checkline{display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font-size:14.5px;}
+  .checkline input{width:20px; height:20px; accent-color:var(--brass);}
+  table{width:100%; border-collapse:collapse; font-size:13px; margin:10px 0;}
+  td,th{padding:7px 6px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top;}
+  th{color:var(--brass); font-size:11px; letter-spacing:.12em; text-transform:uppercase;}
+  .export{font-size:11px; height:120px; word-break:break-all;}
+  /* ============ RESULTS · BOOK PAGES ============ */
+  .book{background:var(--book-paper); color:var(--book-ink); margin:22px -18px 0; padding:26px 20px 30px; border-top:2px solid var(--brass);}
+  .book + .book{margin-top:0; border-top:1px solid var(--book-line);}
+  .book .eyebrow-b{font-family:'Archivo',sans-serif; font-size:10.5px; letter-spacing:.28em; font-weight:700; text-transform:uppercase; color:var(--gold-ink); text-align:center;}
+  .book h2.bt{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(24px,6vw,32px); line-height:1.08; text-align:center; color:var(--book-ink); margin:4px 0 6px; letter-spacing:-.01em;}
+  .book .btsub{font-family:'Literata',Georgia,serif; font-style:italic; font-size:14px; line-height:1.4; text-align:center; color:var(--book-dim); max-width:44ch; margin:0 auto 4px;}
+  .book .brule{width:56px; height:2px; background:var(--brass); border:none; margin:12px auto 20px;}
+  .book .bfoot{font-family:'Literata',Georgia,serif; font-style:italic; font-size:12.5px; line-height:1.5; color:var(--book-dim); border-top:1px solid var(--book-line); margin-top:22px; padding-top:14px;}
+  /* Braid hero card */
+  /* Hero: the cover object, elevated. Radial paper-glow behind the lit-grid motif. */
+  .book--hero{position:relative; overflow:hidden;}
+  .book--hero::before{content:""; position:absolute; top:-10%; left:50%; transform:translateX(-50%);
+    width:340px; height:340px; border-radius:50%; pointer-events:none;
+    background:radial-gradient(circle, rgba(195,154,91,.20) 0%, rgba(195,154,91,.06) 42%, transparent 70%);}
+  .braidcard{text-align:center; padding:8px 0 4px; position:relative;}
+  .braidcard .yb{font-family:'Archivo',sans-serif; font-size:11px; letter-spacing:.3em; font-weight:700; text-transform:uppercase; color:var(--gold-ink);}
+  .heroglyph{width:150px; margin:16px auto 6px;}
+  .heroglyph svg{display:block; width:100%; height:auto; overflow:visible;
+    filter:drop-shadow(0 6px 18px rgba(154,116,64,.28));}
+  .braidcard .bname{font-family:'Fraunces',serif; font-weight:700; font-size:clamp(40px,12vw,64px); line-height:1.0; color:var(--book-ink); margin:8px 0 12px; letter-spacing:-.005em;}
+  .braidcard .bpair{display:flex; gap:10px; justify-content:center; align-items:center; flex-wrap:wrap; margin:12px 0;}
+  .domchip{display:inline-flex; align-items:center; gap:7px; padding:7px 14px 7px 11px; border-radius:20px; font-family:'Fraunces',serif; font-weight:600; font-size:15px; background:rgba(0,0,0,.03);}
+  .domchip .dot{width:11px; height:11px; border-radius:50%;}
+  .domchip.soma{color:var(--soma); box-shadow:inset 0 0 0 1.5px rgba(140,59,46,.45);} .domchip.soma .dot{background:var(--soma);}
+  .domchip.mind{color:var(--mind); box-shadow:inset 0 0 0 1.5px rgba(84,104,124,.45);} .domchip.mind .dot{background:var(--mind);}
+  .domchip.field{color:var(--field); box-shadow:inset 0 0 0 1.5px rgba(78,97,86,.45);} .domchip.field .dot{background:var(--field);}
+  .bpair .amp{font-family:'Fraunces',serif; font-size:19px; color:var(--book-dim);}
+  .tierbadge{display:inline-block; margin:8px auto 2px; padding:6px 16px; border-radius:4px; font-family:'Archivo',sans-serif; font-size:11px; letter-spacing:.18em; font-weight:700; text-transform:uppercase;}
+  .tier-C{background:var(--brass); color:#2A2118;}
+  .tier-S{background:rgba(78,97,86,.16); color:var(--field); box-shadow:inset 0 0 0 1.5px rgba(78,97,86,.5);}
+  .tier-R{background:rgba(140,59,46,.13); color:var(--soma); box-shadow:inset 0 0 0 1.5px rgba(140,59,46,.5);}
+  .tier-Q{background:rgba(84,104,124,.13); color:var(--mind); box-shadow:inset 0 0 0 1.5px rgba(84,104,124,.5);}
+  .tiersub{font-family:'Literata',Georgia,serif; font-style:italic; font-size:13.5px; color:var(--book-dim); margin:8px auto 0; max-width:42ch;}
+  .braiddesc{font-family:'Fraunces',serif; font-size:18px; line-height:1.4; color:var(--book-ink); margin:14px auto 0; max-width:40ch;}
+  /* Constellation wheel */
+  .wheelwrap{margin:6px auto 0; max-width:520px; position:relative;}
+  .wheelwrap svg{display:block; width:100%; height:auto; overflow:visible;}
+  .wnode{cursor:pointer;} .wnode:focus{outline:none;}
+  .wnode:focus .wdot, .wnode:hover .wdot{stroke-width:3.5; filter:drop-shadow(0 0 4px rgba(195,154,91,.6));}
+  .wtip{position:absolute; z-index:5; pointer-events:none; background:#2A2118; color:#EDE4D4; font-family:'Archivo',sans-serif;
+    font-size:12.5px; line-height:1.4; padding:7px 11px; border-radius:5px; max-width:220px; box-shadow:0 6px 18px rgba(0,0,0,.28);
+    transform:translate(-50%,-115%); white-space:normal;}
+  .wtip strong{color:var(--brass-light);}
+  .wlegend{display:flex; flex-wrap:wrap; gap:8px 16px; justify-content:center; margin:14px 0 2px; font-family:'Archivo',sans-serif; font-size:11px; color:var(--book-dim);}
+  .wl-item{display:inline-flex; align-items:center; gap:5px;}
+  .wl-swatch{width:12px; height:12px; border-radius:3px; display:inline-block; flex:0 0 auto;}
+  .wl-gold-strong{background:#B4832E;} .wl-gold-soft{background:#9A7440; opacity:.6;} .wl-faint{background:#8C7E69; opacity:.35;}
+  /* Index grid */
+  .gridscroll{overflow-x:auto; margin:6px -20px 0; padding:0 20px 6px;}
+  /* Mobile fallback: below 640px the 9x9 grid is unreadable even with scroll —
+     show the accordion instead. Above it, show the table and hide the accordion. */
+  .grid-mobile{display:none;}
+  @media (max-width:640px){ .grid-desktop{display:none;} .grid-mobile{display:block;} }
+  .gaItem{border:1px solid var(--book-line); border-radius:6px; margin:6px 0; background:rgba(0,0,0,.015); overflow:hidden;}
+  .gaItem summary{display:flex; align-items:center; gap:10px; padding:11px 12px; cursor:pointer; font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--book-ink); list-style:none;}
+  .gaItem summary::-webkit-details-marker{display:none;}
+  .gaSum{display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:5px; color:#EDE4D4; font-family:'Archivo',sans-serif; font-weight:700; font-size:11px; flex:0 0 auto;}
+  .gaScore{margin-left:auto; font-family:'Archivo',sans-serif; font-size:13px; color:var(--gold-ink); font-weight:700;}
+  .gaBody{padding:0 12px 10px 50px;}
+  .gaRow{display:flex; align-items:baseline; gap:8px; padding:5px 0; border-bottom:1px solid var(--book-line); font-size:12.5px;}
+  .gaRow:last-child{border-bottom:none;}
+  .gaDot{width:7px; height:7px; border-radius:50%; flex:0 0 auto;}
+  .gaOther{color:var(--book-dim); min-width:78px;}
+  .gaBraid{font-family:'Fraunces',serif; font-weight:600; color:var(--book-ink);}
+  .gaRow.mine{background:rgba(195,154,91,.22);} .gaRow.adj{background:rgba(195,154,91,.08);}
+  .igrid{border-collapse:separate; border-spacing:3px; margin:0 auto; min-width:min-content;}
+  .igrid td{padding:0; border:none;}
+  .gcell{width:62px; height:40px; border-radius:4px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; line-height:1.05;}
+  .gcell .gn{font-family:'Archivo',sans-serif; font-size:8.5px; font-weight:600; letter-spacing:.01em;}
+  .gcell .gs{font-family:'Fraunces',serif; font-size:12px; font-weight:700;}
+  .gcell .gt{font-size:7px; letter-spacing:.05em;}
+  .gcell.mine{outline:2.5px solid var(--brass); outline-offset:1px; box-shadow:0 0 0 3px rgba(195,154,91,.28);}
+  .gcell.adj{outline:1.5px solid rgba(195,154,91,.6);}
+  /* Field guide */
+  .fgcols{columns:2; column-gap:26px; margin-top:4px;}
+  @media (max-width:520px){ .fgcols{columns:1;} }
+  .fgrow{break-inside:avoid; display:flex; align-items:baseline; gap:8px; padding:7px 8px; border-bottom:1px solid var(--book-line); border-radius:3px;}
+  .fgrow .fgdot{width:7px; height:7px; border-radius:50%; flex:0 0 auto; margin-top:5px; background:transparent; box-shadow:inset 0 0 0 1px var(--book-dim);}
+  .fgrow.canon .fgdot{background:var(--brass); box-shadow:none;}
+  .fgrow .fgn{font-family:'Fraunces',serif; font-weight:600; font-size:14px; color:var(--book-ink);}
+  .fgrow .fgp{font-family:'Archivo',sans-serif; font-size:9.5px; letter-spacing:.04em; color:var(--book-dim); font-weight:600;}
+  .fgrow .fgd{font-family:'Literata',Georgia,serif; font-size:11.5px; color:var(--book-dim); line-height:1.35; display:block; width:100%;}
+  .fgrow.mine{background:rgba(195,154,91,.22); box-shadow:inset 0 0 0 1.5px var(--brass);}
+  .fgrow.adj{background:rgba(195,154,91,.08);}
+  .fgtxt{flex:1;}
+  /* Result action buttons */
+  .book .btn.book-primary{background:var(--brass); color:#2A2118; border:none; font-weight:700; text-align:center; letter-spacing:.03em;}
+  .book .btn.book-ghost{background:transparent; color:var(--gold-ink); border:1px solid rgba(122,91,49,.4); text-align:center;}
+  .submitstatus{font-family:'Archivo',sans-serif; font-size:12.5px; text-align:center; margin:12px 0 0; color:var(--book-dim);}
+  .submitstatus.ok{color:var(--field);} .submitstatus.err{color:var(--soma);}
+  .book details{margin-top:16px;} .book details summary{cursor:pointer; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--book-dim); font-weight:600;}
+  details.abc{background:#F5EFE2; border:1px solid var(--book-line); border-radius:4px; padding:10px 14px; margin:14px 0;}
+  details.abc summary{color:var(--gold-ink); font-family:'Archivo',sans-serif;}
+  details.abc[open] summary{margin-bottom:6px;}
+  .abclist{list-style:none; margin:6px 0; padding:0;}
+  .abclist li{font-size:13px; line-height:1.5; color:var(--book-ink); padding:6px 0 6px 14px; border-left:2px solid var(--brass); margin:6px 0; background:rgba(195,154,91,.06);}
+  /* ── R3 content modules (all inside .callout cards) ── */
+  .callout p{font-size:13.5px; line-height:1.5; color:var(--book-ink);}
+  .modfoot{font-family:'Literata',Georgia,serif; font-style:italic; font-size:12.5px; color:var(--book-dim); margin-top:10px !important; border-top:1px solid var(--book-line); padding-top:8px;}
+  .dot.soma{background:var(--soma);} .dot.mind{background:var(--mind);} .dot.field{background:var(--field);}
+  details.ev{margin:0 0 12px;} details.ev summary{list-style:none;} details.ev summary::-webkit-details-marker{display:none;}
+  details.ev summary .ct{cursor:pointer;} details.ev summary .ct::after{content:" ▸"; font-size:11px;} details.ev[open] summary .ct::after{content:" ▾";}
+  .evrow{padding:8px 0; border-bottom:1px solid var(--book-line);} .evrow:last-of-type{border-bottom:none;}
+  .evrow .evh{display:flex; align-items:center; gap:8px; font-family:'Fraunces',serif; font-weight:600; font-size:15px; color:var(--book-ink); margin-bottom:3px;}
+  .evrow .evh .dot{width:9px; height:9px; border-radius:50%;}
+  .evrow p{font-size:12.5px; line-height:1.5; color:var(--book-dim);}
+  .evfoot{font-family:'Literata',Georgia,serif; font-style:italic; font-size:12px; color:var(--book-dim); margin-top:8px;}
+  table.hobt, table.chalt{width:100%; border-collapse:collapse; margin:4px 0 2px; font-size:12px;}
+  table.hobt th, table.chalt th{color:var(--gold-ink); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; text-align:left; padding:4px 6px; border-bottom:1px solid var(--book-line); vertical-align:bottom;}
+  table.hobt td, table.chalt td{padding:7px 6px; border-bottom:1px solid var(--book-line); color:var(--book-ink); vertical-align:top; line-height:1.4;}
+  td.hobd{font-family:'Fraunces',serif; font-weight:600; white-space:nowrap; color:var(--gold-ink);}
+  .protowrap{margin:8px 0;} .protohd{font-family:'Fraunces',serif; font-weight:600; font-size:14px; color:var(--book-ink); margin-bottom:6px;}
+  .weekstrip{display:grid; grid-template-columns:repeat(4,1fr); gap:6px;}
+  @media (max-width:480px){ .weekstrip{grid-template-columns:1fr 1fr;} }
+  .wk{background:rgba(195,154,91,.10); border:1px solid rgba(195,154,91,.3); border-radius:5px; padding:7px 8px; font-size:11.5px; line-height:1.35; color:var(--book-ink);}
+  .wk .wkn{display:block; font-family:'Archivo',sans-serif; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--gold-ink); font-weight:700; margin-bottom:3px;}
+  .reachcard{background:#F5EFE2; border:1px solid var(--book-line); border-radius:6px; padding:12px 14px; margin:8px 0;}
+  .reachname{font-family:'Fraunces',serif; font-weight:700; font-size:18px; color:var(--book-ink);}
+  .reachpair{display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin:6px 0;}
+  .reachdesc{font-size:13px; color:var(--book-ink); margin:2px 0;}
+  .reachproof{font-size:12px; color:var(--book-dim); margin-top:4px;} .reachproof span{font-family:'Archivo',sans-serif; font-weight:700; letter-spacing:.03em; color:var(--gold-ink); text-transform:uppercase; font-size:10px;}
+  .rnrow{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;}
+  .rn-chip{display:inline-flex; align-items:center; gap:6px; background:rgba(195,154,91,.12); border:1px solid rgba(195,154,91,.4); border-radius:16px; padding:5px 12px; font-family:'Fraunces',serif; font-weight:600; font-size:13px; color:var(--book-ink); cursor:pointer; -webkit-appearance:none; appearance:none; text-align:left;}
+  @media (hover:hover){ .rn-chip:hover{background:rgba(195,154,91,.24); border-color:var(--brass);} }
+  .rn-chip:focus-visible{outline:none; border-color:var(--brass); box-shadow:0 0 0 2px rgba(195,154,91,.3);}
+  .rn-chip .rn-ch{font-family:'Archivo',sans-serif; font-weight:700; font-size:9.5px; letter-spacing:.06em; color:var(--gold-ink); text-transform:uppercase;}
+  .rn-chip .rn-note{font-family:'Literata',Georgia,serif; font-style:italic; font-weight:400; font-size:11px; color:var(--book-dim);}
+  /* ── R4 interpretive modules ── */
+  .shapediag{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:6px 0 14px;}
+  .shapemini{margin:0; padding:8px 6px; border-radius:6px; border:1.5px solid var(--book-line); background:rgba(0,0,0,.02); text-align:center;}
+  .shapemini.on{border-color:var(--brass); background:rgba(195,154,91,.12); box-shadow:0 0 0 2px rgba(195,154,91,.18);}
+  .shapemini .sbars{display:flex; align-items:flex-end; justify-content:center; gap:2px; height:44px;}
+  .shapemini .sbar{width:5px; background:var(--paper-dim); border-radius:1px;}
+  .shapemini.on .sbar{background:var(--brass);}
+  .shapemini .sname{font-family:'Archivo',sans-serif; font-size:9.5px; letter-spacing:.03em; font-weight:700; text-transform:uppercase; color:var(--book-dim); margin-top:6px;}
+  .shapemini.on .sname{color:var(--gold-ink);}
+  @media (max-width:420px){ .shapemini .sname{font-size:8.5px;} }
+  .portrait{font-family:'Fraunces',serif; font-size:clamp(17px,4.6vw,20px); line-height:1.5; color:var(--book-ink); margin:16px 0 4px;}
+  .portrait strong{font-weight:700;}
+  .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
+  .consentnote{font-size:10.5px; line-height:1.4; color:var(--paper-dim); opacity:.75; margin-top:6px;}
+  .archivedbanner{font-family:Arial,sans-serif; font-size:12.5px; line-height:1.5; color:var(--gold-ink);
+    background:rgba(195,154,91,.14); border:1px solid var(--book-line); border-radius:6px; padding:10px 14px; margin:8px 0 4px;}
+  /* Print */
+  @media print{
+    html,body{background:#fff !important; color:#000 !important;}
+    header, .prog, .btn, .btnrow, .stagecount, .wtip{display:none !important;}
+    .book{background:#fff !important; color:#000 !important; border-color:#999 !important; margin:0 !important; padding:14px 0 !important; break-inside:avoid;}
+    .wrap{max-width:100%; padding:0;}
+    .submitstatus{display:none !important;}
+    /* Pilot data is for study coordination, not the reader's chart — keep it hidden. */
+    details.pilot{display:none !important;}
+    /* Evidence Ledger / A·B·C explainer are force-opened via JS (beforeprint, see boot) —
+       CSS alone can't override Chromium's internal collapsed-<details> rendering. Just
+       strip the now-pointless disclosure triangle since paper isn't interactive. */
+    details.ev summary .ct::after{content:"" !important;}
+    details.abc summary{list-style:none !important;}
+    details.abc summary::-webkit-details-marker, details.abc summary::marker{display:none !important; content:"" !important;}
+    /* The domain bars were designed for the dark-mode chrome; recolor the track for paper. */
+    .barrow .trk{background:#00000014 !important;}
+  }
+  /* The one signature motion moment: gold braid thread draws in on the Constellation. */
+  @media (prefers-reduced-motion: no-preference){
+    .braid-draw{ stroke-dasharray:1; stroke-dashoffset:1; animation:braidDraw 1.15s cubic-bezier(.6,.02,.2,1) .25s forwards; }
+    @keyframes braidDraw{ to{ stroke-dashoffset:0; } }
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important;} .braid-draw{stroke-dasharray:none; stroke-dashoffset:0;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">The Genius Index</div>
+      <div class="sub">Pilot Instrument v1.0 · E.A.T. Media</div>
+    </div>
+    <div class="glyph" id="glyphHead" aria-hidden="true"></div>
+  </header>
+  <div class="prog" id="prog" hidden><i id="progFill" style="width:0%"></i></div>
+  <div id="stage" aria-live="polite"></div>
+</div>
+
+<script>
+"use strict";
+/* ============ CONFIG ============ */
+/* Paste your Google Apps Script Web-App URL here to collect anonymized results.
+   Leave empty ("") and submission is skipped silently. See data-collection-setup.md. */
+const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9Lj6Cbi3HL_nhcLe2yPSvTOzutv35GJknxVh2wbqUXDDFcQ4/exec";
+/* Paste the book's purchase link here once it's live. Leave empty ("") and the
+   intro screen shows a disabled "coming soon" placeholder instead of a dead link. */
+const BOOK_URL = "";
+
+/* ============ DATA ============ */
+const DOMAINS = [
+ {id:"KIN", code:"KI", name:"Kinetic",    meta:"soma",  cell:0},
+ {id:"SEN", code:"SE", name:"Sensory",    meta:"soma",  cell:1},
+ {id:"ADP", code:"AD", name:"Adaptive",   meta:"soma",  cell:2},
+ {id:"ANL", code:"AN", name:"Analytic",   meta:"mind",  cell:3},
+ {id:"MEM", code:"ME", name:"Mnemonic",   meta:"mind",  cell:4},
+ {id:"GEN", code:"GE", name:"Generative", meta:"mind",  cell:5},
+ {id:"REL", code:"RE", name:"Relational", meta:"field", cell:6},
+ {id:"EXP", code:"EX", name:"Expressive", meta:"field", cell:7},
+ {id:"PER", code:"PE", name:"Perceptive", meta:"field", cell:8},
+];
+const FREQ = ["Never","Rarely","Sometimes","Often","Almost always"];
+const AGREE = ["Strongly disagree","Disagree","Neutral","Agree","Strongly agree"];
+
+const A = { // 5 per domain; index 3 = reverse-keyed
+ KIN:["After seeing a physical sequence once — a dance step, a golf swing, a handshake — you reproduce it accurately within two attempts.",
+  "A physical skill you haven't touched in years comes back to your body within minutes, not weeks.",
+  "Learning a new sport or movement, you need far fewer repetitions than the people around you to get the basics.",
+  "You feel clumsy copying physical movements and have to be shown several times.",
+  "People remark that you \u201cpick things up fast\u201d physically — an instrument, a tool, a technique."],
+ SEN:["You notice when a cover song, karaoke track, or live singer is pitched slightly off from the original.",
+  "You detect subtle differences others miss — near shades of color, flavors in a dish, faint background sounds.",
+  "You can identify a song within its first second or two.",
+  "Fine sensory differences — close colors, faint off-notes, subtle flavors — generally pass you by.",
+  "A specific smell, taste, or sound instantly returns you to a precise memory."],
+ ADP:["People are surprised by how far your joints (wrists, elbows, fingers, or more) bend.",
+  "You recover from hard physical exertion faster than the people you did it with.",
+  "You hold your breath, sustain wind, or control your breathing notably longer than peers.",
+  "Physically, you tire or need recovery sooner than others doing the same activity.",
+  "You tolerate conditions others struggle with — heat, cold, discomfort, long duration."],
+ ANL:["You spot the error — in a bill, a spreadsheet, a schedule, an argument — that everyone else missed.",
+  "You see several moves ahead: you anticipate how a situation or system will play out.",
+  "You run multi-step math or estimates in your head faster than others reach for a calculator.",
+  "Number-heavy or highly complex problems make you want to hand them to someone else.",
+  "You naturally find the more efficient route, process, or solution."],
+ MEM:["You recall conversations, pages, or details close to word-for-word after one exposure.",
+  "You remember specific dates and days — and what happened on them — going years back.",
+  "You lock a name to a face after meeting someone once.",
+  "Names, numbers, and details slip away soon after you hear them.",
+  "You memorize sequences — numbers, routes, steps, lyrics — with little effort."],
+ GEN:["You produce more ideas than you can use, without trying hard.",
+  "You connect ideas from completely different fields into something new.",
+  "You improvise well on the spot — words, music, solutions, jokes.",
+  "Faced with a blank page or an open brief, you struggle to generate options.",
+  "You reshape or remix existing things into something that feels original."],
+ REL:["Within ten minutes of meeting you, strangers tell you things they say they \u201cdon't usually tell people.\u201d",
+  "You read the mood or tension in a room within moments of entering.",
+  "You calm charged situations and bring the temperature down between people.",
+  "You're often surprised by how people were really feeling — you missed the signals.",
+  "You sense what someone actually wants, beneath what they say."],
+ EXP:["When you speak to a group, you feel them lock in and follow you.",
+  "You make complicated things clear and simple for other people.",
+  "You're at ease and effective on camera or on a stage.",
+  "Speaking in front of others, your delivery tends to lose people.",
+  "You can make an audience feel a specific emotion you intend — laugh, still, moved."],
+ PER:["You keep your orientation — you know which way is which and can retrace a route — without a map.",
+  "You notice small changes in a space: what moved, what's new, what's off.",
+  "You accurately sense how much time has passed without checking a clock.",
+  "You get turned around easily and lose track of where things are around you.",
+  "You pick up when \u201csomething isn't right\u201d in a place or situation before others do."]
+};
+const C = { // 3 per domain, Likert
+ KIN:["I'm comfortable performing physical skills while people watch.","I'd rather learn by doing with my body than by reading about it.","I stick with physical practice until my body gets it right."],
+ SEN:["I get absorbed in fine sensory detail — sound, color, taste, texture.","Small imperfections in what I see or hear bother me until they're fixed.","I seek out rich sensory experiences on purpose."],
+ ADP:["I push my body's limits and enjoy the challenge.","I keep going physically when others tap out.","I build physical capacity through steady, progressive effort."],
+ ANL:["I enjoy taking complex problems apart to see how they work.","I double-check logic and numbers others take on faith.","I look for the underlying system behind what I'm seeing."],
+ MEM:["I trust my memory over my notes.","I enjoy drilling things until I can recall them cold.","I naturally build tricks and associations to remember things."],
+ GEN:["I'd rather make something new than perfect something that exists.","My mind jumps between unrelated ideas and links them.","Constraints make me more inventive, not less."],
+ REL:["I'm energized by reading and connecting with people.","I naturally attend to how others are feeling.","I adjust my approach to fit whoever I'm with."],
+ EXP:["I come alive with an audience in front of me.","I care about how a message is delivered, not just what it says.","I'll take the mic or the stage when the moment calls for it."],
+ PER:["I scan and stay aware of my surroundings by default.","I notice when the details of a place don't add up.","I keep a running mental map of where I am."]
+};
+const SDR = ["I have never exaggerated a skill to impress someone.","Every new skill I've tried, I've been good at immediately."];
+
+/* Micro-test fixtures (deterministic for pilot comparability) */
+const KIN_SEQ = [2,0,3,1,2,1]; // pad indices: 0↑ 1→ 2↓ 3←
+const PITCH_TRIALS = [ {base:440,cents:50},{base:392,cents:-30},{base:330,cents:20},{base:494,cents:-10},{base:262,cents:0} ];
+const MEM_TARGETS = ["river","candle","hammer","orange","window","thunder","basket","mirror","garden","pillow","rocket","bridge"];
+const MEM_RECOG = ["lantern","river","shovel","candle","lemon","hammer","window","curtain","thunder","lightning","basket","bucket","mirror","shadow","orange","garden","meadow","pillow","blanket","rocket","engine","bridge","tunnel","forest"];
+const ANL_ITEMS = [
+ {q:"2, 6, 12, 20, 30, ?", opts:["36","40","42","44"], k:2},
+ {q:"3, 5, 9, 17, 33, ?", opts:["63","65","66","67"], k:1},
+ {q:"A, C, F, J, O, ?", opts:["S","T","U","V"], k:2},
+ {q:"81, 27, 9, 3, ?", opts:["0","1","2","1.5"], k:1}
+];
+const REL_ITEMS = [
+ {q:"A teammate who usually jokes around goes short-answer all day, keeps their camera off, and says \u201cit's fine\u201d after being passed over for a lead role. Most likely, they are:",
+  opts:["Just busy today","Hurt and pulling back","Angry specifically at you","Relaxed and content"], k:1},
+ {q:"At a dinner, one guest keeps glancing at the door and answers questions a beat late. Most likely, they are:",
+  opts:["Bored by the company","Expecting someone or preoccupied with something outside the room","Offended by the host","Feeling ill"], k:1},
+ {q:"In a meeting, two colleagues trade a quick glance every time a third person pitches an idea. Most likely, the two:",
+  opts:["Share a prior opinion about those ideas","Are checking the time","Haven't met each other","Agree enthusiastically with the pitch"], k:0},
+ {q:"A friend says \u201cI'm over it\u201d — while retelling the story, in detail, for the third time. Most likely, they are:",
+  opts:["Truly over it","Not over it","Testing your memory","Talking about something else"], k:1},
+ {q:"A new coworker laughs at every joke, agrees with everything, and asks no questions. Most likely, they are:",
+  opts:["Fully confident","Seeking acceptance and reading the room nervously","Uninterested in the job","Naturally silent"], k:1}
+];
+
+/* ============ BRAIDS (36 pairings from "The thirty-six braids") ============ */
+/* tier: C=Canonical Ten (gold) · S=Strong Pair · R=Rarest · Q=Quiet Few */
+const TIER_META = {
+ C:{label:"Canonical Ten", sub:"One of the ten combinations distinct enough to carry a name of its own."},
+ S:{label:"Strong Pair", sub:"One of twelve dependable braids — common enough to build on purpose."},
+ R:{label:"Rarest", sub:"One of the eleven you will meet least often — rarity is what makes it valuable."},
+ Q:{label:"Quiet Few", sub:"One of four subtle braids that live on the body and often pass without notice."}
+};
+const BRAIDS = [
+ {name:"The Craftsman",     pair:["KIN","SEN"], tier:"C", desc:"Skilled motion that makes a thing."},
+ {name:"The Performer",     pair:["KIN","EXP"], tier:"C", desc:"The body that communicates."},
+ {name:"The Connoisseur",   pair:["SEN","ANL"], tier:"C", rare:true, desc:"Detects the faint signal, then decodes it."},
+ {name:"The Translator",    pair:["ANL","EXP"], tier:"C", desc:"Turns the structure so other people see it."},
+ {name:"The Diagnostician", pair:["ANL","PER"], tier:"C", desc:"The anomaly, and the system it lives in."},
+ {name:"The Connector",     pair:["MEM","REL"], tier:"C", desc:"Never forgets a person; reads them too."},
+ {name:"The Storyteller",   pair:["GEN","EXP"], tier:"C", desc:"Makes the new thing and transmits it."},
+ {name:"The Leader",        pair:["REL","EXP"], tier:"C", desc:"Reads people and moves them."},
+ {name:"The Instrument",    pair:["ADP","EXP"], tier:"C", desc:"Bodily capacity serving the voice."},
+ {name:"The Documentarian", pair:["PER","EXP"], tier:"C", desc:"Sees what others miss; makes you see it."},
+ {name:"The Natural",       pair:["KIN","ADP"], tier:"S", desc:"Outlasts the room; fast skill uptake."},
+ {name:"The Tactician",     pair:["KIN","ANL"], tier:"S", desc:"Moves while reading the play."},
+ {name:"The Virtuoso",      pair:["KIN","MEM"], tier:"S", desc:"Skilled motion, memorized repertoire."},
+ {name:"The Healer",        pair:["KIN","REL"], tier:"S", desc:"Skilled hands reading the body."},
+ {name:"The Composer",      pair:["SEN","GEN"], tier:"S", desc:"Invents new sensory forms."},
+ {name:"The Empath",        pair:["SEN","REL"], tier:"S", desc:"Reads human signal at high resolution."},
+ {name:"The Stylist",       pair:["SEN","EXP"], tier:"S", desc:"Transmits through refined sensory craft."},
+ {name:"The Tracker",       pair:["SEN","PER"], tier:"S", desc:"The faint sign within the whole scene."},
+ {name:"The Optimizer",     pair:["ADP","ANL"], tier:"S", desc:"Systematically engineers the body."},
+ {name:"The Caregiver",     pair:["ADP","REL"], tier:"S", desc:"Endurance in service of reading people."},
+ {name:"The Explorer",      pair:["ADP","PER"], tier:"S", desc:"Endures and reads harsh terrain."},
+ {name:"The Witness",       pair:["MEM","PER"], tier:"S", desc:"Sees the scene, records it exactly."},
+ {name:"The Maker",         pair:["KIN","GEN"], tier:"R", desc:"Invents in physical media."},
+ {name:"The Athlete",       pair:["KIN","PER"], tier:"R", desc:"Reads the field, answers with the body."},
+ {name:"The Scholar",       pair:["ANL","MEM"], tier:"R", desc:"Structured mastery of a knowledge domain."},
+ {name:"The Inventor",      pair:["ANL","GEN"], tier:"R", desc:"Novel ideas disciplined by analysis."},
+ {name:"The Negotiator",    pair:["ANL","REL"], tier:"R", desc:"Reads the situation and the people."},
+ {name:"The Synthesizer",   pair:["MEM","GEN"], tier:"R", desc:"Remembers a vast store, mixes the new."},
+ {name:"The Bard",          pair:["MEM","EXP"], tier:"R", desc:"Holds and transmits a deep well."},
+ {name:"The Entertainer",   pair:["GEN","REL"], tier:"R", desc:"Invents in real time, to the crowd."},
+ {name:"The Visionary",     pair:["GEN","PER"], tier:"R", desc:"Reads the emerging field, invents in it."},
+ {name:"The Diplomat",      pair:["REL","PER"], tier:"R", desc:"Reads the person and the whole social field."},
+ {name:"The Adept",         pair:["SEN","ADP"], tier:"Q", desc:"Reflex-fast tuning, held with control."},
+ {name:"The Aesthete",      pair:["SEN","MEM"], tier:"Q", desc:"Deep memory for sensory signatures."},
+ {name:"The Veteran",       pair:["ADP","MEM"], tier:"Q", desc:"Durability plus accumulated memory."},
+ {name:"The Daredevil",     pair:["ADP","GEN"], tier:"Q", desc:"Invents at the body's edge."}
+];
+const braidKey = (a,b)=> [a,b].sort().join("|");
+const BRAID_BY_KEY = {};
+BRAIDS.forEach(br=>{ BRAID_BY_KEY[braidKey(br.pair[0],br.pair[1])] = br; });
+function braidFor(a,b){ return BRAID_BY_KEY[braidKey(a,b)] || null; }
+
+/* ============ STATE ============ */
+const S = {
+ code:"", consent:true, respA:{}, respC:{}, respSDR:[null,null],
+ B:{}, Braw:{}, ranksTop:[], ranksBot:[],
+ flowIdx:0, started:Date.now()
+};
+DOMAINS.forEach(d=>{S.respA[d.id]=[null,null,null,null,null]; S.respC[d.id]=[null,null,null];});
+
+/* Inventory flow: round-robin A (rows), SDR inserted, then round-robin C */
+const FLOW = [];
+for(let i=0;i<5;i++){ DOMAINS.forEach(d=>FLOW.push({t:"A",d:d.id,i})); }
+FLOW.splice(22,0,{t:"S",i:0}); FLOW.splice(53,0,{t:"S",i:1});
+for(let i=0;i<3;i++){ DOMAINS.forEach(d=>FLOW.push({t:"C",d:d.id,i})); }
+
+/* ============ HELPERS ============ */
+const $ = id=>document.getElementById(id);
+const stage = ()=>$("stage");
+function h(html){ stage().innerHTML = html; window.scrollTo({top:0}); }
+function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function setProg(p){ $("prog").hidden=false; $("progFill").style.width=(p*100).toFixed(1)+"%"; }
+function litCells(n){ const g=$("glyphHead").children; for(let i=0;i<9;i++) g[i].classList.toggle("lit", i<n); }
+(function(){ const g=$("glyphHead"); for(let i=0;i<9;i++) g.appendChild(document.createElement("div")); })();
+
+/* ============ INTRO: book-grounding content (for links shared without the book) ============ */
+/* Static domain map -- no scores yet at this point, just the framework itself.
+   Reuses the .glyph.big grid component (defined in CSS, otherwise unused on
+   this screen) so it reads as the same visual language as the results page. */
+function buildDomainMapHTML(){
+ const cells=[...DOMAINS].sort((a,b)=>a.cell-b.cell);
+ const grid = cells.map(d=>{
+  const col=realmHex(d.meta);
+  return `<div style="background:${col}1f; border-color:${col}77;">
+    <span class="code" style="color:${col}">${d.code.toUpperCase()}</span>
+    <span class="pct" style="color:var(--paper-dim)">${d.name}</span>
+   </div>`;
+ }).join("");
+ return `<div class="glyph big" style="margin:16px auto; justify-content:center">${grid}</div>
+  <p class="small dim" style="text-align:center;line-height:1.7">
+   <span style="color:${realmHex("soma")}">■</span> SOMA — the body &nbsp;&nbsp;
+   <span style="color:${realmHex("mind")}">■</span> MIND — the mind &nbsp;&nbsp;
+   <span style="color:${realmHex("field")}">■</span> FIELD — the field
+  </p>`;
+}
+/* A worked, non-personal example so a first-time visitor can see the shape of
+   the output before answering anything. Reuses the exact .book/.braidcard
+   markup the real results page renders, so it's an honest preview, not a mockup. */
+function sampleBraidCardHTML(){
+ return `<div class="book" style="margin:14px 0 2px">
+   <div class="braidcard">
+    <div class="yb">Example result</div>
+    <div class="bname">The Storyteller</div>
+    <div class="bpair"><span class="domchip mind"><span class="dot"></span>Generative</span><span class="amp">×</span><span class="domchip field"><span class="dot"></span>Expressive</span></div>
+    <div class="tierbadge tier-C">Canonical Ten</div>
+    <div class="tiersub">One of the ten combinations distinct enough to carry a name of its own.</div>
+    <div class="braiddesc">Makes the new thing and transmits it.</div>
+   </div>
+  </div>
+  <p class="small dim" style="text-align:center;margin:6px 0 2px">Illustrative only — your own result depends entirely on your own answers.</p>`;
+}
+
+/* ============ SCREEN: INTRO ============ */
+function intro(){
+ h(`
+  <h1>Everybody carries a genius.<br>This locates yours.</h1>
+  <p class="dim" style="margin:14px 0 4px">81 items and nine short stations. About 25–35 minutes. Nothing here measures intelligence — the Index locates where ability comes easiest to you, so it can be named and grown. <em>Identify to amplify.</em></p>
+
+  <div class="card">
+    <h3>What this measures, and why</h3>
+    <p class="small dim">This is the companion assessment to <strong>The Genius Index</strong>, the book that this instrument is built from. The book's premise: intelligence isn't one number — everybody is genuinely gifted somewhere, and the task is finding where, naming it, and growing it on purpose.</p>
+    <p class="small dim" style="margin-top:8px">It maps ability into <strong>nine domains</strong> across three realms — <strong>SOMA</strong> (the body), <strong>MIND</strong> (the mind), and <strong>FIELD</strong> (people and the world around you).</p>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h3>The nine domains</h3>
+    ${buildDomainMapHTML()}
+  </div>
+
+  <div class="card">
+    <h3>Why a "braid"</h3>
+    <p class="small dim">Genius is rarely a single gift — it's almost always two domains standing out together. The book names all thirty-six of those pairings <strong>braids</strong>, from The Craftsman (Kinetic × Sensory) to The Diplomat (Relational × Perceptive). This instrument scores your nine domains from what you report and how you actually perform, then resolves and explains your own braid — the same material the book covers, personalized to your answers.</p>
+    ${sampleBraidCardHTML()}
+    ${BOOK_URL
+      ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
+      : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
+  </div>
+
+  <div class="card">
+    <h3>How to take it honestly</h3>
+    <p class="small">1 · Answer for how things <strong>actually happen</strong>, not how you'd like them to.<br>
+    2 · \u201cAlmost always\u201d should be rare. If everything is a strength, nothing is.<br>
+    3 · The stations check your answers against performance. Gaps aren't failure — they're findings.<br>
+    4 · There are no good or bad domains. There is only yours, named or unnamed.</p>
+  </div>
+  <label class="small dim" for="pcode">Participant code (optional — for pilot tracking)</label>
+  <input type="text" id="pcode" placeholder="e.g., ABE-014" autocomplete="off" style="margin:6px 0 14px">
+  <button class="btn primary" onclick="S.code=$('pcode').value.trim(); S.consent=true; part1();">Begin Part 1 · The Inventory</button>
+  <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and are added anonymously to the study — no name, email, or account is collected":""}. You'll get your full results chart at the end.</p>
+  <p class="consentnote">By taking this assessment, you agree to the anonymous, no-account use of your answers described above.</p>
+ `);
+}
+
+/* ============ SCREEN: PART 1 INVENTORY ============ */
+function part1(){ S.flowIdx=0; busy=true; pingStart(); renderQ(); }
+/* Anonymous funnel ping — a start is recorded distinct from a completed
+   submission, so drop-off can be measured. Fire-and-forget; never blocks. */
+function pingStart(){
+ if(!SUBMIT_URL) return;
+ try{
+  fetch(SUBMIT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+   body:JSON.stringify({v:"GI-1.0", event:"start", ts:new Date().toISOString(), code:S.code||null})}).catch(()=>{});
+ }catch(e){}
+}
+function renderQ(){
+ if(S.flowIdx>=FLOW.length){ stationIntro(); return; }
+ const f=FLOW[S.flowIdx];
+ setProg(S.flowIdx/FLOW.length*0.55);
+ const domDone = Math.floor(S.flowIdx/FLOW.length*9); litCells(Math.min(domDone, 4));
+ let text, scale;
+ if(f.t==="A"){ text=A[f.d][f.i]; scale=FREQ; }
+ else if(f.t==="C"){ text=C[f.d][f.i]; scale=AGREE; }
+ else { text=SDR[f.i]; scale=AGREE; }
+ const cur = f.t==="A"?S.respA[f.d][f.i] : f.t==="C"?S.respC[f.d][f.i] : S.respSDR[f.i];
+ h(`
+  <div class="stagecount">Part 1 · Item ${S.flowIdx+1} of ${FLOW.length}</div>
+  <div class="qtext">${esc(text)}</div>
+  ${scale.map((s,v)=>`<button class="btn ${cur===v?'sel':''}" onclick="answer(${v})">${s}</button>`).join("")}
+  <div class="btnrow">
+   <button class="btn ghost" id="navBack" ${S.flowIdx===0?"disabled":""} onclick="goBack()">← Back</button>
+   <button class="btn ghost" id="navNext" ${cur==null?"disabled":""} onclick="goNext()">Next →</button>
+  </div>
+ `);
+}
+function curAnswer(){ const f=FLOW[S.flowIdx];
+ return f.t==="A"?S.respA[f.d][f.i] : f.t==="C"?S.respC[f.d][f.i] : S.respSDR[f.i]; }
+function goBack(){ if(S.flowIdx>0){ S.flowIdx--; renderQ(); } }
+function goNext(){ if(curAnswer()!=null && S.flowIdx<FLOW.length){ S.flowIdx++; renderQ(); } }
+function answer(v){
+ const f=FLOW[S.flowIdx];
+ if(f.t==="A") S.respA[f.d][f.i]=v;
+ else if(f.t==="C") S.respC[f.d][f.i]=v;
+ else S.respSDR[f.i]=v;
+ S.flowIdx++; renderQ(); // fast path: tapping an answer auto-advances
+}
+
+/* ============ STATIONS ============ */
+const STATION_SEQ = ["KIN","SEN","MEMSTUDY","ANL","MEMRECALL","GEN","REL","EXP","ADP","PER"];
+let stIdx=0;
+function stationIntro(){
+ setProg(0.56); litCells(4);
+ h(`
+  <h2>Part 2 · The Nine Stations</h2>
+  <p class="dim">Short performance probes — one per domain. These verify Part 1 against what your body, memory, and senses actually do. Find a quiet spot. No preparation, no retries.</p>
+  <div class="card small"><strong>Note:</strong> two stations involve light physical checks. Stop at any discomfort. Never attempt the breath-hold in water or while standing.</div>
+  <button class="btn primary" onclick="stIdx=0; nextStation();">Start stations</button>
+ `);
+}
+function nextStation(){
+ if(stIdx>=STATION_SEQ.length){ ranking(); return; }
+ setProg(0.56 + 0.34*(stIdx/STATION_SEQ.length));
+ litCells(4 + Math.floor(stIdx/10*5));
+ const s=STATION_SEQ[stIdx];
+ ({KIN:stKIN,SEN:stSEN,MEMSTUDY:stMEMstudy,ANL:stANL,MEMRECALL:stMEMrecall,GEN:stGEN,REL:stREL,EXP:stEXP,ADP:stADP,PER:stPER})[s]();
+}
+function completeStation(dom, norm, raw){
+ S.B[dom]=Math.max(0,Math.min(1,norm)); S.Braw[dom]=raw;
+ stIdx++; nextStation();
+}
+function skipStation(dom){ // leaves S.B[dom] undefined -> results() falls back to self-report weighting
+ S.Braw[dom]="skipped"; stIdx++; nextStation();
+}
+
+/* --- KIN: sequence reproduction --- */
+function stKIN(){
+ h(`
+  <div class="stagecount">Station 1 of 9 · Kinetic</div>
+  <h2>Sequence reproduction</h2>
+  <p class="dim small">A 6-step pattern will flash on the pad — twice. Then repeat it from memory by tapping.</p>
+  <div class="padgrid" id="pad"></div>
+  <button class="btn primary" id="kinGo">Show the pattern</button>
+  <p class="small dim" id="kinMsg"></p>
+ `);
+ const arrows=["\u2191","\u2192","\u2193","\u2190"]; const pad=$("pad");
+ arrows.forEach((a,i)=>{ const b=document.createElement("button"); b.className="pad"; b.textContent=a; b.dataset.i=i; b.disabled=true; pad.appendChild(b); });
+ let input=[];
+ $("kinGo").onclick=()=>{
+  $("kinGo").disabled=true; $("kinMsg").textContent="Watch\u2026";
+  let seq=[...KIN_SEQ,...KIN_SEQ], t=0;
+  const play=()=>{ if(t>=seq.length){ inputPhase(); return; }
+   const b=pad.children[seq[t]]; b.classList.add("flash");
+   setTimeout(()=>{ b.classList.remove("flash"); t++; setTimeout(play, t===KIN_SEQ.length?700:200); },550); };
+  play();
+ };
+ function inputPhase(){
+  $("kinMsg").textContent="Your turn — tap the 6 steps in order.";
+  [...pad.children].forEach(b=>{ b.disabled=false; b.onclick=()=>{ input.push(+b.dataset.i);
+   b.classList.add("flash"); setTimeout(()=>b.classList.remove("flash"),150);
+   if(input.length===6){ let c=0; for(let i=0;i<6;i++) if(input[i]===KIN_SEQ[i]) c++;
+    [...pad.children].forEach(x=>x.disabled=true);
+    $("kinMsg").innerHTML=`Recorded: <strong>${c}/6</strong> in position.`;
+    setTimeout(()=>completeStation("KIN", c/6, c+"/6"), 900); } }; });
+ }
+}
+
+/* --- SEN: pitch match (Web Audio) --- */
+function stSEN(){
+ let trial=0, correct=0, ctx=null;
+ function tone(f,when,dur){ const o=ctx.createOscillator(), g=ctx.createGain();
+  o.type="sine"; o.frequency.value=f; o.connect(g); g.connect(ctx.destination);
+  g.gain.setValueAtTime(0.0001,when); g.gain.exponentialRampToValueAtTime(0.25,when+0.03);
+  g.gain.exponentialRampToValueAtTime(0.0001,when+dur); o.start(when); o.stop(when+dur+0.05); }
+ function render(){
+  if(trial>=PITCH_TRIALS.length){ completeStation("SEN", correct/5, correct+"/5"); return; }
+  h(`
+   <div class="stagecount">Station 2 of 9 · Sensory</div>
+   <h2>Pitch match · trial ${trial+1} of 5</h2>
+   <p class="dim small">Two tones will play. Use earphones or a quiet room. Was the second tone higher, lower, or the same?</p>
+   <button class="btn primary" id="playT">Play tones</button>
+   <div class="btnrow">
+    <button class="btn" id="hi" disabled>Higher</button>
+    <button class="btn" id="same" disabled>Same</button>
+    <button class="btn" id="lo" disabled>Lower</button>
+   </div>
+   <p class="small dim" id="senMsg"></p>
+   <button class="btn ghost" id="senSkip">No sound on this device — skip station</button>
+  `);
+  $("senSkip").onclick=()=>skipStation("SEN");
+  $("playT").onclick=()=>{
+   try{
+    if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+    ctx.resume && ctx.resume();
+    const t=PITCH_TRIALS[trial], f2=t.base*Math.pow(2,t.cents/1200), now=ctx.currentTime+0.05;
+    tone(t.base,now,0.7); tone(f2,now+1.0,0.7);
+    ["hi","same","lo"].forEach(id=>$(id).disabled=false);
+   }catch(err){ $("senMsg").textContent="Audio isn't available in this browser — use “skip station” below."; }
+  };
+  const key = PITCH_TRIALS[trial].cents>0?"hi":PITCH_TRIALS[trial].cents<0?"lo":"same";
+  ["hi","same","lo"].forEach(id=>{ $(id).onclick=()=>{ if(id===key) correct++; trial++; render(); }; });
+ }
+ render();
+}
+
+/* --- MEM study --- */
+function stMEMstudy(){
+ let t=45;
+ h(`
+  <div class="stagecount">Station 3 of 9 · Mnemonic — part one</div>
+  <h2>Study these twelve words</h2>
+  <p class="dim small">You'll be asked about them after the next station. 45 seconds.</p>
+  <div class="memgrid">${MEM_TARGETS.map(w=>`<div class="btn" style="cursor:default">${w}</div>`).join("")}</div>
+  <div class="timer" id="memT">45</div>
+  <button class="btn ghost" onclick="clearInterval(window._memI); stIdx++; nextStation();">I'm ready early</button>
+ `);
+ window._memI=setInterval(()=>{ t--; $("memT").textContent=t;
+  if(t<=0){ clearInterval(window._memI); stIdx++; nextStation(); } },1000);
+}
+
+/* --- ANL: pattern set (doubles as MEM distractor) --- */
+function stANL(){
+ let i=0, correct=0, t=90;
+ function render(){
+  if(i>=ANL_ITEMS.length){ clearInterval(window._anlI); completeStation("ANL", correct/4, correct+"/4"); return; }
+  const it=ANL_ITEMS[i];
+  h(`
+   <div class="stagecount">Station 4 of 9 · Analytic</div>
+   <h2>What comes next?</h2>
+   <div class="timer" id="anlT">${t}</div>
+   <div class="qtext" style="text-align:center; letter-spacing:.06em">${it.q}</div>
+   ${it.opts.map((o,v)=>`<button class="btn" onclick="window._anlA(${v})">${o}</button>`).join("")}
+  `);
+ }
+ window._anlA=(v)=>{ if(v===ANL_ITEMS[i].k) correct++; i++; render(); };
+ window._anlI=setInterval(()=>{ t--; const el=$("anlT"); if(el) el.textContent=t;
+  if(t<=0){ clearInterval(window._anlI); completeStation("ANL", correct/4, correct+"/4 (time)"); } },1000);
+ render();
+}
+
+/* --- MEM recall (recognition w/ false-alarm penalty) --- */
+function stMEMrecall(){
+ const picked=new Set();
+ h(`
+  <div class="stagecount">Station 5 of 9 · Mnemonic — part two</div>
+  <h2>Which words did you study?</h2>
+  <p class="dim small">Tap every word you saw earlier. Twelve were shown; twelve are new. Guessing costs you.</p>
+  <div class="memgrid" id="recog">${MEM_RECOG.map(w=>`<button class="btn" data-w="${w}">${w}</button>`).join("")}</div>
+  <button class="btn primary" id="memDone">Lock answers</button>
+ `);
+ [...$("recog").children].forEach(b=>{ b.onclick=()=>{ const w=b.dataset.w;
+  picked.has(w)?picked.delete(w):picked.add(w); b.classList.toggle("sel"); }; });
+ $("memDone").onclick=()=>{
+  let hits=0, fa=0; picked.forEach(w=> MEM_TARGETS.includes(w)?hits++:fa++);
+  const score=Math.max(0,hits-fa);
+  completeStation("MEM", score/12, `hits ${hits} · false ${fa}`);
+ };
+}
+
+/* --- GEN: alternative uses --- */
+function stGEN(){
+ let t=90;
+ h(`
+  <div class="stagecount">Station 6 of 9 · Generative</div>
+  <h2>Uses for a brick</h2>
+  <p class="dim small">90 seconds. List as many <em>different</em> uses for a brick as you can — one per line. Distinct ideas count; repeats don't.</p>
+  <div class="timer" id="genT">90</div>
+  <textarea id="genBox" rows="8" placeholder="doorstop&#10;paperweight&#10;\u2026"></textarea>
+  <button class="btn ghost" onclick="window._genEnd()">Stop early</button>
+ `);
+ $("genBox").focus();
+ window._genEnd=()=>{ clearInterval(window._genI);
+  const lines=[...new Set($("genBox").value.split("\n").map(x=>x.trim().toLowerCase()).filter(Boolean))];
+  completeStation("GEN", Math.min(lines.length,12)/12, lines.length+" uses"); };
+ window._genI=setInterval(()=>{ t--; const el=$("genT"); if(el) el.textContent=t; if(t<=0) window._genEnd(); },1000);
+}
+
+/* --- REL: cue reading vignettes --- */
+function stREL(){
+ let i=0, correct=0;
+ function render(){
+  if(i>=REL_ITEMS.length){ completeStation("REL", correct/5, correct+"/5"); return; }
+  const it=REL_ITEMS[i];
+  h(`
+   <div class="stagecount">Station 7 of 9 · Relational</div>
+   <h2>Read the moment · ${i+1} of 5</h2>
+   <div class="qtext" style="font-size:18px">${esc(it.q)}</div>
+   ${it.opts.map((o,v)=>`<button class="btn" onclick="window._relA(${v})">${o}</button>`).join("")}
+   <p class="small dim">Scored against consensus reads. Text-based v1 — media version follows the pilot.</p>
+  `);
+ }
+ window._relA=(v)=>{ if(v===REL_ITEMS[i].k) correct++; i++; render(); };
+ render();
+}
+
+/* --- EXP: 60-second impromptu --- */
+function stEXP(){
+ let t=60, phase=0;
+ function ratePhase(){
+  h(`
+   <div class="stagecount">Station 8 of 9 · Expressive</div>
+   <h2>Rate your run — honestly</h2>
+   <p class="dim small">The Index only works unclouded. Score what happened, not what you hoped.</p>
+   <h3>Clarity</h3>
+   <button class="btn" onclick="window._expC(0)">0 · I wandered or didn't finish the idea</button>
+   <button class="btn" onclick="window._expC(1)">1 · Mostly clear, some stumbles</button>
+   <button class="btn" onclick="window._expC(2)">2 · Clear from first line to last</button>
+   <div id="holdBlock" hidden>
+    <h3 style="margin-top:14px">Hold</h3>
+    <button class="btn" onclick="window._expH(0)">0 · Flat — a listener would drift</button>
+    <button class="btn" onclick="window._expH(1)">1 · Some pull</button>
+    <button class="btn" onclick="window._expH(2)">2 · A listener would stay with me</button>
+   </div>
+  `);
+  let c=null;
+  window._expC=(v)=>{ c=v; $("holdBlock").hidden=false; };
+  window._expH=(hv)=>{ completeStation("EXP",(c+hv)/4,`clarity ${c} · hold ${hv} (self)`); };
+ }
+ h(`
+  <div class="stagecount">Station 8 of 9 · Expressive</div>
+  <h2>Sixty seconds, out loud</h2>
+  <p class="dim small">Prompt: <strong>Explain to a ten-year-old why the sky is blue.</strong> Speak aloud — to the room, a mirror, or a voice memo. Start the clock when you start talking.</p>
+  <div class="timer" id="expT">60</div>
+  <button class="btn primary" id="expGo">Start the clock</button>
+ `);
+ $("expGo").onclick=function(){
+  this.disabled=true;
+  window._expI=setInterval(()=>{ t--; $("expT").textContent=t;
+   if(t<=0){ clearInterval(window._expI); ratePhase(); } },1000);
+ };
+}
+
+/* --- ADP: hypermobility + breath --- */
+function stADP(){
+ const checks=["Left little finger bends back past 90\u00b0","Right little finger bends back past 90\u00b0","Left thumb touches forearm","Right thumb touches forearm","Left elbow extends beyond straight","Right elbow extends beyond straight","Left knee extends beyond straight","Right knee extends beyond straight","Palms flat on floor, knees straight"];
+ let hold=0, holding=false, hi=null;
+ h(`
+  <div class="stagecount">Station 9a · Adaptive</div>
+  <h2>Body screen</h2>
+  <p class="dim small">Check what's true for you (gently — never force a joint):</p>
+  <div id="bx">${checks.map((c,i)=>`<label class="checkline"><input type="checkbox" data-i="${i}"> ${c}</label>`).join("")}</div>
+  <h3 style="margin-top:16px">Breath-hold</h3>
+  <p class="small dim">Seated. Normal breath in, hold, stop at the first strong urge. \u26a0 Never in water, never standing, never past discomfort.</p>
+  <div class="timer" id="bhT">0.0</div>
+  <button class="btn" id="bhBtn">Start hold</button>
+  <button class="btn primary" id="adpDone">Finish station</button>
+ `);
+ $("bhBtn").onclick=function(){
+  if(!holding){ holding=true; this.textContent="Stop — I breathed"; const t0=Date.now();
+   hi=setInterval(()=>{ hold=(Date.now()-t0)/1000; $("bhT").textContent=hold.toFixed(1); },100);
+  } else { holding=false; clearInterval(hi); this.disabled=true; }
+ };
+ $("adpDone").onclick=()=>{
+  if(holding){ clearInterval(hi); }
+  const b=[...document.querySelectorAll("#bx input")].filter(x=>x.checked).length;
+  const norm=0.6*(b/9)+0.4*(Math.min(hold,90)/90);
+  completeStation("ADP", norm, `Beighton ${b}/9 · hold ${hold.toFixed(0)}s`);
+ };
+}
+
+/* --- PER: orientation + time sense --- */
+function stPER(){
+ let north=null, exit=null, est=null, t0=null;
+ function score(){
+  if(north===null||exit===null||est===null) return;
+  const err=Math.abs(est-30), pts=(err<=2?2:err<=5?1:0)+north+exit;
+  completeStation("PER", pts/4, `north ${north} · exit ${exit} · est ${est.toFixed(1)}s`);
+ }
+ h(`
+  <div class="stagecount">Station 9b · Perceptive</div>
+  <h2>Orientation & time</h2>
+  <h3>1 · Point north</h3>
+  <p class="small dim">Physically point where you believe north is. Then check a compass app.</p>
+  <div class="btnrow">
+   <button class="btn" onclick="window._pn(1,this)">I was right (\u00b145\u00b0)</button>
+   <button class="btn" onclick="window._pn(0,this)">Off / unsure</button>
+  </div>
+  <h3 style="margin-top:14px">2 · The last building</h3>
+  <p class="small dim">Picture the last building you were in, other than home. From where you sat or stood — where was the nearest exit? Verify from memory or a map.</p>
+  <div class="btnrow">
+   <button class="btn" onclick="window._px(1,this)">Placed it correctly</button>
+   <button class="btn" onclick="window._px(0,this)">Couldn't place it</button>
+  </div>
+  <h3 style="margin-top:14px">3 · Thirty seconds, no counting</h3>
+  <p class="small dim">Press start, look away from the screen, press stop when you feel 30 seconds have passed. Don't count.</p>
+  <button class="btn" id="perT">Start</button>
+  <p class="small dim" id="perMsg"></p>
+ `);
+ window._pn=(v,el)=>{ north=v; [...el.parentElement.children].forEach(b=>b.classList.remove("sel")); el.classList.add("sel"); score(); };
+ window._px=(v,el)=>{ exit=v; [...el.parentElement.children].forEach(b=>b.classList.remove("sel")); el.classList.add("sel"); score(); };
+ $("perT").onclick=function(){
+  if(t0===null){ t0=Date.now(); this.textContent="Stop at 30"; }
+  else { est=(Date.now()-t0)/1000; this.disabled=true;
+   $("perMsg").textContent=`You stopped at ${est.toFixed(1)}s.`; score(); }
+ };
+}
+
+/* ============ RANKING ============ */
+function ranking(){
+ setProg(0.93); litCells(9);
+ const desc={KIN:"Body & movement",SEN:"Senses & perception",ADP:"Physical adaptation",ANL:"Analysis & systems",MEM:"Memory",GEN:"Idea generation",REL:"Reading people",EXP:"Expression & performance",PER:"Environmental awareness"};
+ let phase="top";
+ function render(){
+  const pool=DOMAINS.filter(d=>!S.ranksTop.includes(d.id)&&!S.ranksBot.includes(d.id));
+  h(`
+   <div class="stagecount">Part 3 · Forced ranking</div>
+   <h2>${phase==="top"?"Pick your TOP 3":"Now your BOTTOM 3"}</h2>
+   <p class="dim small">${phase==="top"?"The three that describe you most.":"The three that describe you least."} You can't rate everything high — that's the point.</p>
+   ${pool.map(d=>`<button class="btn" onclick="window._rk('${d.id}')">${d.name} — ${desc[d.id]}</button>`).join("")}
+   <p class="small dim">${phase==="top"?S.ranksTop.length:S.ranksBot.length} of 3 selected</p>
+  `);
+ }
+ window._rk=(id)=>{
+  if(phase==="top"){ S.ranksTop.push(id); if(S.ranksTop.length===3) phase="bot"; }
+  else { S.ranksBot.push(id); if(S.ranksBot.length===3){ results(); return; } }
+  render();
+ };
+ render();
+}
+
+/* ============ RESULTS HELPERS ============ */
+const realmColor = meta => meta==="soma"?"var(--soma)" : meta==="mind"?"var(--mind)" : "var(--field)";
+const realmHex   = meta => meta==="soma"?"#8C3B2E"     : meta==="mind"?"#54687C"     : "#4E6156";
+const domById = id => DOMAINS.find(d=>d.id===id);
+const DOMAIN_DEF = {
+ KIN:"Learns and reproduces physical movement fast.", SEN:"Notices fine sensory detail others miss.",
+ ADP:"Body tolerates and recovers from extremes.", ANL:"Finds the pattern, the error, the system.",
+ MEM:"Recalls detail, sequence, and faces with ease.", GEN:"Produces new ideas readily and often.",
+ REL:"Reads people and rooms accurately.", EXP:"Transmits — an audience follows and feels it.",
+ PER:"Notices change and orientation in a space."
+};
+
+/* Personal constellation wheel (SVG). R = scores map, primaryKey + adjKeys highlight braids. */
+function buildWheel(R, primaryKey, adjKeys, primaryBraid){
+ const cx=312, cy=340, Rr=185;
+ const order=["EXP","PER","KIN","SEN","ADP","ANL","MEM","GEN","REL"];
+ const ang={}; order.forEach((id,i)=> ang[id]=-90+i*40);
+ const pos={}; order.forEach(id=>{ const a=ang[id]*Math.PI/180; pos[id]=[cx+Rr*Math.cos(a), cy+Rr*Math.sin(a)]; });
+ const polar=(r,deg)=>{ const a=deg*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
+ const arc=(r,a0,a1)=>{ const [x0,y0]=polar(r,a0),[x1,y1]=polar(r,a1); return `M${x0.toFixed(1)} ${y0.toFixed(1)}A${r} ${r} 0 ${(a1-a0)>180?1:0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}`; };
+ let svg=`<svg viewBox="0 0 624 640" role="img" aria-label="Your genius constellation">`;
+ svg+=`<path d="${arc(Rr+40,-30,90)}" fill="none" stroke="#8C3B2E" stroke-width="7" stroke-opacity=".75" stroke-linecap="round"/>`;
+ svg+=`<path d="${arc(Rr+40,90,210)}" fill="none" stroke="#54687C" stroke-width="7" stroke-opacity=".75" stroke-linecap="round"/>`;
+ svg+=`<path d="${arc(Rr+40,210,330)}" fill="none" stroke="#4E6156" stroke-width="7" stroke-opacity=".75" stroke-linecap="round"/>`;
+ const lbl=(txt,deg,col)=>{ const [x,y]=polar(Rr+62,deg); return `<text x="${x.toFixed(1)}" y="${(y+5).toFixed(1)}" text-anchor="middle" font-family="Archivo,sans-serif" font-size="15" font-weight="700" letter-spacing="3" fill="${col}">${txt}</text>`; };
+ svg+=lbl("SOMA",30,"#8C3B2E")+lbl("MIND",150,"#54687C")+lbl("FIELD",270,"#4E6156");
+ const chord=(k,br)=>{ const [a,b]=k.split("|"); const [x0,y0]=pos[a],[x1,y1]=pos[b];
+  let stroke="#8C7E69",w=1,op=.22;
+  if(br.tier==="C"){ stroke="#6E6150"; w=1.5; op=.42; }
+  if(adjKeys.has(k)){ stroke="#9A7440"; w=2.4; op=.72; }
+  const isPrimary=(k===primaryKey);
+  if(isPrimary){ stroke="#B4832E"; w=4.5; op=.98; }
+  // The one orchestrated moment: the primary braid thread draws itself in on load.
+  const extra = isPrimary ? ` class="braid-draw" pathLength="1"` : "";
+  return {svg:`<line x1="${x0.toFixed(1)}" y1="${y0.toFixed(1)}" x2="${x1.toFixed(1)}" y2="${y1.toFixed(1)}" stroke="${stroke}" stroke-width="${w}" stroke-opacity="${op}" stroke-linecap="round"${extra}/>`, top:(k===primaryKey||adjKeys.has(k))}; };
+ const cs=BRAIDS.map(br=>chord(braidKey(br.pair[0],br.pair[1]),br));
+ svg+=cs.filter(c=>!c.top).map(c=>c.svg).join("")+cs.filter(c=>c.top).map(c=>c.svg).join("");
+ if(primaryBraid){ const [a,b]=primaryKey.split("|"); const mx=(pos[a][0]+pos[b][0])/2, my=(pos[a][1]+pos[b][1])/2;
+  const w=primaryBraid.name.length*7.2+16;
+  svg+=`<g transform="translate(${mx.toFixed(1)} ${my.toFixed(1)})"><rect x="${(-w/2).toFixed(1)}" y="-11" width="${w.toFixed(1)}" height="22" rx="5" fill="#EFE7D6" stroke="#B4832E" stroke-width="1.3"/><text x="0" y="4.5" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="12.5" fill="#7A5B31">${primaryBraid.name}</text></g>`; }
+ order.forEach(id=>{ const d=domById(id), [x,y]=pos[id], sc=R[id].score;
+  const col=realmHex(d.meta), r=22+sc/100*7, op=(0.12+0.5*sc/100).toFixed(2);
+  const isTop=(id===primaryKey.split("|")[0]||id===primaryKey.split("|")[1]);
+  const tipName=esc(d.name), tipBody=esc(`${sc} · ${DOMAIN_DEF[id]}`);
+  svg+=`<g class="wnode" tabindex="0" role="button" aria-label="${tipName} — ${tipBody}" data-name="${tipName}" data-body="${tipBody}">`;
+  svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(r+8).toFixed(1)}" fill="transparent"/>`; // larger invisible hit target
+  svg+=`<circle class="wdot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${col}" fill-opacity="${op}" stroke="${col}" stroke-width="${isTop?3:1.5}"/>`;
+  svg+=`<text x="${x.toFixed(1)}" y="${(y+1).toFixed(1)}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="13" fill="${col}" style="pointer-events:none">${d.code}</text>`;
+  svg+=`<text x="${x.toFixed(1)}" y="${(y+14).toFixed(1)}" text-anchor="middle" font-family="Archivo,sans-serif" font-size="9" font-weight="700" fill="${col}" style="pointer-events:none">${sc}</text>`;
+  svg+=`</g>`;
+ });
+ svg+=`</svg>`;
+ return svg;
+}
+
+/* Triangular Complete Index Grid, personalized. */
+function buildGrid(R, primaryKey, adjKeys){
+ let rows="";
+ for(let r=0;r<9;r++){
+  let cells="";
+  for(let c=0;c<=r;c++){
+   if(c===r){ const d=DOMAINS[r];
+    cells+=`<td><div class="gcell" style="background:${realmColor(d.meta)};color:#EDE4D4"><span class="gn" style="opacity:.85">${d.code}</span><span class="gs">${R[d.id].score}</span></div></td>`;
+   } else { const br=braidFor(DOMAINS[r].id,DOMAINS[c].id), k=braidKey(DOMAINS[r].id,DOMAINS[c].id);
+    const canon=br.tier==="C"; const mine=k===primaryKey, adj=adjKeys.has(k);
+    const bg = mine?"rgba(195,154,91,.35)": canon?"rgba(195,154,91,.16)":"rgba(0,0,0,.03)";
+    const dotc = br.tier==="C"?"#B4832E":br.tier==="S"?"#4E6156":br.tier==="R"?"#8C3B2E":"#54687C";
+    cells+=`<td><div class="gcell ${mine?'mine':adj?'adj':''}" style="background:${bg}"><span class="gn" style="color:var(--book-ink)">${br.name.replace(/^The /,"")}</span><span class="gt" style="color:${dotc}">●</span></div></td>`;
+   }
+  }
+  rows+=`<tr>${cells}</tr>`;
+ }
+ const desktop = `<div class="gridscroll grid-desktop"><table class="igrid">${rows}</table></div>`;
+ return desktop + buildGridAccordion(R, primaryKey, adjKeys);
+}
+
+/* Mobile fallback: a 9×9 triangular table doesn't work at phone width — an
+   accordion, one entry per domain, listing the braid it forms with every
+   other domain. Same data as the desktop grid, browsable without pinch-zoom. */
+function buildGridAccordion(R, primaryKey, adjKeys){
+ const rows = DOMAINS.map(d=>{
+  const others = DOMAINS.filter(o=>o.id!==d.id).map(o=>{
+   const br=braidFor(d.id,o.id), k=braidKey(d.id,o.id);
+   const mine=k===primaryKey, adj=adjKeys.has(k);
+   const dotc = br.tier==="C"?"#B4832E":br.tier==="S"?"#4E6156":br.tier==="R"?"#8C3B2E":"#54687C";
+   return `<div class="gaRow ${mine?'mine':adj?'adj':''}"><span class="gaDot" style="background:${dotc}"></span><span class="gaOther">${o.name}</span><span class="gaBraid">${br.name}</span></div>`;
+  }).join("");
+  return `<details class="gaItem"><summary><span class="gaSum" style="background:${realmColor(d.meta)}">${d.code}</span>${d.name}<span class="gaScore">${R[d.id].score}</span></summary><div class="gaBody">${others}</div></details>`;
+ }).join("");
+ return `<div class="grid-mobile">${rows}</div>`;
+}
+
+/* Field guide: all 36, grouped by tier, personalized. */
+function buildFieldGuide(R, primaryKey, adjKeys){
+ const groups=[["C","The Canonical Ten"],["S","The Strong Pairs"],["R","The Rarest"],["Q","The Quiet Few"]];
+ let out="";
+ groups.forEach(([t,title])=>{
+  const items=BRAIDS.filter(b=>b.tier===t);
+  out+=`<div class="eyebrow-b" style="text-align:left;margin:14px 0 4px">${title}</div><div class="fgcols">`;
+  items.forEach(br=>{ const k=braidKey(br.pair[0],br.pair[1]);
+   const mine=k===primaryKey, adj=adjKeys.has(k);
+   const ps=(R[br.pair[0]].score+R[br.pair[1]].score)/2;
+   const op=mine?1:(0.5+0.5*ps/100).toFixed(2);
+   const codes=br.pair.map(id=>domById(id).code).join("·");
+   out+=`<div class="fgrow ${t==="C"?'canon':''} ${mine?'mine':adj?'adj':''}" style="opacity:${op}">
+     <span class="fgdot"></span><div class="fgtxt"><span class="fgn">${br.name}</span> <span class="fgp">${codes}</span><span class="fgd">${br.desc}${br.rare?" · also among the rarest":""}</span></div></div>`;
+  });
+  out+=`</div>`;
+ });
+ return out;
+}
+
+/* Anonymized submission to the study endpoint. */
+function submitResult(payload){
+ const el=$("submitStatus");
+ if(!SUBMIT_URL){ if(el){ el.textContent="This device only — no study endpoint configured yet."; } return; }
+ if(!S.consent){ if(el){ el.textContent="Not contributed — you opted out. Everything stayed on your device."; } return; }
+ if(el) el.textContent="Contributing anonymized results…";
+ fetch(SUBMIT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)})
+  .then(()=>{ if(el){ el.textContent="✓ Anonymized results contributed to the validation study. Thank you."; el.className="submitstatus ok"; } })
+  .catch(()=>{ if(el){ el.textContent="✗ Couldn't reach the study server. Your results are safe below — copy the data block and send it manually."; el.className="submitstatus err"; } });
+}
+
+/* ============ INTERPRETATION COMPUTE LAYER ============ */
+/* Domain -> book chapter (Ch 7 Kinetic … Ch 15 Perceptive; 17–18 = stacking + protocol) */
+const chapterOf = id => 7 + DOMAINS.findIndex(d=>d.id===id);
+const CH_STACK = 18; // the amplification/protocol chapter
+const BAND_RANK = {Signature:3, Supporting:2, Developing:1, Dormant:0};
+
+/* Shape classifier (Round 1 §4.1). Uses the TRUE signature count from scores
+   (the same isSig rule results() uses), not the display band — which force-names
+   a top domain even on a flat profile and would mask a real Plateau. */
+function computeShape(R, sorted){
+ const scores = sorted.map(d=>R[d.id].score);
+ const median = scores.slice().sort((a,b)=>a-b)[4];
+ const isSig = v => v>=70 && v>=median+10;
+ const sig = scores.filter(isSig).length;
+ const sup = sorted.filter(d=> R[d.id].score>=55 && !isSig(R[d.id].score)).length;
+ const gap = R[sorted[0].id].score - R[sorted[1].id].score;
+ if(sig===1 && gap>=15) return "Tower";
+ if(sig>=2) return "Ridge";
+ if(sig===1 && sup>=2) return "Anchored";
+ return "Plateau";
+}
+
+/* Shape metadata + the vertical nine-bar profile diagram (R2 §3.2). */
+const SHAPE_META = {
+ Tower:   {bars:[10,3,2,3,2,2,3,2,2], line:"one tall bar, the rest low",        move:"give this one peak a partner"},
+ Ridge:   {bars:[9,9,3,3,2,3,2,3,2],  line:"two tall bars together",            move:"decide which strand leads"},
+ Anchored:{bars:[10,6,6,6,3,3,2,2,3], line:"one tall bar, several mid-height",   move:"choose one strand and braid it on purpose"},
+ Plateau: {bars:[6,5,6,5,6,5,6,5,5],  line:"an even, flat cluster",             move:"develop broadly before you specialise"}
+};
+function buildShapeDiagram(current){
+ return `<div class="shapediag">`+["Tower","Ridge","Anchored","Plateau"].map(name=>{
+  const on=name===current;
+  const bars=SHAPE_META[name].bars.map(v=>`<span class="sbar" style="height:${v*10}%"></span>`).join("");
+  return `<figure class="shapemini ${on?'on':''}"><div class="sbars">${bars}</div><figcaption class="sname">${name}${on?" · you":""}</figcaption></figure>`;
+ }).join("")+`</div>`;
+}
+/* Portrait opener + gap headline + one synthesis line (Round 1 §6.1 / §7.2). */
+function portraitHTML(m){
+ const s0=m.sorted[0].name;
+ const supp=DOMAINS.filter(d=>m.band(d)==="Supporting").slice(0,2).map(d=>d.name);
+ let opener;
+ if(m.shape==="Tower") opener=`You are a <strong>${s0}</strong> genius in the fullest sense — a single, clear peak that runs well ahead of everything else in your profile. The task ahead is not to broaden immediately, but to give this peak a partner.`;
+ else if(m.shape==="Ridge") opener=`You are a <strong>${m.braidDoms[0].name}</strong> genius and a <strong>${m.braidDoms[1].name}</strong> genius at once — two gifts standing at nearly the same height. Most people have to build a braid; yours is already standing. The only real decision is which strand leads.`;
+ else if(m.shape==="Anchored") opener=`You are a <strong>${s0}</strong> genius anchored by real support — one clear peak, buttressed by strength in ${supp.join(" and ")||"your supporting domains"}. The task ahead is not to build more support; it's to choose one strand and braid it on purpose.`;
+ else opener=`Your profile reads even rather than peaked — no domain yet stands clearly above the rest. That isn't an absence of genius; it usually means your Signature lives somewhere this instrument under-measures, or it's real but still latent. The task ahead is developmental before it's strategic.`;
+ const headline = m.topUnclaimed ? ` And your record already outruns your self-image in <strong>${m.topUnclaimed.name}</strong> — you undersell it by ${m.gapOf(m.topUnclaimed)} points, the clearest unclaimed gift on this page.` : "";
+ const synth = m.topUnclaimed ? ` If there is one true thing here, it is that you are more than you give yourself credit for.` : (m.shape==="Ridge" ? ` Lead with whichever strand the moment rewards, and let the other carry it.` : ` Name it, and it starts to grow.`);
+ return `<p class="portrait">${opener}${headline}${synth}</p>`;
+}
+function spotlightHTML(m){
+ if(m.topUnclaimed){ const d=m.topUnclaimed;
+  return `<div class="callout callout--moss"><span class="ct">The one to act on first</span><strong>${d.name}.</strong> You rate yourself at ${Math.round(m.R[d.id].A)}, but you performed at ${Math.round(m.R[d.id].B)} — a ${m.gapOf(d)}-point gap in your favour. Of everything on this page, start here: it's a real capability you're not yet claiming.</div>`;
+ }
+ return `<div class="callout callout--slate"><span class="ct">A rare agreement</span>Your self-view and your record line up closely across the board — rarer than it sounds. What would you attempt if you trusted that agreement completely?</div>`;
+}
+function microHTML(m){
+ const d=m.sig[0], w1=PROTOCOL_DOMAIN[d.id][0];
+ return `<div class="callout callout--brass"><span class="ct">This week's micro-challenge</span>No month-long commitment — just the first move. In the next 24 hours: <strong>${w1}</strong> <span style="color:var(--book-dim)">(${d.name})</span>. That's day one of the protocol below.</div>`;
+}
+function reflectionHTML(m){
+ if(m.topUnclaimed){ const d=m.topUnclaimed;
+  return `<div class="callout callout--slate"><span class="ct">A question to sit with</span>You rated ${d.name} at ${Math.round(m.R[d.id].A)} but performed at ${Math.round(m.R[d.id].B)}. Think of one moment in the last month where this showed up and you didn't give yourself credit for it. What would change if you did?</div>`;
+ }
+ return `<div class="callout callout--slate"><span class="ct">A question to sit with</span>Your self-image and your record agree closely across the board — what would you attempt if you trusted that agreement completely?</div>`;
+}
+function cautionsHTML(m){
+ const d=DOMAINS.find(x=>m.band(x)==="Dormant" && !m.R[x.id].skipped && (m.R[x.id].B-m.R[x.id].A)<=-30);
+ if(!d) return "";
+ const extra = d.id==="ADP" ? " With Adaptive especially: defer to a professional before testing physical limits — do not self-test." : "";
+ return `<div class="callout callout--oxblood"><span class="ct">A caution</span><strong>${d.name}.</strong> Your self-image sits well ahead of the record here, and the domain reads dormant. Not a verdict — a training map.${extra}</div>`;
+}
+/* The interpretation-first block that meets the reader before the taxonomy. */
+function interpTop(m){
+ return `
+  <div class="book">
+   <div class="eyebrow-b">Before the taxonomy — you</div>
+   <h2 class="bt">Your Shape</h2>
+   <p class="btsub">Your profile is a <strong>${m.shape}</strong> — ${SHAPE_META[m.shape].line}.</p>
+   <hr class="brule">
+   ${buildShapeDiagram(m.shape)}
+   <div class="callout callout--brass"><span class="ct">${m.shape}</span>The strategic move for your shape: ${SHAPE_META[m.shape].move}.</div>
+   ${portraitHTML(m)}
+   ${spotlightHTML(m)}
+  </div>`;
+}
+
+/* Reachable next braids (Round 1 §4.3): canonical pairs where one member is
+   Signature and the other is Supporting+, ranked by summed score; fall back to
+   Strong Pairs to fill two slots. Excludes the reader's primary braid. */
+function computeReachable(R, band, primaryKey){
+ const eligible = list => list
+  .filter(b=>{ const bx=band(domById(b.pair[0])), by=band(domById(b.pair[1]));
+    return (bx==="Signature" && BAND_RANK[by]>=2) || (by==="Signature" && BAND_RANK[bx]>=2); })
+  .sort((a,b)=> (R[b.pair[0]].score+R[b.pair[1]].score) - (R[a.pair[0]].score+R[a.pair[1]].score));
+ const notPrimary = b => braidKey(b.pair[0],b.pair[1])!==primaryKey;
+ let picks = eligible(BRAIDS.filter(b=>b.tier==="C" && notPrimary(b))).slice(0,2);
+ if(picks.length<2){
+  const more = eligible(BRAIDS.filter(b=>b.tier==="S" && notPrimary(b) && !picks.includes(b)));
+  picks = picks.concat(more).slice(0,2);
+ }
+ return picks;
+}
+
+/* Read Next ordering (Round 1 §4.4) — labels only, capped at 5. */
+function computeReadNext(R, band, sorted, topUnclaimed){
+ const out=[], seen=new Set();
+ const add=(id,note)=>{ if(id && !seen.has(id)){ seen.add(id); out.push({id, ch:chapterOf(id), name:domById(id).name, note}); } };
+ sorted.filter(d=>band(d)==="Signature").forEach(d=>add(d.id,"your Signature"));
+ if(topUnclaimed) add(topUnclaimed.id,"the unclaimed pivot");
+ const dormantAspir = DOMAINS.find(d=>band(d)==="Dormant" && !R[d.id].skipped && (R[d.id].B-R[d.id].A)<=-30);
+ if(dormantAspir) add(dormantAspir.id,"the caution chapter");
+ out.push({id:"_stack", ch:`17–18`, name:"Stacking & the protocol", note:"how to braid on purpose"});
+ return out.slice(0,5);
+}
+
+/* Shared compute layer: derives the full interpretation context (m) from a
+   domain-score map R alone. Used by both a live completion (results()) and the
+   archived "view" replay (renderArchived()), so a stored submission's original
+   scores always run through the exact same braid/shape/gap logic as a live one. */
+function computeM(R){
+ const sorted=[...DOMAINS].sort((x,y)=>R[y.id].score-R[x.id].score);
+ const scores=sorted.map(d=>R[d.id].score);
+ const median=scores.slice().sort((a,b)=>a-b)[4];
+ const isSig=d=> R[d.id].score>=70 && R[d.id].score>=median+10;
+ let sig=sorted.filter(isSig).slice(0,2);
+ if(sig.length===0) sig.push(sorted[0]);
+ const braidDoms = sig.length>=2 ? [sig[0],sig[1]] : [sorted[0], sorted[1]];
+ const primary = braidFor(braidDoms[0].id, braidDoms[1].id);
+ const primaryKey = braidKey(braidDoms[0].id, braidDoms[1].id);
+ const top3=sorted.slice(0,3);
+ const adjKeys=new Set();
+ for(let i=0;i<top3.length;i++) for(let j=i+1;j<top3.length;j++){ const k=braidKey(top3[i].id,top3[j].id); if(k!==primaryKey) adjKeys.add(k); }
+ const band=d=>{ if(sig.includes(d)) return "Signature";
+  if(R[d.id].score>=55) return "Supporting"; if(R[d.id].score<40) return "Dormant"; return "Developing"; };
+ const gapOf = d => R[d.id].skipped ? null : Math.round(R[d.id].B - R[d.id].A);
+ const unclaimed = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)>=30).sort((a,b)=>gapOf(b)-gapOf(a));
+ const aspir = DOMAINS.filter(d=> gapOf(d)!=null && gapOf(d)<=-30).sort((a,b)=>gapOf(a)-gapOf(b));
+ const topUnclaimed = unclaimed[0] || null;
+ const shape = computeShape(R, sorted);
+ const reachable = computeReachable(R, band, primaryKey);
+ const readNext = computeReadNext(R, band, sorted, topUnclaimed);
+ const topDoms = sorted.slice(0,2);
+ return {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf};
+}
+
+/* ============ CONTENT LIBRARY (condensed from the book; per-domain / per-braid) ============ */
+const CAREERS = {
+ KIN:"Performance trades (dance, music, acting, athletics) · precision trades (surgery, watchmaking, luthiery) · skilled trades (welding, carpentry, culinary knife work) · teaching of movement (coaching, PT, choreography)",
+ SEN:"Ear trades (audio engineering, sound design) · palate trades (culinary, sommelier, perfumery) · eye trades (photography, colour grading, design) · QA / inspection trades",
+ ADP:"Endurance & strength trades · flexibility trades (dance, gymnastics, yoga) · breath trades (vocal, wind instruments, free-diving) · physical-labour professions — medical self-knowledge is the prerequisite throughout",
+ ANL:"Building trades of the mind (software, data science, quant finance) · diagnostic trades (medicine, debugging, forensic accounting) · strategy trades (consulting, investing) · structural trades (law, research)",
+ MEM:"Knowledge-dense professions (medicine, law, academia) · language trades (interpretation, translation) · performance-of-memory (acting, competitive memory) · relationship trades (sales, hospitality, diplomacy)",
+ GEN:"Making trades (writing, music, film, design) · invention trades (product, R&D, entrepreneurship) · idea trades (advertising, branding, content) · problem trades (innovation, consulting)",
+ REL:"Helping professions (therapy, coaching, teaching) · deal professions (sales, negotiation, biz dev) · leading professions (management, executive leadership) · service professions (hospitality, healthcare)",
+ EXP:"Platform trades (speaking, podcasting, broadcasting) · teaching trades · performance trades (acting, singing) · persuasion trades (sales, law, ministry, marketing) · leadership trades",
+ PER:"Watching trades (security, investigation) · inspection trades (QC, building & safety, aviation) · frame trades (cinematography, continuity, editing) · field trades (guiding, tracking, SAR) · experience trades (UX research, venue design)"
+};
+const HOBBIES = {
+ KIN:["A new sport from scratch, martial arts, dance","A partner-dance lesson, axe-throwing, a hands-on cooking class","A maker faire, a movement workshop"],
+ SEN:["Home barista training, tasting practice, ear-training apps","A blind tasting menu, a paint-your-own-pottery night","A tasting festival, a sound-design meetup"],
+ ADP:["Yoga & mobility training, breathwork (with a professional screen first)","A hike matched to real capacity, partner yoga","A guided (not solo) endurance event"],
+ ANL:["Chess & strategy games, cryptic puzzles","An escape room, a trivia night","A hackathon, a strategy-game tournament"],
+ MEM:["Memory-palace practice, language learning, genealogy","A trivia date, revisiting a shared place and comparing recall","A history walking tour, a storytelling night"],
+ GEN:["Sketchbook practice, songwriting, a maker project","An art-supply date, an improv class together","A hackathon, an open-mic"],
+ REL:["Hosting small gatherings, deep-listening practice","A phones-down walk, comparing reads after a show","A communal dinner series"],
+ EXP:["Public-speaking practice, a podcast habit, karaoke","Karaoke, teaching your date something you love","An open-mic, a theatre workshop"],
+ PER:["Photography walks, geocaching, birdwatching","A photo-walk date, a scavenger hunt in a new neighbourhood","A nature & wildlife tour, an urban-sketching meetup"]
+};
+const CHALLENGES = {
+ KIN:["Impatience with purely verbal instruction; the gift reads as “not real intelligence” to others","A new physical skill, no manual — figure it out by feel"],
+ SEN:["Comes across as overly particular; genuinely bothered by low-quality environments others don't notice","Any task where getting the fine detail exactly right is the whole point"],
+ ADP:["Tolerance can mask real cost — risk of ignoring true limits","An honest physical ceiling to find, safely, with guidance"],
+ ANL:["“Always finds the problem” fatigues people who wanted enthusiasm, not an audit","The genuinely broken system nobody else could untangle"],
+ MEM:["The group leans on you as its memory and never builds their own","Mastering a body of material most people wouldn't attempt"],
+ GEN:["Idea volume looks like flakiness without visible follow-through","A genuinely open brief with no existing answer"],
+ REL:["Absorbing everyone's state is exhausting; risk of becoming free therapy","Walking into a tense room and being the one who can read it"],
+ EXP:["Can look like performing even when sincere; drained by unresponsive rooms","Any audience, any size, with something worth saying"],
+ PER:["Noticing everything is quietly tiring (the book's own hypervigilance caution)","The one detail everyone else missed, waiting to be found"]
+};
+const PROTOCOL_DOMAIN = {
+ KIN:["Baseline: film the skill cold, score it","Spacing + interleaving practice","Remove a sense / add a variable","Retention test + filmed delta"],
+ SEN:["Baseline + build a reference vocabulary","A/B discrimination drills","Blind identification","Speed trial + retest"],
+ ADP:["Baseline + professional screen","Graded load, 60–70% of ceiling","Progressive overload, log recovery","Consolidate + retest"],
+ ANL:["Baseline + name the pattern in words","Decomposition drills, find the flaw","Estimation & forecasting (Fermi)","Speed trial + retest"],
+ MEM:["Baseline + build a memory palace","Encoding systems (numbers / names / text)","Spaced retrieval practice","Volume push + retest"],
+ GEN:["Baseline + quantity reps, no judging","Cross-domain input, force a connection","Constraint & blend","Select / refine + retest"],
+ REL:["Baseline + silent reads (predict, check)","Learn people's real baselines","Active verification, check it out loud","Response practice + retest"],
+ EXP:["Baseline + 60-second transmissions","One charismatic tactic per day","Emotional transmission, check it landed","Live reps + retest"],
+ PER:["Baseline + the room audit","Change detection (the delta drill)","Field vigilance, the baseline book","The unaided day + retest"]
+};
+const EVIDENCE = {
+ KIN:"Folklore says fast physical learners are simply “born that way” and that muscle memory is permanent once earned. The record is messier — cellular retention of trained muscle (myonuclei) is a contested, unsettled hypothesis in humans. What's real: rate of skill acquisition varies and is measurable — the permanence story is the part still unproven.",
+ SEN:"Folklore says perfect pitch and fine sensory acuity are fixed gifts you're born with. The record shows absolute pitch is strongly tied to a critical early window plus tonal-language exposure — a genetic-only origin has been ruled out. What's real: acuity is substantially built by early demand, not issued at birth.",
+ ADP:"Folklore treats extreme endurance, flexibility, or low sleep need as superhuman willpower. The record shows these are often rare population- or mutation-level adaptations (documented spleen adaptation in free-diving populations; an inherited gene variant behind true natural short sleep) — not something to train your way into. What's real: the capacity is genuine, but overriding your own limits on purpose can be dangerous. See a professional before you test this one.",
+ ANL:"Folklore says “math people” are born, not made. The record shows expert pattern-recognition (a chess master's board-reading) is built through structured practice and exposure, not raw innate ability — though mindset-effect sizes are genuinely debated. What's real: this domain is trainable further than the folklore admits.",
+ MEM:"Folklore promises true photographic memory. The record: no well-documented adult case has ever been replicated, and the one famous claim is compromised by conflict of interest in its own research. What's real: exceptional memory is genuine but works through dense association, not mental photography — and it is highly trainable by technique.",
+ GEN:"Folklore says creative genius waits for rare, superior flashes of inspiration. The record (the equal-odds rule) says quality tracks quantity — the most creative people are also the most prolific, misfires included. What's real: output volume is the lever, not waiting for the “right” idea.",
+ REL:"Folklore says some people can just read minds. The record: even trained professionals barely beat chance at lie detection, though rapid “thin-slice” judgments are surprisingly accurate on other things. What's real: this is a genuine, measurable skill on subtle cues — keep the confidence calibrated; it isn't mind-reading.",
+ EXP:"Folklore says charisma is innate — you have it or you don't. The record identifies specific, learnable verbal and nonverbal tactics that reliably increase perceived charisma. What's real: this is substantially trainable technique, not fixed birthright.",
+ PER:"Folklore claims a paranormal “sixth sense” for danger or being watched. Controlled testing finds no reliable effect above chance. What's real: what reads as a sixth sense is usually fast, often subconscious integration of real cues (peripheral motion, sound, pattern deviation) — trainable through deliberate attention, not paranormal."
+};
+/* Currency of proof, keyed by braid name (all 36). */
+const CURRENCY = {
+ "The Craftsman":"a finished, technically precise piece — a dish, a recording, a built object",
+ "The Performer":"a recorded or live performance that visibly moves an audience",
+ "The Connoisseur":"a judgment or rating that experts independently confirm as correct",
+ "The Translator":"writing or a talk that makes a hard idea click for a lay audience",
+ "The Diagnostician":"a documented catch — a bug, error, or anomaly found and explained",
+ "The Connector":"a network of real relationships you can actually call on",
+ "The Storyteller":"a finished, shipped narrative work",
+ "The Leader":"a team or room that visibly moved because of you, with a result to show",
+ "The Instrument":"a recorded vocal or physical performance demonstrating range and control",
+ "The Documentarian":"a published observational piece that makes others see what you saw",
+ "The Natural":"a skill picked up from scratch, demonstrated on camera in a short window",
+ "The Tactician":"a match / game record showing anticipation, not just execution",
+ "The Virtuoso":"a performed repertoire executed from memory",
+ "The Maker":"a physical object or prototype invented and built by hand",
+ "The Healer":"client outcomes or testimonials from hands-on practice",
+ "The Athlete":"game footage showing reads and reactions under real conditions",
+ "The Composer":"an original sensory work released — music, a dish, a fragrance",
+ "The Empath":"documented cases of correctly reading and meeting an unspoken need",
+ "The Stylist":"a body of stylistically distinctive published work",
+ "The Tracker":"a documented find — the clue or subject others missed",
+ "The Optimizer":"a measurable before / after improvement in a trained physical outcome",
+ "The Caregiver":"a sustained caregiving or crisis-work record with real outcomes",
+ "The Explorer":"a completed expedition or route log showing endurance and navigation",
+ "The Scholar":"a demonstrated body of expertise — publication, credential, teaching",
+ "The Inventor":"a shipped invention or prototype that solves a real problem",
+ "The Negotiator":"closed deals or resolved disputes with documented terms",
+ "The Synthesizer":"an original work that visibly recombines disparate source material",
+ "The Bard":"a delivered oral performance from memory, well received",
+ "The Witness":"an accurate, detailed account of an event that held up under scrutiny",
+ "The Entertainer":"a live, improvised, or hosted performance that read the room and landed",
+ "The Visionary":"a documented early call on a trend, later validated by events",
+ "The Diplomat":"a resolved multi-party situation with all sides satisfied, on record",
+ "The Adept":"a demonstrated controlled response under real sensory / physical stress",
+ "The Aesthete":"a portfolio of precisely recalled or reproduced sensory signatures",
+ "The Veteran":"a multi-year track record with detailed recall of specifics across it",
+ "The Daredevil":"a novel physical feat performed and documented, safely"
+};
+/* Team-fit partner, for the ten canonical braids; others fall back to Expressive/Analytic. */
+const TEAMFIT = {
+ "The Craftsman":"An Expressive collaborator, to carry the work to an audience",
+ "The Performer":"An Analytic collaborator, to build the structure around the performance",
+ "The Connoisseur":"A Relational collaborator, to turn the judgment into relationships",
+ "The Translator":"A Generative collaborator, to keep fresh material coming",
+ "The Diagnostician":"An Expressive collaborator, to report findings persuasively",
+ "The Connector":"A Generative or Analytic collaborator, to give the network something to rally around",
+ "The Storyteller":"An Analytic or Perceptive collaborator, to keep the story grounded and well-timed",
+ "The Leader":"An Analytic collaborator, to pressure-test the plan behind the vision",
+ "The Instrument":"A Generative collaborator, to keep writing new material for the voice",
+ "The Documentarian":"An Analytic collaborator, to turn observations into a structured argument"
+};
+function teamFitFor(primary){
+ if(!primary) return "An Expressive or Analytic collaborator, to communicate and structure the work.";
+ if(TEAMFIT[primary.name]) return TEAMFIT[primary.name];
+ const ids=primary.pair;
+ if(!ids.includes("EXP")) return "An Expressive collaborator, to communicate the work.";
+ if(!ids.includes("ANL")) return "An Analytic collaborator, to structure and scale the work.";
+ return "A Relational collaborator, to widen the work's reach.";
+}
+
+/* Hero motif: the book's 3×3 cover grid (nine domains by realm row), with the
+   reader's two braid domains lit in gold and a gold thread linking them. */
+function buildHeroGlyph(braidDoms){
+ const lit = braidDoms.map(d=>d.id);
+ const cells = [...DOMAINS].sort((a,b)=>a.cell-b.cell); // 0..8 => 3×3, rows = SOMA/MIND/FIELD
+ const cellSvg = cells.map((d,i)=>{
+  const col=realmHex(d.meta), x=(i%3), y=Math.floor(i/3);
+  const cx=30+x*62, cy=30+y*62, on=lit.includes(d.id);
+  const box = on
+   ? `<rect x="${cx-26}" y="${cy-26}" width="52" height="52" rx="9" fill="#C39A5B" stroke="#9A7440" stroke-width="1.5"/>`
+   : `<rect x="${cx-26}" y="${cy-26}" width="52" height="52" rx="9" fill="${col}" fill-opacity="0.05" stroke="${col}" stroke-opacity="0.28" stroke-width="1.3"/>`;
+  const txt = `<text x="${cx}" y="${cy+5}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="15" fill="${on?'#2A2118':col}" fill-opacity="${on?1:0.72}">${d.code}</text>`;
+  return box+txt;
+ }).join("");
+ // gold thread between the two lit cells
+ const p=braidDoms.map(d=>{ const i=cells.findIndex(c=>c.id===d.id); return [30+(i%3)*62, 30+Math.floor(i/3)*62]; });
+ const thread = p.length===2 ? `<line x1="${p[0][0]}" y1="${p[0][1]}" x2="${p[1][0]}" y2="${p[1][1]}" stroke="#B4832E" stroke-width="3" stroke-linecap="round" stroke-opacity="0.9" class="braid-draw" pathLength="1"/>` : "";
+ return `<div class="heroglyph"><svg viewBox="0 0 184 184" aria-hidden="true">${thread}${cellSvg}</svg></div>`;
+}
+
+/* Book-sourced result modules (R3). All built on the .callout component.
+   m = { sig, topDoms, R, band, primary, braidDoms, reachable, readNext, shape } */
+function bookModules(m){
+ const chDom = id => chapterOf(id);
+ const domChip = d => `<span class="domchip ${d.meta}" style="font-size:13px;padding:5px 11px 5px 9px"><span class="dot"></span>${d.name}</span>`;
+ const sigChapters = m.sig.map(d=>chDom(d.id));
+ const chList = ids => (ids.length>1?"Chapters ":"Chapter ")+ids.join(" & ");
+
+ // Evidence Ledger — one accordion entry per Signature domain
+ const evidence = `<details class="ev"><summary><span class="ct" style="color:var(--gold-ink)">The evidence ledger</span></summary>
+   ${m.sig.map(d=>`<div class="evrow"><div class="evh"><span class="dot ${d.meta}"></span>${d.name}</div><p>${EVIDENCE[d.id]}</p></div>`).join("")}
+   <p class="evfoot">The Index measures what folklore only asserts. ${chList(sigChapters)} carries each full ledger.</p></details>`;
+
+ // Careers
+ const careers = `<div class="callout callout--brass"><span class="ct">Where this pays</span>
+   ${m.sig.map(d=>`<p style="margin:2px 0 8px"><strong>${d.name}.</strong> ${CAREERS[d.id]}</p>`).join("")}
+   <p class="modfoot">None of these hire the marker — they hire it demonstrated. ${chList(sigChapters)} names the specific proof each field reads.</p></div>`;
+
+ // Hobbies / dates — blend top 1–2 domains
+ const hob = `<div class="callout callout--moss"><span class="ct">Where your genius comes alive</span>
+   <table class="hobt"><tr><th></th><th>Hobbies</th><th>A date or outing</th><th>An event to seek</th></tr>
+   ${m.topDoms.map(d=>`<tr><td class="hobd">${d.name}</td><td>${HOBBIES[d.id][0]}</td><td>${HOBBIES[d.id][1]}</td><td>${HOBBIES[d.id][2]}</td></tr>`).join("")}</table>
+   <p class="modfoot">${chList(m.topDoms.map(d=>chDom(d.id)))} has more on why these domains crave this kind of exercise, not just work.</p></div>`;
+
+ // Challenges
+ const chal = `<div class="callout callout--oxblood"><span class="ct">Friction points & growth edges</span>
+   <table class="chalt"><tr><th>Domain</th><th>The shadow</th><th>The edge you'd enjoy</th></tr>
+   ${m.sig.map(d=>`<tr><td class="hobd">${d.name}</td><td>${CHALLENGES[d.id][0]}</td><td>${CHALLENGES[d.id][1]}</td></tr>`).join("")}</table></div>`;
+
+ // 30-Day domain protocol
+ const proto = m.sig.map(d=>`<div class="protowrap"><div class="protohd">${d.name} · 30 days</div>
+   <div class="weekstrip">${PROTOCOL_DOMAIN[d.id].map((w,i)=>`<div class="wk"><span class="wkn">Week ${i+1}</span>${w}</div>`).join("")}</div></div>`).join("");
+ const protocol = `<div class="callout callout--brass"><span class="ct">Your 30-day development protocol</span>
+   ${proto}
+   <p class="modfoot">This is the compressed version. ${chList(sigChapters)} runs the full day-by-day — what to log, and why each week builds on the last.</p></div>`;
+
+ // Braids you could build next
+ const reach = m.reachable.length ? `<div class="callout callout--brass"><span class="ct">Braids you could build next</span>
+   ${m.reachable.map(br=>{ const d0=domById(br.pair[0]), d1=domById(br.pair[1]);
+     return `<div class="reachcard"><div class="reachname">${br.name}</div>
+       <div class="reachpair">${domChip(d0)} <span style="color:var(--book-dim)">${Math.round(m.R[br.pair[0]].score)}</span> × ${domChip(d1)} <span style="color:var(--book-dim)">${Math.round(m.R[br.pair[1]].score)}</span></div>
+       <p class="reachdesc">${br.desc}</p>
+       <p class="reachproof"><span>Currency of proof:</span> ${CURRENCY[br.name]||"a finished, demonstrated piece of work"}.</p></div>`; }).join("")}
+   <p class="modfoot">You already carry one strand of each. The other is within reach — that's what makes these the next braids to build.</p></div>` : "";
+
+ // Team fit
+ const team = `<div class="callout callout--slate"><span class="ct">Who to pair with</span>
+   <p style="margin:2px 0">Not who to become — who complements you. For ${m.primary?`<strong>${m.primary.name}</strong>`:"your braid"}: ${teamFitFor(m.primary)}.</p></div>`;
+
+ // Read next — real links into the chapter pages built from this same content library
+ const readnext = `<div class="callout callout--brass"><span class="ct">Read next</span>
+   <div class="rnrow">${m.readNext.map(e=>`<button class="rn-chip" onclick="showChapter('${e.id}')"><span class="rn-ch">Ch ${e.ch}</span>${e.name}${e.note?`<span class="rn-note"> · ${e.note}</span>`:""}</button>`).join("")}</div></div>`;
+
+ return `
+  <div class="book">
+   <div class="eyebrow-b">What your genius is for</div>
+   <h2 class="bt">Where it lives in a life</h2>
+   <p class="btsub">Your Signature ${m.sig.length>1?"domains":"domain"} — ${m.sig.map(d=>d.name).join(" & ")} — read into work, play, and the edges between.</p>
+   <hr class="brule">
+   ${evidence}${careers}${hob}${chal}
+  </div>
+  <div class="book">
+   <div class="eyebrow-b">What to do with it</div>
+   <h2 class="bt">Grow it on purpose</h2>
+   <hr class="brule">
+   ${microHTML(m)}${protocol}${reach}${team}${readnext}${reflectionHTML(m)}
+  </div>`;
+}
+
+/* ============ RESULTS ============ */
+function results(){
+ setProg(1); litCells(9); busy=false;
+ const R={};
+ DOMAINS.forEach(d=>{
+  const a=S.respA[d.id].map((v,i)=> i===3 ? 4-v : v).reduce((x,y)=>x+y,0); // reverse-key item 4
+  const c=S.respC[d.id].reduce((x,y)=>x+y,0);
+  const A100=a/20*100, C100=c/12*100;
+  const skipped = S.B[d.id]==null; // station skipped -> self-report only
+  const B100=(S.B[d.id]??0)*100;
+  const score = skipped ? Math.round((0.5*A100+0.2*C100)/0.7) : Math.round(0.5*A100+0.3*B100+0.2*C100);
+  R[d.id]={A:A100,B:B100,C:C100,score,skipped};
+ });
+ const m = computeM(R);
+ const sdrFlag = S.respSDR[0]>=3 && S.respSDR[1]>=3;
+ const compTop3=m.sorted.slice(0,3).map(d=>d.id);
+ const overlap=S.ranksTop.filter(x=>compTop3.includes(x)).length;
+ const code = m.sig.map(d=>d.code).join("·") + (m.unclaimed.length?` (+${m.unclaimed.map(d=>d.code.toLowerCase()).join(",")})`:"");
+ m.sdrFlag=sdrFlag; m.overlap=overlap;
+
+ const exportObj={v:"GI-1.0",event:"complete",code:S.code||null,consent:S.consent,ts:new Date().toISOString(),
+  minutes:Math.round((Date.now()-S.started)/60000),
+  A:S.respA,C:S.respC,SDR:S.respSDR,B:S.Braw,Bnorm:S.B,
+  ranksTop:S.ranksTop,ranksBot:S.ranksBot,
+  domains:Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
+  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id), braidTier:m.primary?m.primary.tier:null,
+  adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
+  flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}};
+
+ renderResultsPage(m, exportObj, {archived:false});
+}
+
+/* Archived-result replay: rebuilds a stored submission's domain scores and runs
+   them through the exact same computeM()/renderResultsPage() path as a live
+   completion, so a Sheet row always opens to the current scoring model's read
+   of that submission -- not a frozen snapshot of whatever the code did at the
+   time it was collected. Triggered by #view=<encodeURIComponent(raw_json)>. */
+let ARCHIVED_PAYLOAD = null;
+function domainsFromPayload(payload){
+ const R={};
+ DOMAINS.forEach(d=>{
+  const dd = payload.domains && payload.domains[d.id];
+  R[d.id] = dd ? {A:+dd.A||0, B:+dd.B||0, C:+dd.C||0, score:Math.round(dd.score||0), skipped:!!dd.skipped} : {A:0,B:0,C:0,score:0,skipped:true};
+ });
+ return R;
+}
+function renderArchived(payload){
+ ARCHIVED_PAYLOAD = payload;
+ const R = domainsFromPayload(payload);
+ const m = computeM(R);
+ const sdrFlag = !!(payload.flags && payload.flags.sdr);
+ const ranksTop = payload.ranksTop||[];
+ const compTop3 = m.sorted.slice(0,3).map(d=>d.id);
+ const overlap = ranksTop.filter(x=>compTop3.includes(x)).length;
+ m.sdrFlag=sdrFlag; m.overlap=overlap;
+ const code = m.sig.map(d=>d.code).join("·") + (m.unclaimed.length?` (+${m.unclaimed.map(d=>d.code.toLowerCase()).join(",")})`:"");
+ const exportObj = {
+  v:payload.v||"", event:"complete", code:payload.code||null, consent:payload.consent!==false,
+  ts:payload.ts||"", minutes:payload.minutes||0,
+  domains:payload.domains||Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
+  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id), braidTier:m.primary?m.primary.tier:null,
+  adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
+  flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}
+ };
+ renderResultsPage(m, exportObj, {archived:true});
+}
+function archivedBannerHTML(exportObj){
+ return `<div class="archivedbanner">Archived result${exportObj.code?` · code <strong>${esc(exportObj.code)}</strong>`:""}${exportObj.ts?` · submitted ${new Date(exportObj.ts).toLocaleString()}`:""} — recomputed from the stored answers using the <strong>current</strong> scoring model.</div>`;
+}
+
+/* Shared renderer: builds the full results page HTML from a computed m/exportObj.
+   opts.archived suppresses the submit-once POST and the baseline/retake UI (this
+   isn't the viewer's own session) and swaps a couple of labels accordingly. */
+function renderResultsPage(m, exportObj, opts){
+ opts = opts || {};
+ const {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf, sdrFlag=false, overlap=0} = m;
+ const bars=sorted.map(d=>`<div class="barrow ${d.meta}"><span class="lbl">${d.name}</span>
+   <span class="trk"><i style="width:${R[d.id].score}%"></i></span><span class="val">${R[d.id].score}</span></div>`).join("");
+
+ const tm = primary?TIER_META[primary.tier]:null;
+ const chip = d => `<span class="domchip ${d.meta}"><span class="dot"></span>${d.name}</span>`;
+ // Stash context so the all-36 reference view and chapter pages can personalize.
+ S.ctx={R, primaryKey, adjKeys, primary, m};
+
+ h(`
+  ${opts.archived?archivedBannerHTML(exportObj):""}
+  <div class="stagecount" style="margin-top:8px">Your result · complete</div>
+
+  <div class="book book--hero">
+   <div class="braidcard">
+    <div class="yb">Your braid</div>
+    ${buildHeroGlyph(braidDoms)}
+    <div class="bname">${primary?primary.name:exportObj.signature}</div>
+    <div class="bpair">${chip(braidDoms[0])}<span class="amp">×</span>${chip(braidDoms[1])}</div>
+    ${tm?`<div class="tierbadge tier-${primary.tier}">${tm.label}${primary.rare?" · Rarest":""}</div>
+    <div class="tiersub">${tm.sub}</div>`:""}
+    <div class="braiddesc">${primary?esc(primary.desc):""}</div>
+   </div>
+   <div class="bfoot">Rarity comes from combination. Genius is rarely a single gift — it is almost always two of the nine domains braided together, and the pairing, not either strand alone, is what makes a person rare.</div>
+  </div>
+
+  ${interpTop(m)}
+
+  <div class="book">
+   <div class="eyebrow-b">Your place in the field</div>
+   <h2 class="bt">The Constellation</h2>
+   <p class="btsub">All nine domains, sized by your score. Your braid is drawn in gold. Hover or tab through a domain for its score and definition.</p>
+   <hr class="brule">
+   <div class="wheelwrap" id="wheelWrap">${buildWheel(R, primaryKey, adjKeys, primary)}<div class="wtip" id="wheelTip" hidden></div></div>
+   <div class="wlegend">
+    <span class="wl-item"><i class="wl-swatch wl-gold-strong"></i>Your braid</span>
+    <span class="wl-item"><i class="wl-swatch wl-gold-soft"></i>Neighbouring pairs</span>
+    <span class="wl-item"><i class="wl-swatch wl-faint"></i>Every other combination</span>
+    <span class="wl-item"><i class="wl-swatch" style="background:var(--soma)"></i>SOMA</span>
+    <span class="wl-item"><i class="wl-swatch" style="background:var(--mind)"></i>MIND</span>
+    <span class="wl-item"><i class="wl-swatch" style="background:var(--field)"></i>FIELD</span>
+   </div>
+  </div>
+
+  <div class="book">
+   <div class="eyebrow-b">The measurements</div>
+   <h2 class="bt">Your Nine Domains</h2>
+   <hr class="brule">
+   <div class="bars">${bars}</div>
+   <table style="color:var(--book-ink)"><tr><th style="color:var(--gold-ink)">Domain</th><th style="color:var(--gold-ink)">Band</th><th style="color:var(--gold-ink)">A · B · C</th></tr>
+    ${sorted.map(d=>`<tr><td>${d.name}</td><td>${band(d)}</td><td style="color:var(--book-dim)">${Math.round(R[d.id].A)} · ${R[d.id].skipped?"—":Math.round(R[d.id].B)} · ${Math.round(R[d.id].C)}${R[d.id].skipped?' <span style="font-size:10px">(self-report)</span>':""}</td></tr>`).join("")}
+   </table>
+   <details class="abc"><summary>How to read A · B · C</summary>
+    <p class="small" style="color:var(--book-ink);margin:8px 0 2px">Every domain score blends three different questions into one number.</p>
+    <ul class="abclist">
+     <li><strong>A — What you say happens.</strong> Your answers about real-life frequency. Carries the most weight (<strong>50%</strong>) — repeated behavior is the strongest single signal of a genuine gift.</li>
+     <li><strong>B — What you did when tested.</strong> A short live task, scored on the spot — the check on A (<strong>30%</strong>). Skip a station and the domain is computed from A and C alone, reweighted to fill the gap; skipping never zeroes a domain out.</li>
+     <li><strong>C — How you're wired to train it.</strong> A short disposition reading (<strong>20%</strong>) — not ability, but whether your temperament makes this a natural domain to develop. High C with low A/B isn't a gift yet; it's an aptitude waiting to become one.</li>
+    </ul>
+    <p class="small" style="color:var(--book-ink);margin:8px 0 0"><strong>The real insight is in the gaps, not the average.</strong> B ahead of A means you're underselling a real capability — an <em>unclaimed genius</em>. A ahead of B means your self-image has outpaced the record — an <em>aspirational gap</em>: not a failure, an honest map of where the work still is.</p>
+   </details>
+   ${sdrFlag?`<div class="callout callout--oxblood"><span class="ct">Honesty check</span>Your answers to the two check items suggest a flattering read. Answer for how things actually happen, not how you'd like them to — the Index is only useful unclouded. A re-take is recommended.</div>`:""}
+   ${unclaimed.length?`<div class="callout callout--moss"><span class="ct">Unclaimed genius${topUnclaimed?` · ${topUnclaimed.name} +${gapOf(topUnclaimed)}`:""}</span>${unclaimed.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: you performed well ahead of how you rate yourself. This is the Index's most valuable finding — explore it first. Chapter ${topUnclaimed?chapterOf(topUnclaimed.id):"—"} shows what to do with it.</div>`:""}
+   ${aspir.length?`<div class="callout callout--oxblood"><span class="ct">Aspirational gap</span>${aspir.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: your self-image outruns the record. Not a verdict — a training map.</div>`:""}
+   ${cautionsHTML(m)}
+   <div class="card small" style="background:#F5EFE2;color:var(--book-ink);border-color:var(--book-line)">Forced-rank convergence: your top-3 picks matched <strong>${overlap} of 3</strong> computed leaders.</div>
+  </div>
+
+  ${bookModules(m)}
+
+  <div class="book" style="text-align:center">
+   <div class="eyebrow-b">The full field</div>
+   <h2 class="bt">All thirty-six braids</h2>
+   <p class="btsub">Your report stays on your own braid and the ones you're closest to building. The complete catalogue — every pairing, the index grid, the field guide — lives on its own page.</p>
+   <button class="btn book-primary" style="max-width:340px;margin:6px auto 0" onclick="showAllBraids()">Explore all 36 braids →</button>
+  </div>
+
+  ${opts.archived?"":`
+  <div class="book">
+   <div class="eyebrow-b">Track it over time</div>
+   <h2 class="bt">Baseline &amp; Retake</h2>
+   <hr class="brule">
+   ${baselineHTML(exportObj)}
+   <p class="small" style="color:var(--book-dim);margin-top:8px">Saved only on this device — nothing is uploaded when you save a baseline.</p>
+  </div>`}
+
+  <div class="book">
+   <p class="submitstatus" id="submitStatus"></p>
+   <p class="submitstatus" id="shareStatus"></p>
+   <div class="btnrow">
+    <button class="btn book-primary" id="shareBtn">Download share card</button>
+    <button class="btn book-ghost" onclick="window.print()">Save / print my chart</button>
+   </div>
+   <div class="btnrow">
+    ${opts.archived
+      ?`<button class="btn book-ghost" onclick="location.href='./'">Take the assessment →</button>`
+      :`<button class="btn book-ghost" onclick="if(confirm('Reset and clear this session?')) location.reload()">Take it again</button>`}
+   </div>
+   <details class="pilot">
+    <summary>${opts.archived?"Raw submission data":"Pilot data (for study participants)"}</summary>
+    <p class="small" style="color:var(--book-dim);margin:8px 0">${opts.archived?"The exact JSON this archived view was recomputed from.":"If the automatic upload didn't go through, copy this block and send it to the study coordinator."}</p>
+    <textarea class="export" id="exp" readonly>${esc(JSON.stringify(exportObj))}</textarea>
+    <button class="btn book-ghost" id="copyBtn" style="margin-top:8px">Copy results block</button>
+   </details>
+   <div class="bfoot" style="text-align:center">The Genius Index is a reflective and developmental tool. It is not a test, a diagnosis, or a measure of intelligence. <em>Identify to amplify.</em></div>
+  </div>
+ `);
+
+ const cb=$("copyBtn");
+ if(cb) cb.onclick=()=>{ const t=$("exp").value;
+  const done=()=>{ cb.textContent="Copied ✓"; };
+  if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,()=>{ $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }); }
+  else { $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }
+ };
+ if(!opts.archived && !S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render; never for an archived replay
+ wireWheelTooltip();
+ const shareBtn=$("shareBtn");
+ if(shareBtn) shareBtn.onclick=()=>{ const st=$("shareStatus"); if(st) st.textContent="Generating your share card…";
+  try{ downloadShareCard(m); if(st) st.textContent="✓ Downloaded. Share it anywhere."; }
+  catch(e){ if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; } };
+ if(!opts.archived){
+  const wireSaveBaseline=()=>{ const b=$("saveBaselineBtn"); if(b) b.onclick=()=>{ saveBaseline(exportObj); b.textContent="Saved ✓"; b.disabled=true; }; };
+  wireSaveBaseline();
+ }
+}
+
+/* ============ SHARE CARD (R6) ============ */
+/* Self-contained 1080×1080 SVG -> canvas -> PNG download. No external libs. */
+function buildShareCardSVG(m){
+ const W=1080,H=1080, primary=domById(m.braidDoms[0].id), other=domById(m.braidDoms[1].id);
+ const braidName = m.primary?m.primary.name:"Your Braid";
+ const fs = braidName.length>16?66:braidName.length>11?78:92;
+ const top3 = m.sorted.slice(0,3);
+ const barY0=660, barH=30, barGap=62;
+ const bars = top3.map((d,i)=>{ const y=barY0+i*barGap, w=520*d_score(m,d)/100, col=realmHex(d.meta);
+   return `<rect x="330" y="${y}" width="520" height="${barH}" rx="7" fill="#00000012"/>
+           <rect x="330" y="${y}" width="${w.toFixed(1)}" height="${barH}" rx="7" fill="${col}"/>
+           <text x="310" y="${y+barH-8}" text-anchor="end" font-family="Archivo,sans-serif" font-size="22" font-weight="700" fill="#2A2118">${d.name}</text>
+           <text x="${330+520+16}" y="${y+barH-8}" text-anchor="start" font-family="Archivo,sans-serif" font-size="22" font-weight="700" fill="${col}">${Math.round(d_score(m,d))}</text>`;
+ }).join("");
+ const chip=(d,x)=>`<g transform="translate(${x} 470)"><rect x="-118" y="-30" width="236" height="60" rx="30" fill="#FFFFFF55" stroke="${realmHex(d.meta)}" stroke-width="2"/><circle cx="-96" cy="0" r="8" fill="${realmHex(d.meta)}"/><text x="-76" y="8" font-family="Fraunces,serif" font-weight="600" font-size="26" fill="${realmHex(d.meta)}">${d.name}</text></g>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
+  <rect width="${W}" height="${H}" fill="#EDE4D4"/>
+  <rect width="${W}" height="14" fill="#C39A5B"/>
+  <text x="${W/2}" y="150" text-anchor="middle" font-family="Archivo,sans-serif" font-size="26" font-weight="700" letter-spacing="7" fill="#7A5B31">THE GENIUS INDEX</text>
+  <text x="${W/2}" y="215" text-anchor="middle" font-family="Archivo,sans-serif" font-size="20" letter-spacing="3" fill="#7A5B31">YOUR BRAID</text>
+  <text x="${W/2}" y="${215+fs}" text-anchor="middle" font-family="Fraunces,serif" font-weight="700" font-size="${fs}" fill="#2A2118">${esc(braidName)}</text>
+  ${chip(primary,W/2-135)}${chip(other,W/2+135)}
+  <text x="${W/2}" y="590" text-anchor="middle" font-family="Archivo,sans-serif" font-size="22" font-weight="700" letter-spacing="2" fill="#6B6258">SHAPE · ${m.shape.toUpperCase()}</text>
+  ${bars}
+  <text x="${W/2}" y="960" text-anchor="middle" font-family="Literata,Georgia,serif" font-style="italic" font-size="26" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
+  <rect y="${H-14}" width="${W}" height="14" fill="#C39A5B"/>
+ </svg>`;
+}
+function d_score(m,d){ return m.R[d.id].score; }
+function downloadShareCard(m){
+ const svgStr = buildShareCardSVG(m);
+ const svgBlob = new Blob([svgStr], {type:"image/svg+xml;charset=utf-8"});
+ const url = URL.createObjectURL(svgBlob);
+ const img = new Image();
+ img.onload = ()=>{
+  const canvas=document.createElement("canvas"); canvas.width=1080; canvas.height=1080;
+  const ctx=canvas.getContext("2d"); ctx.drawImage(img,0,0,1080,1080);
+  URL.revokeObjectURL(url);
+  canvas.toBlob(blob=>{
+   const dl=document.createElement("a"); dl.href=URL.createObjectURL(blob);
+   dl.download=`genius-index-${(m.primary?m.primary.name:"result").replace(/\s+/g,"-").toLowerCase()}.png`;
+   document.body.appendChild(dl); dl.click(); dl.remove();
+  }, "image/png");
+ };
+ img.onerror = ()=>{ const st=$("shareStatus"); if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; };
+ img.src = url;
+}
+
+/* ============ RETAKE & BASELINE (R6, localStorage — per device only) ============ */
+const BASELINE_KEY = "gi_baseline_v1";
+function loadBaseline(){ try{ return JSON.parse(localStorage.getItem(BASELINE_KEY)); }catch(e){ return null; } }
+function saveBaseline(exportObj){
+ try{ localStorage.setItem(BASELINE_KEY, JSON.stringify({ts:Date.now(), braid:exportObj.braid, shape:exportObj.shape, domains:exportObj.domains})); return true; }
+ catch(e){ return false; }
+}
+function baselineHTML(exportObj){
+ const b = loadBaseline();
+ if(!b){ return `<div class="callout callout--slate"><span class="ct">Baseline</span>No saved baseline yet on this device. Save this result to compare against a future retake.
+   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Save this as my baseline</button></div></div>`; }
+ const days = Math.max(0, Math.round((Date.now()-b.ts)/86400000));
+ const deltas = DOMAINS.map(d=>({d, delta: Math.round((exportObj.domains[d.id]?.score||0) - (b.domains[d.id]?.score||0))}))
+   .filter(x=>Math.abs(x.delta)>=5).sort((a,c)=>Math.abs(c.delta)-Math.abs(a.delta)).slice(0,4);
+ const deltaList = deltas.length ? deltas.map(x=>`${x.d.name} ${x.delta>0?"+":""}${x.delta}`).join(", ") : "no domain moved more than a few points";
+ const nudge = days>=90 ? ` It's been ${days} days since your last baseline — right on schedule for a check-in.` : ` Next check-in around day 90 (in ${90-days} days).`;
+ return `<div class="callout callout--slate"><span class="ct">Since your last baseline · ${days} day${days===1?"":"s"} ago</span>
+   Braid then: <strong>${b.braid||"—"}</strong> (${b.shape||"—"}). Braid now: <strong>${exportObj.braid||"—"}</strong> (${exportObj.shape}). Biggest moves: ${deltaList}.${nudge}
+   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Update my baseline to today</button></div></div>`;
+}
+
+/* Constellation hover/focus tooltip: name, score, one-line definition. */
+function wireWheelTooltip(){
+ const wrap=$("wheelWrap"), tip=$("wheelTip");
+ if(!wrap||!tip) return;
+ const show=node=>{ const wr=wrap.getBoundingClientRect(), nr=node.getBoundingClientRect();
+  tip.innerHTML=`<strong>${node.dataset.name}</strong> — ${node.dataset.body}`;
+  tip.style.left=(nr.left+nr.width/2-wr.left)+"px";
+  tip.style.top=(nr.top-wr.top)+"px";
+  tip.hidden=false; };
+ const hide=()=>{ tip.hidden=true; };
+ wrap.querySelectorAll(".wnode").forEach(node=>{
+  node.addEventListener("pointerenter",()=>show(node));
+  node.addEventListener("pointerleave",hide);
+  node.addEventListener("focus",()=>show(node));
+  node.addEventListener("blur",hide);
+ });
+}
+
+/* ============ REFERENCE VIEW: all 36 braids ============ */
+function showAllBraids(){
+ const c=S.ctx; if(!c) return;
+ try{ history.pushState(null,"","#all-braids"); }catch(e){}
+ const backBtn=`<button class="btn book-ghost" style="max-width:220px" onclick="backToResults()">← Back to my results</button>`;
+ h(`
+  <div class="stagecount" style="margin-top:8px">Reference · all thirty-six braids</div>
+  <div class="book">
+   ${backBtn}
+   <div class="eyebrow-b" style="margin-top:14px">Every pairing, side by side</div>
+   <h2 class="bt">The Complete Index Grid</h2>
+   <p class="btsub">Nine domains down the diagonal; every square is the braid two of them make. Yours is ringed in gold.</p>
+   <hr class="brule">
+   ${buildGrid(c.R, c.primaryKey, c.adjKeys)}
+   <div class="bfoot">The diagonal shows each domain and your score in it. Gold-dotted squares are the canonical ten; your braid is outlined, its neighbours lightly marked.</div>
+  </div>
+  <div class="book">
+   <div class="eyebrow-b">The complete catalogue</div>
+   <h2 class="bt">The Field Guide</h2>
+   <p class="btsub">All thirty-six braids — the two domains behind each, and what it looks like in a person. Your region of the field reads brightest.</p>
+   <hr class="brule">
+   ${buildFieldGuide(c.R, c.primaryKey, c.adjKeys)}
+   <div style="margin-top:16px">${backBtn}</div>
+  </div>
+ `);
+}
+function backToResults(){ try{ history.pushState(null,"","#results"); }catch(e){} if(ARCHIVED_PAYLOAD) renderArchived(ARCHIVED_PAYLOAD); else results(); }
+// Browser Back from the reference view returns to the results (live or archived).
+// A hash-only navigation to a *different* #view=... payload (e.g. pasting another
+// archived link into the same open tab) is a same-document navigation in Chromium --
+// it never re-runs the boot script, so handle it explicitly here too.
+window.addEventListener("hashchange",()=>{
+ const hs=location.hash;
+ if(hs.indexOf("#view=")===0){
+  try{ renderArchived(JSON.parse(decodeURIComponent(hs.slice(6)))); }catch(e){}
+  return;
+ }
+ if(hs!=="#all-braids" && !/^#chapter-/.test(hs) && S.ctx && $("stage") && /all thirty-six|^Chapter /.test($("stage").textContent||"")) { if(ARCHIVED_PAYLOAD) renderArchived(ARCHIVED_PAYLOAD); else results(); }
+});
+
+/* ============ CHAPTER PAGES (Read Next targets) ============ */
+/* Compiles the content library already written for R3/R4 into a standalone
+   page per domain (Ch 7-15), plus a general Stacking & Protocol chapter
+   (17-18) — so the Read Next chips go somewhere real instead of being labels. */
+function chapterTitle(entryId){
+ return entryId==="_stack" ? {ch:"17–18", name:"Stacking & the Protocol"} : {ch:String(chapterOf(entryId)), name:domById(entryId).name};
+}
+const backChapBtn = `<button class="btn book-ghost" style="max-width:220px" onclick="backToResults()">← Back to my results</button>`;
+function buildDomainChapter(id, ctx){
+ const d=domById(id), m=ctx.m, sc=Math.round(m.R[id].score), band=m.band(d);
+ const isSig = m.sig.some(x=>x.id===id);
+ const isTop = m.topUnclaimed && m.topUnclaimed.id===id;
+ const roleNote = isTop
+  ? `Your unclaimed pivot — you performed at ${Math.round(m.R[id].B)} but rated yourself at ${Math.round(m.R[id].A)}. This is the one to act on first.`
+  : isSig ? `One of your Signature domains, scoring <strong>${sc}</strong> on your profile.`
+  : `Scoring <strong>${sc}</strong> on your profile — currently ${band}.`;
+ return `
+  <div class="book">
+   ${backChapBtn}
+   <div class="eyebrow-b" style="margin-top:14px">Chapter ${chapterOf(id)}</div>
+   <h2 class="bt">${d.name}</h2>
+   <p class="btsub">${DOMAIN_DEF[id]}</p>
+   <hr class="brule">
+   <div class="callout callout--slate"><span class="ct">On your profile</span>${roleNote}</div>
+   <div class="callout" style="--accent:var(--sage); --accent-tint:rgba(169,180,166,.16)"><span class="ct">The evidence</span><p style="margin:2px 0">${EVIDENCE[id]}</p></div>
+   <div class="callout callout--brass"><span class="ct">Where this pays</span><p style="margin:2px 0">${CAREERS[id]}</p></div>
+   <div class="callout callout--moss"><span class="ct">Where it comes alive</span>
+    <table class="hobt"><tr><th>Hobbies</th><th>A date or outing</th><th>An event to seek</th></tr>
+    <tr><td>${HOBBIES[id][0]}</td><td>${HOBBIES[id][1]}</td><td>${HOBBIES[id][2]}</td></tr></table></div>
+   <div class="callout callout--oxblood"><span class="ct">Friction points &amp; growth edges</span>
+    <table class="chalt"><tr><th>The shadow</th><th>The edge you'd enjoy</th></tr>
+    <tr><td>${CHALLENGES[id][0]}</td><td>${CHALLENGES[id][1]}</td></tr></table></div>
+   <div class="callout callout--brass"><span class="ct">Your 30-day development protocol</span>
+    <div class="weekstrip">${PROTOCOL_DOMAIN[id].map((w,i)=>`<div class="wk"><span class="wkn">Week ${i+1}</span>${w}</div>`).join("")}</div></div>
+   <div style="margin-top:10px">${backChapBtn}</div>
+  </div>`;
+}
+function buildStackChapter(ctx){
+ const m=ctx.m;
+ return `
+  <div class="book">
+   ${backChapBtn}
+   <div class="eyebrow-b" style="margin-top:14px">Chapter 17–18</div>
+   <h2 class="bt">Stacking &amp; the Protocol</h2>
+   <p class="btsub">How a two-domain braid becomes a working practice — and when a third strand earns its place.</p>
+   <hr class="brule">
+   <p style="font-size:14.5px;line-height:1.55;color:var(--book-ink)">A braid names the pairing. <strong>Stacking</strong> is what you do with it: repeating the pairing on purpose until it becomes a reliable practice, then deciding whether a third domain deserves a place alongside it. The right move depends on your shape.</p>
+   ${buildShapeDiagram(m.shape)}
+   <div class="callout callout--brass"><span class="ct">${m.shape} — your shape</span>Your profile is ${SHAPE_META[m.shape].line}. The strategic move: ${SHAPE_META[m.shape].move}.</div>
+   ${m.reachable.length?`<div class="callout callout--slate"><span class="ct">Your candidates for a third strand</span>${m.reachable.map(b=>b.name).join(" or ")} — the braids you're already closest to building alongside ${m.primary?m.primary.name:"your braid"}.</div>`:""}
+   <div class="callout callout--moss"><span class="ct">Who to pair with instead</span>Not every gap needs to become your own skill. ${teamFitFor(m.primary)}</div>
+   <div style="margin-top:10px">${backChapBtn}</div>
+  </div>`;
+}
+function showChapter(entryId){
+ const c=S.ctx; if(!c || !c.m) return;
+ try{ history.pushState(null,"","#chapter-"+entryId); }catch(e){}
+ const title=chapterTitle(entryId);
+ const body = entryId==="_stack" ? buildStackChapter(c) : buildDomainChapter(entryId, c);
+ h(`<div class="stagecount" style="margin-top:8px">Chapter ${title.ch} · ${title.name}</div>${body}`);
+}
+
+/* ============ BOOT ============ */
+let busy=false;
+window.addEventListener("beforeunload",e=>{ if(busy){ e.preventDefault(); e.returnValue=""; } });
+// Inventory keyboard nav: ←/→ = Back/Next. Only when the nav buttons are on screen
+// and focus isn't in a text field. Acts through the buttons so disabled-state is honored.
+document.addEventListener("keydown",e=>{
+ if(/^(INPUT|TEXTAREA)$/.test((e.target&&e.target.tagName)||"")) return;
+ const back=$("navBack"), next=$("navNext");
+ if(!back && !next) return;
+ if(e.key==="ArrowLeft" && back && !back.disabled){ e.preventDefault(); goBack(); }
+ else if(e.key==="ArrowRight" && next && !next.disabled){ e.preventDefault(); goNext(); }
+});
+// Force the Evidence Ledger / A·B·C explainer open for print — CSS alone can't override
+// Chromium's internal collapsed-<details> rendering, so toggle the real `open` state.
+window.addEventListener("beforeprint",()=>{
+ document.querySelectorAll("details.ev, details.abc").forEach(d=>{ d.dataset.wasOpen = d.open?"1":"0"; d.open = true; });
+});
+window.addEventListener("afterprint",()=>{
+ document.querySelectorAll("details.ev, details.abc").forEach(d=>{ d.open = d.dataset.wasOpen==="1"; delete d.dataset.wasOpen; });
+});
+function bootFromHash(){
+ const hs=location.hash;
+ if(hs.indexOf("#view=")===0){
+  try{
+   const payload=JSON.parse(decodeURIComponent(hs.slice(6)));
+   renderArchived(payload);
+  }catch(e){
+   h(`<div class="card"><h3>Couldn't open this archived result</h3><p class="small">The link may be corrupted or truncated. <a href="./">Take the assessment →</a></p></div>`);
+  }
+  return true;
+ }
+ return false;
+}
+if(!bootFromHash()) intro();
+</script>
+</body>
+</html>

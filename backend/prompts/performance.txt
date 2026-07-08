@@ -1,0 +1,43 @@
+Analyze the performance data for the following Black Genius Files episode and produce an intervention plan.
+
+EPISODE: {title}
+TOPIC: {topic}
+
+PERFORMANCE DATA:
+- CTR at 24h: {ctr_24h}%
+- CTR at 48h: {ctr_48h}%
+- Retention at 30% mark: {retention_30}%
+- Retention at 70% mark: {retention_70}%
+- Average watch time: {watch_time_sec} seconds
+- Session depth: {session_depth} (videos watched after this one)
+- Shorts views (best performing): {shorts_views}
+
+BENCHMARKS:
+- CTR: <6% = intervention needed, 6–10% = stable, 10%+ = strong
+- Retention at 30%: <50% = hook failure, >65% = strong
+- Retention at 70%: <35% = pacing failure, >50% = strong
+- Session depth: <1.5 = bridge failure, >2.5 = strong
+
+Produce:
+
+1. DIAGNOSIS
+- What specifically failed? Be precise — don't say "the hook was weak," say "the opening 15 seconds did not create sufficient pattern interrupt because..."
+- At which timestamp did viewers most commonly drop off?
+
+2. ROOT CAUSE
+- Hook issue? Thumbnail mismatch? Pacing problem? Topic mismatch with audience?
+
+3. IMMEDIATE ACTIONS (within 48 hours)
+- Thumbnail: change or keep? If change, describe the new concept.
+- Title: rewrite or keep? If rewrite, provide the new title.
+- Description: any updates needed?
+
+4. STRUCTURAL FIXES FOR NEXT EPISODE
+- What must change in the script structure?
+- What pacing adjustments are needed?
+- What thumbnail/title pattern should be adopted or avoided?
+
+5. PATTERN LOG ENTRY
+- One sentence summarizing what was learned, to be stored in the system memory.
+
+Output as JSON with keys: diagnosis, root_cause, immediate_actions, structural_fixes, pattern_log

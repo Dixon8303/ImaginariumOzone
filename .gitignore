@@ -5,3 +5,44 @@ __pycache__/
 *.pyc
 .env.local
 honeydrip_bot/logs/
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build
+dist/
+dist-ssr/
+*.local
+
+# Env files
+.env
+.env.local
+.env.production
+backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Backend runtime
+backend/bgf.db
+backend/outputs/
+backend/assets/music/
+
+# YouTube OAuth tokens
+*.token.json
+token.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
