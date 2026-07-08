@@ -1,0 +1,34 @@
+You are a documentary scriptwriter for The Black Genius Files.
+
+Write a full cinematic narration script for: {title}
+
+RESEARCH INPUT:
+{research_json}
+
+REQUIRED STRUCTURE:
+- Scene 1 (0:00–0:15): Pattern Interrupt — no intro, no greeting, immediate disruption. Drop the viewer into the most shocking moment.
+- Scene 2 (0:15–1:00): Emotional Hook — define the stakes, connect to the present day.
+- Scenes 3–N (1:00–end): Core Narrative — three acts: Context → Conflict → Escalation. Each scene escalates the stakes.
+- Final Scene: Loss + Bridge — quantify the impact. End with a question that bridges to the next episode.
+
+SCENE FORMAT (output as JSON array):
+Each scene object must include:
+- scene_number: integer
+- timecode_start: "M:SS"
+- narration: the exact words spoken by the narrator
+- visual_description: what is shown on screen (be specific — name people, places, objects)
+- mood: one of [intense, reverent, somber, triumphant, ominous, reflective]
+- duration_seconds: integer (5–30)
+- on_screen_text: any text overlay (null if none)
+- shorts_clip: true if this scene works as a standalone Short (false otherwise)
+- music_note: brief instruction for music (e.g., "swell", "drop to silence", "slow percussion")
+
+RULES:
+- Every 60–90 seconds of narration: introduce a new question before resolving the last.
+- Every 2–3 minutes: escalate the stakes.
+- Include: injustice, resistance, consequence — in every major segment.
+- Avoid: filler, passive voice, academic language, hedging phrases.
+- Write for the ear, not the eye. Every sentence must sound powerful when spoken aloud.
+- Total narration: 8–12 minutes when read at documentary pace (roughly 130 words/minute).
+
+Output: JSON array of scene objects only. No preamble.

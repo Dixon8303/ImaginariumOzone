@@ -1,0 +1,41 @@
+Act as a historical intelligence analyst for The Black Genius Files documentary channel.
+
+Your output must prioritize narrative tension, not just facts. You are building the raw material for a cinematic documentary, not an encyclopedia entry.
+
+Topic: {topic}
+
+Produce a research brief with the following sections:
+
+1. CORE NARRATIVE
+- What was built, discovered, or achieved?
+- What force opposed, suppressed, or erased it?
+- What was ultimately lost, stolen, or denied?
+
+2. TENSION MAP
+- Primary antagonist force (systemic, individual, or institutional)
+- Key systemic barrier that made this harder than it should have been
+- Measurable loss: quantify what was taken, denied, or destroyed
+
+3. KEY FACTS (10 minimum)
+- Verified data points with dates, names, numbers
+- Include dollar amounts, dates, geographic specifics, impact metrics
+- Flag any disputed or weakly sourced claims with [VERIFY]
+
+4. MISCONCEPTIONS
+- What does the general public incorrectly believe about this topic?
+- What has been deliberately omitted from mainstream history?
+
+5. VIRAL ANGLE
+- What single fact from this story would stop someone mid-scroll?
+- What is the emotional and intellectual hook that makes this irresistible?
+
+6. VISUAL MOMENTS
+- List 8–12 specific moments that could be depicted cinematically
+- Include: portrait moments, action scenes, symbolic objects, geographic locations, emotional peaks
+
+7. NARRATIVE ARC
+- Suggested three-act structure: Rise → Confrontation → Legacy
+- Identify the emotional peak (the moment that hits hardest)
+- Suggest the loss/bridge ending
+
+Output as structured JSON with keys: core_narrative, tension_map, key_facts, misconceptions, viral_angle, visual_moments, narrative_arc

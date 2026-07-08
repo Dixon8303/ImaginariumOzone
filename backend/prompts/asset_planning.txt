@@ -1,0 +1,26 @@
+You are a visual director breaking a Black Genius Files documentary script into individual asset generation prompts for ComfyUI.
+
+EPISODE TITLE: {title}
+
+SCRIPT INPUT:
+{script_json}
+
+For each scene, determine whether it needs a VIDEO clip (motion, action, atmosphere) or an IMAGE (portraits, archival-style stills, documents, infographics). Lean toward VIDEO for dynamic scenes and opening/closing sequences; use IMAGE for portraits, archival photos, and data visualization.
+
+For each scene produce:
+- scene_index: integer (matches scene_number from script)
+- asset_type: one of [ai_video, ai_image]
+- comfyui_prompt: full, self-contained prompt for ComfyUI
+- negative_prompt: what to explicitly avoid
+- motion_notes: for ai_image assets — which Ken Burns motion to apply [zoom_in, zoom_out, pan_left, pan_right, static, slow_push]
+- color_grade: one of [warm, cold, neutral, desaturated, sepia]
+- duration_seconds: how long this clip/image should appear in the final video
+
+COMFYUI PROMPT RULES:
+Format: [specific subject], [detailed setting], [historical period], [lighting description], [camera angle], [mood/atmosphere], cinematic documentary style, 16mm film grain, photorealistic
+For ai_video: add "slow deliberate [zoom in/pan left/etc.] camera movement" and keep the action description simple (no fast motion)
+
+NEGATIVE PROMPT (use for all):
+"camera shake, motion blur, fast motion, flickering, artifacts, text, watermark, logo, modern elements (unless specified), unrealistic anatomy, distorted faces, extra limbs, oversaturated, blown highlights"
+
+Output: JSON array of asset objects ordered by scene_index.

@@ -1,0 +1,69 @@
+{
+  "1": {
+    "_meta": { "title": "Load SDXL Checkpoint" },
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "sd_xl_base_1.0.safetensors"
+    }
+  },
+  "2": {
+    "_meta": { "title": "CLIP Text Encode Positive" },
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "INJECT_POSITIVE_PROMPT"
+    }
+  },
+  "3": {
+    "_meta": { "title": "CLIP Text Encode Negative" },
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "text, watermark, logo, signature, blurry, low quality, artifacts, noise, oversaturated, washed out, extra limbs, distorted anatomy, modern anachronisms"
+    }
+  },
+  "4": {
+    "_meta": { "title": "Empty Latent Image" },
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": 1024,
+      "height": 1024,
+      "batch_size": 1
+    }
+  },
+  "5": {
+    "_meta": {
+      "title": "KSampler",
+      "notes": "DDIM sampler is most stable on Apple Silicon MPS for SDXL. CFG 7.0 prevents oversaturation. 25 steps is optimal quality/speed tradeoff."
+    },
+    "class_type": "KSampler",
+    "inputs": {
+      "model": ["1", 0],
+      "positive": ["2", 0],
+      "negative": ["3", 0],
+      "latent_image": ["4", 0],
+      "sampler_name": "ddim",
+      "scheduler": "karras",
+      "steps": 25,
+      "cfg": 7.0,
+      "seed": 42,
+      "denoise": 1.0
+    }
+  },
+  "6": {
+    "_meta": { "title": "VAE Decode" },
+    "class_type": "VAEDecode",
+    "inputs": {
+      "vae": ["1", 2],
+      "samples": ["5", 0]
+    }
+  },
+  "7": {
+    "_meta": { "title": "Save Image" },
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": ["6", 0],
+      "filename_prefix": "bgf_img"
+    }
+  }
+}

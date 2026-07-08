@@ -1,0 +1,92 @@
+{
+  "1": {
+    "_meta": { "title": "Load Wan2.2 Checkpoint" },
+    "class_type": "CheckpointLoaderSimple",
+    "inputs": {
+      "ckpt_name": "wan2.2_t2v_1.3B_fp16.safetensors"
+    }
+  },
+  "2": {
+    "_meta": { "title": "Positive Prompt" },
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "INJECT_POSITIVE_PROMPT"
+    }
+  },
+  "3": {
+    "_meta": { "title": "Negative Prompt" },
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "clip": ["1", 1],
+      "text": "camera shake, blur, distortion, artifacts, flickering, fast motion, jitter, noise, grain, overexposure, washed out, chromatic aberration, text, watermark, logo, modern elements, oversaturated, motion blur"
+    }
+  },
+  "4": {
+    "_meta": {
+      "title": "Empty Latent Video",
+      "notes": "832x480 is Wan2.2 native 16:9 training resolution. Do NOT use 1920x1080 here — upscale in ffmpeg assembly instead."
+    },
+    "class_type": "EmptyLatentVideo",
+    "inputs": {
+      "width": 832,
+      "height": 480,
+      "length": 81,
+      "batch_size": 1
+    }
+  },
+  "5": {
+    "_meta": {
+      "title": "Wan Video Sampler",
+      "notes": "Quality settings tuned for Apple Silicon MPS. cfg=6.5 prevents color banding above 7.5. euler+linear is temporally stable on MPS fp16. motion_bucket_id=100 gives deliberate cinematic motion without erratic movement. augmentation_level=0.0 prevents compounding grain artifacts."
+    },
+    "class_type": "WanVideoSampler",
+    "inputs": {
+      "model": ["1", 0],
+      "positive": ["2", 0],
+      "negative": ["3", 0],
+      "latent_image": ["4", 0],
+      "sampler_name": "euler",
+      "scheduler": "linear",
+      "steps": 30,
+      "cfg": 6.5,
+      "seed": 42,
+      "denoise": 1.0,
+      "num_frames": 81,
+      "fps": 16,
+      "motion_bucket_id": 100,
+      "augmentation_level": 0.0
+    }
+  },
+  "6": {
+    "_meta": {
+      "title": "VAE Decode Tiled",
+      "notes": "VAEDecodeTiled_Video is MANDATORY on MPS. Standard VAEDecode OOMs on 81 frames at 832x480. tile_size=256 + overlap=64 prevents tile seam artifacts. temporal_size=64 + temporal_overlap=8 prevents frame-boundary flickering."
+    },
+    "class_type": "VAEDecodeTiled_Video",
+    "inputs": {
+      "vae": ["1", 2],
+      "samples": ["5", 0],
+      "tile_size": 256,
+      "overlap": 64,
+      "temporal_size": 64,
+      "temporal_overlap": 8
+    }
+  },
+  "7": {
+    "_meta": { "title": "Video Combine Output" },
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": ["6", 0],
+      "frame_rate": 16,
+      "loop_count": 0,
+      "filename_prefix": "bgf_scene",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": false,
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}
