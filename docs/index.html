@@ -243,6 +243,12 @@
   .portrait strong{font-weight:700;}
   .book .export{background:#F5EFE2; border:1px solid var(--book-line); color:var(--book-ink);}
   .consentnote{font-size:10.5px; line-height:1.4; color:var(--paper-dim); opacity:.75; margin-top:6px;}
+  .authbadge{display:flex; align-items:center; justify-content:flex-end; gap:2px; flex-wrap:wrap; padding:6px 2px 0; font-size:11px;}
+  .authbadge[hidden]{display:none;}
+  .authlink{background:none; border:none; color:var(--brass); font-size:11px; text-decoration:underline; cursor:pointer; padding:0; margin-left:10px; font-family:'Archivo',sans-serif;}
+  .authlink:hover{color:var(--brass-light);}
+  .profilerow{padding:10px 12px; border:1px solid var(--line); border-radius:4px; margin:8px 0; cursor:pointer; display:flex; flex-direction:column; gap:2px;}
+  .profilerow:hover{border-color:var(--brass);}
   .archivedbanner{font-family:Arial,sans-serif; font-size:12.5px; line-height:1.5; color:var(--gold-ink);
     background:rgba(195,154,91,.14); border:1px solid var(--book-line); border-radius:6px; padding:10px 14px; margin:8px 0 4px;}
   /* Print */
@@ -280,6 +286,7 @@
     </div>
     <div class="glyph" id="glyphHead" aria-hidden="true"></div>
   </header>
+  <div class="authbadge" id="authBadge" hidden></div>
   <div class="prog" id="prog" hidden><i id="progFill" style="width:0%"></i></div>
   <div id="stage" aria-live="polite"></div>
 </div>
@@ -293,6 +300,21 @@ const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9L
 /* Paste the book's purchase link here once it's live. Leave empty ("") and the
    intro screen shows a disabled "coming soon" placeholder instead of a dead link. */
 const BOOK_URL = "";
+
+/* Optional: Google sign-in (Firebase Auth + Firestore), for people who want a
+   saved history of their results and to opt in to hearing about future Genius
+   Index releases. Entirely additive -- the anonymous pilot pipeline above is
+   untouched and keeps working whether or not this is configured. Leave this
+   empty ({}) and the sign-in UI never appears; nothing is fetched or loaded.
+   One-time setup: see docs/firebase-login-setup.md. */
+const FIREBASE_CONFIG = {
+ apiKey: "AIzaSyCGFsfmUPmLqEapGhlqNmhjvJvtdBbRYDg",
+ authDomain: "the-genius-index.firebaseapp.com",
+ projectId: "the-genius-index",
+ storageBucket: "the-genius-index.firebasestorage.app",
+ messagingSenderId: "512062004597",
+ appId: "1:512062004597:web:8aa14165fd902cf14bc73c"
+};
 
 /* ============ DATA ============ */
 const DOMAINS = [
@@ -467,6 +489,96 @@ function setProg(p){ $("prog").hidden=false; $("progFill").style.width=(p*100).t
 function litCells(n){ const g=$("glyphHead").children; for(let i=0;i<9;i++) g[i].classList.toggle("lit", i<n); }
 (function(){ const g=$("glyphHead"); for(let i=0;i<9;i++) g.appendChild(document.createElement("div")); })();
 
+/* ============ OPTIONAL LOGIN (Firebase Auth + Firestore) ============
+   Additive only: nothing here ever touches the anonymous SUBMIT_URL pipeline.
+   The Firebase SDK is fetched dynamically (not via a <head> <script> tag) so a
+   site with an empty FIREBASE_CONFIG makes zero extra network requests -- same
+   "don't call out unless configured" rule the SUBMIT_URL/BOOK_URL constants
+   already follow. */
+const AUTH_WANTED = !!(FIREBASE_CONFIG && FIREBASE_CONFIG.apiKey);
+let AUTH_ENABLED = false;
+let fbAuth = null, fbDb = null, authUser = null, VIEWING_FROM_PROFILE = false;
+
+function loadFirebaseSDK(){
+ if(!AUTH_WANTED) return;
+ const urls = [
+  "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
+  "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js",
+  "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"
+ ];
+ const loadOne = src => new Promise((res,rej)=>{ const s=document.createElement("script"); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+ urls.reduce((p,src)=>p.then(()=>loadOne(src)), Promise.resolve())
+  .then(()=>{
+   firebase.initializeApp(FIREBASE_CONFIG);
+   fbAuth = firebase.auth();
+   fbDb = firebase.firestore();
+   AUTH_ENABLED = true;
+   fbAuth.onAuthStateChanged(u=>{ authUser = u ? {uid:u.uid, email:u.email, displayName:u.displayName} : null; renderAuthBadge(); });
+   renderAuthBadge();
+  })
+  .catch(e=>{ console.error("Sign-in is unavailable right now:", e); AUTH_ENABLED=false; });
+}
+function signIn(marketingOptIn){
+ if(!AUTH_ENABLED) return;
+ const provider = new firebase.auth.GoogleAuthProvider();
+ fbAuth.signInWithPopup(provider).then(cred=>{
+  const ref = fbDb.collection("users").doc(cred.user.uid);
+  return ref.get().then(snap=>{
+   if(!snap.exists){
+    return ref.set({ email:cred.user.email||"", displayName:cred.user.displayName||"",
+     marketingOptIn: !!marketingOptIn, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+   }
+  });
+ }).catch(e=>{ alert("Sign-in didn't go through: "+e.message); });
+}
+function signOutUser(){ if(AUTH_ENABLED) fbAuth.signOut().then(()=>intro()); }
+function renderAuthBadge(){
+ const el=$("authBadge"); if(!el) return;
+ if(!AUTH_ENABLED){ el.hidden=true; el.innerHTML=""; return; }
+ el.hidden=false;
+ el.innerHTML = authUser
+  ? `<span class="small dim">Signed in as ${esc(authUser.displayName||authUser.email)}</span><button class="authlink" onclick="showProfile()">My results</button><button class="authlink" onclick="signOutUser()">Sign out</button>`
+  : `<button class="authlink" onclick="signIn(false)">Sign in with Google</button>`;
+}
+function saveResultToProfile(exportObj){
+ if(!AUTH_ENABLED || !authUser || !fbDb) return;
+ fbDb.collection("users").doc(authUser.uid).collection("results")
+  .add({ ...exportObj, clientTs:exportObj.ts, ts:firebase.firestore.FieldValue.serverTimestamp() })
+  .catch(e=>{ console.error("Couldn't save this result to your profile:", e); });
+}
+function showProfile(){
+ if(!AUTH_ENABLED || !authUser){ intro(); return; }
+ try{ history.pushState(null,"","#profile"); }catch(e){}
+ h(`
+  <div class="stagecount" style="margin-top:8px">My results</div>
+  <div class="card">
+   <p class="small dim">Signed in as <strong>${esc(authUser.displayName||authUser.email)}</strong>.</p>
+   <div class="btnrow"><button class="btn ghost" onclick="intro()">← Back to start</button><button class="btn ghost" onclick="signOutUser()">Sign out</button></div>
+  </div>
+  <div id="profileResults" class="card"><p class="small dim">Loading your results…</p></div>
+ `);
+ fbDb.collection("users").doc(authUser.uid).collection("results").orderBy("ts","desc").limit(50).get()
+  .then(qs=>{
+   const el=$("profileResults");
+   if(qs.empty){ el.innerHTML=`<p class="small dim">No saved results yet. Take the assessment while signed in and it'll show up here.</p>`; return; }
+   el.innerHTML = qs.docs.map(doc=>{
+    const d=doc.data();
+    const when = d.ts && d.ts.toDate ? d.ts.toDate().toLocaleDateString() : "";
+    return `<div class="profilerow" onclick="showSavedResult('${doc.id}')">
+      <strong>${esc(d.braid||d.signature||"Result")}</strong>
+      <span class="small dim">${esc(d.shape||"")}${d.shape?" · ":""}${when}</span>
+     </div>`;
+   }).join("");
+  })
+  .catch(e=>{ $("profileResults").innerHTML=`<p class="small dim">Couldn't load your results: ${esc(e.message)}</p>`; });
+}
+function showSavedResult(docId){
+ if(!AUTH_ENABLED || !authUser) return;
+ fbDb.collection("users").doc(authUser.uid).collection("results").doc(docId).get()
+  .then(doc=>{ if(doc.exists){ VIEWING_FROM_PROFILE=true; renderArchived(doc.data()); } })
+  .catch(e=>alert("Couldn't open that result: "+e.message));
+}
+
 /* ============ INTRO: book-grounding content (for links shared without the book) ============ */
 /* Static domain map -- no scores yet at this point, just the framework itself.
    Reuses the .glyph.big grid component (defined in CSS, otherwise unused on
@@ -529,6 +641,18 @@ function intro(){
       ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
       : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
   </div>
+
+  ${AUTH_ENABLED ? `<div class="card">
+    <h3>Save your results (optional)</h3>
+    <p class="small dim">Sign in with Google to keep a private history of your results across retakes. Skip this and the assessment still works exactly the same, fully anonymous, on this device only.</p>
+    ${authUser
+      ? `<p class="small dim" style="margin-top:8px">Signed in as <strong>${esc(authUser.displayName||authUser.email)}</strong>.</p><button class="btn ghost" onclick="showProfile()">View my past results</button>`
+      : `<label class="small dim" style="display:flex;align-items:center;gap:8px;margin:10px 0 4px">
+          <input type="checkbox" id="marketingOptIn" style="width:auto;margin:0">
+          Also email me about future Genius Index releases
+         </label>
+         <button class="btn ghost" onclick="signIn($('marketingOptIn').checked)">Sign in with Google</button>`}
+  </div>` : ``}
 
   <div class="card">
     <h3>How to take it honestly</h3>
@@ -1441,7 +1565,8 @@ function renderArchived(payload){
  renderResultsPage(m, exportObj, {archived:true});
 }
 function archivedBannerHTML(exportObj){
- return `<div class="archivedbanner">Archived result${exportObj.code?` · code <strong>${esc(exportObj.code)}</strong>`:""}${exportObj.ts?` · submitted ${new Date(exportObj.ts).toLocaleString()}`:""} — recomputed from the stored answers using the <strong>current</strong> scoring model.</div>`;
+ const backLink = VIEWING_FROM_PROFILE ? ` <button class="authlink" style="margin-left:4px" onclick="showProfile()">← Back to my results</button>` : "";
+ return `<div class="archivedbanner">Archived result${exportObj.code?` · code <strong>${esc(exportObj.code)}</strong>`:""}${exportObj.ts?` · submitted ${new Date(exportObj.ts).toLocaleString()}`:""} — recomputed from the stored answers using the <strong>current</strong> scoring model.${backLink}</div>`;
 }
 
 /* Shared renderer: builds the full results page HTML from a computed m/exportObj.
@@ -1563,7 +1688,10 @@ function renderResultsPage(m, exportObj, opts){
   if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done,()=>{ $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }); }
   else { $("exp").select(); try{document.execCommand("copy");}catch(e){} done(); }
  };
- if(!opts.archived && !S._submitted){ submitResult(exportObj); S._submitted=true; } // submit once, not on nav re-render; never for an archived replay
+ if(!opts.archived && !S._submitted){
+  submitResult(exportObj); S._submitted=true; // submit once, not on nav re-render; never for an archived replay
+  saveResultToProfile(exportObj); // separate opt-in write; no-op unless signed in
+ }
  wireWheelTooltip();
  const shareBtn=$("shareBtn");
  if(shareBtn) shareBtn.onclick=()=>{ const st=$("shareStatus"); if(st) st.textContent="Generating your share card…";
@@ -1789,6 +1917,7 @@ function bootFromHash(){
  if(hs.indexOf("#view=")===0){
   try{
    const payload=JSON.parse(decodeURIComponent(hs.slice(6)));
+   VIEWING_FROM_PROFILE=false; // a shared Sheet link, not a profile-history visit
    renderArchived(payload);
   }catch(e){
    h(`<div class="card"><h3>Couldn't open this archived result</h3><p class="small">The link may be corrupted or truncated. <a href="./">Take the assessment →</a></p></div>`);
@@ -1797,6 +1926,7 @@ function bootFromHash(){
  }
  return false;
 }
+loadFirebaseSDK(); // no-op, no network request, unless FIREBASE_CONFIG is set
 if(!bootFromHash()) intro();
 </script>
 </body>
