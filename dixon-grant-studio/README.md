@@ -1,4 +1,4 @@
-# Watts Grant Studio
+# Dixon Grant Studio
 
 Grant application packages, written to win, for the small education
 organizations that can't afford a full-time grant writer.
@@ -56,7 +56,7 @@ until it clears 90% with nothing left unmet.
 
 ## Who's Behind This
 
-Watts Grant Studio is built and run by D. Antione Dixon, who works inside
+Dixon Grant Studio is built and run by D. Antione Dixon, who works inside
 a Title I LAUSD elementary school as an instructional aide and campus
 technology trainer, is a Watts of Power Foundation Teaching Fellow, holds
 an MBA in Marketing from LMU, and is a festival-selected documentary
@@ -64,14 +64,14 @@ producer who has built investor pitch materials for his own films. He
 grew up around and works daily inside under-resourced education — he
 knows the funding pain of small education organizations firsthand — and
 he understands the persuasion craft of a winning pitch document from
-building them for film investors. Watts Grant Studio exists because that
+building them for film investors. Dixon Grant Studio exists because that
 combination — lived proximity to the problem, and professional skill at
 the pitch — is rare, and it's exactly what a funder's rubric rewards.
 
 ## Repository Layout
 
 ```
-watts-grant-studio/
+dixon-grant-studio/
 ├── README.md                  — this file
 ├── PLAN.md                    — 7-day, max-1-hour/day launch plan
 ├── pipeline/                  — the repeatable production workflow

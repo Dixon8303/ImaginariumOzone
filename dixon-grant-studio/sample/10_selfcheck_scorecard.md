@@ -18,7 +18,7 @@ DATE: [pass 1 and pass 2 both completed during drafting; final pass to
 The real 21st CCLC narrative review is **holistic, tiered per standard**
 (Insufficient / Sufficient / Comprehensive / Outstanding — exact tier
 count and labels `[MODELED — CONFIRM AT RELEASE]`), not points-based.
-To apply Watts Grant Studio's internal ≥90% quality bar to a
+To apply Dixon Grant Studio's internal ≥90% quality bar to a
 tiered-rating funder, each standard is scored on this internal proxy
 scale before totaling:
 
