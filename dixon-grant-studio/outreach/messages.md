@@ -103,7 +103,7 @@ Do you have a grant application coming up worth trying this on?
 Hi [Name],
 
 I connected [with/through] the All Black Everything Podcast network and
-wanted to reach out directly. I run Watts Grant Studio — full grant
+wanted to reach out directly. I run Dixon Grant Studio — full grant
 application packages for education and community nonprofits, written by
 someone who works daily inside a Title I school and has spent years
 building investor-grade pitch materials for independent film. Every

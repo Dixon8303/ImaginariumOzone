@@ -32,7 +32,7 @@ each to advance.
 **Timing:** CDE's Expanded Learning Division has indicated the next
 competitive cycle (referred to publicly as "Cohort 16") is anticipated to
 release in **August 2026** with an **October 2026** due date — which is
-why this is the live opportunity Watts Grant Studio is building toward
+why this is the live opportunity Dixon Grant Studio is building toward
 right now, in July 2026.
 
 ## What is real vs. modeled in this sample
