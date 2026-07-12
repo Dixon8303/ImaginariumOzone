@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watts Grant Studio</title>
+<style>
+  :root {
+    --ink: #1a1a1a;
+    --paper: #faf8f4;
+    --line: #d8d2c4;
+    --accent: #7a3b2e;
+    --muted: #5c5850;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.55;
+  }
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+  header {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1.25rem;
+    margin-bottom: 2rem;
+  }
+  header p.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0 0 0.4rem;
+  }
+  h1 {
+    font-size: 2rem;
+    margin: 0 0 0.4rem;
+  }
+  header .tagline {
+    font-size: 1.05rem;
+    color: var(--muted);
+    margin: 0;
+  }
+  h2 {
+    font-size: 1.3rem;
+    margin: 2.5rem 0 0.9rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0.4rem;
+  }
+  ul {
+    padding-left: 1.2rem;
+  }
+  li {
+    margin-bottom: 0.5rem;
+  }
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    padding-left: 0;
+  }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding-left: 3rem;
+    margin-bottom: 1.4rem;
+  }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -0.1rem;
+    width: 2.1rem;
+    height: 2.1rem;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+  }
+  .steps strong {
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+  .price-box {
+    border: 1px solid var(--ink);
+    padding: 1.25rem 1.5rem;
+    margin-top: 1rem;
+  }
+  .price-box .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 0.6rem 0;
+  }
+  .price-box .row + .row {
+    border-top: 1px solid var(--line);
+  }
+  .price-box .amount {
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+  .founder {
+    background: #fff;
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.25rem;
+  }
+  footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid var(--ink);
+    text-align: center;
+  }
+  a {
+    color: var(--accent);
+  }
+  .contact-email {
+    font-size: 1.15rem;
+    font-weight: bold;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #ece7dd;
+      --paper: #1c1a17;
+      --line: #47433a;
+      --accent: #d59a86;
+      --muted: #b8b2a4;
+    }
+    .founder { background: #24211c; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Watts Grant Studio</p>
+    <h1>Grant applications, written to win, for organizations that can't afford a full-time grant writer.</h1>
+    <p class="tagline">Submission-ready grant packages for education nonprofits and community organizations in South Los Angeles.</p>
+  </header>
+
+  <section>
+    <h2>What you get</h2>
+    <p>One complete application package, built against your funder's own published rubric:</p>
+    <ul>
+      <li><strong>Needs statement</strong> — the case for your program, backed by your own data</li>
+      <li><strong>Program narrative</strong> — what you do, who you serve, how it works, mapped to the funder's priorities</li>
+      <li><strong>Logic model</strong> — one page connecting your inputs, activities, and outcomes</li>
+      <li><strong>Budget and budget narrative</strong> — every line item justified against your program</li>
+      <li><strong>Evaluation plan</strong> — how you'll measure and report on outcomes</li>
+      <li><strong>Organizational capacity statement</strong> — why your team can deliver</li>
+      <li><strong>RFP compliance checklist</strong> — every eligibility rule, attachment, and deadline, checked off</li>
+    </ul>
+    <p>Every package is scored against the funder's own rubric before it's delivered to you. Nothing ships below a self-scored 90%, with zero unmet requirements.</p>
+  </section>
+
+  <section>
+    <h2>Who it's for</h2>
+    <p>Executive directors and program directors at education nonprofits and after-school programs with roughly $100,000–$2,000,000 in annual budgets — organizations doing real work with real outcomes, where one person is already wearing five hats and grant writing keeps getting pushed to the end of the week.</p>
+  </section>
+
+  <section>
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>Intake</strong>The RFP or NOFO you're targeting, plus your organization's basic documents (990, budget, program data). One call, about 30 minutes.</li>
+      <li><strong>Draft and self-check</strong>Every section is written against the funder's specific requirements, then scored row-by-row against their rubric before you ever see it. If it doesn't clear the bar, it gets revised before delivery, not after.</li>
+      <li><strong>Deliver and submit</strong>You receive a finished .docx, a PDF, and a one-page submission checklist. You review, sign off, and submit — on your own timeline, in full control of what goes out under your organization's name.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Price</h2>
+    <div class="price-box">
+      <div class="row">
+        <span>First trial application</span>
+        <span class="amount">$750</span>
+      </div>
+      <div class="row">
+        <span>Standard, per application</span>
+        <span class="amount">$2,500</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>About the founder</h2>
+    <div class="founder">
+      <p>Watts Grant Studio is built and run by D. Antione Dixon, who works inside a Title I LAUSD elementary school as an instructional aide and campus technology trainer, is a Watts of Power Foundation Teaching Fellow, holds an MBA in Marketing from LMU, and is a festival-selected documentary producer who has built investor pitch materials for his own films. He grew up around and works daily inside under-resourced education — he knows the funding pain of small education organizations firsthand — and he understands the persuasion craft of a winning pitch document from building them for film investors. That combination is what goes into every application this studio writes.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>D. Antione Dixon, Founder</p>
+    <p class="contact-email"><a href="mailto:eatmediatv@gmail.com">eatmediatv@gmail.com</a></p>
+  </footer>
+
+</div>
+</body>
+</html>
