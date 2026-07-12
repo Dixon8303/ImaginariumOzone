@@ -249,6 +249,13 @@
   .authlink:hover{color:var(--brass-light);}
   .profilerow{padding:10px 12px; border:1px solid var(--line); border-radius:4px; margin:8px 0; cursor:pointer; display:flex; flex-direction:column; gap:2px;}
   .profilerow:hover{border-color:var(--brass);}
+  .samplecarousel{position:relative;}
+  .sampleslide{display:none;}
+  .sampleslide.on{display:block; animation:sampleFade .5s ease;}
+  @keyframes sampleFade{ from{opacity:0;} to{opacity:1;} }
+  .sampledots{display:flex; justify-content:center; gap:8px; margin-top:10px;}
+  .sampledot{width:8px; height:8px; border-radius:50%; border:1px solid var(--brass-deep); background:transparent; padding:0; cursor:pointer;}
+  .sampledot.on{background:var(--brass);}
   .archivedbanner{font-family:Arial,sans-serif; font-size:12.5px; line-height:1.5; color:var(--gold-ink);
     background:rgba(195,154,91,.14); border:1px solid var(--book-line); border-radius:6px; padding:10px 14px; margin:8px 0 4px;}
   /* Print */
@@ -602,18 +609,55 @@ function buildDomainMapHTML(){
 /* A worked, non-personal example so a first-time visitor can see the shape of
    the output before answering anything. Reuses the exact .book/.braidcard
    markup the real results page renders, so it's an honest preview, not a mockup. */
-function sampleBraidCardHTML(){
- return `<div class="book" style="margin:14px 0 2px">
-   <div class="braidcard">
+/* Three worked examples spanning different tiers (Canonical / Rarest / Strong
+   Pair) so a first-time visitor sees the range of possible results, not just
+   one. Auto-advances, but respects prefers-reduced-motion (no autoplay, dots
+   still work) and pauses on hover/focus like any well-behaved carousel. */
+const SAMPLE_BRAID_NAMES = ["The Storyteller", "The Diplomat", "The Optimizer"];
+function sampleBraidCarouselHTML(){
+ const slides = SAMPLE_BRAID_NAMES.map((name,i)=>{
+  const br = BRAIDS.find(b=>b.name===name);
+  const d0=domById(br.pair[0]), d1=domById(br.pair[1]), tm=TIER_META[br.tier];
+  return `<div class="braidcard sampleslide${i===0?" on":""}">
     <div class="yb">Example result</div>
-    <div class="bname">The Storyteller</div>
-    <div class="bpair"><span class="domchip mind"><span class="dot"></span>Generative</span><span class="amp">×</span><span class="domchip field"><span class="dot"></span>Expressive</span></div>
-    <div class="tierbadge tier-C">Canonical Ten</div>
-    <div class="tiersub">One of the ten combinations distinct enough to carry a name of its own.</div>
-    <div class="braiddesc">Makes the new thing and transmits it.</div>
-   </div>
+    <div class="bname">${br.name}</div>
+    <div class="bpair"><span class="domchip ${d0.meta}"><span class="dot"></span>${d0.name}</span><span class="amp">×</span><span class="domchip ${d1.meta}"><span class="dot"></span>${d1.name}</span></div>
+    <div class="tierbadge tier-${br.tier}">${tm.label}${br.rare?" · Rarest":""}</div>
+    <div class="tiersub">${tm.sub}</div>
+    <div class="braiddesc">${esc(br.desc)}</div>
+   </div>`;
+ }).join("");
+ const dots = SAMPLE_BRAID_NAMES.map((_,i)=>`<button class="sampledot${i===0?" on":""}" aria-label="Show example ${i+1} of ${SAMPLE_BRAID_NAMES.length}" onclick="showSample(${i}); armSampleAutoAdvance();"></button>`).join("");
+ return `<div class="book" style="margin:14px 0 2px">
+   <div class="samplecarousel" id="sampleCarousel">${slides}</div>
+   <div class="sampledots">${dots}</div>
   </div>
   <p class="small dim" style="text-align:center;margin:6px 0 2px">Illustrative only — your own result depends entirely on your own answers.</p>`;
+}
+let sampleTimer=null, sampleIdx=0;
+function showSample(i){
+ const wrap=$("sampleCarousel"); if(!wrap) return;
+ const slides=wrap.querySelectorAll(".sampleslide"); if(!slides.length) return;
+ sampleIdx = ((i%slides.length)+slides.length)%slides.length;
+ slides.forEach((s,idx)=>s.classList.toggle("on", idx===sampleIdx));
+ document.querySelectorAll(".sampledot").forEach((d,idx)=>d.classList.toggle("on", idx===sampleIdx));
+}
+function armSampleAutoAdvance(){
+ if(sampleTimer) clearInterval(sampleTimer);
+ if(window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return; // dots still work, no autoplay
+ sampleTimer=setInterval(()=>{
+  const wrap=$("sampleCarousel");
+  if(!wrap){ clearInterval(sampleTimer); sampleTimer=null; return; } // intro() left the screen -- stop ticking
+  showSample(sampleIdx+1);
+ }, 4500);
+}
+function disarmSampleAutoAdvance(){ if(sampleTimer){ clearInterval(sampleTimer); sampleTimer=null; } }
+function startSampleCarousel(){
+ sampleIdx=0;
+ const wrap=$("sampleCarousel"); if(!wrap) return;
+ armSampleAutoAdvance();
+ wrap.addEventListener("pointerenter", disarmSampleAutoAdvance);
+ wrap.addEventListener("pointerleave", armSampleAutoAdvance);
 }
 
 /* ============ SCREEN: INTRO ============ */
@@ -636,7 +680,7 @@ function intro(){
   <div class="card">
     <h3>Why a "braid"</h3>
     <p class="small dim">Genius is rarely a single gift — it's almost always two domains standing out together. The book names all thirty-six of those pairings <strong>braids</strong>, from The Craftsman (Kinetic × Sensory) to The Diplomat (Relational × Perceptive). This instrument scores your nine domains from what you report and how you actually perform, then resolves and explains your own braid — the same material the book covers, personalized to your answers.</p>
-    ${sampleBraidCardHTML()}
+    ${sampleBraidCarouselHTML()}
     ${BOOK_URL
       ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
       : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
@@ -667,6 +711,7 @@ function intro(){
   <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and are added anonymously to the study — no name, email, or account is collected":""}. You'll get your full results chart at the end.</p>
   <p class="consentnote">By taking this assessment, you agree to the anonymous, no-account use of your answers described above.</p>
  `);
+ startSampleCarousel();
 }
 
 /* ============ SCREEN: PART 1 INVENTORY ============ */
