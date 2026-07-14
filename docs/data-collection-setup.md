@@ -150,8 +150,16 @@ line as above, it will compile.
 
 ## Fallback / alternatives
 
-- **Manual copy** — always available. The results screen has a *Pilot data* section with
-  a copy button; a taker can paste that JSON into an email if the endpoint is ever down.
+- **Manual copy, auto-imported** — always available. The results screen has a *Pilot data*
+  section with a copy button, for when the automatic upload silently fails (wrong network,
+  ad blocker, misconfigured endpoint, etc.). Paste that JSON into column A of the
+  **paste_import** tab in your results sheet (any row below the header) and it's imported
+  automatically — same columns, same `results_url`, as if it had come through the endpoint
+  directly. That tab is created for you the first time you open the sheet after deploying
+  this version of `Code.gs`; if you don't see it, open **Genius Index → Go to paste-import
+  tab** from the sheet's menu bar. Column B fills in with an "Imported ..." status once
+  it's processed; leave a row's status blank to have it reprocessed (e.g. if you pasted
+  into the wrong row).
 - **Netlify Forms** — only if you also host on Netlify. Zero script, but the free tier
   caps at **100 submissions/month**, so it can't carry a 150+ study by itself. Apps Script
   above has no such cap.

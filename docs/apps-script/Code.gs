@@ -28,6 +28,13 @@ var SHEET_NAME = 'results';
 // mode (see bootFromHash in docs/index.html). Straight quotes only, as above.
 var SITE_URL = 'https://dixon8303.github.io/ImaginariumOzone/';
 
+// Manual-recovery path: the results page's "Pilot data" block lets a taker
+// copy their raw JSON if the automatic upload silently failed. Paste that
+// text into column A of this sheet (any row below the header) and it's
+// imported into SHEET_NAME the same way a real submission would be --
+// same columns, same results_url. See onEdit_ below.
+var PASTE_SHEET_NAME = 'paste_import';
+
 // Original columns, in their original order -- NEVER reorder or rename these.
 // Any sheet already collecting data has this exact header row on row 1, and
 // reordering would misalign every row already collected.
@@ -65,55 +72,61 @@ function ensureHeaders_(sheet) {
   }
 }
 
+// Builds one results-sheet row (in HEADERS order) from a parsed submission
+// payload. Shared by doPost (the automatic path) and importPastedBlock_
+// (the manual-recovery path), so both produce byte-identical rows.
+function buildResultRow_(data) {
+  // Rows sent before this update had no "event" field at all -- treat those,
+  // and any row that omits it, as a completed submission.
+  var event = data.event || 'complete';
+  var dom = data.domains || {};
+  var s = function (id) { return dom[id] ? dom[id].score : ''; };
+  var f = data.flags || {};
+  var rawJson = JSON.stringify(data);
+
+  // Only a 'complete' submission has answers worth reopening -- a 'start'
+  // ping has no domains yet, so #view= would just show a broken page.
+  var resultsUrl = (event === 'complete' && dom && Object.keys(dom).length)
+    ? SITE_URL + '#view=' + encodeURIComponent(rawJson)
+    : '';
+
+  return [
+    new Date(),
+    data.v || '',
+    data.code || '',
+    data.consent === false ? 'no' : 'yes',
+    data.ts || '',
+    data.minutes || '',
+    data.braid || '',
+    data.braidTier || '',
+    (data.braidPair || []).join('-'),
+    data.signature || '',
+    (data.adjacent || []).join(' '),
+    s('KIN'), s('SEN'), s('ADP'), s('ANL'), s('MEM'), s('GEN'), s('REL'), s('EXP'), s('PER'),
+    f.sdr ? 'yes' : 'no',
+    '', // flag_latent -- retired, see HEADERS comment
+    (f.aspirational || []).join(' '),
+    '', // flag_diverge -- retired, see HEADERS comment
+    f.rankOverlap != null ? f.rankOverlap : '',
+    (data.ranksTop || []).join(' '),
+    (data.ranksBot || []).join(' '),
+    rawJson,
+    event,
+    data.shape || '',
+    (data.reachable || []).join(' | '),
+    (f.unclaimed || []).join(' '),
+    f.topUnclaimed || '',
+    resultsUrl
+  ];
+}
+
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
     var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME)
              || SpreadsheetApp.openById(SHEET_ID).insertSheet(SHEET_NAME);
     ensureHeaders_(sheet);
-
-    // Rows sent before this update had no "event" field at all -- treat those,
-    // and any row that omits it, as a completed submission.
-    var event = data.event || 'complete';
-    var dom = data.domains || {};
-    var s = function (id) { return dom[id] ? dom[id].score : ''; };
-    var f = data.flags || {};
-    var rawJson = JSON.stringify(data);
-
-    // Only a 'complete' submission has answers worth reopening -- a 'start'
-    // ping has no domains yet, so #view= would just show a broken page.
-    var resultsUrl = (event === 'complete' && dom && Object.keys(dom).length)
-      ? SITE_URL + '#view=' + encodeURIComponent(rawJson)
-      : '';
-
-    sheet.appendRow([
-      new Date(),
-      data.v || '',
-      data.code || '',
-      data.consent === false ? 'no' : 'yes',
-      data.ts || '',
-      data.minutes || '',
-      data.braid || '',
-      data.braidTier || '',
-      (data.braidPair || []).join('-'),
-      data.signature || '',
-      (data.adjacent || []).join(' '),
-      s('KIN'), s('SEN'), s('ADP'), s('ANL'), s('MEM'), s('GEN'), s('REL'), s('EXP'), s('PER'),
-      f.sdr ? 'yes' : 'no',
-      '', // flag_latent -- retired, see HEADERS comment
-      (f.aspirational || []).join(' '),
-      '', // flag_diverge -- retired, see HEADERS comment
-      f.rankOverlap != null ? f.rankOverlap : '',
-      (data.ranksTop || []).join(' '),
-      (data.ranksBot || []).join(' '),
-      rawJson,
-      event,
-      data.shape || '',
-      (data.reachable || []).join(' | '),
-      (f.unclaimed || []).join(' '),
-      f.topUnclaimed || '',
-      resultsUrl
-    ]);
+    sheet.appendRow(buildResultRow_(data));
 
     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -190,4 +203,76 @@ function computeStats_() {
     avgMinutes: minutesCount > 0 ? Math.round((minutesSum / minutesCount) * 10) / 10 : null,
     updatedAt: new Date().toISOString()
   };
+}
+
+/* ============ Manual recovery: paste-import sheet ============
+ * A dedicated tab where you can paste a taker's raw JSON (from the results
+ * page's "Pilot data" block) and have it imported automatically -- no manual
+ * column-by-column transcription. Column A: paste the JSON. Column B: status,
+ * filled in automatically once imported. Leave column B blank to reprocess a
+ * row (e.g. if you pasted into the wrong row); a non-blank status is treated
+ * as "already handled" and skipped on later edits, so nothing double-imports.
+ */
+
+function ensurePasteSheet_(ss) {
+  var sheet = ss.getSheetByName(PASTE_SHEET_NAME);
+  if (sheet) return sheet;
+  sheet = ss.insertSheet(PASTE_SHEET_NAME);
+  sheet.getRange(1, 1, 1, 2).setValues([['Paste raw JSON here (one block per row)', 'Status']]);
+  sheet.getRange(1, 1, 1, 2).setFontWeight('bold');
+  sheet.setColumnWidth(1, 500);
+  sheet.setColumnWidth(2, 300);
+  return sheet;
+}
+
+// Runs automatically when the sheet is opened (a container-bound simple
+// trigger -- no separate deployment or authorization step needed). Creates
+// the paste-import tab on first open after this update, and adds a menu
+// entry so it's easy to find again later.
+function onOpen(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  ensurePasteSheet_(ss);
+  SpreadsheetApp.getUi()
+    .createMenu('Genius Index')
+    .addItem('Go to paste-import tab', 'showPasteSheet_')
+    .addToUi();
+}
+
+function showPasteSheet_() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  ss.setActiveSheet(ensurePasteSheet_(ss));
+}
+
+// Runs automatically on every edit to this spreadsheet (also a simple
+// trigger). Only acts on edits to column A of the paste-import tab, below
+// the header row, where that row's status (column B) is still blank.
+function onEdit(e) {
+  if (!e || !e.range) return;
+  var sheet = e.range.getSheet();
+  if (sheet.getName() !== PASTE_SHEET_NAME) return;
+  if (e.range.getColumn() !== 1 || e.range.getRow() < 2) return;
+
+  var row = e.range.getRow();
+  var statusCell = sheet.getRange(row, 2);
+  if (String(statusCell.getValue()).trim() !== '') return; // already handled
+
+  var text = String(e.range.getValue()).trim();
+  if (!text) return; // cleared the cell -- nothing to do
+
+  try {
+    var data = JSON.parse(text);
+    if (!data || typeof data !== 'object' || (!data.domains && data.event !== 'start')) {
+      statusCell.setValue('Not recognized as a Genius Index result block -- left as-is.');
+      return;
+    }
+    var resultsSheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME)
+                     || SpreadsheetApp.openById(SHEET_ID).insertSheet(SHEET_NAME);
+    ensureHeaders_(resultsSheet);
+    resultsSheet.appendRow(buildResultRow_(data));
+    statusCell.setValue('Imported ' + new Date().toLocaleString());
+  } catch (err) {
+    // Most common cause: an incomplete paste (still mid-paste when this fired)
+    // or stray characters. Leaving the status blank lets you just paste again.
+    statusCell.setValue('Import failed: ' + String(err));
+  }
 }
