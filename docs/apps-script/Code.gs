@@ -72,10 +72,10 @@ function ensureHeaders_(sheet) {
   }
 }
 
-// Builds one results-sheet row (in HEADERS order) from a parsed submission
-// payload. Shared by doPost (the automatic path) and importPastedBlock_
-// (the manual-recovery path), so both produce byte-identical rows.
-function buildResultRow_(data) {
+// Builds one results-sheet row's values, keyed by HEADER NAME (not column
+// position). Shared by doPost (the automatic path) and onEdit (the
+// paste-import recovery path), so both produce identical values.
+function buildResultFields_(data) {
   // Rows sent before this update had no "event" field at all -- treat those,
   // and any row that omits it, as a completed submission.
   var event = data.event || 'complete';
@@ -90,34 +90,54 @@ function buildResultRow_(data) {
     ? SITE_URL + '#view=' + encodeURIComponent(rawJson)
     : '';
 
-  return [
-    new Date(),
-    data.v || '',
-    data.code || '',
-    data.consent === false ? 'no' : 'yes',
-    data.ts || '',
-    data.minutes || '',
-    data.braid || '',
-    data.braidTier || '',
-    (data.braidPair || []).join('-'),
-    data.signature || '',
-    (data.adjacent || []).join(' '),
-    s('KIN'), s('SEN'), s('ADP'), s('ANL'), s('MEM'), s('GEN'), s('REL'), s('EXP'), s('PER'),
-    f.sdr ? 'yes' : 'no',
-    '', // flag_latent -- retired, see HEADERS comment
-    (f.aspirational || []).join(' '),
-    '', // flag_diverge -- retired, see HEADERS comment
-    f.rankOverlap != null ? f.rankOverlap : '',
-    (data.ranksTop || []).join(' '),
-    (data.ranksBot || []).join(' '),
-    rawJson,
-    event,
-    data.shape || '',
-    (data.reachable || []).join(' | '),
-    (f.unclaimed || []).join(' '),
-    f.topUnclaimed || '',
-    resultsUrl
-  ];
+  return {
+    received_at: new Date(),
+    version: data.v || '',
+    code: data.code || '',
+    consent: data.consent === false ? 'no' : 'yes',
+    client_ts: data.ts || '',
+    minutes: data.minutes || '',
+    braid: data.braid || '',
+    braid_tier: data.braidTier || '',
+    braid_pair: (data.braidPair || []).join('-'),
+    signature: data.signature || '',
+    adjacent: (data.adjacent || []).join(' '),
+    KIN: s('KIN'), SEN: s('SEN'), ADP: s('ADP'), ANL: s('ANL'), MEM: s('MEM'),
+    GEN: s('GEN'), REL: s('REL'), EXP: s('EXP'), PER: s('PER'),
+    flag_sdr: f.sdr ? 'yes' : 'no',
+    flag_latent: '', // retired, see HEADERS comment
+    flag_aspirational: (f.aspirational || []).join(' '),
+    flag_diverge: '', // retired, see HEADERS comment
+    rank_overlap: f.rankOverlap != null ? f.rankOverlap : '',
+    ranks_top: (data.ranksTop || []).join(' '),
+    ranks_bot: (data.ranksBot || []).join(' '),
+    raw_json: rawJson,
+    event: event,
+    shape: data.shape || '',
+    reachable: (data.reachable || []).join(' | '),
+    flag_unclaimed: (f.unclaimed || []).join(' '),
+    top_unclaimed: f.topUnclaimed || '',
+    results_url: resultsUrl
+  };
+}
+
+// Appends one row, placing each field under its header's ACTUAL column in
+// the live sheet (looked up by name), never by fixed array position.
+// ensureHeaders_ only ever appends missing columns at the end -- it can't
+// guarantee no gaps or stray columns exist earlier in the row (e.g. from a
+// manual edit in Sheets), and a plain appendRow(array) silently misaligns
+// every field after the first drifted column. Looking up each value by its
+// header's name is the only way that's immune to that kind of drift.
+function appendResultRow_(sheet, data) {
+  ensureHeaders_(sheet);
+  var lastCol = sheet.getLastColumn();
+  var headerRow = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  var fields = buildResultFields_(data);
+  var row = new Array(lastCol).fill('');
+  headerRow.forEach(function (h, i) {
+    if (h && fields.hasOwnProperty(h)) row[i] = fields[h];
+  });
+  sheet.appendRow(row);
 }
 
 function doPost(e) {
@@ -125,8 +145,7 @@ function doPost(e) {
     var data = JSON.parse(e.postData.contents);
     var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME)
              || SpreadsheetApp.openById(SHEET_ID).insertSheet(SHEET_NAME);
-    ensureHeaders_(sheet);
-    sheet.appendRow(buildResultRow_(data));
+    appendResultRow_(sheet, data);
 
     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
       .setMimeType(ContentService.MimeType.JSON);
@@ -273,8 +292,7 @@ function onEdit(e) {
     // the same file as results, that's exactly the right one here.
     var ss = e.source || SpreadsheetApp.getActiveSpreadsheet();
     var resultsSheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
-    ensureHeaders_(resultsSheet);
-    resultsSheet.appendRow(buildResultRow_(data));
+    appendResultRow_(resultsSheet, data);
     statusCell.setValue('Imported ' + new Date().toLocaleString());
   } catch (err) {
     // Most common cause: an incomplete paste (still mid-paste when this fired)

@@ -148,6 +148,15 @@ Fix it inside the Apps Script editor (which never auto-curls quotes):
 The committed `Code.gs` is plain ASCII, so if you paste it fresh and edit only the ID
 line as above, it will compile.
 
+**A column (like `results_url`) looks blank on every row, even completed ones.**
+Rows are written by matching each value to its header **by name**, so this can only
+happen if that header cell itself got blanked or duplicated (e.g. a column was
+manually inserted or deleted in the sheet at some point). Check row 1 for any blank
+or duplicate header cells; if you find one, either delete that stray column or type
+the correct name back into it. This does not affect already-collected rows, which
+keep whatever data they were written with -- it only affects where *new* rows land
+until the header is fixed.
+
 ## Fallback / alternatives
 
 - **Manual copy, auto-imported** — always available. The results screen has a *Pilot data*
