@@ -265,8 +265,14 @@ function onEdit(e) {
       statusCell.setValue('Not recognized as a Genius Index result block -- left as-is.');
       return;
     }
-    var resultsSheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME)
-                     || SpreadsheetApp.openById(SHEET_ID).insertSheet(SHEET_NAME);
+    // Simple triggers (onEdit/onOpen) run with limited authorization and
+    // cannot call SpreadsheetApp.openById(), even for the same spreadsheet
+    // they're bound to -- that requires a broader scope only a full
+    // (non-trigger) execution has. e.source / getActiveSpreadsheet() is the
+    // one they ARE allowed to use, and since paste_import always lives in
+    // the same file as results, that's exactly the right one here.
+    var ss = e.source || SpreadsheetApp.getActiveSpreadsheet();
+    var resultsSheet = ss.getSheetByName(SHEET_NAME) || ss.insertSheet(SHEET_NAME);
     ensureHeaders_(resultsSheet);
     resultsSheet.appendRow(buildResultRow_(data));
     statusCell.setValue('Imported ' + new Date().toLocaleString());
