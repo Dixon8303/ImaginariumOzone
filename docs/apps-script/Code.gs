@@ -23,6 +23,11 @@
 var SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
 var SHEET_NAME = 'results';
 
+// The live assessment site. Used to build each row's results_url -- a link
+// that reopens that exact submission via the site's #view= archived-result
+// mode (see bootFromHash in docs/index.html). Straight quotes only, as above.
+var SITE_URL = 'https://dixon8303.github.io/ImaginariumOzone/';
+
 // Original columns, in their original order -- NEVER reorder or rename these.
 // Any sheet already collecting data has this exact header row on row 1, and
 // reordering would misalign every row already collected.
@@ -38,7 +43,10 @@ var HEADERS = [
   'raw_json',
   // Added later -- always append new fields HERE, at the end, never in the
   // middle, so no already-collected row ever shifts columns.
-  'event', 'shape', 'reachable', 'flag_unclaimed', 'top_unclaimed'
+  'event', 'shape', 'reachable', 'flag_unclaimed', 'top_unclaimed',
+  // Reopens this exact submission on the live site (blank for 'start' rows,
+  // which have no answers yet to show).
+  'results_url'
 ];
 
 // Ensure the header row has every column in HEADERS, appending any that are
@@ -70,6 +78,13 @@ function doPost(e) {
     var dom = data.domains || {};
     var s = function (id) { return dom[id] ? dom[id].score : ''; };
     var f = data.flags || {};
+    var rawJson = JSON.stringify(data);
+
+    // Only a 'complete' submission has answers worth reopening -- a 'start'
+    // ping has no domains yet, so #view= would just show a broken page.
+    var resultsUrl = (event === 'complete' && dom && Object.keys(dom).length)
+      ? SITE_URL + '#view=' + encodeURIComponent(rawJson)
+      : '';
 
     sheet.appendRow([
       new Date(),
@@ -91,12 +106,13 @@ function doPost(e) {
       f.rankOverlap != null ? f.rankOverlap : '',
       (data.ranksTop || []).join(' '),
       (data.ranksBot || []).join(' '),
-      JSON.stringify(data),
+      rawJson,
       event,
       data.shape || '',
       (data.reachable || []).join(' | '),
       (f.unclaimed || []).join(' '),
-      f.topUnclaimed || ''
+      f.topUnclaimed || '',
+      resultsUrl
     ]);
 
     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
