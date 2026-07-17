@@ -2,10 +2,11 @@
 
 ## Project Overview
 
-This repository contains two independent components:
+This repository contains three independent components:
 
 1. **Circle of Morality** (`src/`) — React UI, philosophical virtue-wheel application. Separate from trading infrastructure.
 2. **HoneyDrip Bot** (`honeydrip_bot/`) — Python trading methodology framework. Alpaca Paper Trading only.
+3. **Marvel Release Tracker** (`marvel_tracker/`) — personal automation, unrelated to the other two. Watches TMDb for new/changed Marvel Studios movies, episodes, shorts, and specials; syncs a dedicated iCloud calendar and sends push/SMS notifications. Runs on a free daily GitHub Actions cron (`.github/workflows/marvel_tracker.yml`). See `marvel_tracker/README.md` for setup.
 
 ---
 
