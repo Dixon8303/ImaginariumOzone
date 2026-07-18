@@ -1,0 +1,49 @@
+name: Marvel Release Tracker
+
+on:
+  schedule:
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: marvel-tracker
+  cancel-in-progress: false
+
+jobs:
+  track:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r marvel_tracker/requirements.txt
+
+      - name: Run tracker
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          ICLOUD_APPLE_ID: ${{ secrets.ICLOUD_APPLE_ID }}
+          ICLOUD_APP_SPECIFIC_PASSWORD: ${{ secrets.ICLOUD_APP_SPECIFIC_PASSWORD }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          SMS_GATEWAY_ADDRESS: ${{ secrets.SMS_GATEWAY_ADDRESS }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+        run: python -m marvel_tracker.tracker
+
+      - name: Commit updated state
+        run: |
+          git config user.name "marvel-tracker-bot"
+          git config user.email "actions@github.com"
+          git add marvel_tracker/state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Update Marvel release tracker state"
+            git push
+          fi

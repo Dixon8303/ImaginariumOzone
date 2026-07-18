@@ -1,0 +1,20 @@
+# Manually maintained supplement to the automatic TMDb discovery.
+#
+# tmdb_client.py auto-discovers movies and shows via TMDb's
+# discover-by-company endpoint (Marvel Studios = company id 420), which
+# catches nearly everything. TMDb's tagging is inconsistent for shorts and
+# some specials, though, so use this file to fill gaps or filter noise.
+#
+# To find a TMDb id: search themoviedb.org, open the title, and read the id
+# out of the URL — e.g. themoviedb.org/tv/84958-loki -> 84958.
+#
+# Revisit this file every few months; new Marvel Studios titles occasionally
+# get tagged late or under the wrong company on TMDb.
+
+extra_movie_ids: []
+extra_show_ids: []
+
+# TMDb ids to ignore even though they matched the company-420 filter (e.g.
+# a project that shares the company tag but you don't want tracked).
+excluded_movie_ids: []
+excluded_show_ids: []
