@@ -132,10 +132,21 @@
   .resultart-cap{font-family:'Lato',sans-serif; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
     color:var(--book-dim); text-align:center; margin-top:9px;}
   .heroart{max-width:340px; margin:18px auto 4px;}
-  .artcollage{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; max-width:420px; margin:0 auto;}
-  .artcollage .resultart{max-width:none; border-radius:4px;}
-  .artcollage .resultart-cap{font-size:8.5px; letter-spacing:.08em;}
-  @media (max-width:420px){ .artcollage{grid-template-columns:repeat(2,1fr); max-width:280px;} }
+  /* Collage: fixed-height cells + object-fit:cover so mismatched source-image
+     sizes/aspect-ratios still line up into one tidy grid, full container width. */
+  .artcollage{display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; gap:10px; width:100%; margin:16px 0 0;}
+  .artcollage .resultart{max-width:none; width:100%; height:100%; margin:0; border-radius:7px; position:relative;}
+  .artcollage .resultart img{height:100%; object-fit:cover;}
+  .artcollage .resultart-cap{position:absolute; left:0; right:0; bottom:0; margin:0; padding:16px 8px 9px;
+    text-align:center; font-size:9.5px; letter-spacing:.1em;
+    background:linear-gradient(to top, rgba(20,14,8,.82), rgba(20,14,8,0) 78%);
+    color:#F3E7C9; opacity:0; transform:translateY(6px); text-shadow:0 0 0 rgba(233,196,120,0);
+    transition:opacity .35s ease, transform .35s ease, text-shadow .35s ease; pointer-events:none;}
+  .artcollage .resultart img{transition:transform .5s ease, filter .5s ease;}
+  .artcollage .resultart:hover img, .artcollage .resultart:focus-within img{transform:scale(1.06); filter:brightness(.82);}
+  .artcollage .resultart:hover .resultart-cap, .artcollage .resultart:focus-within .resultart-cap{
+    opacity:1; transform:translateY(0); text-shadow:0 0 10px rgba(233,196,120,.9), 0 0 22px rgba(195,154,91,.55);}
+  @media (max-width:560px){ .artcollage{grid-template-columns:repeat(2,1fr); grid-auto-rows:170px;} }
   .reachart{width:56px; height:56px; flex-shrink:0; border-radius:5px; overflow:hidden; border:1px solid var(--brass);}
   .reachart img{width:100%; height:100%; object-fit:cover; display:block;}
   .reachhead{display:flex; align-items:center; justify-content:space-between; gap:10px;}
@@ -1703,10 +1714,10 @@ function renderResultsPage(m, exportObj, opts){
 
   <div class="book" style="text-align:center">
    <div class="artcollage">
-    ${primary?`<div class="resultart"><img src="${braidImage(primary.name)}" alt="${esc(primary.name)}" loading="lazy"><div class="resultart-cap">${esc(primary.name).replace(/^The /,"")}</div></div>`:""}
-    <div class="resultart"><img src="${domainImage(braidDoms[0].id)}" alt="${braidDoms[0].name}" loading="lazy"><div class="resultart-cap">${braidDoms[0].name}</div></div>
-    <div class="resultart"><img src="${domainImage(braidDoms[1].id)}" alt="${braidDoms[1].name}" loading="lazy"><div class="resultart-cap">${braidDoms[1].name}</div></div>
-    <div class="resultart"><img src="${familyImage(m.leadingFamily)}" alt="${m.leadingFamily.toUpperCase()}" loading="lazy"><div class="resultart-cap">${m.leadingFamily.toUpperCase()}</div></div>
+    ${primary?`<div class="resultart" tabindex="0"><img src="${braidImage(primary.name)}" alt="${esc(primary.name)}" loading="lazy"><div class="resultart-cap">${esc(primary.name).replace(/^The /,"")}</div></div>`:""}
+    <div class="resultart" tabindex="0"><img src="${domainImage(braidDoms[0].id)}" alt="${braidDoms[0].name}" loading="lazy"><div class="resultart-cap">${braidDoms[0].name}</div></div>
+    <div class="resultart" tabindex="0"><img src="${domainImage(braidDoms[1].id)}" alt="${braidDoms[1].name}" loading="lazy"><div class="resultart-cap">${braidDoms[1].name}</div></div>
+    <div class="resultart" tabindex="0"><img src="${familyImage(m.leadingFamily)}" alt="${m.leadingFamily.toUpperCase()}" loading="lazy"><div class="resultart-cap">${m.leadingFamily.toUpperCase()}</div></div>
    </div>
   </div>
 
