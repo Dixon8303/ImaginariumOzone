@@ -733,6 +733,7 @@ function sampleBraidCarouselHTML(){
   const d0=domById(br.pair[0]), d1=domById(br.pair[1]), tm=TIER_META[br.tier];
   return `<div class="braidcard sampleslide${i===0?" on":""}">
     <div class="yb">Example result</div>
+    <div class="resultart heroart"><img src="${braidImage(br.name)}" alt="${esc(br.name)}" loading="lazy"></div>
     <div class="bname">${br.name}</div>
     <div class="bpair"><span class="domchip ${d0.meta}"><span class="dot"></span>${d0.name}</span><span class="amp">×</span><span class="domchip ${d1.meta}"><span class="dot"></span>${d1.name}</span></div>
     <div class="tierbadge tier-${br.tier}">${tm.label}${br.rare?" · Rarest":""}</div>
