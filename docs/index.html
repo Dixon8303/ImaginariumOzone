@@ -132,21 +132,31 @@
   .resultart-cap{font-family:'Lato',sans-serif; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
     color:var(--book-dim); text-align:center; margin-top:9px;}
   .heroart{max-width:340px; margin:18px auto 4px;}
-  /* Collage: fixed-height cells + object-fit:cover so mismatched source-image
-     sizes/aspect-ratios still line up into one tidy grid, full container width. */
-  .artcollage{display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:150px; gap:10px; width:100%; margin:16px 0 0;}
-  .artcollage .resultart{max-width:none; width:100%; height:100%; margin:0; border-radius:7px; position:relative;}
-  .artcollage .resultart img{height:100%; object-fit:cover;}
+  /* Collage: a real photo-collage, not a forced-crop grid. Each tile's own
+     aspect ratio sets its width at a shared row height (img height:100%,
+     width:auto), so photos of very different shapes still tessellate
+     edge-to-edge -- nothing cropped, every frame shown whole. Rows wrap on
+     narrow screens; a slight alternating tilt + hover-straighten reads as a
+     scattered print pile rather than a UI grid. */
+  .artcollage{display:flex; flex-wrap:wrap; gap:12px; width:100%; margin:18px 0 4px; justify-content:center; align-items:flex-start;}
+  .artcollage .resultart{width:auto; max-width:100%; height:clamp(96px,24vw,168px); margin:0; border-radius:4px;
+    border:4px solid #FBF6EA; box-shadow:0 6px 16px rgba(42,33,24,.28); position:relative;
+    transition:transform .35s ease, box-shadow .35s ease;}
+  .artcollage .resultart:nth-child(odd){transform:rotate(-1.6deg);}
+  .artcollage .resultart:nth-child(even){transform:rotate(1.6deg);}
+  .artcollage .resultart:hover, .artcollage .resultart:focus-within{
+    transform:rotate(0deg) translateY(-4px); z-index:2; box-shadow:0 16px 34px rgba(42,33,24,.36);}
+  .artcollage .resultart img{height:100%; width:auto; max-width:none; display:block;
+    transition:transform .5s ease, filter .5s ease;}
+  .artcollage .resultart:hover img, .artcollage .resultart:focus-within img{transform:scale(1.06); filter:brightness(.82);}
   .artcollage .resultart-cap{position:absolute; left:0; right:0; bottom:0; margin:0; padding:16px 8px 9px;
     text-align:center; font-size:9.5px; letter-spacing:.1em;
     background:linear-gradient(to top, rgba(20,14,8,.82), rgba(20,14,8,0) 78%);
     color:#F3E7C9; opacity:0; transform:translateY(6px); text-shadow:0 0 0 rgba(233,196,120,0);
     transition:opacity .35s ease, transform .35s ease, text-shadow .35s ease; pointer-events:none;}
-  .artcollage .resultart img{transition:transform .5s ease, filter .5s ease;}
-  .artcollage .resultart:hover img, .artcollage .resultart:focus-within img{transform:scale(1.06); filter:brightness(.82);}
   .artcollage .resultart:hover .resultart-cap, .artcollage .resultart:focus-within .resultart-cap{
     opacity:1; transform:translateY(0); text-shadow:0 0 10px rgba(233,196,120,.9), 0 0 22px rgba(195,154,91,.55);}
-  @media (max-width:560px){ .artcollage{grid-template-columns:repeat(2,1fr); grid-auto-rows:170px;} }
+  @media (max-width:560px){ .artcollage{gap:9px;} }
   .reachart{width:56px; height:56px; flex-shrink:0; border-radius:5px; overflow:hidden; border:1px solid var(--brass);}
   .reachart img{width:100%; height:100%; object-fit:cover; display:block;}
   .reachhead{display:flex; align-items:center; justify-content:space-between; gap:10px;}
