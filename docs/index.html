@@ -126,6 +126,18 @@
   .book--hero::before{content:""; position:absolute; top:-10%; left:50%; transform:translateX(-50%);
     width:340px; height:340px; border-radius:50%; pointer-events:none;
     background:radial-gradient(circle, rgba(195,154,91,.20) 0%, rgba(195,154,91,.06) 42%, transparent 70%);}
+  .resultart{width:100%; max-width:420px; margin:0 auto; border-radius:6px; overflow:hidden;
+    border:1px solid var(--brass); box-shadow:0 10px 28px rgba(42,33,24,.22);}
+  .resultart img{width:100%; height:auto; display:block;}
+  .resultart-cap{font-family:'Lato',sans-serif; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--book-dim); text-align:center; margin-top:9px;}
+  .heroart{max-width:340px; margin:18px auto 4px;}
+  .artcollage{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; max-width:420px; margin:0 auto;}
+  .artcollage .resultart{max-width:none; border-radius:4px;}
+  .artcollage .resultart-cap{font-size:8.5px; letter-spacing:.08em;}
+  @media (max-width:420px){ .artcollage{grid-template-columns:repeat(2,1fr); max-width:280px;} }
+  .reachart{width:74px; height:74px; flex-shrink:0; border-radius:5px; overflow:hidden; border:1px solid var(--brass);}
+  .reachart img{width:100%; height:100%; object-fit:cover; display:block;}
   .braidcard{text-align:center; padding:8px 0 4px; position:relative;}
   .braidcard .yb{font-family:'Lato',sans-serif; font-size:11px; letter-spacing:.3em; font-weight:700; text-transform:uppercase; color:var(--gold-ink);}
   .heroglyph{width:150px; margin:16px auto 6px;}
@@ -482,6 +494,22 @@ const braidKey = (a,b)=> [a,b].sort().join("|");
 const BRAID_BY_KEY = {};
 BRAIDS.forEach(br=>{ BRAID_BY_KEY[braidKey(br.pair[0],br.pair[1])] = br; });
 function braidFor(a,b){ return BRAID_BY_KEY[braidKey(a,b)] || null; }
+
+/* ============ RESULT ARTWORK ============ */
+/* Commissioned art, one to five interchangeable pieces per braid/domain/family
+   (several were generated more than once -- different pieces, not duplicates
+   -- so pick one at random each render rather than always showing the same
+   image for a given result). Falls back to a neutral filler if a lookup ever
+   comes up empty. */
+const RESULT_IMAGES = {"braids":{"The Craftsman":["braids/craftsman-1.jpg","braids/craftsman-2.jpg","braids/craftsman-3.jpg","braids/craftsman-4.jpg","braids/craftsman-5.jpg"],"The Performer":["braids/performer-1.jpg","braids/performer-2.jpg"],"The Connoisseur":["braids/connoisseur-1.jpg","braids/connoisseur-2.jpg"],"The Translator":["braids/translator-1.jpg","braids/translator-2.jpg"],"The Diagnostician":["braids/diagnostician-1.jpg","braids/diagnostician-2.jpg"],"The Connector":["braids/connector-1.jpg","braids/connector-2.jpg"],"The Storyteller":["braids/storyteller-1.jpg","braids/storyteller-2.jpg"],"The Leader":["braids/leader-1.jpg","braids/leader-2.jpg"],"The Instrument":["braids/instrument-1.jpg","braids/instrument-2.jpg"],"The Documentarian":["braids/documentarian-1.jpg","braids/documentarian-2.jpg"],"The Natural":["braids/natural-1.jpg","braids/natural-2.jpg","braids/natural-3.jpg"],"The Tactician":["braids/tactician-1.jpg","braids/tactician-2.jpg"],"The Virtuoso":["braids/virtuoso-1.jpg","braids/virtuoso-2.jpg"],"The Healer":["braids/healer-1.jpg","braids/healer-2.jpg"],"The Composer":["braids/composer-1.jpg","braids/composer-2.jpg"],"The Empath":["braids/empath-1.jpg","braids/empath-2.jpg"],"The Stylist":["braids/stylist-1.jpg","braids/stylist-2.jpg"],"The Tracker":["braids/tracker-1.jpg","braids/tracker-2.jpg"],"The Optimizer":["braids/optimizer-1.jpg","braids/optimizer-2.jpg"],"The Caregiver":["braids/caregiver-1.jpg","braids/caregiver-2.jpg"],"The Explorer":["braids/explorer-1.jpg","braids/explorer-2.jpg"],"The Witness":["braids/witness-1.jpg","braids/witness-2.jpg"],"The Maker":["braids/maker-1.jpg","braids/maker-2.jpg"],"The Athlete":["braids/athlete-1.jpg","braids/athlete-2.jpg"],"The Scholar":["braids/scholar-1.jpg","braids/scholar-2.jpg"],"The Inventor":["braids/inventor-1.jpg","braids/inventor-2.jpg"],"The Negotiator":["braids/negotiator-1.jpg","braids/negotiator-2.jpg"],"The Synthesizer":["braids/synthesizer-1.jpg","braids/synthesizer-2.jpg"],"The Bard":["braids/bard-1.jpg","braids/bard-2.jpg"],"The Entertainer":["braids/entertainer-1.jpg","braids/entertainer-2.jpg"],"The Visionary":["braids/visionary-1.jpg","braids/visionary-2.jpg"],"The Diplomat":["braids/diplomat-1.jpg","braids/diplomat-2.jpg"],"The Adept":["braids/adept-1.jpg","braids/adept-2.jpg"],"The Aesthete":["braids/aesthete-1.jpg","braids/aesthete-2.jpg"],"The Veteran":["braids/veteran-1.jpg","braids/veteran-2.jpg"],"The Daredevil":["braids/daredevil-1.jpg","braids/daredevil-2.jpg"]},"domains":{"KIN":["domains/kinetic-1.jpg","domains/kinetic-2.jpg","domains/kinetic-3.jpg"],"SEN":["domains/sensory-1.jpg","domains/sensory-2.jpg","domains/sensory-3.jpg"],"ADP":["domains/adaptive-1.jpg","domains/adaptive-2.jpg","domains/adaptive-3.jpg"],"ANL":["domains/analytic-1.jpg","domains/analytic-2.jpg","domains/analytic-3.jpg"],"MEM":["domains/mnemonic-1.jpg"],"GEN":["domains/generative-1.jpg","domains/generative-2.jpg","domains/generative-3.jpg"],"REL":["domains/relational-1.jpg","domains/relational-2.jpg","domains/relational-3.jpg"],"EXP":["domains/expressive-1.jpg","domains/expressive-2.jpg","domains/expressive-3.jpg"],"PER":["domains/perceptive-1.jpg","domains/perceptive-2.jpg","domains/perceptive-3.jpg"]},"families":{"soma":["families/soma-1.jpg"],"mind":["families/mind-1.jpg"],"field":["families/field-1.jpg"]},"fallback":["fallback/error-filler.jpg","fallback/null.jpg"]};
+const RESULT_IMAGES_BASE = "images/results/";
+function pickResultImage(pool){
+ const list = (pool && pool.length) ? pool : RESULT_IMAGES.fallback;
+ return RESULT_IMAGES_BASE + list[Math.floor(Math.random()*list.length)];
+}
+function braidImage(name){ return pickResultImage(RESULT_IMAGES.braids[name]); }
+function domainImage(id){ return pickResultImage(RESULT_IMAGES.domains[id]); }
+function familyImage(key){ return pickResultImage(RESULT_IMAGES.families[key]); }
 
 /* ============ STATE ============ */
 const S = {
@@ -1344,7 +1372,14 @@ function computeM(R){
  const reachable = computeReachable(R, band, primaryKey);
  const readNext = computeReadNext(R, band, sorted, topUnclaimed);
  const topDoms = sorted.slice(0,2);
- return {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf};
+ // Leading family (SOMA/MIND/FIELD): whichever family averages highest across
+ // its three domains -- an average, not just the top single domain's family,
+ // so a family with two strong domains beats one with a single spike.
+ const famAvg = {};
+ DOMAINS.forEach(d=>{ famAvg[d.meta]=(famAvg[d.meta]||0)+R[d.id].score; });
+ Object.keys(famAvg).forEach(k=>famAvg[k]/=3);
+ const leadingFamily = Object.keys(famAvg).sort((a,b)=>famAvg[b]-famAvg[a])[0];
+ return {sig, topDoms, sorted, band, R, primary, primaryKey, adjKeys, braidDoms, reachable, readNext, shape, topUnclaimed, aspir, unclaimed, gapOf, leadingFamily};
 }
 
 /* ============ CONTENT LIBRARY (condensed from the book; per-domain / per-braid) ============ */
@@ -1521,7 +1556,11 @@ function bookModules(m){
    <p class="modfoot">This is the compressed version. ${chList(sigChapters)} runs the full day-by-day — what to log, and why each week builds on the last.</p></div>`;
 
  // Braids you could build next
- const reach = m.reachable.length ? `<div class="callout callout--brass"><span class="ct">Braids you could build next</span>
+ const reach = m.reachable.length ? `<div class="callout callout--brass">
+   <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+    ${m.primary?`<div class="reachart"><img src="${braidImage(m.primary.name)}" alt="${esc(m.primary.name)}" loading="lazy"></div>`:""}
+    <span class="ct" style="margin:0">Braids you could build next</span>
+   </div>
    ${m.reachable.map(br=>{ const d0=domById(br.pair[0]), d1=domById(br.pair[1]);
      return `<div class="reachcard"><div class="reachname">${br.name}</div>
        <div class="reachpair">${domChip(d0)} <span style="color:var(--book-dim)">${Math.round(m.R[br.pair[0]].score)}</span> × ${domChip(d1)} <span style="color:var(--book-dim)">${Math.round(m.R[br.pair[1]].score)}</span></div>
@@ -1538,12 +1577,18 @@ function bookModules(m){
    <div class="rnrow">${m.readNext.map(e=>`<button class="rn-chip" onclick="showChapter('${e.id}')"><span class="rn-ch">Ch ${e.ch}</span>${e.name}${e.note?`<span class="rn-note"> · ${e.note}</span>`:""}</button>`).join("")}</div></div>`;
 
  return `
+  <div class="book" style="text-align:center">
+   <div class="resultart"><img src="${domainImage(m.braidDoms[0].id)}" alt="${m.braidDoms[0].name}" loading="lazy"><div class="resultart-cap">${m.braidDoms[0].name}</div></div>
+  </div>
   <div class="book">
    <div class="eyebrow-b">What your genius is for</div>
    <h2 class="bt">Where it lives in a life</h2>
    <p class="btsub">Your Signature ${m.sig.length>1?"domains":"domain"} — ${m.sig.map(d=>d.name).join(" & ")} — read into work, play, and the edges between.</p>
    <hr class="brule">
    ${evidence}${careers}${hob}${chal}
+  </div>
+  <div class="book" style="text-align:center">
+   <div class="resultart"><img src="${familyImage(m.leadingFamily)}" alt="${m.leadingFamily.toUpperCase()}" loading="lazy"><div class="resultart-cap">${m.leadingFamily.toUpperCase()}</div></div>
   </div>
   <div class="book">
    <div class="eyebrow-b">What to do with it</div>
@@ -1645,6 +1690,7 @@ function renderResultsPage(m, exportObj, opts){
   <div class="book book--hero">
    <div class="braidcard">
     <div class="yb">Your braid</div>
+    ${primary?`<div class="resultart heroart"><img src="${braidImage(primary.name)}" alt="${esc(primary.name)}" loading="lazy"></div>`:""}
     ${buildHeroGlyph(braidDoms)}
     <div class="bname">${primary?primary.name:exportObj.signature}</div>
     <div class="bpair">${chip(braidDoms[0])}<span class="amp">×</span>${chip(braidDoms[1])}</div>
@@ -1655,7 +1701,20 @@ function renderResultsPage(m, exportObj, opts){
    <div class="bfoot">Rarity comes from combination. Genius is rarely a single gift — it is almost always two of the nine domains braided together, and the pairing, not either strand alone, is what makes a person rare.</div>
   </div>
 
+  <div class="book" style="text-align:center">
+   <div class="artcollage">
+    ${primary?`<div class="resultart"><img src="${braidImage(primary.name)}" alt="${esc(primary.name)}" loading="lazy"><div class="resultart-cap">${esc(primary.name).replace(/^The /,"")}</div></div>`:""}
+    <div class="resultart"><img src="${domainImage(braidDoms[0].id)}" alt="${braidDoms[0].name}" loading="lazy"><div class="resultart-cap">${braidDoms[0].name}</div></div>
+    <div class="resultart"><img src="${domainImage(braidDoms[1].id)}" alt="${braidDoms[1].name}" loading="lazy"><div class="resultart-cap">${braidDoms[1].name}</div></div>
+    <div class="resultart"><img src="${familyImage(m.leadingFamily)}" alt="${m.leadingFamily.toUpperCase()}" loading="lazy"><div class="resultart-cap">${m.leadingFamily.toUpperCase()}</div></div>
+   </div>
+  </div>
+
   ${interpTop(m)}
+
+  <div class="book" style="text-align:center">
+   <div class="resultart"><img src="${domainImage(braidDoms[1].id)}" alt="${braidDoms[1].name}" loading="lazy"><div class="resultart-cap">${braidDoms[1].name}</div></div>
+  </div>
 
   <div class="book">
    <div class="eyebrow-b">Your place in the field</div>
