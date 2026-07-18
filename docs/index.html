@@ -1836,8 +1836,8 @@ function renderResultsPage(m, exportObj, opts){
  }
  wireWheelTooltip();
  const shareBtn=$("shareBtn");
- if(shareBtn) shareBtn.onclick=()=>{ const st=$("shareStatus"); if(st) st.textContent="Generating your share card…";
-  try{ downloadShareCard(m); if(st) st.textContent="✓ Downloaded. Share it anywhere."; }
+ if(shareBtn) shareBtn.onclick=async ()=>{ const st=$("shareStatus"); if(st) st.textContent="Generating your share card…";
+  try{ await downloadShareCard(m); if(st) st.textContent="✓ Downloaded. Share it anywhere."; }
   catch(e){ if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; } };
  if(!opts.archived){
   const wireSaveBaseline=()=>{ const b=$("saveBaselineBtn"); if(b) b.onclick=()=>{ saveBaseline(exportObj); b.textContent="Saved ✓"; b.disabled=true; }; };
@@ -1846,8 +1846,25 @@ function renderResultsPage(m, exportObj, opts){
 }
 
 /* ============ SHARE CARD (R6) ============ */
-/* Self-contained 1080×1080 SVG -> canvas -> PNG download. No external libs. */
-function buildShareCardSVG(m){
+/* Self-contained 1080×1080 SVG -> canvas -> PNG download. No external libs.
+   The collage images are fetched and inlined as data URIs (not referenced by
+   URL) so the exported PNG has no external resource references -- an SVG
+   <image> pointing at a same-origin file still risks tainting the canvas in
+   some browsers, so embedding the bytes directly sidesteps that entirely. */
+async function imgToDataURI(path){
+ try{
+  const res = await fetch(path);
+  if(!res.ok) return null;
+  const blob = await res.blob();
+  return await new Promise((resolve,reject)=>{
+   const r=new FileReader();
+   r.onload=()=>resolve(r.result);
+   r.onerror=()=>reject(r.error);
+   r.readAsDataURL(blob);
+  });
+ }catch(e){ return null; }
+}
+async function buildShareCardSVG(m){
  const W=1080,H=1080, primary=domById(m.braidDoms[0].id), other=domById(m.braidDoms[1].id);
  const braidName = m.primary?m.primary.name:"Your Braid";
  const fs = braidName.length>16?66:braidName.length>11?78:92;
@@ -1860,6 +1877,24 @@ function buildShareCardSVG(m){
            <text x="${330+520+16}" y="${y+barH-8}" text-anchor="start" font-family="Lato,sans-serif" font-size="22" font-weight="700" fill="${col}">${Math.round(d_score(m,d))}</text>`;
  }).join("");
  const chip=(d,x)=>`<g transform="translate(${x} 470)"><rect x="-118" y="-30" width="236" height="60" rx="30" fill="#FFFFFF55" stroke="${realmHex(d.meta)}" stroke-width="2"/><circle cx="-96" cy="0" r="8" fill="${realmHex(d.meta)}"/><text x="-76" y="8" font-family="Playfair Display,serif" font-weight="600" font-size="26" fill="${realmHex(d.meta)}">${d.name}</text></g>`;
+
+ const collageSrcs = [
+  m.primary?braidImage(m.primary.name):null,
+  domainImage(m.braidDoms[0].id),
+  domainImage(m.braidDoms[1].id),
+  familyImage(m.leadingFamily)
+ ].filter(Boolean);
+ const dataUris = await Promise.all(collageSrcs.map(imgToDataURI));
+ const collageUris = dataUris.filter(Boolean);
+ const cw=164, ch=110, gap=14;
+ const totalW = collageUris.length*cw + Math.max(0,collageUris.length-1)*gap;
+ const startX = (W-totalW)/2, cy=850;
+ const collage = collageUris.map((uri,i)=>{ const x=startX+i*(cw+gap);
+   return `<clipPath id="cclip${i}"><rect x="${x}" y="${cy}" width="${cw}" height="${ch}" rx="8"/></clipPath>
+     <image href="${uri}" x="${x}" y="${cy}" width="${cw}" height="${ch}" preserveAspectRatio="xMidYMid slice" clip-path="url(#cclip${i})"/>
+     <rect x="${x}" y="${cy}" width="${cw}" height="${ch}" rx="8" fill="none" stroke="#C39A5B" stroke-width="2"/>`;
+ }).join("");
+
  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
   <rect width="${W}" height="${H}" fill="#EDE4D4"/>
   <rect width="${W}" height="14" fill="#C39A5B"/>
@@ -1869,28 +1904,33 @@ function buildShareCardSVG(m){
   ${chip(primary,W/2-135)}${chip(other,W/2+135)}
   <text x="${W/2}" y="590" text-anchor="middle" font-family="Lato,sans-serif" font-size="22" font-weight="700" letter-spacing="2" fill="#6B6258">SHAPE · ${m.shape.toUpperCase()}</text>
   ${bars}
-  <text x="${W/2}" y="960" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="26" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
+  ${collage}
+  <text x="${W/2}" y="1015" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="26" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
   <rect y="${H-14}" width="${W}" height="14" fill="#C39A5B"/>
  </svg>`;
 }
 function d_score(m,d){ return m.R[d.id].score; }
-function downloadShareCard(m){
- const svgStr = buildShareCardSVG(m);
+async function downloadShareCard(m){
+ const svgStr = await buildShareCardSVG(m);
  const svgBlob = new Blob([svgStr], {type:"image/svg+xml;charset=utf-8"});
  const url = URL.createObjectURL(svgBlob);
- const img = new Image();
- img.onload = ()=>{
-  const canvas=document.createElement("canvas"); canvas.width=1080; canvas.height=1080;
-  const ctx=canvas.getContext("2d"); ctx.drawImage(img,0,0,1080,1080);
-  URL.revokeObjectURL(url);
-  canvas.toBlob(blob=>{
-   const dl=document.createElement("a"); dl.href=URL.createObjectURL(blob);
-   dl.download=`genius-index-${(m.primary?m.primary.name:"result").replace(/\s+/g,"-").toLowerCase()}.png`;
-   document.body.appendChild(dl); dl.click(); dl.remove();
-  }, "image/png");
- };
- img.onerror = ()=>{ const st=$("shareStatus"); if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; };
- img.src = url;
+ return new Promise((resolve,reject)=>{
+  const img = new Image();
+  img.onload = ()=>{
+   const canvas=document.createElement("canvas"); canvas.width=1080; canvas.height=1080;
+   const ctx=canvas.getContext("2d"); ctx.drawImage(img,0,0,1080,1080);
+   URL.revokeObjectURL(url);
+   canvas.toBlob(blob=>{
+    if(!blob){ reject(new Error("toBlob failed")); return; }
+    const dl=document.createElement("a"); dl.href=URL.createObjectURL(blob);
+    dl.download=`genius-index-${(m.primary?m.primary.name:"result").replace(/\s+/g,"-").toLowerCase()}.png`;
+    document.body.appendChild(dl); dl.click(); dl.remove();
+    resolve();
+   }, "image/png");
+  };
+  img.onerror = ()=>reject(new Error("SVG render failed"));
+  img.src = url;
+ });
 }
 
 /* ============ RETAKE & BASELINE (R6, localStorage — per device only) ============ */
@@ -1994,6 +2034,7 @@ function buildDomainChapter(id, ctx){
    <div class="eyebrow-b" style="margin-top:14px">Chapter ${chapterOf(id)}</div>
    <h2 class="bt">${d.name}</h2>
    <p class="btsub">${DOMAIN_DEF[id]}</p>
+   <div class="resultart heroart"><img src="${domainImage(id)}" alt="${esc(d.name)}" loading="lazy"></div>
    <hr class="brule">
    <div class="callout callout--slate"><span class="ct">On your profile</span>${roleNote}</div>
    <div class="callout" style="--accent:var(--sage); --accent-tint:rgba(169,180,166,.16)"><span class="ct">The evidence</span><p style="margin:2px 0">${EVIDENCE[id]}</p></div>
@@ -2017,11 +2058,19 @@ function buildStackChapter(ctx){
    <div class="eyebrow-b" style="margin-top:14px">Chapter 17–18</div>
    <h2 class="bt">Stacking &amp; the Protocol</h2>
    <p class="btsub">How a two-domain braid becomes a working practice — and when a third strand earns its place.</p>
+   ${m.primary?`<div class="resultart heroart"><img src="${braidImage(m.primary.name)}" alt="${esc(m.primary.name)}" loading="lazy"></div>`:""}
    <hr class="brule">
    <p style="font-size:14.5px;line-height:1.55;color:var(--book-ink)">A braid names the pairing. <strong>Stacking</strong> is what you do with it: repeating the pairing on purpose until it becomes a reliable practice, then deciding whether a third domain deserves a place alongside it. The right move depends on your shape.</p>
    ${buildShapeDiagram(m.shape)}
    <div class="callout callout--brass"><span class="ct">${m.shape} — your shape</span>Your profile is ${SHAPE_META[m.shape].line}. The strategic move: ${SHAPE_META[m.shape].move}.</div>
-   ${m.reachable.length?`<div class="callout callout--slate"><span class="ct">Your candidates for a third strand</span>${m.reachable.map(b=>b.name).join(" or ")} — the braids you're already closest to building alongside ${m.primary?m.primary.name:"your braid"}.</div>`:""}
+   ${m.reachable.length?`<div class="callout callout--slate"><span class="ct">Your candidates for a third strand</span>
+     <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px">
+      ${m.reachable.map(b=>`<div style="display:flex;align-items:center;gap:8px">
+        <div class="reachart"><img src="${braidImage(b.name)}" alt="${esc(b.name)}" loading="lazy"></div>
+        <span style="font-family:'Playfair Display',serif;font-weight:600;font-size:14px;color:var(--book-ink)">${b.name}</span>
+       </div>`).join("")}
+     </div>
+     <p style="margin:8px 0 0">The braids you're already closest to building alongside ${m.primary?m.primary.name:"your braid"}.</p></div>`:""}
    <div class="callout callout--moss"><span class="ct">Who to pair with instead</span>Not every gap needs to become your own skill. ${teamFitFor(m.primary)}</div>
    <div style="margin-top:10px">${backChapBtn}</div>
   </div>`;
