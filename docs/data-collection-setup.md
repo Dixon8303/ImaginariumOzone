@@ -9,6 +9,12 @@ shape, flags, timing, forced-rank picks, and the raw answers — as JSON. **No n
 email, IP, or account.** Starting the assessment implies consent to this (stated on the
 first screen); nothing is uploaded before that.
 
+**Optional demographics:** a short, fully skippable screen after the forced-ranking step
+asks for age range, gender, education, and region — each independently optional, used
+only in aggregate for the validation study (see
+[`validation-study-plan.md`](./validation-study-plan.md)). A taker can leave every field
+blank and still see their full results; nothing is required.
+
 ---
 
 ## One-time setup (~10 minutes)
@@ -94,6 +100,12 @@ new columns at the end, so nothing you've collected so far shifts or breaks.
     computed leaders agree?
   - `flag_latent` and `flag_diverge` are retired columns from an earlier scoring model —
     they stay blank going forward; ignore them.
+  - `braid_tier` is also retired going forward (the internal single-letter tier code had
+    no public gloss in that context) — it stays blank on new rows; the visible tier badge
+    on the results page already explains itself in full.
+  - **Demographics** (`demo_age`, `demo_gender`, `demo_education`, `demo_region`) — blank
+    on any row where the taker skipped that field. Treat sparsely-filled columns as
+    expected, not a bug.
 
 ## Funnel tracking (in-house only, not on the public site)
 
@@ -106,6 +118,13 @@ and averages, never a raw row, a participant code, or anything traceable to one 
 are available from your Apps Script endpoint at `GET ?stats=1&key=YOUR_SECRET`, gated by
 a private key that lives only in Apps Script's Script Properties — **never in this repo**,
 so it's never publicly visible even though the repo itself is public.
+
+The endpoint also returns `sdrFlagRate` (share of completions flagged for a
+socially-desirable response pattern — a sanity check on the item bank itself if this
+drifts far from what you'd expect) and `domainStats` (per-domain n/mean/min/max/quartiles
+— watch for floor/ceiling effects, i.e. scores bunching at one end of a domain, well
+before you have anywhere near enough data for a real reliability or factor-structure
+analysis).
 
 ### One-time: set your private key
 1. In the Apps Script editor: **Project Settings** (gear icon, left sidebar) → scroll to

@@ -53,7 +53,11 @@ var HEADERS = [
   'event', 'shape', 'reachable', 'flag_unclaimed', 'top_unclaimed',
   // Reopens this exact submission on the live site (blank for 'start' rows,
   // which have no answers yet to show).
-  'results_url'
+  'results_url',
+  // Optional, anonymous, entirely skippable -- collected once at the end of
+  // the assessment for the eventual validation study (demographic spread /
+  // generalizability checks). Blank whenever the taker skipped a field.
+  'demo_age', 'demo_gender', 'demo_education', 'demo_region'
 ];
 
 // Ensure the header row has every column in HEADERS, appending any that are
@@ -117,7 +121,11 @@ function buildResultFields_(data) {
     reachable: (data.reachable || []).join(' | '),
     flag_unclaimed: (f.unclaimed || []).join(' '),
     top_unclaimed: f.topUnclaimed || '',
-    results_url: resultsUrl
+    results_url: resultsUrl,
+    demo_age: (data.demographics && data.demographics.age) || '',
+    demo_gender: (data.demographics && data.demographics.gender) || '',
+    demo_education: (data.demographics && data.demographics.education) || '',
+    demo_region: (data.demographics && data.demographics.region) || ''
   };
 }
 
@@ -174,11 +182,51 @@ function doGet(e) {
   return ContentService.createTextOutput('Genius Index collector is running.');
 }
 
+var DOMAIN_IDS_ = ['KIN', 'SEN', 'ADP', 'ANL', 'MEM', 'GEN', 'REL', 'EXP', 'PER'];
+
+// Linear-interpolated percentile over an already-sorted numeric array.
+function percentile_(sorted, p) {
+  if (!sorted.length) return null;
+  var idx = (p / 100) * (sorted.length - 1);
+  var lo = Math.floor(idx), hi = Math.ceil(idx);
+  if (lo === hi) return sorted[lo];
+  return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
+}
+
+function emptyDomainSummary_() {
+  return { n: 0, mean: null, min: null, max: null, p25: null, p50: null, p75: null };
+}
+
+// Distributional summary for one domain's scores -- used to spot floor/ceiling
+// effects (scores bunching at one end) independent of the 4.5:1-type reliability
+// stats, which need a much larger sample before they mean anything.
+function summarizeDomain_(values) {
+  if (!values.length) return emptyDomainSummary_();
+  var sorted = values.slice().sort(function (a, b) { return a - b; });
+  var sum = values.reduce(function (a, b) { return a + b; }, 0);
+  return {
+    n: values.length,
+    mean: Math.round((sum / values.length) * 10) / 10,
+    min: sorted[0],
+    max: sorted[sorted.length - 1],
+    p25: Math.round(percentile_(sorted, 25) * 10) / 10,
+    p50: Math.round(percentile_(sorted, 50) * 10) / 10,
+    p75: Math.round(percentile_(sorted, 75) * 10) / 10
+  };
+}
+
+function emptyDomainStats_() {
+  var out = {};
+  DOMAIN_IDS_.forEach(function (id) { out[id] = emptyDomainSummary_(); });
+  return out;
+}
+
 function computeStats_() {
   var empty = {
     totalStarts: 0, totalCompletes: 0, conversionRate: null,
     topBraids: [], shapeCounts: { Tower: 0, Ridge: 0, Anchored: 0, Plateau: 0 },
-    avgMinutes: null, updatedAt: new Date().toISOString()
+    avgMinutes: null, sdrFlagRate: null, domainStats: emptyDomainStats_(),
+    updatedAt: new Date().toISOString()
   };
   var sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
   if (!sheet || sheet.getLastRow() < 2) return empty;
@@ -188,9 +236,11 @@ function computeStats_() {
   var col = {};
   headerRow.forEach(function (h, i) { col[h] = i; });
 
-  var totalStarts = 0, totalCompletes = 0, minutesSum = 0, minutesCount = 0;
+  var totalStarts = 0, totalCompletes = 0, minutesSum = 0, minutesCount = 0, sdrCount = 0;
   var braidCounts = {};
   var shapeCounts = { Tower: 0, Ridge: 0, Anchored: 0, Plateau: 0 };
+  var domainValues = {};
+  DOMAIN_IDS_.forEach(function (id) { domainValues[id] = []; });
 
   for (var r = 1; r < values.length; r++) {
     var row = values[r];
@@ -204,12 +254,23 @@ function computeStats_() {
     if (shape && shapeCounts.hasOwnProperty(shape)) shapeCounts[shape]++;
     var minutes = col.hasOwnProperty('minutes') ? row[col.minutes] : '';
     if (typeof minutes === 'number' && minutes > 0) { minutesSum += minutes; minutesCount++; }
+    var sdr = col.hasOwnProperty('flag_sdr') ? row[col.flag_sdr] : '';
+    if (sdr === 'yes') sdrCount++;
+    DOMAIN_IDS_.forEach(function (id) {
+      if (col.hasOwnProperty(id)) {
+        var v = row[col[id]];
+        if (typeof v === 'number') domainValues[id].push(v);
+      }
+    });
   }
 
   var topBraids = Object.keys(braidCounts)
     .map(function (name) { return { name: name, count: braidCounts[name] }; })
     .sort(function (a, b) { return b.count - a.count; })
     .slice(0, 10);
+
+  var domainStats = {};
+  DOMAIN_IDS_.forEach(function (id) { domainStats[id] = summarizeDomain_(domainValues[id]); });
 
   return {
     totalStarts: totalStarts,
@@ -220,6 +281,13 @@ function computeStats_() {
     topBraids: topBraids,
     shapeCounts: shapeCounts,
     avgMinutes: minutesCount > 0 ? Math.round((minutesSum / minutesCount) * 10) / 10 : null,
+    // Share of completions flagged for a socially-desirable response pattern --
+    // a sanity check on the item bank itself if this drifts far from expectations.
+    sdrFlagRate: totalCompletes > 0 ? Math.round((sdrCount / totalCompletes) * 100) : null,
+    // Per-domain score distribution (mean/min/max/quartiles) -- watch for
+    // floor/ceiling effects (scores bunching at one end) independent of
+    // reliability stats, which need a much larger sample to mean anything.
+    domainStats: domainStats,
     updatedAt: new Date().toISOString()
   };
 }
