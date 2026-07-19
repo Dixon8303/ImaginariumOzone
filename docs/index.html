@@ -1701,7 +1701,7 @@ function results(){
   A:S.respA,C:S.respC,SDR:S.respSDR,B:S.Braw,Bnorm:S.B,
   ranksTop:S.ranksTop,ranksBot:S.ranksBot,
   domains:Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
-  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id), braidTier:m.primary?m.primary.tier:null,
+  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id),
   adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
   flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}};
 
@@ -1736,7 +1736,7 @@ function renderArchived(payload){
   v:payload.v||"", event:"complete", code:payload.code||null, consent:payload.consent!==false,
   ts:payload.ts||"", minutes:payload.minutes||0,
   domains:payload.domains||Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
-  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id), braidTier:m.primary?m.primary.tier:null,
+  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id),
   adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
   flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}
  };
@@ -1808,6 +1808,11 @@ function renderResultsPage(m, exportObj, opts){
     <span class="wl-item"><i class="wl-swatch" style="background:var(--mind)"></i>MIND</span>
     <span class="wl-item"><i class="wl-swatch" style="background:var(--field)"></i>FIELD</span>
    </div>
+   ${(() => { const second=sorted[1], runnerUp=sorted[2];
+     const secondScore=Math.round(R[second.id].score), runnerScore=Math.round(R[runnerUp.id].score), margin=secondScore-runnerScore;
+     return `<div class="callout callout--slate"><span class="ct">Margin of the call</span>${margin===0
+       ? `Your ${second.name} score (${secondScore}) tied exactly with ${runnerUp.name} (${runnerScore}) for the second strand — a genuine coin flip.`
+       : `Your ${second.name} score (${secondScore}) edged ${runnerUp.name} (${runnerScore}) by ${margin} point${margin===1?"":"s"} for the second strand.`}</div>`; })()}
   </div>
 
   <div class="book">
@@ -1832,6 +1837,7 @@ function renderResultsPage(m, exportObj, opts){
    ${aspir.length?`<div class="callout callout--oxblood"><span class="ct">Aspirational gap</span>${aspir.map(d=>`${d.name} (${Math.round(R[d.id].A)}→${Math.round(R[d.id].B)})`).join(", ")}: your self-image outruns the record. Not a verdict — a training map.</div>`:""}
    ${cautionsHTML(m)}
    <div class="card small" style="background:#F5EFE2;color:var(--book-ink);border-color:var(--book-line)">Forced-rank convergence: your top-3 picks matched <strong>${overlap} of 3</strong> computed leaders.</div>
+   ${sdrFlag?"":`<div class="card small" style="background:#F5EFE2;color:var(--book-ink);border-color:var(--book-line)">Response integrity: no social-desirability flags on the two check items — this profile reads as an honest self-report.</div>`}
   </div>
 
   ${bookModules(m)}
@@ -1863,7 +1869,10 @@ function renderResultsPage(m, exportObj, opts){
    <p class="submitstatus" id="submitStatus"></p>
    <p class="submitstatus" id="shareStatus"></p>
    <div class="btnrow">
-    <button class="btn book-primary" id="shareBtn">Download share card</button>
+    <button class="btn book-primary" id="shareBtn">Share your braid card! #GeniusIndex</button>
+    <button class="btn book-primary" id="shareNativeBtn">Share to Instagram →</button>
+   </div>
+   <div class="btnrow">
     <button class="btn book-ghost" onclick="window.print()">Save / print my chart</button>
    </div>
    <div class="btnrow">
@@ -1896,6 +1905,14 @@ function renderResultsPage(m, exportObj, opts){
  if(shareBtn) shareBtn.onclick=async ()=>{ const st=$("shareStatus"); if(st) st.textContent="Generating your share card…";
   try{ await downloadShareCard(m); if(st) st.textContent="✓ Downloaded. Share it anywhere."; }
   catch(e){ if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; } };
+ const shareNativeBtn=$("shareNativeBtn");
+ if(shareNativeBtn){
+  if(!navigator.share){ shareNativeBtn.style.display="none"; }
+  else shareNativeBtn.onclick=async ()=>{ const st=$("shareStatus"); if(st) st.textContent="Preparing your card…";
+   try{ const result=await shareBraidCard(m);
+    if(st) st.textContent = result==="shared" ? "✓ Shared!" : result==="cancelled" ? "" : "✓ Downloaded. Share it anywhere.";
+   } catch(e){ if(st) st.textContent="Couldn't generate the image in this browser — try Save/Print instead."; } };
+ }
  if(!opts.archived){
   const wireSaveBaseline=()=>{ const b=$("saveBaselineBtn"); if(b) b.onclick=()=>{ saveBaseline(exportObj); b.textContent="Saved ✓"; b.disabled=true; }; };
   wireSaveBaseline();
@@ -1983,12 +2000,13 @@ async function buildShareCardSVG(m){
   <text x="${W/2}" y="590" text-anchor="middle" font-family="Lato,sans-serif" font-size="22" font-weight="700" letter-spacing="2" fill="#6B6258">SHAPE · ${m.shape.toUpperCase()}</text>
   ${bars}
   ${collage}
-  <text x="${W/2}" y="1015" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="26" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
+  <text x="${W/2}" y="998" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="24" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
+  <text x="${W/2}" y="1034" text-anchor="middle" font-family="Lato,sans-serif" font-weight="700" font-size="25" letter-spacing="0.4" fill="#7A5B31">Take the assessment → tinyurl.com/geniusindextest</text>
   <rect y="${H-10}" width="${W}" height="10" fill="url(#edgeBar)"/>
  </svg>`;
 }
 function d_score(m,d){ return m.R[d.id].score; }
-async function downloadShareCard(m){
+async function getShareCardBlob(m){
  const svgStr = await buildShareCardSVG(m);
  const svgBlob = new Blob([svgStr], {type:"image/svg+xml;charset=utf-8"});
  const url = URL.createObjectURL(svgBlob);
@@ -2000,15 +2018,37 @@ async function downloadShareCard(m){
    URL.revokeObjectURL(url);
    canvas.toBlob(blob=>{
     if(!blob){ reject(new Error("toBlob failed")); return; }
-    const dl=document.createElement("a"); dl.href=URL.createObjectURL(blob);
-    dl.download=`genius-index-${(m.primary?m.primary.name:"result").replace(/\s+/g,"-").toLowerCase()}.png`;
-    document.body.appendChild(dl); dl.click(); dl.remove();
-    resolve();
+    resolve(blob);
    }, "image/png");
   };
   img.onerror = ()=>reject(new Error("SVG render failed"));
   img.src = url;
  });
+}
+function shareCardFilename(m){ return `genius-index-${(m.primary?m.primary.name:"result").replace(/\s+/g,"-").toLowerCase()}.png`; }
+function triggerBlobDownload(blob, filename){
+ const dl=document.createElement("a"); dl.href=URL.createObjectURL(blob);
+ dl.download=filename;
+ document.body.appendChild(dl); dl.click(); dl.remove();
+}
+async function downloadShareCard(m){
+ const blob = await getShareCardBlob(m);
+ triggerBlobDownload(blob, shareCardFilename(m));
+}
+async function shareBraidCard(m){
+ const blob = await getShareCardBlob(m);
+ const filename = shareCardFilename(m);
+ const braidName = m.primary?m.primary.name:"my braid";
+ const shareText = `I'm ${braidName} on The Genius Index. Find your braid: https://tinyurl.com/geniusindextest #GeniusIndex`;
+ try{
+  const file = new File([blob], filename, {type:"image/png"});
+  if(navigator.canShare && navigator.canShare({files:[file]})){
+   await navigator.share({files:[file], title:"My Genius Index Braid", text:shareText});
+   return "shared";
+  }
+ }catch(e){ if(e && e.name==="AbortError") return "cancelled"; }
+ triggerBlobDownload(blob, filename);
+ return "downloaded";
 }
 
 /* ============ RETAKE & BASELINE (R6, localStorage — per device only) ============ */
