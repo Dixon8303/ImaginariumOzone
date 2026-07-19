@@ -121,6 +121,18 @@
   .pad.flash{background:linear-gradient(180deg, var(--brass-light), var(--brass)); color:#241C12; box-shadow:0 0 22px oklch(0.72 0.14 75 / 55%); transform:scale(1.03);}
   .memgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:14px 0;}
   .memgrid .btn{margin:0; text-align:center; padding:12px 6px; font-size:14px;}
+  /* Optional demographics screen: single-select pill groups, one per field. */
+  .demoblock{margin:18px 0;}
+  .demofield{margin:16px 0;}
+  .demolabel{font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--brass); font-weight:600; margin-bottom:9px;}
+  .demo-opts{display:flex; flex-wrap:wrap; gap:8px;}
+  .demo-chip{background:linear-gradient(180deg, var(--ink3), var(--ink2)); border:1px solid var(--line); border-radius:16px;
+    padding:8px 14px; color:var(--paper); font-family:'Lato',sans-serif; font-size:13px; cursor:pointer;
+    -webkit-appearance:none; appearance:none; box-shadow:var(--shadow-1);
+    transition:border-color .2s var(--ease), background .2s var(--ease), transform .15s var(--ease), color .2s var(--ease);}
+  .demo-chip:focus-visible{border-color:var(--brass); outline:none; box-shadow:0 0 0 3px oklch(0.72 0.14 75 / 25%);}
+  @media (hover:hover){ .demo-chip:hover{border-color:var(--brass); transform:translateY(-1px);} }
+  .demo-chip.sel{border-color:var(--brass); background:oklch(0.24 0.05 75); color:var(--brass-light); font-weight:700;}
   .bars{margin:16px 0;}
   .barrow{display:flex; align-items:center; gap:10px; margin:8px 0;}
   .barrow .lbl{width:96px; font-size:12px; letter-spacing:.04em;}
@@ -590,6 +602,7 @@ function familyImage(key){ return pickResultImage(RESULT_IMAGES.families[key]); 
 const S = {
  code:"", consent:true, respA:{}, respC:{}, respSDR:[null,null],
  B:{}, Braw:{}, ranksTop:[], ranksBot:[],
+ demo:{age:null, gender:null, education:null, region:null},
  flowIdx:0, started:Date.now()
 };
 DOMAINS.forEach(d=>{S.respA[d.id]=[null,null,null,null,null]; S.respC[d.id]=[null,null,null];});
@@ -1177,10 +1190,46 @@ function ranking(){
  }
  window._rk=(id)=>{
   if(phase==="top"){ S.ranksTop.push(id); if(S.ranksTop.length===3) phase="bot"; }
-  else { S.ranksBot.push(id); if(S.ranksBot.length===3){ results(); return; } }
+  else { S.ranksBot.push(id); if(S.ranksBot.length===3){ demographics(); return; } }
   render();
  };
  render();
+}
+
+/* ============ OPTIONAL ANONYMOUS DEMOGRAPHICS ============
+   One short screen between the ranking and results -- entirely optional and
+   skippable field-by-field (or in full via "Skip this step"). Used only in
+   aggregate for the validation study; no field is required to see results. */
+const DEMO_FIELDS = [
+ {key:"age", label:"Age range", opts:["Under 18","18–24","25–34","35–44","45–54","55–64","65+"]},
+ {key:"gender", label:"Gender", opts:["Woman","Man","Non-binary / other"]},
+ {key:"education", label:"Education", opts:["No degree","High school","Some college","Bachelor's","Graduate / professional"]},
+ {key:"region", label:"Region", opts:["North America","South America","Europe","Africa","Middle East","Asia","Oceania"]}
+];
+function demographics(){
+ setProg(0.97); litCells(9);
+ h(`
+  <div class="stagecount">Almost done · Optional</div>
+  <h2>Help make this measurement mean something</h2>
+  <p class="dim small">The book is honest that this instrument hasn't completed a formal validation study yet. These four questions help build toward one — checking whether the Index holds up consistently across different kinds of people. Entirely optional and anonymous: no name, account, or identifying data is ever attached. Leave anything blank to skip it.</p>
+  <div class="demoblock">
+   ${DEMO_FIELDS.map(f=>`<div class="demofield">
+     <div class="demolabel">${f.label}</div>
+     <div class="demo-opts" data-field="${f.key}">
+      ${f.opts.map(o=>`<button type="button" class="demo-chip" onclick="setDemo('${f.key}','${esc(o)}',this)">${o}</button>`).join("")}
+     </div>
+    </div>`).join("")}
+  </div>
+  <div class="btnrow" style="margin-top:18px">
+   <button class="btn primary" onclick="results()">Continue to my results →</button>
+  </div>
+ `);
+}
+function setDemo(field, value, el){
+ const already = S.demo[field]===value;
+ S.demo[field] = already ? null : value;
+ el.parentElement.querySelectorAll(".demo-chip").forEach(b=>b.classList.remove("sel"));
+ if(!already) el.classList.add("sel");
 }
 
 /* ============ RESULTS HELPERS ============ */
@@ -1700,6 +1749,7 @@ function results(){
   minutes:Math.round((Date.now()-S.started)/60000),
   A:S.respA,C:S.respC,SDR:S.respSDR,B:S.Braw,Bnorm:S.B,
   ranksTop:S.ranksTop,ranksBot:S.ranksBot,
+  demographics:{...S.demo},
   domains:Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
   signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id),
   adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
@@ -1735,6 +1785,7 @@ function renderArchived(payload){
  const exportObj = {
   v:payload.v||"", event:"complete", code:payload.code||null, consent:payload.consent!==false,
   ts:payload.ts||"", minutes:payload.minutes||0,
+  demographics:payload.demographics||{},
   domains:payload.domains||Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
   signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id),
   adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
@@ -1916,6 +1967,8 @@ function renderResultsPage(m, exportObj, opts){
  if(!opts.archived){
   const wireSaveBaseline=()=>{ const b=$("saveBaselineBtn"); if(b) b.onclick=()=>{ saveBaseline(exportObj); b.textContent="Saved ✓"; b.disabled=true; }; };
   wireSaveBaseline();
+  const retestBtn=$("retestReminderBtn");
+  if(retestBtn) retestBtn.onclick=()=>{ downloadRetestReminder(m); retestBtn.textContent="✓ Added to calendar"; };
  }
 }
 
@@ -1938,8 +1991,9 @@ async function imgToDataURI(path){
   });
  }catch(e){ return null; }
 }
+const SHARE_CARD_W = 1080, SHARE_CARD_H = 1150;
 async function buildShareCardSVG(m){
- const W=1080,H=1080, primary=domById(m.braidDoms[0].id), other=domById(m.braidDoms[1].id);
+ const W=SHARE_CARD_W,H=SHARE_CARD_H, primary=domById(m.braidDoms[0].id), other=domById(m.braidDoms[1].id);
  const braidName = m.primary?m.primary.name:"Your Braid";
  const fs = braidName.length>16?66:braidName.length>11?78:92;
  const top3 = m.sorted.slice(0,3);
@@ -2002,6 +2056,8 @@ async function buildShareCardSVG(m){
   ${collage}
   <text x="${W/2}" y="998" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="24" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
   <text x="${W/2}" y="1034" text-anchor="middle" font-family="Lato,sans-serif" font-weight="700" font-size="25" letter-spacing="0.4" fill="#7A5B31">Take the assessment → tinyurl.com/geniusindextest</text>
+  <rect x="${W/2-190}" y="1054" width="380" height="1" fill="rgba(122,91,49,.3)"/>
+  <text x="${W/2}" y="1086" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="22" fill="#6B6258">↺ Retake it ${esc(retestDate().toLocaleDateString(undefined,{month:"long", day:"numeric"}))} — see what's changed</text>
   <rect y="${H-10}" width="${W}" height="10" fill="url(#edgeBar)"/>
  </svg>`;
 }
@@ -2013,8 +2069,8 @@ async function getShareCardBlob(m){
  return new Promise((resolve,reject)=>{
   const img = new Image();
   img.onload = ()=>{
-   const canvas=document.createElement("canvas"); canvas.width=1080; canvas.height=1080;
-   const ctx=canvas.getContext("2d"); ctx.drawImage(img,0,0,1080,1080);
+   const canvas=document.createElement("canvas"); canvas.width=SHARE_CARD_W; canvas.height=SHARE_CARD_H;
+   const ctx=canvas.getContext("2d"); ctx.drawImage(img,0,0,SHARE_CARD_W,SHARE_CARD_H);
    URL.revokeObjectURL(url);
    canvas.toBlob(blob=>{
     if(!blob){ reject(new Error("toBlob failed")); return; }
@@ -2058,10 +2114,49 @@ function saveBaseline(exportObj){
  try{ localStorage.setItem(BASELINE_KEY, JSON.stringify({ts:Date.now(), braid:exportObj.braid, shape:exportObj.shape, domains:exportObj.domains})); return true; }
  catch(e){ return false; }
 }
+
+/* Retest reminder: a downloadable .ics calendar event ~90 days out, so "come
+   back and see what's changed" is a real invitation instead of just a line of
+   text -- works with no account and no backend, in any calendar app. */
+const RETEST_DAYS = 90;
+function pad2_(n){ return String(n).padStart(2,"0"); }
+function icsLocalDate_(d){ return `${d.getFullYear()}${pad2_(d.getMonth()+1)}${pad2_(d.getDate())}`; }
+function icsUtcStamp_(d){ return `${d.getUTCFullYear()}${pad2_(d.getUTCMonth()+1)}${pad2_(d.getUTCDate())}T${pad2_(d.getUTCHours())}${pad2_(d.getUTCMinutes())}${pad2_(d.getUTCSeconds())}Z`; }
+function icsEscape_(s){ return String(s).replace(/\\/g,"\\\\").replace(/,/g,"\\,").replace(/;/g,"\\;").replace(/\n/g,"\\n"); }
+function retestDate(){ return new Date(Date.now()+RETEST_DAYS*86400000); }
+function buildRetestICS(m){
+ const when = retestDate();
+ const braidName = m && m.primary ? m.primary.name : "your braid";
+ const desc = `You took The Genius Index and came out ${braidName}. Come back and retake it to see whether that still holds -- or what's shifted since. https://dixon8303.github.io/ImaginariumOzone/`;
+ const dt = icsLocalDate_(when);
+ const lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//The Genius Index//EN","CALSCALE:GREGORIAN",
+  "BEGIN:VEVENT",
+  `UID:gi-retest-${Date.now()}@geniusindex`,
+  `DTSTAMP:${icsUtcStamp_(new Date())}`,
+  `DTSTART;VALUE=DATE:${dt}`,
+  `DTEND;VALUE=DATE:${dt}`,
+  `SUMMARY:${icsEscape_("Retake the Genius Index — see what's changed")}`,
+  `DESCRIPTION:${icsEscape_(desc)}`,
+  "URL:https://dixon8303.github.io/ImaginariumOzone/",
+  "END:VEVENT","END:VCALENDAR"];
+ return lines.join("\r\n");
+}
+function downloadRetestReminder(m){
+ const ics = buildRetestICS(m);
+ const blob = new Blob([ics], {type:"text/calendar;charset=utf-8"});
+ const dl=document.createElement("a"); dl.href=URL.createObjectURL(blob);
+ dl.download="genius-index-retest-reminder.ics";
+ document.body.appendChild(dl); dl.click(); dl.remove();
+}
+function retestButtonHTML(){
+ const dateLabel = retestDate().toLocaleDateString(undefined,{month:"long", day:"numeric"});
+ return `<div class="btnrow" style="margin-top:8px"><button class="btn book-ghost" id="retestReminderBtn" style="max-width:320px">↺ Remind me to retake this on ${dateLabel}</button></div>`;
+}
 function baselineHTML(exportObj){
  const b = loadBaseline();
  if(!b){ return `<div class="callout callout--slate"><span class="ct">Baseline</span>No saved baseline yet on this device. Save this result to compare against a future retake.
-   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Save this as my baseline</button></div></div>`; }
+   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Save this as my baseline</button></div>
+   ${retestButtonHTML()}</div>`; }
  const days = Math.max(0, Math.round((Date.now()-b.ts)/86400000));
  const deltas = DOMAINS.map(d=>({d, delta: Math.round((exportObj.domains[d.id]?.score||0) - (b.domains[d.id]?.score||0))}))
    .filter(x=>Math.abs(x.delta)>=5).sort((a,c)=>Math.abs(c.delta)-Math.abs(a.delta)).slice(0,4);
@@ -2069,7 +2164,8 @@ function baselineHTML(exportObj){
  const nudge = days>=90 ? ` It's been ${days} days since your last baseline — right on schedule for a check-in.` : ` Next check-in around day 90 (in ${90-days} days).`;
  return `<div class="callout callout--slate"><span class="ct">Since your last baseline · ${days} day${days===1?"":"s"} ago</span>
    Braid then: <strong>${b.braid||"—"}</strong> (${b.shape||"—"}). Braid now: <strong>${exportObj.braid||"—"}</strong> (${exportObj.shape}). Biggest moves: ${deltaList}.${nudge}
-   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Update my baseline to today</button></div></div>`;
+   <div class="btnrow" style="margin-top:10px"><button class="btn book-ghost" id="saveBaselineBtn" style="max-width:260px">Update my baseline to today</button></div>
+   ${retestButtonHTML()}</div>`;
 }
 
 /* Constellation hover/focus tooltip: name, score, one-line definition. */
