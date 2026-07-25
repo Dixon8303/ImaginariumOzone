@@ -11,6 +11,7 @@ study (see below).
 
 - **The page:** [`index.html`](./index.html) — open it locally in any browser, or host it.
 - **Public URL (once Pages is on):** `https://dixon8303.github.io/ImaginariumOzone/`
+- **Link console:** [`links.html`](./links.html) (`https://dixon8303.github.io/ImaginariumOzone/links.html`) — every live site, local dev server, and external service across all of the repo's projects, in one searchable, shareable page.
 
 ## Publishing it for free (GitHub Pages)
 
