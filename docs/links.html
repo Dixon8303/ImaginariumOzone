@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ImaginariumOzone — Link Console</title>
+<meta name="description" content="Every live site, local dev server, and external service tied to the ImaginariumOzone projects, in one place." />
+<style>
+  :root {
+    --ink: #20242b;
+    --paper: #eceee9;
+    --surface: #ffffff;
+    --surface-inset: #f5f6f3;
+    --line: #d7d9d3;
+    --muted: #6b7278;
+    --accent: #b5772a;
+    --accent-ink: #ffffff;
+    --live: #2f8f5b;
+    --live-bg: #e3f2e9;
+    --local: #4f6fc4;
+    --local-bg: #e7ebfa;
+    --external: #8a5fb0;
+    --external-bg: #f0e7f7;
+    --focus: #b5772a;
+  }
+  :root[data-theme="dark"] {
+    --ink: #e6e8e2;
+    --paper: #15181d;
+    --surface: #1c2027;
+    --surface-inset: #21262e;
+    --line: #323842;
+    --muted: #9198a1;
+    --accent: #dda15e;
+    --accent-ink: #1c1204;
+    --live: #63c893;
+    --live-bg: #1a2f24;
+    --local: #90aef0;
+    --local-bg: #1c2740;
+    --external: #c9a3e6;
+    --external-bg: #2b2138;
+    --focus: #dda15e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #e6e8e2;
+      --paper: #15181d;
+      --surface: #1c2027;
+      --surface-inset: #21262e;
+      --line: #323842;
+      --muted: #9198a1;
+      --accent: #dda15e;
+      --accent-ink: #1c1204;
+      --live: #63c893;
+      --live-bg: #1a2f24;
+      --local: #90aef0;
+      --local-bg: #1c2740;
+      --external: #c9a3e6;
+      --external-bg: #2b2138;
+      --focus: #dda15e;
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+    padding-bottom: 4rem;
+  }
+
+  h1, h2 {
+    font-family: Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  code, .url, .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  a { color: inherit; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 1.1rem 1.5rem;
+  }
+
+  .topbar-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+  }
+
+  .brand h1 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .brand .tag {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .search-wrap {
+    flex: 1 1 260px;
+    max-width: 360px;
+    position: relative;
+  }
+
+  #search {
+    width: 100%;
+    padding: 0.55rem 0.8rem 0.55rem 2.1rem;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 0.92rem;
+  }
+
+  #search:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  .search-wrap::before {
+    content: "⌕";
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+
+  main {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 1.75rem 1.5rem 0;
+  }
+
+  .legend {
+    display: flex;
+    gap: 1.1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+
+  .dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; display: inline-block; }
+  .dot.live { background: var(--live); }
+  .dot.local { background: var(--local); }
+  .dot.external { background: var(--external); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.1rem;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.2rem 1.3rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card h2 {
+    font-size: 1.08rem;
+    font-weight: 600;
+  }
+
+  .card .desc {
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin: 0.3rem 0 0.9rem;
+  }
+
+  .link-row {
+    border-top: 1px solid var(--line);
+    padding: 0.7rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .link-row .row-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+  }
+
+  .link-title {
+    font-size: 0.94rem;
+    font-weight: 600;
+  }
+
+  .pill {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .pill.live { background: var(--live-bg); color: var(--live); }
+  .pill.local { background: var(--local-bg); color: var(--local); }
+  .pill.external { background: var(--external-bg); color: var(--external); }
+
+  .link-note {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .row-bottom {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .url {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--surface-inset);
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    scrollbar-width: thin;
+  }
+
+  .actions { display: flex; gap: 0.4rem; flex: 0 0 auto; }
+
+  button.act, a.act {
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 6px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  a.act.open {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  button.act:hover, a.act:hover { filter: brightness(0.95); }
+  :root[data-theme="dark"] button.act:hover, :root[data-theme="dark"] a.act:hover { filter: brightness(1.15); }
+
+  button.act:focus-visible, a.act:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  button.act.copied { background: var(--live); border-color: var(--live); color: #fff; }
+
+  .empty {
+    display: none;
+    color: var(--muted);
+    padding: 3rem 0;
+    text-align: center;
+  }
+
+  footer {
+    max-width: 1180px;
+    margin: 2.5rem auto 0;
+    padding: 1.25rem 1.5rem 0;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .card { transition: border-color 0.15s ease; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <h1>Link Console</h1>
+      <span class="tag">ImaginariumOzone</span>
+    </div>
+    <div class="search-wrap">
+      <input id="search" type="text" placeholder="Filter links…" autocomplete="off" />
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="legend">
+    <span><i class="dot live"></i> Live / public</span>
+    <span><i class="dot local"></i> Local dev (run it first)</span>
+    <span><i class="dot external"></i> External service</span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <p class="empty" id="empty">No links match “<span id="empty-term"></span>”.</p>
+</main>
+
+<footer>
+  Generated from the repo's own docs and config — see <code>CLAUDE.md</code> for the project map. Each row's Copy button puts the URL on your clipboard for sharing.
+</footer>
+
+<script>
+  const DATA = [
+    {
+      name: "Genius Index — Braid Constellations",
+      desc: "The public assessment site, published from docs/ via GitHub Pages.",
+      links: [
+        { title: "Take the assessment", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/", note: "docs/index.html" },
+        { title: "Companion PDF", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/downloads/the-thirty-six-braids-companion.pdf", note: "The Thirty-Six Braids" },
+        { title: "Braid Constellations — the book", kind: "external", url: "https://dixon8303.github.io/genius-index-booksite/", note: "linked as \"Get the book\"" },
+      ],
+    },
+    {
+      name: "Dixon Grant Studio",
+      desc: "Grant-writing pipeline and sample site.",
+      links: [
+        { title: "Studio site", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/dixon-grant-studio/", note: "docs/dixon-grant-studio/" },
+      ],
+    },
+    {
+      name: "Circle of Morality",
+      desc: "React virtue-wheel UI (src/). Dev-only, not deployed.",
+      links: [
+        { title: "Vite dev server", kind: "local", url: "http://localhost:5173", note: "npm run dev" },
+      ],
+    },
+    {
+      name: "BGF Production OS",
+      desc: "Narrative production backend (backend/) — see BGF_USER_GUIDE.md.",
+      links: [
+        { title: "Production dashboard", kind: "local", url: "http://localhost:5173", note: "frontend" },
+        { title: "Backend API", kind: "local", url: "http://localhost:8001", note: "FastAPI" },
+        { title: "API health check", kind: "local", url: "http://localhost:8001/api/health", note: "" },
+        { title: "ComfyUI", kind: "local", url: "http://localhost:8188", note: "image/video generation" },
+        { title: "Ollama", kind: "local", url: "http://localhost:11434", note: "local LLM runtime" },
+        { title: "ElevenLabs", kind: "external", url: "https://elevenlabs.io", note: "speech enhancement" },
+        { title: "vidIQ", kind: "external", url: "https://vidiq.com", note: "channel + title/thumbnail scoring" },
+        { title: "YouTube Studio", kind: "external", url: "https://studio.youtube.com", note: "uploaded episodes land here" },
+      ],
+    },
+    {
+      name: "LaunchAI",
+      desc: "One-click local AI stack launcher for macOS.",
+      links: [
+        { title: "Open WebUI", kind: "local", url: "http://localhost:3000", note: "Qwen2.5 chat" },
+        { title: "ComfyUI", kind: "local", url: "http://localhost:8188", note: "" },
+      ],
+    },
+    {
+      name: "HoneyDrip Bot",
+      desc: "Paper-trading methodology framework. PAPER = True, always.",
+      links: [
+        { title: "Alpaca Paper Trading dashboard", kind: "external", url: "https://app.alpaca.markets", note: "toggle to Paper" },
+        { title: "Alpaca API docs", kind: "external", url: "https://docs.alpaca.markets", note: "" },
+      ],
+    },
+    {
+      name: "Marvel Release Tracker",
+      desc: "Watches TMDb, syncs an iCloud calendar, pushes notifications.",
+      links: [
+        { title: "TMDb", kind: "external", url: "https://www.themoviedb.org", note: "release data source" },
+        { title: "ntfy", kind: "external", url: "https://ntfy.sh", note: "push notifications" },
+        { title: "Apple ID", kind: "external", url: "https://appleid.apple.com", note: "app-specific password for CalDAV" },
+        { title: "Google App Passwords", kind: "external", url: "https://myaccount.google.com/apppasswords", note: "SMS relay via Gmail" },
+      ],
+    },
+    {
+      name: "Repository",
+      desc: "The monorepo itself.",
+      links: [
+        { title: "GitHub repository", kind: "external", url: "https://github.com/dixon8303/imaginariumozone", note: "" },
+        { title: "Bolt.new project", kind: "external", url: "https://bolt.new/~/sb1-nctvxxxv", note: "" },
+      ],
+    },
+  ];
+
+  const grid = document.getElementById("grid");
+  const emptyMsg = document.getElementById("empty");
+  const emptyTerm = document.getElementById("empty-term");
+
+  function esc(s) {
+    return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  function kindLabel(k) {
+    return { live: "Live", local: "Local", external: "External" }[k] || k;
+  }
+
+  DATA.forEach((section, si) => {
+    const card = document.createElement("section");
+    card.className = "card";
+    card.dataset.searchable = (section.name + " " + section.desc).toLowerCase();
+
+    const rows = section.links.map((l, li) => `
+      <div class="link-row" data-id="${si}-${li}" data-text="${esc((l.title + " " + l.url + " " + l.note).toLowerCase())}">
+        <div class="row-top">
+          <span class="link-title">${esc(l.title)}</span>
+          <span class="pill ${l.kind}">${kindLabel(l.kind)}</span>
+        </div>
+        ${l.note ? `<span class="link-note">${esc(l.note)}</span>` : ""}
+        <div class="row-bottom">
+          <span class="url mono">${esc(l.url)}</span>
+          <span class="actions">
+            <a class="act open" href="${esc(l.url)}" target="_blank" rel="noopener">Open</a>
+            <button class="act copy" type="button" data-url="${esc(l.url)}">Copy</button>
+          </span>
+        </div>
+      </div>
+    `).join("");
+
+    card.innerHTML = `<h2>${esc(section.name)}</h2><p class="desc">${esc(section.desc)}</p>${rows}`;
+    grid.appendChild(card);
+  });
+
+  grid.addEventListener("click", async (e) => {
+    const btn = e.target.closest("button.copy");
+    if (!btn) return;
+    const url = btn.dataset.url;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    const original = btn.textContent;
+    btn.textContent = "Copied!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove("copied");
+    }, 1400);
+  });
+
+  const search = document.getElementById("search");
+  search.addEventListener("input", () => {
+    const term = search.value.trim().toLowerCase();
+    let anyVisible = false;
+    document.querySelectorAll(".card").forEach((card) => {
+      let cardHasMatch = false;
+      card.querySelectorAll(".link-row").forEach((row) => {
+        const match = !term || row.dataset.text.includes(term);
+        row.style.display = match ? "" : "none";
+        if (match) cardHasMatch = true;
+      });
+      card.style.display = cardHasMatch ? "" : "none";
+      if (cardHasMatch) anyVisible = true;
+    });
+    emptyMsg.style.display = anyVisible || !term ? "none" : "block";
+    emptyTerm.textContent = search.value.trim();
+  });
+</script>
+
+</body>
+</html>
