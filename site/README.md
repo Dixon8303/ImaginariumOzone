@@ -1,17 +1,33 @@
-# blackgeniusfiles.com — What History Buried site
+# What History Buried — official site
 
-Pure static site for **What History Buried** (The Black Genius Files, Vol. 1).
+Pure static site for **What History Buried** (The Black Genius Files, Vol. 1),
+compiled from the Claude Design prototypes in [`design-src/`](design-src/).
 No build step, no backend — ready for GitHub Pages.
 
 ## Pages & anchors (the automation deep-links to these — keep stable)
 
 | URL | Purpose |
 |-----|---------|
-| `/` | Book landing — hero, praise, chapters preview, `#free-chapter`, `#buy` |
-| `/links.html` | Link-in-bio hub: Book, Amazon, YouTube, Pinterest, Podcast, Contact |
-| `/free-chapter.html` | Email capture → free Chapter 1 PDF (Vol. 2 launch list) |
+| `/` | The official site — case files, evidence room, timeline, excerpt, `#acquire` (aliases `#buy`, `#free-chapter`), deep links `#bgf-001`…`#bgf-012` |
+| `/links.html` | Link-in-bio hub: Book, Free Chapter, Archive, Genius Index, Podcast, Press Kit |
+| `/press-kit.html` | One-page press kit for media & educators |
+| `/free-chapter.html` | Stable redirect → `/#free-chapter` (the Recovery List capture) |
 | `/privacy.html` | GA4 + email-capture disclosures |
 | `/404.html` | Not-found page (picked up automatically by GitHub Pages) |
+
+## Images — replace the placeholders
+
+`img/` currently holds **generated placeholders**. Replace them 1:1 by
+filename with the real art from the Claude Design project:
+
+- `book/images/chXX_YY.jpg` → `img/chXX_YY.jpg` (same names)
+- plus `img/cover.jpg` (front cover), `img/author.jpg` (portrait),
+  `img/prologue.jpg` (hero background), `img/og.jpg` (1200×630 share card),
+  `img/favicon.png`
+
+Easiest path: GitHub → **Add file → Upload files** into `site/img/` on a
+branch, keep the filenames, merge. Keep JPEGs ≤200 KB each (the traffic
+arrives from Shorts and pins on mobile).
 
 ## Config
 
@@ -24,9 +40,11 @@ Everything configurable lives in **one config block** at the top of
 | `PAYHIP_STORE_URL` | ✅ https://payhip.com/BlackGeniusFiles (hub "Full Bookstore" link) |
 | `YOUTUBE_URL` | ✅ https://youtube.com/@theblackgeniusfiles |
 | `AMAZON_URL` | ✅ https://www.amazon.com/dp/B0GX32RB25 (Kindle ebook, $12.99) |
-| `GA4_MEASUREMENT_ID` | ⬜ Google Analytics → Admin → Data streams → `G-XXXXXXXXXX` |
+| `GA4_MEASUREMENT_ID` | ✅ `G-FXDJLKSKDG` |
 | `FORM_ACTION` | ⬜ Beehiiv / MailerLite (free tier) form endpoint that delivers the free-chapter PDF |
-| `PINTEREST_URL` / `PODCAST_URL` / `CONTACT_EMAIL` | ⬜ Remaining links.html hub destinations |
+| `PODCAST_URL` | ✅ The All Black Everything Podcast (Apple Podcasts) |
+| `PINTEREST_URL` | ⬜ Remaining links.html hub destination |
+| `CONTACT_EMAIL` | ✅ eatmediatv@gmail.com |
 
 Buy buttons, GA4, the email form, and hub links are all wired from that block at
 page load. GA4 and the form stay safely disabled until their values look real.

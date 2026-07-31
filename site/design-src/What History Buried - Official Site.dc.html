@@ -1,8 +1,13 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
 <title>What History Buried — The Black Genius Files, Vol. 1</title>
 <meta name="description" content="Twelve stories the world’s most powerful institutions tried to erase. The official archive of What History Buried by D. Antione Dixon." />
 <meta name="theme-color" content="#0E0D0B" />
@@ -11,14 +16,14 @@
 <meta property="og:site_name" content="E.A.T. Media" />
 <meta property="og:title" content="What History Buried — The Black Genius Files, Vol. 1" />
 <meta property="og:description" content="Twelve case files the record tried to erase — reopened, corrected, and sourced. By D. Antione Dixon." />
-<meta property="og:image" content="https://dixon8303.github.io/ImaginariumOzone/book/img/og.jpg" />
+<meta property="og:image" content="img/og.jpg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="What History Buried — The Black Genius Files, Vol. 1" />
 <meta name="twitter:description" content="Twelve case files the record tried to erase — reopened, corrected, and sourced." />
-<meta name="twitter:image" content="https://dixon8303.github.io/ImaginariumOzone/book/img/og.jpg" />
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"What History Buried — The Black Genius Files, Vol. 1","author":{"@type":"Person","name":"D. Antione Dixon"},"publisher":{"@type":"Organization","name":"E.A.T. Media"},"inLanguage":"en","image":"https://dixon8303.github.io/ImaginariumOzone/book/img/og.jpg","isbn":"979-8185084878","url":"https://dixon8303.github.io/ImaginariumOzone/book/","description":"Twelve case files the record tried to erase — reopened, corrected, and sourced.","offers":{"@type":"Offer","availability":"https://schema.org/InStock","url":"https://a.co/d/0g29KbPj"}}</script>
+<meta name="twitter:image" content="img/og.jpg" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"What History Buried — The Black Genius Files, Vol. 1","author":{"@type":"Person","name":"D. Antione Dixon"},"publisher":{"@type":"Organization","name":"E.A.T. Media"},"inLanguage":"en","image":"img/og.jpg","description":"Twelve case files the record tried to erase — reopened, corrected, and sourced.","offers":{"@type":"Offer","availability":"https://schema.org/InStock","url":"https://a.co/d/0g29KbPj"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&amp;family=Archivo:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
@@ -49,30 +54,17 @@ input[data-atlas]::-moz-range-track{height:2px;background:#C2A24A}
 input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;background:#0E0D0B;border:2px solid #e7b24e}
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}[data-bar]{display:none!important}}
 </style>
-<link rel="canonical" href="https://dixon8303.github.io/ImaginariumOzone/book/" />
-<meta property="og:url" content="https://dixon8303.github.io/ImaginariumOzone/book/" />
-<style>
-.hv0:hover{color:#e7b24e}
-.hv1:hover{background:rgba(194,162,74,.2)}
-.hv2:hover{background:#e7b24e;color:#0E0D0B}
-.hv3:hover{background:#e7b24e;border-color:#e7b24e;color:#0E0D0B}
-.hv4:hover{border-color:#e7b24e;background:rgba(194,162,74,.08);color:#e7b24e}
-.hv5:hover{border-color:rgba(194,162,74,.5)}
-.hv6:hover{background:rgba(194,162,74,.25)}
-.hv7:hover{background:#e7b24e}
-.hv8:hover{transform:rotate(0deg) scale(1.02)}
-</style>
-<script src="assets/site.js" defer></script>
-<script src="assets/whb.js" defer></script>
-</head>
-<body>
+</helmet>
+
 <div data-prog style="position:fixed;top:0;left:0;height:2px;width:0%;background:linear-gradient(90deg,#9a6a18,#e7b24e);z-index:99"></div>
 <canvas data-dust aria-hidden="true" style="position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:55;opacity:.55"></canvas>
 <div data-grain aria-hidden="true" style="position:fixed;inset:-120px;pointer-events:none;z-index:56;opacity:.045;background:repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(0,0,0,.06) 0 1px,transparent 1px 4px);animation:grainmove .5s steps(4) infinite"></div>
 
 <div data-spine aria-label="Case docket" style="position:fixed;right:13px;top:50%;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;align-items:center;gap:6px">
-  <span aria-hidden="true" style="font-family:'Archivo',sans-serif;font-size:8.5px;letter-spacing:.24em;color:#564a36;writing-mode:vertical-rl;margin-bottom:6px">DOCKET&nbsp;<span data-txt="openedN">0</span>/12</span>
-  <div data-slot="spine" style="display:contents"></div>
+  <span aria-hidden="true" style="font-family:'Archivo',sans-serif;font-size:8.5px;letter-spacing:.24em;color:#564a36;writing-mode:vertical-rl;margin-bottom:6px">DOCKET&nbsp;{{ openedN }}/12</span>
+  <sc-for list="{{ spine }}" as="s" hint-placeholder-count="12">
+    <button data-i="{{ s.i }}" onClick="{{ open }}" title="{{ s.tip }}" aria-label="{{ s.tip }}" style="width:16px;height:16px;padding:0;background:transparent;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;transform:rotate(45deg);border:1px solid {{ s.bc }};background:{{ s.bg }};display:block;transition:transform .25s" style-hover="transform:rotate(45deg) scale(1.45)"></span></button>
+  </sc-for>
 </div>
 
 <nav data-screen-label="Nav" aria-label="Site" style="position:fixed;top:2px;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,3vw,32px);background:rgba(14,13,11,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(194,162,74,.14)">
@@ -81,18 +73,18 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <span style="font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.24em;font-size:10.5px;color:#f1e6cc;white-space:nowrap">WHAT HISTORY BURIED</span>
   </a>
   <div style="display:flex;gap:clamp(12px,2.4vw,28px);overflow-x:auto;scrollbar-width:none;padding:4px 2px">
-    <a href="#erasure" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" class="hv0">Exhibit&nbsp;A</a>
-    <a href="#twelve" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" class="hv0">Case&nbsp;Files</a>
-    <a href="#evidence" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" class="hv0">Evidence</a>
-    <a href="#timeline" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" class="hv0">Timeline</a>
-    <a href="#excerpt" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" class="hv0">Read&nbsp;a&nbsp;Page</a>
-    <a href="#author" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" class="hv0">Author</a>
-    <a href="#faq" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" class="hv0">FAQ</a>
+    <a href="#erasure" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" style-hover="color:#e7b24e">Exhibit&nbsp;A</a>
+    <a href="#twelve" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" style-hover="color:#e7b24e">Case&nbsp;Files</a>
+    <a href="#evidence" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" style-hover="color:#e7b24e">Evidence</a>
+    <a href="#timeline" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" style-hover="color:#e7b24e">Timeline</a>
+    <a href="#excerpt" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" style-hover="color:#e7b24e">Read&nbsp;a&nbsp;Page</a>
+    <a href="#author" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" style-hover="color:#e7b24e">Author</a>
+    <a href="#faq" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.22em;text-transform:uppercase;text-decoration:none;color:#c3b08a;white-space:nowrap" style-hover="color:#e7b24e">FAQ</a>
   </div>
   <div style="display:flex;align-items:center;gap:16px;flex-shrink:0">
-    <button data-act="sndToggle" title="Enable archive ambience (off by default)" data-titlebind="sndTitle" data-sndbtn="" aria-label="Toggle archive ambience" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#5a4d38;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0" class="hv1">♪</button>
-    <a href="#archive" title="Artifacts recovered — the hidden archive" style="font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.2em;color:#C2A24A;text-decoration:none;white-space:nowrap" class="hv0">✦ <span data-txt="found">0</span>/7</a>
-    <a href="#acquire" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:10px 16px;white-space:nowrap" class="hv2">Get the Book</a>
+    <button onClick="{{ sndToggle }}" title="{{ sndTitle }}" aria-label="Toggle archive ambience" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:{{ sndColor }};cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0" style-hover="background:rgba(194,162,74,.2)">♪</button>
+    <a href="#archive" title="Artifacts recovered — the hidden archive" style="font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.2em;color:#C2A24A;text-decoration:none;white-space:nowrap" style-hover="color:#e7b24e">✦ {{ found }}/7</a>
+    <a href="#acquire" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:10px 16px;white-space:nowrap" style-hover="background:#e7b24e;color:#0E0D0B">Get the Book</a>
   </div>
 </nav>
 
@@ -119,11 +111,11 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <p style="font-family:'Newsreader',serif;font-style:italic;font-size:clamp(18px,2.2vw,24px);color:#c3b08a;max-width:46ch;line-height:1.5;margin:36px 0 0;animation:fadeup 1s 1.5s both">Twelve stories the world’s most powerful institutions tried to erase — reopened, documented, and read back into the record.</p>
     <p style="font-family:'Archivo',sans-serif;font-weight:500;letter-spacing:.2em;font-size:13px;color:#f1e6cc;margin:28px 0 0;animation:fadeup 1s 1.7s both">D.&nbsp;ANTIONE&nbsp;DIXON</p>
     <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:42px;animation:fadeup 1s 1.9s both">
-      <a href="#twelve" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:17px 30px;border:1px solid #C2A24A" class="hv3">Open the Case Files</a>
-      <a href="https://a.co/d/0g29KbPj" target="_blank" rel="noopener" style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#e7b24e;background:transparent;padding:17px 30px;border:1px solid rgba(231,178,78,.45)" class="hv4">Get the Book</a>
+      <a href="#twelve" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:17px 30px;border:1px solid #C2A24A" style-hover="background:#e7b24e;border-color:#e7b24e;color:#0E0D0B">Open the Case Files</a>
+      <a href="https://a.co/d/0g29KbPj" target="_blank" rel="noopener" style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#e7b24e;background:transparent;padding:17px 30px;border:1px solid rgba(231,178,78,.45)" style-hover="border-color:#e7b24e;background:rgba(194,162,74,.08);color:#e7b24e">Get the Book</a>
     </div>
   </div>
-  <button data-k="a" data-act="collect" title="Something is buried here" data-titlebind="tA" aria-label="Hidden artifact" style="position:absolute;left:clamp(26px,4vw,46px);bottom:clamp(26px,4vw,46px);width:34px;height:34px;border-radius:50%;border:1px solid rgba(194,162,74,.38);background:rgba(194,162,74,.05);color:#C2A24A;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;animation:sealPulse 4.5s ease-in-out infinite;padding:0" class="hv1"><span data-txt="sA">✦</span></button>
+  <button data-k="a" onClick="{{ collect }}" title="{{ tA }}" aria-label="Hidden artifact" style="position:absolute;left:clamp(26px,4vw,46px);bottom:clamp(26px,4vw,46px);width:34px;height:34px;border-radius:50%;border:1px solid rgba(194,162,74,.38);background:rgba(194,162,74,.05);color:#C2A24A;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;animation:sealPulse 4.5s ease-in-out infinite;padding:0" style-hover="background:rgba(194,162,74,.2)">{{ sA }}</button>
   <div aria-hidden="true" style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;animation:cue 2.6s ease-in-out infinite">
     <span style="font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.32em;color:#c3b08a">SCROLL&nbsp;TO&nbsp;EXCAVATE</span>
     <span style="width:1px;height:26px;background:linear-gradient(#e7b24e,transparent)"></span>
@@ -147,7 +139,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.24em;color:#8d7c5e;border:1px solid #442216;padding:9px 15px">LETTERS</span>
       <span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.24em;color:#8d7c5e;border:1px solid #442216;padding:9px 15px">TRANSCRIPTS</span>
     </div>
-    <button data-k="b" data-act="collect" title="Something is buried here" data-titlebind="tB" aria-label="Hidden artifact" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;padding:0;margin-top:6px" class="hv1"><span data-txt="sB">✦</span></button>
+    <button data-k="b" onClick="{{ collect }}" title="{{ tB }}" aria-label="Hidden artifact" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;padding:0;margin-top:6px" style-hover="background:rgba(194,162,74,.2)">{{ sB }}</button>
   </div>
 </section>
 
@@ -173,29 +165,31 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         </div>
         <div data-atlashandle aria-hidden="true" style="position:absolute;top:0;bottom:0;left:12%;width:2px;background:#e7b24e;box-shadow:0 0 18px rgba(231,178,78,.7)"></div>
         <span style="position:absolute;left:14px;bottom:12px;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.26em;color:#e7b24e;background:rgba(14,13,11,.62);padding:6px 11px">1375&nbsp;—&nbsp;THE&nbsp;RECORD</span>
-        <span data-slot="atlasbadge" style="display:contents"></span>
+        <sc-if value="{{ atlasDone }}" hint-placeholder-val="{{ false }}">
+          <span style="position:absolute;top:14px;left:14px;font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.26em;color:#0E0D0B;background:#C2A24A;padding:7px 12px">RECORD&nbsp;RESTORED&nbsp;✦</span>
+        </sc-if>
       </div>
-      <input data-atlas type="range" min="0" max="100" value="12" data-act-input="atlasMove" aria-label="Drag to restore the Catalan Atlas" />
+      <input data-atlas type="range" min="0" max="100" defaultValue="12" onInput="{{ atlasMove }}" aria-label="Drag to restore the Catalan Atlas" />
       <p style="margin:12px 0 0;font-family:'Archivo',sans-serif;font-size:12.5px;line-height:1.7;color:#8d7c5e;border-left:2px solid #C2A24A;padding-left:12px;max-width:80ch">Fifty years after the pilgrimage, the best map of the age placed Musa at the center of West Africa — named, titled, gold in hand. As Europe turned toward conquest and the slave trade, that detailed West Africa was redrawn as blank space and <em>terra incognita</em>: erasure as a cartographic act, not an accident.</p>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:clamp(48px,7vh,76px)">
-      <div data-reveal style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" class="hv5">
+      <div data-reveal style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" style-hover="border-color:rgba(194,162,74,.5)">
         <span aria-hidden="true" style="font-family:'Playfair Display',serif;font-weight:800;font-size:38px;line-height:1;color:#3a2e1a">01</span>
         <span style="font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.28em;text-transform:uppercase;font-size:10.5px;color:#C2A24A">The Clerk</span>
         <p style="margin:0;font-size:16.5px;line-height:1.62;color:#c3b08a">files one ship’s log and throws away another.</p>
       </div>
-      <div data-reveal="90" style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" class="hv5">
+      <div data-reveal="90" style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" style-hover="border-color:rgba(194,162,74,.5)">
         <span aria-hidden="true" style="font-family:'Playfair Display',serif;font-weight:800;font-size:38px;line-height:1;color:#3a2e1a">02</span>
         <span style="font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.28em;text-transform:uppercase;font-size:10.5px;color:#C2A24A">The Editor</span>
         <p style="margin:0;font-size:16.5px;line-height:1.62;color:#c3b08a">puts one name in the headline and folds the rest into <em>and others</em>.</p>
       </div>
-      <div data-reveal="180" style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" class="hv5">
+      <div data-reveal="180" style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" style-hover="border-color:rgba(194,162,74,.5)">
         <span aria-hidden="true" style="font-family:'Playfair Display',serif;font-weight:800;font-size:38px;line-height:1;color:#3a2e1a">03</span>
         <span style="font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.28em;text-transform:uppercase;font-size:10.5px;color:#C2A24A">The Committee</span>
         <p style="margin:0;font-size:16.5px;line-height:1.62;color:#c3b08a">picks the textbook a generation will open.</p>
       </div>
-      <div data-reveal="270" style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" class="hv5">
+      <div data-reveal="270" style="border:1px solid #442216;background:#17130d;padding:28px 24px;display:flex;flex-direction:column;gap:13px" style-hover="border-color:rgba(194,162,74,.5)">
         <span aria-hidden="true" style="font-family:'Playfair Display',serif;font-weight:800;font-size:38px;line-height:1;color:#3a2e1a">04</span>
         <span style="font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.28em;text-transform:uppercase;font-size:10.5px;color:#C2A24A">The Publisher</span>
         <p style="margin:0;font-size:16.5px;line-height:1.62;color:#c3b08a">decides which pages that textbook can afford to keep.</p>
@@ -212,11 +206,40 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <h2 data-reveal style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(34px,5.4vw,64px);line-height:1.04;color:#f1e6cc;margin:0;max-width:18ch;text-wrap:balance">Twelve names the record was built to lose.</h2>
       <p data-reveal style="margin:0;font-size:18px;font-style:italic;color:#c3b08a;max-width:52ch">Five parts. Every claim anchored to a primary document. Open a file.</p>
       <div data-reveal style="display:flex;align-items:center;gap:14px">
-        <span style="font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.24em;color:#8d7c5e"><span data-txt="openedN">0</span>/12&nbsp;FILES&nbsp;OPENED</span>
-        <button data-k="d" data-act="collect" title="Something is buried here" data-titlebind="tD" aria-label="Hidden artifact" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" class="hv1"><span data-txt="sD">✦</span></button>
+        <span style="font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.24em;color:#8d7c5e">{{ openedN }}/12&nbsp;FILES&nbsp;OPENED</span>
+        <button data-k="d" onClick="{{ collect }}" title="{{ tD }}" aria-label="Hidden artifact" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:rgba(194,162,74,.2)">{{ sD }}</button>
       </div>
     </div>
-    <div data-slot="parts" style="display:contents"></div>
+    <sc-for list="{{ parts }}" as="p" hint-placeholder-count="2">
+      <div style="margin-top:clamp(48px,7vh,78px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 20px;border-bottom:1px solid #442216;padding-bottom:16px">
+          <span style="font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.3em;text-transform:uppercase;font-size:11px;color:#e7b24e">{{ p.label }}</span>
+          <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(22px,3vw,30px);color:#f1e6cc">{{ p.title }}</span>
+          <span style="margin-left:auto;font-style:italic;color:#8d7c5e;font-size:14.5px;max-width:52ch">{{ p.desc }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-top:24px">
+          <sc-for list="{{ p.cases }}" as="c" hint-placeholder-count="3">
+            <button data-i="{{ c.i }}" onClick="{{ open }}" style="text-align:left;border:1px solid #3c1d13;background:radial-gradient(ellipse at 28% 18%,rgba(158,62,42,.16),transparent 62%),#261009;padding:0;cursor:pointer;display:flex;flex-direction:column;font-family:inherit;color:inherit;transition:transform .35s cubic-bezier(.2,.7,.2,1),border-color .35s,box-shadow .35s" style-hover="transform:translateY(-5px);border-color:rgba(194,162,74,.55);box-shadow:0 26px 52px -22px rgba(0,0,0,.85)">
+              <span style="position:relative;display:block;overflow:hidden;width:100%">
+                <img src="{{ c.img }}" alt="{{ c.name }}" loading="lazy" style="display:block;width:100%;aspect-ratio:4/5;object-fit:cover;filter:saturate(.82) contrast(1.03)" />
+                <span aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,13,11,.26),transparent 34%,rgba(14,13,11,.9) 94%)"></span>
+                <span style="position:absolute;top:12px;left:12px;font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.24em;color:#e7b24e;border:1px solid rgba(231,178,78,.4);padding:5px 9px;background:rgba(14,13,11,.55)">FILE&nbsp;{{ c.file }}</span>
+                <span style="position:absolute;top:12px;right:12px;font-family:'Archivo',sans-serif;font-size:9px;letter-spacing:.2em;color:#C2A24A">{{ c.seen }}</span>
+                <span style="position:absolute;left:14px;right:14px;bottom:13px;display:block">
+                  <span style="display:block;font-family:'Playfair Display',serif;font-weight:800;font-size:24px;line-height:1.05;color:#f1e6cc">{{ c.name }}</span>
+                  <span style="display:block;margin-top:7px;font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#c3b08a">{{ c.who }}</span>
+                </span>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:10px;padding:16px 16px 18px;width:100%;box-sizing:border-box">
+                <span style="font-family:'Newsreader',serif;font-style:italic;font-size:16.5px;line-height:1.45;color:#e7b24e">{{ c.title }}</span>
+                <span style="font-size:14.5px;line-height:1.62;color:#8d7c5e">{{ c.hook }}</span>
+                <span style="margin-top:4px;font-family:'Archivo',sans-serif;font-weight:600;font-size:10px;letter-spacing:.24em;color:#C2A24A">OPEN&nbsp;FILE&nbsp;→</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
   </div>
 </section>
 
@@ -238,7 +261,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <div style="position:relative">
           <img src="img/ch01_mosque.jpg" alt="The Djinguereber Mosque at Timbuktu, photographed c. 1905" loading="lazy" style="display:block;width:100%;aspect-ratio:4/3;object-fit:cover;filter:sepia(.1) contrast(1.02)" />
           <span style="position:absolute;top:10px;left:10px;font-family:'Archivo',sans-serif;font-size:9px;letter-spacing:.26em;color:#e7b24e;background:rgba(14,13,11,.65);padding:5px 9px">PLATE&nbsp;02&nbsp;·&nbsp;c.&nbsp;1905</span>
-          <button data-k="e" data-act="collect" title="Something is buried here" data-titlebind="tE" aria-label="Hidden artifact" style="position:absolute;right:10px;bottom:10px;width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.4);background:rgba(14,13,11,.6);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" class="hv6"><span data-txt="sE">✦</span></button>
+          <button data-k="e" onClick="{{ collect }}" title="{{ tE }}" aria-label="Hidden artifact" style="position:absolute;right:10px;bottom:10px;width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.4);background:rgba(14,13,11,.6);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:rgba(194,162,74,.25)">{{ sE }}</button>
         </div>
         <figcaption style="margin-top:13px;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.68;color:#8d7c5e;border-left:2px solid #C2A24A;padding-left:11px">The Djinguereber Mosque at Timbuktu — commissioned by Mansa Musa after his pilgrimage, completed in 1327, still standing seven centuries later. Photographed c. 1905 by Edmond Fortier. Public domain.</figcaption>
       </figure>
@@ -316,13 +339,27 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <p data-reveal style="margin:22px auto 0;font-size:17.5px;font-style:italic;color:#c3b08a;max-width:52ch">What was built. What stood against it. What it cost the world to ignore it.</p>
     </div>
     <div style="margin-top:clamp(48px,7vh,72px)">
-      <div data-slot="tl" style="display:contents"></div>
+      <sc-for list="{{ tl }}" as="e" hint-placeholder-count="6">
+        <div data-reveal style="display:grid;grid-template-columns:clamp(52px,9vw,92px) 34px 1fr;column-gap:14px">
+          <span style="text-align:right;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(17px,2.2vw,22px);color:#e7b24e;line-height:1.25">{{ e.y }}</span>
+          <span aria-hidden="true" style="display:flex;flex-direction:column;align-items:center">
+            <span style="width:9px;height:9px;transform:rotate(45deg);border:1.5px solid #C2A24A;background:#0E0D0B;margin-top:8px;flex-shrink:0"></span>
+            <span style="flex:1;width:1px;background:rgba(194,162,74,.26);margin-top:6px"></span>
+          </span>
+          <div style="padding-bottom:clamp(34px,5vh,52px)">
+            <p style="margin:2px 0 0;font-size:17px;line-height:1.68;color:#c3b08a;max-width:58ch">{{ e.t }}</p>
+            <sc-if value="{{ e.img }}" hint-placeholder-val="{{ false }}">
+              <img src="{{ e.img }}" alt="{{ e.alt }}" loading="lazy" style="margin-top:14px;width:min(380px,100%);aspect-ratio:3/2;object-fit:cover;border:1px solid #442216;filter:saturate(.8)" />
+            </sc-if>
+          </div>
+        </div>
+      </sc-for>
       <div style="display:grid;grid-template-columns:clamp(52px,9vw,92px) 34px 1fr;column-gap:14px;align-items:center">
         <span></span>
         <span aria-hidden="true" style="display:flex;justify-content:center"><span style="width:11px;height:11px;transform:rotate(45deg);background:#C2A24A"></span></span>
         <div style="display:flex;align-items:center;gap:14px">
           <p style="margin:0;font-family:'Playfair Display',serif;font-style:italic;font-size:19px;color:#f1e6cc">The record continues.</p>
-          <button data-k="f" data-act="collect" title="Something is buried here" data-titlebind="tF" aria-label="Hidden artifact" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" class="hv1"><span data-txt="sF">✦</span></button>
+          <button data-k="f" onClick="{{ collect }}" title="{{ tF }}" aria-label="Hidden artifact" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:rgba(194,162,74,.2)">{{ sF }}</button>
         </div>
       </div>
     </div>
@@ -363,7 +400,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:22px;padding-top:clamp(38px,6vh,60px)">
     <p data-reveal style="font-family:'Playfair Display',serif;font-style:italic;font-size:clamp(19px,2.4vw,27px);line-height:1.4;color:#f1e6cc;margin:0;text-align:center;text-wrap:balance">There is a second kind of absence, and it does not behave like weather.</p>
     <p data-reveal style="font-size:15px;line-height:1.7;color:#9c8a67;margin:0;text-align:center;max-width:46ch">It behaves like engineering. The rest of the Prologue — and the twelve cases that prove it — continue in the book.</p>
-    <a data-reveal href="#acquire" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:16px 34px" class="hv7">Keep Reading — Get the Book</a>
+    <a data-reveal href="#acquire" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:16px 34px" style-hover="background:#e7b24e">Keep Reading — Get the Book</a>
   </div>
 </section>
 
@@ -375,7 +412,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <p data-reveal style="margin:0;font-size:17px;font-style:italic;color:#c3b08a;max-width:54ch">A 7×10 trade paperback built like a dossier — case files, evidence plates, and a primary-source appendix. Four of its plates:</p>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:clamp(22px,3vw,36px);margin-top:clamp(46px,7vh,72px)">
-      <figure data-reveal style="margin:0;transform:rotate(-1.3deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" class="hv8">
+      <figure data-reveal style="margin:0;transform:rotate(-1.3deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" style-hover="transform:rotate(0deg) scale(1.02)">
         <div style="background:#F3EEE3;padding:12px 12px 0;box-shadow:0 30px 60px -24px rgba(0,0,0,.85)">
           <div style="position:relative;aspect-ratio:4/3;background:#EADDC2">
             <img src="img/ch01_hajj.jpg" alt="The pilgrimage crossing the Sahara, 1324 — the caravan in gold" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
@@ -383,7 +420,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
           <figcaption style="margin:0;padding:13px 4px 15px;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.24em;color:#6b5a3e;text-align:center">BGF-001&nbsp;—&nbsp;THE&nbsp;PILGRIMAGE,&nbsp;1324</figcaption>
         </div>
       </figure>
-      <figure data-reveal="90" style="margin:0;transform:rotate(1.1deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" class="hv8">
+      <figure data-reveal="90" style="margin:0;transform:rotate(1.1deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" style-hover="transform:rotate(0deg) scale(1.02)">
         <div style="background:#F3EEE3;padding:12px 12px 0;box-shadow:0 30px 60px -24px rgba(0,0,0,.85)">
           <div style="position:relative;aspect-ratio:4/3;background:#EADDC2">
             <img src="img/ch02_02.jpg" alt="The Banneker striking clock — every gear cut by hand from wood, 1753" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
@@ -391,7 +428,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
           <figcaption style="margin:0;padding:13px 4px 15px;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.24em;color:#6b5a3e;text-align:center">BGF-002&nbsp;—&nbsp;THE&nbsp;CLOCK,&nbsp;CUT&nbsp;IN&nbsp;WOOD</figcaption>
         </div>
       </figure>
-      <figure data-reveal="180" style="margin:0;transform:rotate(-0.8deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" class="hv8">
+      <figure data-reveal="180" style="margin:0;transform:rotate(-0.8deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" style-hover="transform:rotate(0deg) scale(1.02)">
         <div style="background:#F3EEE3;padding:12px 12px 0;box-shadow:0 30px 60px -24px rgba(0,0,0,.85)">
           <div style="position:relative;aspect-ratio:4/3;background:#EADDC2">
             <img src="img/ch06_04.jpg" alt="A ledger of real names, kept by candlelight at mortal risk" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" />
@@ -399,7 +436,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
           <figcaption style="margin:0;padding:13px 4px 15px;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.24em;color:#6b5a3e;text-align:center">BGF-006&nbsp;—&nbsp;THE&nbsp;NAMES&nbsp;THEY&nbsp;SAVED</figcaption>
         </div>
       </figure>
-      <figure data-reveal="270" style="margin:0;transform:rotate(1.4deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" class="hv8">
+      <figure data-reveal="270" style="margin:0;transform:rotate(1.4deg);transition:transform .4s cubic-bezier(.2,.7,.2,1)" style-hover="transform:rotate(0deg) scale(1.02)">
         <div style="background:#F3EEE3;padding:12px 12px 0;box-shadow:0 30px 60px -24px rgba(0,0,0,.85)">
           <div style="position:relative;aspect-ratio:4/3;background:#EADDC2">
             <img src="img/ch10_04.jpg" alt="From the Walker case file — the wealthiest self-made woman in America" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 22%" />
@@ -427,7 +464,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   </div>
 </section>
 
-<span id="buy" style="position:absolute"></span><span id="free-chapter" style="position:absolute"></span><section id="acquire" data-screen-label="Acquire" style="position:relative;padding:clamp(110px,16vh,200px) 24px;background:radial-gradient(ellipse 62% 50% at 50% 40%,rgba(194,162,74,.1),transparent 62%),#0E0D0B;overflow:hidden">
+<section id="acquire" data-screen-label="Acquire" style="position:relative;padding:clamp(110px,16vh,200px) 24px;background:radial-gradient(ellipse 62% 50% at 50% 40%,rgba(194,162,74,.1),transparent 62%),#0E0D0B;overflow:hidden">
   <div style="max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:clamp(40px,6vw,84px);align-items:center">
     <div data-reveal style="display:flex;justify-content:center">
       <img src="img/cover.jpg" alt="What History Buried — front cover" style="width:min(390px,84vw);box-shadow:0 44px 90px -18px rgba(0,0,0,.88),0 0 90px rgba(231,178,78,.13);border:1px solid rgba(231,178,78,.18)" />
@@ -443,21 +480,21 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.18em;color:#c3b08a;border:1px solid #442216;padding:8px 13px">ISBN&nbsp;979-8185084878</span>
       </div>
       <div data-reveal style="display:flex;flex-wrap:wrap;gap:14px;margin-top:6px">
-        <a href="https://a.co/d/0g29KbPj" target="_blank" rel="noopener" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:18px 32px;border:1px solid #C2A24A" class="hv3">Get it on Amazon&nbsp;→</a>
-        <a href="#twelve" style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#e7b24e;padding:18px 32px;border:1px solid rgba(231,178,78,.45)" class="hv4">Read the Files First</a>
+        <a href="https://a.co/d/0g29KbPj" target="_blank" rel="noopener" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:18px 32px;border:1px solid #C2A24A" style-hover="background:#e7b24e;border-color:#e7b24e;color:#0E0D0B">Get it on Amazon&nbsp;→</a>
+        <a href="#twelve" style="font-family:'Archivo',sans-serif;font-weight:600;font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#e7b24e;padding:18px 32px;border:1px solid rgba(231,178,78,.45)" style-hover="border-color:#e7b24e;background:rgba(194,162,74,.08);color:#e7b24e">Read the Files First</a>
       </div>
       <div data-reveal style="border:1px solid #442216;background:radial-gradient(ellipse at 72% 12%,rgba(158,62,42,.13),transparent 58%),#220f09;padding:24px;margin-top:10px">
         <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.28em;text-transform:uppercase;font-size:10.5px;color:#e7b24e">Read Chapter 1 Free</p>
         <p style="margin:10px 0 0;font-size:15px;line-height:1.6;color:#c3b08a">Enter your email and the full first case file is yours — plus declassifications, new case files, and Volume Two, sent first to the Recovery List.</p>
         <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
           <input type="email" placeholder="your@email.com" aria-label="Email address" style="flex:1;min-width:180px;background:#0E0D0B;border:1px solid #442216;color:#f1e6cc;font-family:'Archivo',sans-serif;font-size:13px;padding:14px 16px" />
-          <button data-act="subscribe" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#0E0D0B;background:#C2A24A;border:1px solid #C2A24A;padding:14px 22px;cursor:pointer" class="hv7">Send Chapter 1</button>
+          <button onClick="{{ subscribe }}" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#0E0D0B;background:#C2A24A;border:1px solid #C2A24A;padding:14px 22px;cursor:pointer" style-hover="background:#e7b24e">Send Chapter 1</button>
         </div>
         <p style="margin:12px 0 0;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;color:#564a36">SIGNUP OPENS AT LAUNCH — PREVIEW ONLY</p>
       </div>
     </div>
   </div>
-  
+  <sc-if value="{{ showV2 }}" hint-placeholder-val="{{ true }}">
     <div data-reveal style="position:relative;max-width:760px;margin:clamp(70px,10vh,110px) auto 0;border:1px dashed rgba(179,42,32,.55);background:#14100a;padding:clamp(30px,4.5vw,48px);text-align:center">
       <span style="position:absolute;top:-15px;left:50%;transform:translateX(-50%) rotate(-7deg);font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:.3em;font-size:11px;color:#b32a20;border:2px solid #b32a20;padding:8px 15px;background:#0E0D0B">SEALED</span>
       <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:600;letter-spacing:.32em;text-transform:uppercase;font-size:10.5px;color:#8d7c5e">The Black Genius Files continue</p>
@@ -465,7 +502,7 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
       <p style="margin:16px auto 0;font-size:16.5px;font-style:italic;line-height:1.65;color:#c3b08a;max-width:48ch">The next case files are being assembled. In preparation at E.A.T. Media — declassified to the Recovery List first.</p>
       <p style="margin:22px 0 0;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.24em;color:#564a36">THIS FILE HAS NOT BEEN ENTERED INTO THE PUBLIC INDEX</p>
     </div>
-  
+  </sc-if>
 </section>
 
 <section id="faq" data-screen-label="FAQ" style="padding:clamp(100px,15vh,180px) 24px;background:#0E0D0B;border-top:1px solid #1f1810">
@@ -520,15 +557,17 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 <section id="archive" data-screen-label="Hidden Archive" style="padding:clamp(90px,13vh,150px) 24px;background:#0B0A08;border-top:1px solid #1f1810">
   <div style="max-width:980px;margin:0 auto;text-align:center;display:flex;flex-direction:column;align-items:center;gap:26px">
     <p data-reveal style="font-family:'Archivo',sans-serif;font-weight:600;letter-spacing:.36em;text-transform:uppercase;font-size:11px;color:#b32a20;margin:0">Restricted — The Hidden Archive</p>
-    <p data-reveal style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4.4vw,46px);color:#f1e6cc;margin:0"><span data-txt="found">0</span> of 7 artifacts recovered</p>
-    <div style="height:3px;background:#1f1810;width:min(420px,80%)"><div style="height:100%;background:linear-gradient(90deg,#9a6a18,#e7b24e);width:0%" data-meter=""></div></div>
+    <p data-reveal style="font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4.4vw,46px);color:#f1e6cc;margin:0">{{ found }} of 7 artifacts recovered</p>
+    <div style="height:3px;background:#1f1810;width:min(420px,80%)"><div style="height:100%;background:linear-gradient(90deg,#9a6a18,#e7b24e);width:{{ meterW }}"></div></div>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:760px">
-      <div data-slot="roster" style="display:contents"></div>
+      <sc-for list="{{ roster }}" as="r" hint-placeholder-count="7">
+        <span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.16em;color:#8d7c5e;border:1px solid #442216;padding:8px 13px;display:inline-flex;align-items:center;gap:8px"><span style="color:#C2A24A">{{ r.glyph }}</span>{{ r.name }}&nbsp;—&nbsp;{{ r.st }}</span>
+      </sc-for>
     </div>
-    <div data-vis="locked" style="display:contents">
+    <sc-if value="{{ locked }}" hint-placeholder-val="{{ true }}">
       <p data-reveal style="margin:6px 0 0;font-size:17px;font-style:italic;line-height:1.7;color:#c3b08a;max-width:52ch">Seven gold seals are hidden in this archive — in the corners, the margins, the places erasure likes to work. Recover all seven to open the restricted file.</p>
-    </div>
-    <div data-vis="unlocked" style="display:none">
+    </sc-if>
+    <sc-if value="{{ unlocked }}" hint-placeholder-val="{{ false }}">
       <div style="border:1px solid rgba(194,162,74,.45);background:radial-gradient(ellipse at 72% 12%,rgba(158,62,42,.13),transparent 58%),#220f09;padding:clamp(24px,4vw,44px);max-width:720px;display:flex;flex-direction:column;gap:18px;align-items:center">
         <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.3em;text-transform:uppercase;font-size:10.5px;color:#e7b24e">Restricted File — Open</p>
         <img src="img/ch14_02.jpg" alt="The ledger reopened" style="width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid #442216" />
@@ -536,9 +575,11 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
         <p style="margin:0;font-family:'Playfair Display',serif;font-style:italic;font-size:20px;color:#f1e6cc">Epilogue — Who Decides What Survives</p>
         <p style="margin:0;font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.2em;color:#C2A24A">ONE FILE WAS NEVER ENTERED INTO THE INDEX:&nbsp;&nbsp;↑ ↑ ↓ ↓ ← → ← → B A</p>
       </div>
-    </div>
+    </sc-if>
     <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:8px">
-      <div data-slot="ach" style="display:contents"></div>
+      <sc-for list="{{ ach }}" as="a" hint-placeholder-count="6">
+        <span style="{{ a.st }}"><span aria-hidden="true">{{ a.glyph }}</span>&nbsp;&nbsp;{{ a.t }}&nbsp;·&nbsp;<em>{{ a.d }}</em></span>
+      </sc-for>
     </div>
   </div>
 </section>
@@ -554,23 +595,441 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     </div>
     <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
       <div style="display:flex;gap:18px;flex-wrap:wrap">
-        <a href="Press Kit.dc.html" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#c3b08a;text-decoration:none" class="hv0">PRESS&nbsp;KIT</a>
-        <a href="https://dixon8303.github.io/genius-index-booksite/" target="_blank" rel="noopener" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#c3b08a;text-decoration:none" class="hv0">MORE&nbsp;FROM&nbsp;THE&nbsp;AUTHOR</a>
-        <a href="#faq" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#c3b08a;text-decoration:none" class="hv0">FAQ</a>
+        <a href="Press Kit.dc.html" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#c3b08a;text-decoration:none" style-hover="color:#e7b24e">PRESS&nbsp;KIT</a>
+        <a href="https://dixon8303.github.io/genius-index-booksite/" target="_blank" rel="noopener" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#c3b08a;text-decoration:none" style-hover="color:#e7b24e">MORE&nbsp;FROM&nbsp;THE&nbsp;AUTHOR</a>
+        <a href="#faq" style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#c3b08a;text-decoration:none" style-hover="color:#e7b24e">FAQ</a>
       </div>
       <p style="margin:0;font-family:'Playfair Display',serif;font-style:italic;font-size:19px;color:#C2A24A">“Be the tide that raises all ships.”</p>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#564a36">NOT&nbsp;EVERYTHING&nbsp;IS&nbsp;IN&nbsp;THE&nbsp;INDEX.</span>
-      <button data-k="g" data-act="collect" title="Something is buried here" data-titlebind="tG" aria-label="Hidden artifact" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" class="hv1"><span data-txt="sG">✦</span></button>
+      <button data-k="g" onClick="{{ collect }}" title="{{ tG }}" aria-label="Hidden artifact" style="width:30px;height:30px;border-radius:50%;border:1px solid rgba(194,162,74,.3);background:rgba(194,162,74,.04);color:#C2A24A;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;padding:0" style-hover="background:rgba(194,162,74,.2)">{{ sG }}</button>
     </div>
   </div>
 </footer>
 
-<div data-slot="modal"></div>
+<sc-if value="{{ ocOn }}" hint-placeholder-val="{{ false }}">
+  <div role="dialog" aria-modal="true" aria-label="Case file" style="position:fixed;inset:0;z-index:110;display:flex;align-items:center;justify-content:center;padding:18px">
+    <button onClick="{{ close }}" aria-label="Close file" style="position:absolute;inset:0;background:rgba(6,5,4,.84);backdrop-filter:blur(8px);border:none;cursor:pointer"></button>
+    <div style="position:relative;max-width:960px;width:100%;max-height:88vh;overflow:auto;background:radial-gradient(ellipse at 30% 15%,rgba(158,62,42,.17),transparent 60%),#2a130c;border:1px solid rgba(194,162,74,.35);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));animation:fadeup .4s cubic-bezier(.2,.7,.2,1)">
+      <div style="position:relative;min-height:360px">
+        <div role="img" aria-label="{{ oc.name }}" style="{{ ocImgStyle }}"></div>
+        <span aria-hidden="true" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,13,11,.3),transparent 40%,rgba(22,18,9,.5))"></span>
+        <span style="position:absolute;top:14px;left:14px;font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.24em;color:#e7b24e;border:1px solid rgba(231,178,78,.4);padding:5px 10px;background:rgba(14,13,11,.6)">FILE&nbsp;{{ oc.file }}&nbsp;·&nbsp;DECLASSIFIED</span>
+        <span aria-hidden="true" style="position:absolute;right:16px;bottom:18px;text-align:center;font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:.24em;font-size:clamp(13px,1.7vw,17px);color:#c93a2e;border:3px double #c93a2e;border-radius:5px;padding:10px 16px 9px;background:rgba(14,13,11,.4);animation:stampIn .5s cubic-bezier(.2,1.4,.3,1) .35s both">{{ ocVerdict }}<span style="display:block;font-size:7.5px;letter-spacing:.28em;font-weight:600;margin-top:5px;color:#d4776c">FILE&nbsp;REOPENED&nbsp;·&nbsp;WHB&nbsp;VOL.&nbsp;1</span></span>
+      </div>
+      <div style="padding:clamp(26px,3.6vw,44px);display:flex;flex-direction:column;gap:17px">
+        <h3 style="margin:0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,3.6vw,40px);line-height:1.03;color:#f1e6cc">{{ oc.name }}</h3>
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:#c3b08a">{{ oc.who }}</p>
+        <p style="margin:0;font-family:'Newsreader',serif;font-style:italic;font-size:19px;color:#e7b24e">{{ oc.title }}</p>
+        <div>
+          <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.26em;color:#e7b24e">WHAT&nbsp;WAS&nbsp;BUILT</p>
+          <p style="margin:8px 0 0;font-size:16px;line-height:1.7;color:#c3b08a">{{ oc.built }}</p>
+        </div>
+        <div>
+          <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.26em;color:#b32a20">WHAT&nbsp;WAS&nbsp;BURIED</p>
+          <p style="margin:8px 0 0;font-size:16px;line-height:1.7;color:#c3b08a">{{ oc.buried }}</p>
+        </div>
+        <sc-if value="{{ occOn }}" hint-placeholder-val="{{ false }}">
+          <div style="border:1px solid rgba(179,42,32,.45);padding:18px 20px">
+            <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.26em;color:#b32a20">STRUCK&nbsp;&amp;&nbsp;CORRECTED</p>
+            <p style="margin:10px 0 0;font-family:'Playfair Display',serif;font-weight:700;font-size:19px;color:#8d7c5e;text-decoration:line-through;text-decoration-color:#b32a20;text-decoration-thickness:2.5px">{{ corr.legend }}</p>
+            <p style="margin:8px 0 0;font-family:'Playfair Display',serif;font-weight:700;font-size:17px;line-height:1.4;color:#f1e6cc">{{ corr.truth }}</p>
+            <p style="margin:12px 0 0;font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.14em;color:#8d7c5e">SOURCE&nbsp;—&nbsp;{{ corr.srcU }}</p>
+          </div>
+        </sc-if>
+        <div>
+          <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.26em;color:#C2A24A">PRIMARY&nbsp;ANCHORS</p>
+          <p style="margin:8px 0 0;font-family:'Archivo',sans-serif;font-size:12px;line-height:1.65;color:#8d7c5e">{{ oc.evid }}</p>
+        </div>
+        <sc-if value="{{ ocExOn }}" hint-placeholder-val="{{ false }}">
+          <div>
+            <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:9.5px;letter-spacing:.26em;color:#C2A24A">EXHIBITS</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+              <sc-for list="{{ ocEx }}" as="x" hint-placeholder-count="2">
+                <figure style="margin:0">
+                  <img src="{{ x.s }}" alt="{{ x.c }}" loading="lazy" style="display:block;width:100%;aspect-ratio:3/2;object-fit:cover;border:1px solid #442216;filter:saturate(.85)" />
+                  <figcaption style="margin-top:7px;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.08em;line-height:1.5;color:#8d7c5e">{{ x.c }}</figcaption>
+                </figure>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
+          <a href="https://a.co/d/0g29KbPj" target="_blank" rel="noopener" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:14px 22px" style-hover="background:#e7b24e">Read the Full Case — Get the Book</a>
+          <button onClick="{{ share }}" style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c3b08a;background:transparent;border:1px solid #442216;padding:14px 22px;cursor:pointer" style-hover="border-color:rgba(194,162,74,.5);color:#e7b24e">Share This Case</button>
+          <button onClick="{{ close }}" style="font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c3b08a;background:transparent;border:1px solid #442216;padding:14px 22px;cursor:pointer" style-hover="border-color:rgba(194,162,74,.5);color:#e7b24e">Close File</button>
+        </div>
+      </div>
+      <button onClick="{{ close }}" aria-label="Close file" style="position:absolute;top:10px;right:10px;width:38px;height:38px;background:rgba(14,13,11,.72);border:1px solid #442216;color:#c3b08a;font-size:15px;cursor:pointer" style-hover="color:#e7b24e;border-color:rgba(194,162,74,.5)">✕</button>
+    </div>
+  </div>
+</sc-if>
 
-<div data-slot="vol2"></div>
+<sc-if value="{{ vol2On }}" hint-placeholder-val="{{ false }}">
+  <div role="dialog" aria-modal="true" aria-label="Declassified preview" style="position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:18px">
+    <button onClick="{{ close }}" aria-label="Close" style="position:absolute;inset:0;background:rgba(6,5,4,.86);backdrop-filter:blur(8px);border:none;cursor:pointer"></button>
+    <div style="position:relative;max-width:560px;width:100%;background:radial-gradient(ellipse at 30% 15%,rgba(158,62,42,.17),transparent 60%),#2a130c;border:1px solid rgba(194,162,74,.45);padding:clamp(34px,5vw,54px);text-align:center;animation:fadeup .4s cubic-bezier(.2,.7,.2,1)">
+      <span style="position:absolute;top:-15px;left:50%;transform:translateX(-50%) rotate(-7deg);font-family:'Archivo',sans-serif;font-weight:800;letter-spacing:.3em;font-size:11px;color:#0E0D0B;border:2px solid #C2A24A;background:#C2A24A;padding:8px 15px">DECLASSIFIED</span>
+      <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:600;letter-spacing:.32em;text-transform:uppercase;font-size:10.5px;color:#8d7c5e">Off the Record</p>
+      <p style="margin:18px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(30px,5vw,44px);letter-spacing:.04em;color:#f1e6cc">VOLUME TWO</p>
+      <p style="margin:18px auto 0;font-size:16.5px;font-style:italic;line-height:1.68;color:#c3b08a;max-width:42ch">The Black Genius Files continue — Volume Two is in preparation at E.A.T. Media.</p>
+      <p style="margin:22px 0 0;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.22em;color:#C2A24A">YOU FOUND WHAT WAS NEVER FILED. THE ARCHIVE REMEMBERS CURIOSITY.</p>
+      <button onClick="{{ close }}" style="margin-top:28px;font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c3b08a;background:transparent;border:1px solid #442216;padding:13px 24px;cursor:pointer" style-hover="border-color:rgba(194,162,74,.5);color:#e7b24e">Reseal</button>
+    </div>
+  </div>
+</sc-if>
 
-<div data-slot="toast"></div>
+<sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+  <div role="status" style="position:fixed;right:22px;bottom:22px;z-index:130;background:radial-gradient(ellipse at 30% 15%,rgba(158,62,42,.17),transparent 60%),#2a130c;border:1px solid rgba(194,162,74,.5);padding:16px 20px;display:flex;gap:13px;align-items:flex-start;animation:toastIn .45s cubic-bezier(.2,.7,.2,1);max-width:340px;box-shadow:0 22px 50px rgba(0,0,0,.65)">
+    <span aria-hidden="true" style="color:#e7b24e;font-size:16px;line-height:1.2">✦</span>
+    <div>
+      <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.22em;color:#e7b24e">{{ toastT }}</p>
+      <p style="margin:5px 0 0;font-size:14px;line-height:1.5;color:#c3b08a">{{ toastS }}</p>
+    </div>
+  </div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dust&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Atmosphere&quot;},&quot;grain&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Atmosphere&quot;},&quot;vol2Tease&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    const st = this.load();
+    let snd = false; try { snd = localStorage.getItem('whb_snd') === 'on'; } catch(e){}
+    this.state = { seals: st.seals || {}, opened: st.opened || {}, ach: st.ach || {}, ocI: null, vol2: false, toast: null, atlasDone: !!(st.ach && st.ach.cart), snd };
+  }
+
+  SEALNAMES = { a:'The Opening Seal', b:'The Clerk’s Pen', c:'The Cartographer’s Mark', d:'The Conductor’s Lantern', e:'The 1905 Plate', f:'The Ledger’s Spine', g:'The Tide Mark' };
+
+  VERDICTS = ['ERASED','BURNED','UNCREDITED','REWRITTEN','SHORTCHANGED','REWRITTEN','REVOKED','REWRITTEN','UNCREDITED','OMITTED','BURNED','BLACKLISTED'];
+
+  ACHDEFS = [
+    { k:'first',  t:'FIRST RECOVERY',    d:'One seal found. Six remain.' },
+    { k:'cart',   t:'THE CARTOGRAPHER',  d:'The 1375 record, restored.' },
+    { k:'reader', t:'CASE READER',       d:'Six case files opened.' },
+    { k:'docket', t:'FULL DOCKET',       d:'All twelve case files opened.' },
+    { k:'arch',   t:'THE ARCHIVIST',     d:'All seven artifacts recovered.' },
+    { k:'kon',    t:'OFF THE RECORD',    d:'You found what was never filed.' }
+  ];
+
+  PARTS = [
+    { label:'Part One',   title:'The World They Built', desc:'From an emperor who moved the price of gold to the woman the machines answered to — genius at the scale of the world, and the long work of erasing it.' },
+    { label:'Part Two',   title:'The Generals', desc:'An intelligence network, a stolen warship, and a continent-wide system run on coded language — resistance organized like a campaign.' },
+    { label:'Part Three', title:'What Was Promised and Taken', desc:'What freedom was promised, in writing, by the people who had earned it — and how the promise was taken back.' },
+    { label:'Part Four',  title:'The Invention They Buried', desc:'Inventions, fortunes, and enterprises built in full view — and quietly transferred to other names.' },
+    { label:'Part Five',  title:'The Architecture of Silence', desc:'The machinery of silence itself — a passport, a file, a blacklist — and the one thing it could not take.' }
+  ];
+
+  CASES = [
+    { i:0, part:0, file:'BGF-001', name:'Mansa Musa', who:'Mali Empire · r. c. 1312–c. 1332', title:'The King Who Moved the Price of Gold', img:'img/ch01_opener.jpg', ex:[{s:'img/ch01_hajj.jpg',c:'The pilgrimage crossing the Sahara, 1324'},{s:'img/ch01_mosque.jpg',c:'Djinguereber Mosque, photographed c. 1905'}],
+      hook:'In 1324, one traveler’s spending sank the price of gold in Cairo — for more than ten years.',
+      built:'An empire the size of Western Europe, astride the goldfields that supplied the Mediterranean world’s money. Caravans moved gold north and salt south, and Mali taxed the traffic at both ends.',
+      buried:'Fifty years after the pilgrimage, Europe’s best map named him, gold in hand. As Europe turned toward conquest, that detailed West Africa was redrawn as blank space — terra incognita.',
+      evid:'al-ʿUmari, Cairo, 1337 · Catalan Atlas, 1375 — BnF Ms. Espagnol 30',
+      corr:{ legend:'$400,000,000,000', truth:'A treasury that governed the gold supply', src:'AL-ʿUMARI, 1337 · SCHULTZ' } },
+    { i:1, part:0, file:'BGF-002', name:'Benjamin Banneker', who:'1731–1806 · Maryland', title:'The Man Who Mailed the Proof', img:'img/ch02_01.jpg', ex:[{s:'img/ch02_02.jpg',c:'The wooden striking clock, 1753'},{s:'img/ch02_05.jpg',c:'The funeral-day fire, 1806'}],
+      hook:'A wooden clock built after studying a borrowed pocket watch — once. Then six years of published almanacs.',
+      built:'A striking clock, every gear cut by hand from wood, in 1753. Six straight years of astronomical almanacs. In 1791, the survey of the new federal district — and a letter challenging Jefferson, in plain language, on the people he owned.',
+      buried:'On the day of his funeral, his house burned — taking the wooden clock and most of his papers with it.',
+      evid:'Banneker–Jefferson correspondence, 1791 · the surviving almanacs' },
+    { i:2, part:0, file:'BGF-003', name:'Katherine Johnson', who:'NASA · 1918–2020', title:'The Woman the Machine Answered To', img:'img/ch03_01.jpg', ex:[{s:'img/ch03_02.jpg',c:'The segregated West Area computers, Langley'},{s:'img/ch03_04.jpg',c:'Glenn waits on her arithmetic, February 1962'}],
+      hook:'Before Friendship 7 flew, John Glenn asked for her by name — to check the computer’s numbers by hand.',
+      built:'The orbital-trajectory mathematics of American spaceflight, worked out by hand in the segregated “West Computers” at Langley — and trusted over the machine by the man sitting on top of the rocket.',
+      buried:'Her name sat in the NASA archive, on the reports, for decades before the country said it aloud.',
+      evid:'NASA Langley technical reports · NASA photographic archive' },
+    { i:3, part:1, file:'BGF-004', name:'Harriet Tubman', who:'Combahee River Raid · 1863', title:'The Spy Who Freed 750 People in One Night', img:'img/ch04_01.jpg', ex:[{s:'img/ch04_02.jpg',c:'Scouts and river pilots — the network'},{s:'img/ch04_05.jpg',c:'The dispatch that recorded the raid, 1863'}],
+      hook:'Three Union gunboats up the Combahee in darkness. More than 750 people free before sunrise.',
+      built:'A working intelligence network of scouts and river pilots behind Confederate lines — and the raid it made possible, June 1–2, 1863.',
+      buried:'The official Union reports of the raid were never found; the first account ran in a newspaper. The legend that grew in their place undercounts what she actually did.',
+      evid:'The documentary record, per Larson · press account, 1863',
+      corr:{ legend:'300 people · 19 trips', truth:'About 70 people, some 13 trips — and 750 freed in a single night at Combahee', src:'LARSON, FROM THE DOCUMENTARY RECORD' } },
+    { i:4, part:1, file:'BGF-005', name:'Robert Smalls', who:'Charleston · 1862', title:'The Warship and the Schoolhouse', img:'img/ch05_01.jpg', ex:[{s:'img/ch05_02.jpg',c:'The captain’s coat, the correct signals'},{s:'img/ch05_05.jpg',c:'The prize-money appraisal, 1862'}],
+      hook:'He sailed a Confederate warship out of Charleston Harbor in the captain’s coat — giving every correct signal.',
+      built:'The CSS Planter, eased past the forts before dawn and delivered to the U.S. Navy — secret codebooks and all — on May 13, 1862. Six years later: the law creating South Carolina’s first free public-school system.',
+      buried:'Congress’s prize money for the Planter was appraised far below the ship’s worth — and most of it was kept by others.',
+      evid:'U.S. Navy records, May 13, 1862 · S.C. Constitutional Convention, 1868' },
+    { i:5, part:1, file:'BGF-006', name:'The Underground Railroad', who:'William Still & the Network', title:'The Names They Saved', img:'img/ch06_00.jpg', ex:[{s:'img/ch06_02.jpg',c:'Signals subtler than the legend'},{s:'img/ch06_04.jpg',c:'A church cellar on the network'}],
+      hook:'A continent-wide network run on coded language — and a ledger of real names, kept at mortal risk.',
+      built:'Safe houses, night movement across hundreds of miles of hostile country, Black churches as the network’s urban nodes — and William Still’s meticulous records of the people who passed through.',
+      buried:'The “quilt code” is the kind of legend that outran the record; the real signaling was subtler. The real archive is the names themselves — saved on paper.',
+      evid:'William Still’s records, published 1872' },
+    { i:6, part:2, file:'BGF-007', name:'Garrison Frazier', who:'Savannah · January 1865', title:'The Answer Was Land', img:'img/ch07_01.jpg', ex:[{s:'img/ch07_02.jpg',c:'The Savannah Colloquy, January 12, 1865'},{s:'img/ch07_05.jpg',c:'The Edisto Island petition, 1865'}],
+      hook:'Asked what his people needed, the sixty-seven-year-old minister answered in one word: land.',
+      built:'The Savannah Colloquy, January 12, 1865 — twenty Black ministers, questioned in writing, answering in writing. Special Field Order No. 15 set aside the Lowcountry: forty acres to each family.',
+      buried:'Within the year, presidential pardons restored the land to its former enslavers. The freedpeople of Edisto Island petitioned the President in writing, refusing to leave.',
+      evid:'Colloquy transcript, Jan. 12, 1865 · Special Field Order No. 15 · Edisto petition, 1865' },
+    { i:7, part:2, file:'BGF-008', name:'John Roy Lynch', who:'Reconstruction · Mississippi', title:'The Man Who Wrote Back', img:'img/ch08_01.jpg', ex:[{s:'img/ch08_03.jpg',c:'Outside the schoolhouse window'},{s:'img/ch08_05.jpg',c:'Writing the correction, 1913'}],
+      hook:'He taught himself within sight of a schoolhouse he was barred from entering — then wrote the rebuttal.',
+      built:'Reconstruction legislatures that built public schools and rewrote state constitutions — with Lynch in the room, an eyewitness.',
+      buried:'At Columbia, the Dunning School recast Reconstruction as a tragedy of Black incompetence. Lynch answered with The Facts of Reconstruction (1913) — an eyewitness rebuttal.',
+      evid:'The Facts of Reconstruction, 1913' },
+    { i:8, part:3, file:'BGF-009', name:'Granville T. Woods', who:'Holder of some forty-five patents', title:'The Patent and the Pauper', img:'img/ch09_01.jpg', ex:[{s:'img/ch09_03.jpg',c:'The induction telegraph'},{s:'img/ch09_04.jpg',c:'Ruled for Woods — twice'}],
+      hook:'Edison sued, claiming the invention as his own. The court ruled for Woods — twice.',
+      built:'The induction telegraph: moving trains that could finally communicate, and collisions prevented. One of some forty-five U.S. patents.',
+      buried:'He held the patents; he died owning nothing, and lay in an unmarked grave for sixty-five years.',
+      evid:'The U.S. patent record · court rulings, per Fouché',
+      corr:{ legend:'60 patents', truth:'Around 45 U.S. patents — held, defended, twice upheld against Edison', src:'FOUCHÉ, FROM THE PATENT RECORD' } },
+    { i:9, part:3, file:'BGF-010', name:'Madam C. J. Walker', who:'1867–1919', title:'The Field and the Factory', img:'img/ch10_01.jpg', ex:[{s:'img/ch10_03.jpg',c:'The Walker agents — a national force'},{s:'img/ch10_04.jpg',c:'Villa Lewaro, Irvington-on-Hudson'}],
+      hook:'Eighteen years washing other people’s laundry for about a dollar a day. Then a national company.',
+      built:'A manufacturing company and a national sales force — tens of thousands of trained, commissioned Black women agents — and Villa Lewaro, her thirty-four-room mansion built deliberately among the Hudson’s wealthiest.',
+      buried:'The wealthiest self-made woman in America — named in under four percent of textbooks.',
+      evid:'Company and estate records · textbook survey' },
+    { i:10, part:3, file:'BGF-011', name:'America’s Black Millionaires', who:'1848–1921', title:'The Ledger and the Fire', img:'img/ch11_01.jpg', ex:[{s:'img/ch11_02.jpg',c:'William Leidesdorff — a San Francisco fortune by 1848'},{s:'img/ch11_05.jpg',c:'Greenwood burns — May 31–June 1, 1921'}],
+      hook:'The fortunes existed — by 1848, by 1870, by 1900. Then thirty-five blocks burned in under two days.',
+      built:'William Leidesdorff’s San Francisco fortune by 1848. Mary Ellen Pleasant’s investments and civil-rights suits. Robert Reed Church Sr.’s Memphis real estate — the South’s first Black fortune. Greenwood: “Black Wall Street.”',
+      buried:'Greenwood ablaze, May 31–June 1, 1921 — thirty-five blocks destroyed. Pleasant recast by her biographers as “Mammy Pleasant.” The pattern, repeated.',
+      evid:'Census, probate, and press records · Tulsa, 1921' },
+    { i:11, part:4, file:'BGF-012', name:'Paul Robeson', who:'1898–1976', title:'The Most Dangerous Man in America', img:'img/ch12_00.jpg', ex:[{s:'img/ch12_05.jpg',c:'Sung across the Atlantic by telephone, 1957'},{s:'img/ch12_06.jpg',c:'The FBI file, opened 1941'}],
+      hook:'A government spent seven years trying to silence one voice. It could not.',
+      built:'A voice heard around the world — and when the passport was gone, a concert sung to Welsh miners across the Atlantic by telephone, 1957.',
+      buried:'Peekskill, 1949 — a coordinated attack, not a crowd that lost control. The passport revoked in 1950. An FBI file from 1941 until after his death — one of its largest on any performer.',
+      evid:'State Department records, 1950 · the FBI file · Peekskill record, 1949' }
+  ];
+
+  TL = [
+    { y:'1312', t:'Musa comes to power in Mali — an empire that rivals Western Europe by area, astride the goldfields that supply the Mediterranean world’s money.' },
+    { y:'1324', t:'The pilgrimage. One traveler’s spending depresses the price of gold in Cairo; al-ʿUmari records the damage in 1337. The Djinguereber Mosque rises at Timbuktu, completed 1327.' },
+    { y:'1375', t:'The Catalan Atlas places Musa at the center of West Africa — named, titled, gold in hand. Europe knew.', img:'img/ch01_hajj.jpg', alt:'The hajj procession crossing the Sahara' },
+    { y:'after', t:'As Europe turns toward conquest and the slave trade, its maps redraw a detailed West Africa as blank space — terra incognita. Erasure as a cartographic act.' },
+    { y:'1753', t:'Benjamin Banneker builds a striking clock from hand-cut wood, after studying a borrowed pocket watch once.' },
+    { y:'1791', t:'Banneker helps survey the new federal district — and writes to Jefferson, challenging the distance between his stated principles and the people he owned.' },
+    { y:'1862', t:'Before dawn on May 13, Robert Smalls eases the CSS Planter out of Charleston Harbor and delivers her — codebooks and all — to the U.S. Navy.' },
+    { y:'1863', t:'Tubman’s Combahee River Raid, June 1–2: three gunboats upriver in darkness; more than 750 people free before sunrise.', img:'img/ch04_03.jpg', alt:'Union gunboats moving up the Combahee in darkness' },
+    { y:'1865', t:'Savannah, January 12. Asked what his people need, Garrison Frazier answers: land. Special Field Order No. 15 sets aside the Lowcountry — and within the year, presidential pardons take it back.' },
+    { y:'1868', t:'At South Carolina’s constitutional convention, Smalls helps write the state’s first free public-school system.' },
+    { y:'1887', t:'Granville Woods patents the induction telegraph; moving trains can finally speak. Edison sues, and loses. Twice.' },
+    { y:'1913', t:'John Roy Lynch answers the Dunning School with The Facts of Reconstruction — an eyewitness rebuttal.' },
+    { y:'1919', t:'Madam C. J. Walker dies the wealthiest self-made woman in America — later named in under four percent of textbooks.' },
+    { y:'1921', t:'Greenwood, Tulsa — May 31–June 1: thirty-five blocks of “Black Wall Street” destroyed in under two days.', img:'img/ch11_05.jpg', alt:'Greenwood ablaze, 1921' },
+    { y:'1950', t:'The State Department revokes Paul Robeson’s passport, collapsing his income and his stages. The FBI file runs from 1941 until after his death.' },
+    { y:'1957', t:'His stages gone, Robeson sings to Welsh miners across the Atlantic — by telephone.' },
+    { y:'2020', t:'Katherine Johnson dies at 101. Her name sat in the NASA archive, on the reports, for decades before the country said it aloud.' }
+  ];
+
+  load(){ try { return JSON.parse(localStorage.getItem('whb_archive') || '{}'); } catch(e){ return {}; } }
+  persist(){ try { localStorage.setItem('whb_archive', JSON.stringify({ seals:this.state.seals, opened:this.state.opened, ach:this.state.ach })); } catch(e){} }
+
+  fire(t, s){ clearTimeout(this._tt); this.setState({ toast:{ t, s } }); this._tt = setTimeout(() => this.setState({ toast:null }), 4200); }
+
+  grant(k, extraAch){
+    const seals = { ...this.state.seals }; const ach = { ...this.state.ach };
+    if (seals[k]) { this.fire('ALREADY RECOVERED', this.SEALNAMES[k] + ' is in your archive.'); return; }
+    seals[k] = 1;
+    const n = Object.keys(seals).length;
+    if (n === 1) ach.first = 1;
+    if (n === 7) ach.arch = 1;
+    if (extraAch) ach[extraAch] = 1;
+    this.setState({ seals, ach }, () => this.persist());
+    this.sfx('chime');
+    this.fire('ARTIFACT RECOVERED — ' + n + ' OF 7', this.SEALNAMES[k] + (n === 7 ? '. The restricted file is open.' : ''));
+  }
+
+  collect = (e) => { this.grant(e.currentTarget.dataset.k); };
+
+  open = (e) => {
+    const i = +e.currentTarget.dataset.i;
+    const opened = { ...this.state.opened, [i]: 1 }; const ach = { ...this.state.ach };
+    const n = Object.keys(opened).length;
+    let note = null;
+    if (n >= 6 && !ach.reader) { ach.reader = 1; note = ['ACHIEVEMENT — CASE READER', 'Six case files opened.']; }
+    if (n === 12 && !ach.docket) { ach.docket = 1; note = ['ACHIEVEMENT — FULL DOCKET', 'All twelve case files opened.']; }
+    this.setState({ ocI: i, opened, ach }, () => this.persist());
+    if (note) this.fire(note[0], note[1]);
+    this.sfx('paper'); clearTimeout(this._st2); this._st2 = setTimeout(() => this.sfx('stamp'), 480);
+    document.body.style.overflow = 'hidden';
+  };
+
+  close = () => { this.setState({ ocI: null, vol2: false }); document.body.style.overflow = ''; };
+
+  subscribe = () => { this.fire('THE RECOVERY LIST', 'Signup opens at launch — this is a preview.'); };
+
+  share = () => {
+    const c = this.state.ocI != null ? this.CASES[this.state.ocI] : null; if (!c) return;
+    const url = location.origin + location.pathname + '#bgf-' + String(c.i + 1).padStart(3, '0');
+    const done = () => this.fire('CASE LINK COPIED', c.file + ' · ' + c.name + ' — paste it anywhere.');
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, () => this.fire('SHARE THIS LINK', url));
+    else this.fire('SHARE THIS LINK', url);
+  };
+
+  sndInit(){
+    if (this._ac) return;
+    try {
+      const A = new (window.AudioContext || window.webkitAudioContext)();
+      this._ac = A;
+      const len = A.sampleRate * 4, buf = A.createBuffer(1, len, A.sampleRate), d = buf.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < len; i++){ const w = Math.random() * 2 - 1; last = (last + .02 * w) / 1.02; d[i] = last * 3.5; }
+      const src = A.createBufferSource(); src.buffer = buf; src.loop = true;
+      const lp = A.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 300;
+      this._amb = A.createGain(); this._amb.gain.value = 0;
+      src.connect(lp); lp.connect(this._amb); this._amb.connect(A.destination);
+      src.start();
+    } catch(e){ this._ac = null; }
+  }
+
+  sndRamp(on){
+    if (!this._ac) return;
+    if (this._ac.state === 'suspended') this._ac.resume();
+    const g = this._amb.gain, t = this._ac.currentTime;
+    g.cancelScheduledValues(t); g.setValueAtTime(g.value, t); g.linearRampToValueAtTime(on ? .045 : 0, t + 1.2);
+  }
+
+  sfx(kind){
+    if (!this.state.snd || !this._ac) return;
+    const A = this._ac, t = A.currentTime, out = A.destination;
+    const noise = (dur, type, freq, vol) => {
+      const n = A.createBufferSource(), b = A.createBuffer(1, Math.max(1, A.sampleRate * dur | 0), A.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      n.buffer = b;
+      const f = A.createBiquadFilter(); f.type = type; f.frequency.value = freq;
+      const g = A.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + dur);
+      n.connect(f); f.connect(g); g.connect(out); n.start(t);
+    };
+    const tone = (freq, dur, vol, delay) => {
+      const o = A.createOscillator(); o.frequency.value = freq;
+      const g = A.createGain(); g.gain.setValueAtTime(0, t + delay); g.gain.linearRampToValueAtTime(vol, t + delay + .015); g.gain.exponentialRampToValueAtTime(.001, t + delay + dur);
+      o.connect(g); g.connect(out); o.start(t + delay); o.stop(t + delay + dur + .05);
+    };
+    if (kind === 'paper') noise(.3, 'highpass', 1100, .09);
+    if (kind === 'stamp'){ noise(.06, 'lowpass', 500, .45); tone(75, .16, .5, 0); }
+    if (kind === 'chime'){ tone(660, .7, .06, 0); tone(990, .9, .045, .09); }
+  }
+
+  sndToggle = () => {
+    const snd = !this.state.snd;
+    this.sndInit();
+    this.setState({ snd }, () => { this.sndRamp(snd); if (snd) this.sfx('chime'); });
+    try { localStorage.setItem('whb_snd', snd ? 'on' : 'off'); } catch(e){}
+    this.fire(snd ? 'ARCHIVE AMBIENCE — ON' : 'ARCHIVE AMBIENCE — OFF', snd ? 'Room tone and reading-room sounds enabled.' : 'The archive falls silent.');
+  };
+
+  atlasMove = (e) => {
+    const v = +e.target.value;
+    const L = document.querySelector('[data-atlaslayer]'); const H = document.querySelector('[data-atlashandle]');
+    if (L) L.style.clipPath = 'inset(0 0 0 ' + v + '%)';
+    if (H) H.style.left = v + '%';
+    if (v >= 96 && !this.state.atlasDone) { this.setState({ atlasDone: true }); this.grant('c', 'cart'); }
+  };
+
+  unseal(){
+    const ach = { ...this.state.ach }; ach.kon = 1;
+    this.setState({ vol2: true, ach }, () => this.persist());
+    this.sfx('chime');
+    document.body.style.overflow = 'hidden';
+  }
+
+  componentDidMount(){
+    const rm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (this.props.grain === false) { const g = document.querySelector('[data-grain]'); if (g) g.style.display = 'none'; }
+    if (!rm) {
+      const els = [...document.querySelectorAll('[data-reveal]')];
+      const pending = new Set(els);
+      const show = el => { el.style.opacity = '1'; el.style.transform = 'none'; pending.delete(el); if (this._ob) this._ob.unobserve(el); };
+      els.forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(28px)'; el.style.transition = 'opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1)'; el.style.transitionDelay = (el.dataset.reveal || 0) + 'ms'; });
+      try {
+        this._ob = new IntersectionObserver(en => { en.forEach(x => { if (x.isIntersecting) show(x.target); }); }, { threshold: .15, rootMargin: '0px 0px -6% 0px' });
+        els.forEach(el => this._ob.observe(el));
+      } catch(e){}
+      // Fail-open fallbacks: plain scroll/resize sweep + safety timer that reveals everything.
+      this._sweep = () => { pending.forEach(el => { const r = el.getBoundingClientRect(); if (r.top < innerHeight * 1.05 && r.bottom > -40) show(el); }); };
+      addEventListener('scroll', this._sweep, { passive: true });
+      addEventListener('resize', this._sweep, { passive: true });
+      setTimeout(this._sweep, 350);
+      setTimeout(() => { pending.forEach(el => show(el)); }, 6000);
+    }
+    if (!rm && this.props.dust !== false) this.mountDust();
+    const seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let ki = 0;
+    this._kd = (e) => {
+      if (e.key === 'Escape' && (this.state.ocI != null || this.state.vol2)) { this.close(); return; }
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (key === seq[ki]) { ki++; if (ki === seq.length) { ki = 0; this.unseal(); } }
+      else ki = (key === seq[0]) ? 1 : 0;
+    };
+    addEventListener('keydown', this._kd);
+    this._sc = () => {
+      const h = document.documentElement;
+      const p = h.scrollTop / ((h.scrollHeight - h.clientHeight) || 1) * 100;
+      const bar = document.querySelector('[data-prog]'); if (bar) bar.style.width = p + '%';
+      const hi = document.querySelector('[data-heroimg]');
+      if (hi && !rm) { const y = Math.min(h.scrollTop, 1000); hi.style.transform = 'translateY(' + (y * .16) + 'px)'; }
+    };
+    addEventListener('scroll', this._sc, { passive: true });
+    this._sc();
+    const dm = location.hash.match(/^#bgf-0*(\d{1,3})$/i);
+    if (dm && this.CASES[+dm[1] - 1]) this._dlt = setTimeout(() => this.open({ currentTarget: { dataset: { i: +dm[1] - 1 } } }), 700);
+    this._spfit = () => { const sp = document.querySelector('[data-spine]'); if (sp) sp.style.display = innerWidth < 1120 ? 'none' : 'flex'; };
+    this._spfit(); addEventListener('resize', this._spfit);
+    if (this.state.snd) {
+      const once = () => { this.sndInit(); this.sndRamp(true); removeEventListener('pointerdown', once); removeEventListener('keydown', once); };
+      this._sndOnce = once; addEventListener('pointerdown', once); addEventListener('keydown', once);
+    }
+  }
+
+  mountDust(){
+    const c = document.querySelector('[data-dust]'); if (!c) return;
+    const x = c.getContext('2d'); let w, h;
+    const fit = () => { w = c.width = innerWidth; h = c.height = innerHeight; };
+    fit(); this._fit = fit; addEventListener('resize', fit);
+    const ps = [];
+    for (let i = 0; i < 64; i++) ps.push({ x: Math.random(), y: Math.random(), r: .5 + Math.random() * 1.7, s: .12 + Math.random() * .3, o: .06 + Math.random() * .22, ph: Math.random() * 6.28 });
+    const tick = (t) => {
+      x.clearRect(0, 0, w, h);
+      for (const p of ps) {
+        p.y -= p.s / h; p.x += Math.sin(t / 2800 + p.ph) * .00016;
+        if (p.y < -.02) { p.y = 1.02; p.x = Math.random(); }
+        x.globalAlpha = p.o * (.55 + .45 * Math.sin(t / 950 + p.ph));
+        x.fillStyle = '#e7b24e';
+        x.beginPath(); x.arc(p.x * w, p.y * h, p.r, 0, 6.283); x.fill();
+      }
+      this._raf = requestAnimationFrame(tick);
+    };
+    this._raf = requestAnimationFrame(tick);
+  }
+
+  componentWillUnmount(){
+    cancelAnimationFrame(this._raf); cancelAnimationFrame(this._sraf);
+    removeEventListener('keydown', this._kd); removeEventListener('scroll', this._sc); removeEventListener('resize', this._fit);
+    removeEventListener('scroll', this._sweep); removeEventListener('resize', this._sweep);
+    if (this._ob) this._ob.disconnect();
+    clearTimeout(this._tt); clearTimeout(this._st2); clearTimeout(this._dlt);
+    removeEventListener('resize', this._spfit);
+    if (this._sndOnce) { removeEventListener('pointerdown', this._sndOnce); removeEventListener('keydown', this._sndOnce); }
+    if (this._ac) { try { this._ac.close(); } catch(e){} }
+    document.body.style.overflow = '';
+  }
+
+  renderVals(){
+    const S = this.state; const seals = S.seals;
+    const g = k => seals[k] ? '●' : '✦';
+    const tt = k => seals[k] ? this.SEALNAMES[k] + ' — recovered' : 'Something is buried here';
+    const found = Object.keys(seals).length;
+    const openedN = Object.keys(S.opened).length;
+    const parts = this.PARTS.map((p, pi) => ({ ...p, cases: this.CASES.filter(c => c.part === pi).map(c => ({ ...c, seen: S.opened[c.i] ? 'OPENED ●' : '' })) }));
+    const oc = S.ocI != null ? this.CASES[S.ocI] : { img:'img/cover.jpg', name:'', file:'', who:'', title:'', built:'', buried:'', evid:'' };
+    const corr = oc.corr ? { ...oc.corr, srcU: oc.corr.src } : { legend:'', truth:'', srcU:'' };
+    const achChipBase = 'font-family:Archivo,sans-serif;font-size:10px;letter-spacing:.14em;padding:9px 14px;display:inline-flex;align-items:center;';
+    const ach = this.ACHDEFS.map(a => ({ ...a, glyph: S.ach[a.k] ? '◆' : '◇',
+      st: achChipBase + (S.ach[a.k] ? 'color:#e7b24e;border:1px solid rgba(194,162,74,.55);background:rgba(194,162,74,.07)' : 'color:#564a36;border:1px solid #1f1810') }));
+    const roster = Object.keys(this.SEALNAMES).map(k => ({ name: this.SEALNAMES[k], st: seals[k] ? 'RECOVERED' : 'MISSING', glyph: seals[k] ? '●' : '○' }));
+    const spine = this.CASES.map(c => ({ i: c.i, tip: 'FILE ' + c.file + ' — ' + c.name + (S.opened[c.i] ? ' · opened' : ''), bc: S.opened[c.i] ? '#e7b24e' : 'rgba(194,162,74,.38)', bg: S.opened[c.i] ? '#C2A24A' : 'transparent' }));
+    return {
+      found, openedN, meterW: (found / 7 * 100) + '%',
+      parts, tl: this.TL, roster, ach,
+      oc, ocEx: oc.ex || [], ocExOn: !!(oc.ex && oc.ex.length), ocOn: S.ocI != null, occOn: S.ocI != null && !!oc.corr, corr,
+      ocImgStyle: "position:absolute;inset:0;background-image:url('" + oc.img + "');background-size:cover;background-position:center;filter:saturate(.85)",
+      vol2On: S.vol2, showV2: this.props.vol2Tease === true,
+      toastOn: !!S.toast, toastT: S.toast ? S.toast.t : '', toastS: S.toast ? S.toast.s : '',
+      atlasDone: S.atlasDone, locked: found < 7, unlocked: found >= 7,
+      sA: g('a'), sB: g('b'), sD: g('d'), sE: g('e'), sF: g('f'), sG: g('g'),
+      tA: tt('a'), tB: tt('b'), tD: tt('d'), tE: tt('e'), tF: tt('f'), tG: tt('g'),
+      collect: this.collect, open: this.open, close: this.close, subscribe: this.subscribe, atlasMove: this.atlasMove,
+      spine, ocVerdict: S.ocI != null ? this.VERDICTS[S.ocI] : '', share: this.share,
+      sndToggle: this.sndToggle, sndColor: S.snd ? '#e7b24e' : '#5a4d38',
+      sndTitle: S.snd ? 'Archive ambience on — click to mute' : 'Enable archive ambience (off by default)'
+    };
+  }
+}
+</script>
 </body>
 </html>

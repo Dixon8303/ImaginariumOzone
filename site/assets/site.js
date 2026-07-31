@@ -13,9 +13,8 @@ window.BGF_CONFIG = {
   /* Amazon Kindle ebook listing ($12.99). */
   AMAZON_URL: "https://www.amazon.com/dp/B0GX32RB25",
 
-  /* Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX".
-     GA4 stays OFF until this looks like a real ID. */
-  GA4_MEASUREMENT_ID: "MEASUREMENT_ID",
+  /* Google Analytics 4 measurement ID. */
+  GA4_MEASUREMENT_ID: "G-FXDJLKSKDG",
 
   /* Email provider form endpoint (Beehiiv / MailerLite / Buttondown…).
      The free-chapter form stays disabled until this is a real URL. */
@@ -24,7 +23,7 @@ window.BGF_CONFIG = {
   /* links.html hub destinations. */
   YOUTUBE_URL: "https://youtube.com/@theblackgeniusfiles",
   PINTEREST_URL: "PINTEREST_URL",
-  PODCAST_URL: "PODCAST_URL",
+  PODCAST_URL: "https://podcasts.apple.com/us/podcast/the-all-black-everything-podcast/id1527013923",
   CONTACT_EMAIL: "eatmediatv@gmail.com",
 };
 /* ========================== end of config block ============================ */
@@ -107,7 +106,7 @@ window.BGF_CONFIG = {
       return url;
     }
   }
-  var OUTBOUND = /(^|\.)(payhip\.com|amazon\.[a-z.]+|amzn\.to)$/i;
+  var OUTBOUND = /(^|\.)(payhip\.com|amazon\.[a-z.]+|amzn\.to|a\.co)$/i;
 
   /* ---- Wire the page ------------------------------------------------------ */
   function wire() {
