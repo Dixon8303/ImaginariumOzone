@@ -5,9 +5,10 @@
    social links on links.html.
    ============================================================================ */
 window.BGF_CONFIG = {
-  /* Payhip: after creating the product, its URL looks like
-     https://payhip.com/b/AbCdE — the ID is the part after /b/. */
-  PAYHIP_PRODUCT_ID: "PRODUCT_ID",
+  /* Payhip: the product URL is https://payhip.com/b/exquo — the ID is the
+     part after /b/. Storefront: https://payhip.com/BlackGeniusFiles */
+  PAYHIP_PRODUCT_ID: "exquo",
+  PAYHIP_STORE_URL: "https://payhip.com/BlackGeniusFiles",
 
   /* Amazon paperback listing (full URL). */
   AMAZON_URL: "AMAZON_URL",
@@ -21,7 +22,7 @@ window.BGF_CONFIG = {
   FORM_ACTION: "FORM_ACTION",
 
   /* links.html hub destinations. */
-  YOUTUBE_URL: "YOUTUBE_URL",
+  YOUTUBE_URL: "https://youtube.com/@theblackgeniusfiles",
   PINTEREST_URL: "PINTEREST_URL",
   PODCAST_URL: "PODCAST_URL",
   CONTACT_EMAIL: "eatmediatv@gmail.com",
@@ -127,7 +128,12 @@ window.BGF_CONFIG = {
     }
 
     // links.html hub destinations + contact.
-    var hub = { youtube: cfg.YOUTUBE_URL, pinterest: cfg.PINTEREST_URL, podcast: cfg.PODCAST_URL };
+    var hub = {
+      youtube: cfg.YOUTUBE_URL,
+      pinterest: cfg.PINTEREST_URL,
+      podcast: cfg.PODCAST_URL,
+      store: cfg.PAYHIP_STORE_URL,
+    };
     Object.keys(hub).forEach(function (key) {
       if (!isUrl(hub[key])) return;
       document.querySelectorAll('a[data-link="' + key + '"]').forEach(function (a) {
