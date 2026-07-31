@@ -41,7 +41,7 @@ Everything configurable lives in **one config block** at the top of
 | `YOUTUBE_URL` | ✅ https://youtube.com/@theblackgeniusfiles |
 | `AMAZON_URL` | ✅ https://a.co/d/0g29KbPj (trade paperback — the Kindle ebook link is intentionally unused) |
 | `GA4_MEASUREMENT_ID` | ✅ `G-FXDJLKSKDG` |
-| `FORM_ACTION` | ⬜ Beehiiv / MailerLite (free tier) form endpoint that delivers the free-chapter PDF |
+| `FORM_ACTION` | ✅ Kit form `9748584` (posts `email_address`; the incentive email delivers the Chapter 1 PDF) |
 | `PODCAST_URL` | ✅ The All Black Everything Podcast (Apple Podcasts) |
 | `PINTEREST_URL` | ⬜ Remaining links.html hub destination |
 | `CONTACT_EMAIL` | ✅ eatmediatv@gmail.com |

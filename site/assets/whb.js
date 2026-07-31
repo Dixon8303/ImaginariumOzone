@@ -345,7 +345,7 @@
     if (!email || email.indexOf("@") < 1) { fire("THE RECOVERY LIST", "Enter your email address to receive Chapter 1."); if (input) input.focus(); return; }
     var f = document.createElement("form");
     f.method = "post"; f.action = cfg.FORM_ACTION; f.style.display = "none";
-    var em = document.createElement("input"); em.name = "email"; em.value = email; f.appendChild(em);
+    var em = document.createElement("input"); em.name = "email_address"; em.value = email; f.appendChild(em);
     document.body.appendChild(f); f.submit();
   }
 
@@ -432,14 +432,6 @@
   function mount() {
     var tl = slotEl("tl"); if (tl) tl.innerHTML = tlHTML();
     render();
-
-    // "SIGNUP OPENS AT LAUNCH" small print flips once the list is connected.
-    var cfg = window.BGF_CONFIG || {};
-    if (cfg.FORM_ACTION && /^https:\/\//.test(cfg.FORM_ACTION)) {
-      $$("#acquire p").forEach(function (p) {
-        if (p.textContent.indexOf("SIGNUP OPENS AT LAUNCH") !== -1) p.textContent = "CHAPTER 1 ARRIVES BY EMAIL — UNSUBSCRIBE ANYTIME";
-      });
-    }
 
     var rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
