@@ -10,8 +10,9 @@ window.BGF_CONFIG = {
   PAYHIP_PRODUCT_ID: "exquo",
   PAYHIP_STORE_URL: "https://payhip.com/BlackGeniusFiles",
 
-  /* Amazon Kindle ebook listing ($12.99). */
-  AMAZON_URL: "https://www.amazon.com/dp/B0GX32RB25",
+  /* Amazon listing — the trade paperback. (The $12.99 Kindle ebook link is
+     deliberately not used anywhere: it undercuts the direct price.) */
+  AMAZON_URL: "https://a.co/d/0g29KbPj",
 
   /* Google Analytics 4 measurement ID. */
   GA4_MEASUREMENT_ID: "G-FXDJLKSKDG",
