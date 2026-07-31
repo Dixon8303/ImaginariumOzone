@@ -26,7 +26,9 @@ Everything configurable lives in **one config block** at the top of
 | `AMAZON_URL` | ✅ https://www.amazon.com/dp/B0GX32RB25 (Kindle ebook, $12.99) |
 | `GA4_MEASUREMENT_ID` | ⬜ Google Analytics → Admin → Data streams → `G-XXXXXXXXXX` |
 | `FORM_ACTION` | ⬜ Beehiiv / MailerLite (free tier) form endpoint that delivers the free-chapter PDF |
-| `PINTEREST_URL` / `PODCAST_URL` / `CONTACT_EMAIL` | ⬜ Remaining links.html hub destinations |
+| `PODCAST_URL` | ✅ The All Black Everything Podcast (Apple Podcasts) |
+| `PINTEREST_URL` | ⬜ Remaining links.html hub destination |
+| `CONTACT_EMAIL` | ✅ eatmediatv@gmail.com |
 
 Buy buttons, GA4, the email form, and hub links are all wired from that block at
 page load. GA4 and the form stay safely disabled until their values look real.

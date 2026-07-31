@@ -24,7 +24,7 @@ window.BGF_CONFIG = {
   /* links.html hub destinations. */
   YOUTUBE_URL: "https://youtube.com/@theblackgeniusfiles",
   PINTEREST_URL: "PINTEREST_URL",
-  PODCAST_URL: "PODCAST_URL",
+  PODCAST_URL: "https://podcasts.apple.com/us/podcast/the-all-black-everything-podcast/id1527013923",
   CONTACT_EMAIL: "eatmediatv@gmail.com",
 };
 /* ========================== end of config block ============================ */
