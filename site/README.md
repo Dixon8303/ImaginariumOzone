@@ -23,7 +23,7 @@ Everything configurable lives in **one config block** at the top of
 | `PAYHIP_PRODUCT_ID` | ✅ `exquo` → https://payhip.com/b/exquo (static buy-button hrefs match, so the no-JS fallback works too) |
 | `PAYHIP_STORE_URL` | ✅ https://payhip.com/BlackGeniusFiles (hub "Full Bookstore" link) |
 | `YOUTUBE_URL` | ✅ https://youtube.com/@theblackgeniusfiles |
-| `AMAZON_URL` | ⬜ The paperback's Amazon listing URL |
+| `AMAZON_URL` | ✅ https://www.amazon.com/dp/B0GX32RB25 (Kindle ebook, $12.99) |
 | `GA4_MEASUREMENT_ID` | ⬜ Google Analytics → Admin → Data streams → `G-XXXXXXXXXX` |
 | `FORM_ACTION` | ⬜ Beehiiv / MailerLite (free tier) form endpoint that delivers the free-chapter PDF |
 | `PINTEREST_URL` / `PODCAST_URL` / `CONTACT_EMAIL` | ⬜ Remaining links.html hub destinations |
