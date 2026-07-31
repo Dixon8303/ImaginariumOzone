@@ -13,31 +13,28 @@ No build step, no backend — ready for GitHub Pages.
 | `/privacy.html` | GA4 + email-capture disclosures |
 | `/404.html` | Not-found page (picked up automatically by GitHub Pages) |
 
-## One-time setup: swap the placeholders
+## Config
 
 Everything configurable lives in **one config block** at the top of
 [`assets/site.js`](assets/site.js):
 
-| Key | Where to get it |
-|-----|-----------------|
-| `PAYHIP_PRODUCT_ID` | Create the ebook product on payhip.com — the ID is the part after `/b/` in the product URL |
-| `AMAZON_URL` | The paperback's Amazon listing URL |
-| `GA4_MEASUREMENT_ID` | Google Analytics → Admin → Data streams → `G-XXXXXXXXXX` |
-| `FORM_ACTION` | Beehiiv / MailerLite (free tier) form endpoint that delivers the free-chapter PDF |
-| `YOUTUBE_URL` / `PINTEREST_URL` / `PODCAST_URL` / `CONTACT_EMAIL` | The links.html hub destinations |
+| Key | Status |
+|-----|--------|
+| `PAYHIP_PRODUCT_ID` | ✅ `exquo` → https://payhip.com/b/exquo (static buy-button hrefs match, so the no-JS fallback works too) |
+| `PAYHIP_STORE_URL` | ✅ https://payhip.com/BlackGeniusFiles (hub "Full Bookstore" link) |
+| `YOUTUBE_URL` | ✅ https://youtube.com/@theblackgeniusfiles |
+| `AMAZON_URL` | ⬜ The paperback's Amazon listing URL |
+| `GA4_MEASUREMENT_ID` | ⬜ Google Analytics → Admin → Data streams → `G-XXXXXXXXXX` |
+| `FORM_ACTION` | ⬜ Beehiiv / MailerLite (free tier) form endpoint that delivers the free-chapter PDF |
+| `PINTEREST_URL` / `PODCAST_URL` / `CONTACT_EMAIL` | ⬜ Remaining links.html hub destinations |
 
 Buy buttons, GA4, the email form, and hub links are all wired from that block at
 page load. GA4 and the form stay safely disabled until their values look real.
 
-**No-JS fallback:** the buy buttons' static `href` contains the literal
-`PRODUCT_ID` placeholder. After Payhip setup, also run a one-shot
-search-and-replace so no-JS visitors land on the right product page:
-
-```bash
-grep -rl 'payhip.com/b/PRODUCT_ID' . | xargs sed -i 's|payhip.com/b/PRODUCT_ID|payhip.com/b/YOUR_REAL_ID|g'
-```
-
-Also replace `ISBN_PLACEHOLDER` in `index.html`'s JSON-LD once the ISBN is assigned.
+If the Payhip product ID ever changes, update the config block **and**
+search-and-replace `payhip.com/b/exquo` across the HTML so the no-JS fallback
+hrefs stay in sync. Also replace `ISBN_PLACEHOLDER` in `index.html`'s JSON-LD
+once the ISBN is assigned.
 
 ## Tracking
 
