@@ -17,9 +17,8 @@ window.BGF_CONFIG = {
   /* Google Analytics 4 measurement ID. */
   GA4_MEASUREMENT_ID: "G-FXDJLKSKDG",
 
-  /* Email provider form endpoint (Beehiiv / MailerLite / Buttondown…).
-     The free-chapter form stays disabled until this is a real URL. */
-  FORM_ACTION: "FORM_ACTION",
+  /* Kit (ConvertKit) form endpoint — posts field "email_address". */
+  FORM_ACTION: "https://app.kit.com/forms/9748584/subscriptions",
 
   /* links.html hub destinations. */
   YOUTUBE_URL: "https://youtube.com/@theblackgeniusfiles",
