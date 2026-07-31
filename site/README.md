@@ -44,29 +44,46 @@ once the ISBN is assigned.
   the visit, and appended to every outbound Payhip / Amazon link — attribution
   survives internal navigation and the click out to checkout.
 
-## Deploy (GitHub Pages + custom domain)
+## Deploy — LIVE at the repo URL
 
-This folder is self-contained — deploy **its contents** as the root of a
-GitHub Pages site (easiest: a dedicated repo, e.g. `blackgeniusfiles`, since
-the custom domain applies to the whole Pages site):
+This site is deployed by this repo's Pages workflow
+([`.github/workflows/pages.yml`](../.github/workflows/pages.yml)), which
+publishes the assessment (`docs/`) at the root and this folder under `/book/`
+on every push to `main`:
 
-1. Copy the contents of `site/` to the new repo's root (keep `.nojekyll` and `CNAME`).
-2. Repo **Settings → Pages → Deploy from a branch** → `main`, folder `/ (root)`.
-3. **Enforce HTTPS** in the same Pages settings once the certificate is issued.
+**https://dixon8303.github.io/ImaginariumOzone/book/**
 
-### DNS (at your domain registrar)
+All internal paths are relative, so the site works at any mount point. The
+`CNAME` file is deliberately excluded from the deploy for now, and all
+canonical/OG/sitemap URLs point at the repo URL above.
 
-| Type | Host | Value |
-|------|------|-------|
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| CNAME | `www` | `<username>.github.io` |
+### Later: going live on blackgeniusfiles.com
 
-The `CNAME` file in this folder already contains `blackgeniusfiles.com`;
-GitHub Pages reads it automatically. DNS + certificate issuance can take up to
-24 h the first time.
+When the domain is ready:
+
+1. Add DNS records at the registrar:
+
+   | Type | Host | Value |
+   |------|------|-------|
+   | A | `@` | `185.199.108.153` |
+   | A | `@` | `185.199.109.153` |
+   | A | `@` | `185.199.110.153` |
+   | A | `@` | `185.199.111.153` |
+   | CNAME | `www` | `dixon8303.github.io` |
+
+2. Move this site to its own Pages site (a dedicated repo, e.g.
+   `blackgeniusfiles`, with these files at the root — the custom domain
+   applies to a whole Pages site, and this repo's root already serves the
+   assessment). Keep `.nojekyll` and `CNAME` (it contains
+   `blackgeniusfiles.com`; Pages reads it automatically).
+3. Point the URLs back at the domain:
+   `grep -rl 'dixon8303.github.io/ImaginariumOzone/book' . | xargs sed -i 's|https://dixon8303.github.io/ImaginariumOzone/book/|https://blackgeniusfiles.com/|g; s|/ImaginariumOzone/book/|/|g'`
+4. **Enforce HTTPS** in Pages settings once the certificate is issued
+   (DNS + cert can take up to 24 h the first time).
+
+Note: while served under `/book/`, `robots.txt` and `sitemap.xml` are inert
+(crawlers only read them from a domain root) — they activate once the site
+moves to its own domain.
 
 ## Performance
 

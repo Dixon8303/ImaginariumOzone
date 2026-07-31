@@ -5,22 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Page Not Found — Black Genius Files</title>
 <meta name="robots" content="noindex" />
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-<link rel="stylesheet" href="/assets/style.css" />
-<script src="/assets/site.js" defer></script>
+<!-- Self-contained on purpose: GitHub Pages serves this file from the site
+     root for ANY missing path, so it can't rely on relative asset paths.
+     When the custom domain goes live, swap /ImaginariumOzone/book/ for /. -->
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: #14110c; color: #efe7d6;
+    font: 400 1.0625rem/1.65 Georgia, "Times New Roman", serif;
+    min-height: 100dvh; display: grid; place-items: center; text-align: center;
+  }
+  .code { font-size: 5rem; color: #a87c2f; margin: 0; }
+  h1 { font-size: clamp(1.6rem, 5vw, 2.2rem); margin: 0 0 0.75rem; }
+  p { color: #c9bfa9; margin: 0 auto 1.5rem; max-width: 28rem; padding: 0 1.25rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 0.9rem; justify-content: center; }
+  a {
+    display: inline-block; padding: 0.95rem 1.6rem; text-decoration: none;
+    font-family: Verdana, Geneva, sans-serif; font-size: 0.92rem;
+    border: 1px solid #a87c2f;
+  }
+  .primary { background: #d2a24c; color: #17130b; font-weight: 700; }
+  .secondary { background: transparent; color: #d2a24c; }
+</style>
 </head>
 <body>
 
-<main class="error-page">
-  <div>
-    <p class="code">404</p>
-    <h1>This page got buried.</h1>
-    <p class="lede" style="margin:0 auto 1.5rem; max-width:28rem">Unlike the stories in the book, there's nothing to dig up here.</p>
-    <div class="cta-row" style="justify-content:center">
-      <a class="btn btn-primary" href="/">Back to the book</a>
-      <a class="btn btn-secondary" href="/links.html">All links</a>
-    </div>
+<main>
+  <p class="code">404</p>
+  <h1>This page got buried.</h1>
+  <p>Unlike the stories in the book, there's nothing to dig up here.</p>
+  <div class="row">
+    <a class="primary" href="/ImaginariumOzone/book/">Back to the book</a>
+    <a class="secondary" href="/ImaginariumOzone/book/links.html">All links</a>
   </div>
 </main>
 
