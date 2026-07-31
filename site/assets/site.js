@@ -13,9 +13,8 @@ window.BGF_CONFIG = {
   /* Amazon Kindle ebook listing ($12.99). */
   AMAZON_URL: "https://www.amazon.com/dp/B0GX32RB25",
 
-  /* Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX".
-     GA4 stays OFF until this looks like a real ID. */
-  GA4_MEASUREMENT_ID: "MEASUREMENT_ID",
+  /* Google Analytics 4 measurement ID. */
+  GA4_MEASUREMENT_ID: "G-FXDJLKSKDG",
 
   /* Email provider form endpoint (Beehiiv / MailerLite / Buttondown…).
      The free-chapter form stays disabled until this is a real URL. */
