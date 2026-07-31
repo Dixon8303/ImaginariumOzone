@@ -131,6 +131,7 @@
 
   function persist() { try { localStorage.setItem("whb_archive", JSON.stringify({ seals: S.seals, opened: S.opened, ach: S.ach })); } catch (e) {} }
 
+  function tagUrl(u) { return window.BGF_WITH_UTMS ? window.BGF_WITH_UTMS(u) : u; }
   var $ = function (sel) { return document.querySelector(sel); };
   var $$ = function (sel) { return Array.prototype.slice.call(document.querySelectorAll(sel)); };
   function slotEl(name) { return $('[data-slot="' + name + '"]'); }
@@ -247,7 +248,7 @@
         }).join("") +
         "</div></div>" : "") +
       '<div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">' +
-      '<a href="https://a.co/d/0g29KbPj" target="_blank" rel="noopener" class="whbGoldBtn" style="font-family:\'Archivo\',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:14px 22px">Read the Full Case — Get the Book</a>' +
+      '<a href="' + tagUrl("https://payhip.com/b/exquo") + '" rel="noopener" class="whbGoldBtn" style="font-family:\'Archivo\',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:14px 22px">Read the Full Case — Get the Book</a>' +
       '<button data-act="share" class="whbGhostBtn" style="font-family:\'Archivo\',sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c3b08a;background:transparent;border:1px solid #442216;padding:14px 22px;cursor:pointer">Share This Case</button>' +
       '<button data-act="close" class="whbGhostBtn" style="font-family:\'Archivo\',sans-serif;font-weight:600;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c3b08a;background:transparent;border:1px solid #442216;padding:14px 22px;cursor:pointer">Close File</button>' +
       "</div></div>" +
