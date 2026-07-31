@@ -108,6 +108,8 @@ window.BGF_CONFIG = {
     }
   }
   var OUTBOUND = /(^|\.)(payhip\.com|amazon\.[a-z.]+|amzn\.to|a\.co)$/i;
+  // For links rendered after page load (e.g. the case-file modal).
+  window.BGF_WITH_UTMS = withUtms;
 
   /* ---- Wire the page ------------------------------------------------------ */
   function wire() {
