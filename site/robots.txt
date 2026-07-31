@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blackgeniusfiles.com/sitemap.xml
