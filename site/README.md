@@ -1,17 +1,33 @@
-# blackgeniusfiles.com — What History Buried site
+# What History Buried — official site
 
-Pure static site for **What History Buried** (The Black Genius Files, Vol. 1).
+Pure static site for **What History Buried** (The Black Genius Files, Vol. 1),
+compiled from the Claude Design prototypes in [`design-src/`](design-src/).
 No build step, no backend — ready for GitHub Pages.
 
 ## Pages & anchors (the automation deep-links to these — keep stable)
 
 | URL | Purpose |
 |-----|---------|
-| `/` | Book landing — hero, praise, chapters preview, `#free-chapter`, `#buy` |
-| `/links.html` | Link-in-bio hub: Book, Amazon, YouTube, Pinterest, Podcast, Contact |
-| `/free-chapter.html` | Email capture → free Chapter 1 PDF (Vol. 2 launch list) |
+| `/` | The official site — case files, evidence room, timeline, excerpt, `#acquire` (aliases `#buy`, `#free-chapter`), deep links `#bgf-001`…`#bgf-012` |
+| `/links.html` | Link-in-bio hub: Book, Free Chapter, Archive, Genius Index, Podcast, Press Kit |
+| `/press-kit.html` | One-page press kit for media & educators |
+| `/free-chapter.html` | Stable redirect → `/#free-chapter` (the Recovery List capture) |
 | `/privacy.html` | GA4 + email-capture disclosures |
 | `/404.html` | Not-found page (picked up automatically by GitHub Pages) |
+
+## Images — replace the placeholders
+
+`img/` currently holds **generated placeholders**. Replace them 1:1 by
+filename with the real art from the Claude Design project:
+
+- `book/images/chXX_YY.jpg` → `img/chXX_YY.jpg` (same names)
+- plus `img/cover.jpg` (front cover), `img/author.jpg` (portrait),
+  `img/prologue.jpg` (hero background), `img/og.jpg` (1200×630 share card),
+  `img/favicon.png`
+
+Easiest path: GitHub → **Add file → Upload files** into `site/img/` on a
+branch, keep the filenames, merge. Keep JPEGs ≤200 KB each (the traffic
+arrives from Shorts and pins on mobile).
 
 ## Config
 

@@ -107,7 +107,7 @@ window.BGF_CONFIG = {
       return url;
     }
   }
-  var OUTBOUND = /(^|\.)(payhip\.com|amazon\.[a-z.]+|amzn\.to)$/i;
+  var OUTBOUND = /(^|\.)(payhip\.com|amazon\.[a-z.]+|amzn\.to|a\.co)$/i;
 
   /* ---- Wire the page ------------------------------------------------------ */
   function wire() {
