@@ -10,8 +10,8 @@ window.BGF_CONFIG = {
   PAYHIP_PRODUCT_ID: "exquo",
   PAYHIP_STORE_URL: "https://payhip.com/BlackGeniusFiles",
 
-  /* Amazon paperback listing (full URL). */
-  AMAZON_URL: "AMAZON_URL",
+  /* Amazon Kindle ebook listing ($12.99). */
+  AMAZON_URL: "https://www.amazon.com/dp/B0GX32RB25",
 
   /* Google Analytics 4 measurement ID, e.g. "G-XXXXXXXXXX".
      GA4 stays OFF until this looks like a real ID. */
