@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://blackgeniusfiles.com/sitemap.xml
+Sitemap: https://dixon8303.github.io/ImaginariumOzone/book/sitemap.xml
