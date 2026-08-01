@@ -17,16 +17,20 @@ No build step, no backend — ready for GitHub Pages.
 
 ## Images
 
-All of the book's chapter/cover/author art is real (uploaded and optimized).
-One placeholder remains:
+All art is real (uploaded and optimized), including `img/cover.jpg` (the
+titled front cover) and `img/StudyCompanion_Thumb_Portrait.jpg` (the
+Companion's promotional graphic — despite the "_1000.png" name used
+earlier, the real asset is a portrait poster, not a square; it was renamed
+and recompressed to JPEG to fit the mobile budget).
 
-- `img/StudyCompanion_Thumb_Square_1000.png` — a generated stand-in for the
-  Study & Trivia Companion's promotional square thumbnail. Replace it with
-  the real 1000×1000 asset, **same filename**, and it drops into the
-  `#acquire` product card with no code changes.
+Both product-card images in `#acquire` share `aspect-ratio:3/4;
+object-fit:cover` so they render at matching sizes regardless of each
+source image's native aspect ratio — keep that pairing if either image is
+swapped for a new version, so future cards line up too.
 
-Easiest path: GitHub → **Add file → Upload files** into `site/img/` on a
-branch, keep the filename, merge. Keep it ≤200 KB (the traffic arrives from
+Easiest path for new/updated art: GitHub → **Add file → Upload files** into
+`site/img/` on a branch, keep the filename, merge. Keep it ≤200 KB (the
+traffic arrives from
 Shorts and pins on mobile).
 
 ## Config
