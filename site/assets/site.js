@@ -9,6 +9,7 @@ window.BGF_CONFIG = {
      part after /b/. Storefront: https://payhip.com/BlackGeniusFiles */
   PAYHIP_PRODUCT_ID: "exquo",
   PAYHIP_STORE_URL: "https://payhip.com/BlackGeniusFiles",
+  PAYHIP_STUDY_URL: "https://payhip.com/b/R0jgn",
 
   /* Amazon listing — the trade paperback. (The $12.99 Kindle ebook link is
      deliberately not used anywhere: it undercuts the direct price.) */
@@ -134,6 +135,7 @@ window.BGF_CONFIG = {
       pinterest: cfg.PINTEREST_URL,
       podcast: cfg.PODCAST_URL,
       store: cfg.PAYHIP_STORE_URL,
+      study: cfg.PAYHIP_STUDY_URL,
     };
     Object.keys(hub).forEach(function (key) {
       if (!isUrl(hub[key])) return;
