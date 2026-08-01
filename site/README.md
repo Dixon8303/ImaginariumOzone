@@ -15,19 +15,19 @@ No build step, no backend — ready for GitHub Pages.
 | `/privacy.html` | GA4 + email-capture disclosures |
 | `/404.html` | Not-found page (picked up automatically by GitHub Pages) |
 
-## Images — replace the placeholders
+## Images
 
-`img/` currently holds **generated placeholders**. Replace them 1:1 by
-filename with the real art from the Claude Design project:
+All of the book's chapter/cover/author art is real (uploaded and optimized).
+One placeholder remains:
 
-- `book/images/chXX_YY.jpg` → `img/chXX_YY.jpg` (same names)
-- plus `img/cover.jpg` (front cover), `img/author.jpg` (portrait),
-  `img/prologue.jpg` (hero background), `img/og.jpg` (1200×630 share card),
-  `img/favicon.png`
+- `img/StudyCompanion_Thumb_Square_1000.png` — a generated stand-in for the
+  Study & Trivia Companion's promotional square thumbnail. Replace it with
+  the real 1000×1000 asset, **same filename**, and it drops into the
+  `#acquire` product card with no code changes.
 
 Easiest path: GitHub → **Add file → Upload files** into `site/img/` on a
-branch, keep the filenames, merge. Keep JPEGs ≤200 KB each (the traffic
-arrives from Shorts and pins on mobile).
+branch, keep the filename, merge. Keep it ≤200 KB (the traffic arrives from
+Shorts and pins on mobile).
 
 ## Config
 
@@ -38,7 +38,7 @@ Everything configurable lives in **one config block** at the top of
 |-----|--------|
 | `PAYHIP_PRODUCT_ID` | ✅ `exquo` → https://payhip.com/b/exquo (static buy-button hrefs match, so the no-JS fallback works too) |
 | `PAYHIP_STORE_URL` | ✅ https://payhip.com/BlackGeniusFiles (hub "Full Bookstore" link) |
-| `PAYHIP_STUDY_URL` | ✅ https://payhip.com/b/R0jgn (Study & Trivia Companion — hub row 07, FAQ Q·05) |
+| `PAYHIP_STUDY_URL` | ✅ https://payhip.com/b/R0jgn (Study & Trivia Companion — hub row 07, FAQ Q·05, and a product card in `#acquire`) |
 | `YOUTUBE_URL` | ✅ https://youtube.com/@theblackgeniusfiles |
 | `AMAZON_URL` | ✅ https://a.co/d/0g29KbPj (trade paperback — the Kindle ebook link is intentionally unused) |
 | `GA4_MEASUREMENT_ID` | ✅ `G-FXDJLKSKDG` |
