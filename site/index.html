@@ -25,6 +25,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,600;1,700;1,800&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400;1,6..72,500&amp;family=Archivo:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
 <style>
 html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:100px}
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
@@ -77,7 +78,11 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
   <div data-slot="spine" style="display:contents"></div>
 </div>
 
-<nav data-screen-label="Nav" aria-label="Site" style="position:fixed;top:2px;left:0;right:0;z-index:90;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,3vw,32px);background:rgba(14,13,11,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(194,162,74,.14)">
+<div id="top-chrome" style="position:fixed;top:2px;left:0;right:0;z-index:90;display:flex;flex-direction:column">
+<a href="https://dixon8303.github.io/black-genius-files/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;text-align:center;background:linear-gradient(90deg,#1a1611,#241d14);border-bottom:1px solid rgba(231,178,78,.24);font-family:'Archivo',sans-serif;font-weight:600;font-size:clamp(10px,2.4vw,11.5px);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:#f1e6cc" class="hv0">
+  <span aria-hidden="true" style="color:#e7b24e">✦</span>&nbsp;Explore the Full Archive — video hub, quizzes &amp; the Discord&nbsp;↗
+</a>
+<nav data-screen-label="Nav" aria-label="Site" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,3vw,32px);background:rgba(14,13,11,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(194,162,74,.14)">
   <a href="#top" style="display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0">
     <span aria-hidden="true" style="width:24px;height:24px;border:1px solid #C2A24A;transform:rotate(45deg);display:flex;align-items:center;justify-content:center"><span style="transform:rotate(-45deg);font-family:'Playfair Display',serif;font-weight:800;font-size:12px;color:#e7b24e;line-height:1">B</span></span>
     <span style="font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:.24em;font-size:10.5px;color:#f1e6cc;white-space:nowrap">WHAT HISTORY BURIED</span>
@@ -97,8 +102,9 @@ input[data-atlas]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
     <a href="#acquire" style="font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:#0E0D0B;background:#C2A24A;padding:10px 16px;white-space:nowrap" class="hv2">Get the Book</a>
   </div>
 </nav>
+</div>
 
-<section id="top" data-screen-label="Hero" style="position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;padding:120px 20px 90px;background:#0E0D0B">
+<section id="top" data-screen-label="Hero" style="position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;overflow:hidden;padding:clamp(150px,22vh,168px) 20px 90px;background:#0E0D0B">
   <div data-heroimg aria-hidden="true" style="position:absolute;inset:-8%;background-image:url('img/prologue.jpg');background-size:cover;background-position:center 28%;opacity:.15;animation:kb 32s ease-in-out infinite alternate;will-change:transform"></div>
   <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(ellipse 72% 56% at 50% 58%,rgba(231,178,78,.09),transparent 62%),linear-gradient(180deg,#0E0D0B 2%,rgba(14,13,11,.18) 46%,#0E0D0B 97%)"></div>
   <div aria-hidden="true" style="position:absolute;inset:clamp(12px,2.4vw,26px);border:1px solid rgba(231,178,78,.2);pointer-events:none"></div>
