@@ -54,6 +54,22 @@ window.BGF_CONFIG = {
     };
     window.gtag("js", new Date());
     window.gtag("config", cfg.GA4_MEASUREMENT_ID);
+
+    /* ---- Outbound purchase-click tracking ---------------------------------
+       Any buy button carrying data-track-buy fires a GA4 event on click —
+       covers the ebook and Study & Trivia Companion cards today, and any
+       paperback/hardcover card added later automatically, with no JS
+       changes: just add the same data attributes to the new button. */
+    document.addEventListener("click", function (ev) {
+      var el = ev.target.closest("[data-track-buy]");
+      if (!el || typeof window.gtag !== "function") return;
+      window.gtag("event", "buy_click", {
+        item_name: el.dataset.trackBuy,
+        price: el.dataset.trackPrice || "",
+        currency: "USD",
+        link_url: el.href || "",
+      });
+    });
   }
 
   /* ---- UTM passthrough ----------------------------------------------------
