@@ -470,6 +470,30 @@
       else ki = (key === seq[0]) ? 1 : 0;
     });
 
+    // Touch equivalent of the konami code: swipe up-up-down-down-left-right-
+    // left-right, then two quick taps (mirrors "B A" — the hint text's arrows
+    // read the same way as swipe directions). Passive listeners; scrolling
+    // and normal taps still behave exactly as before.
+    var touchSeq = ["up", "up", "down", "down", "left", "right", "left", "right", "tap", "tap"];
+    var ti = 0, tsx, tsy, tst;
+    var SWIPE_MIN = 40, TAP_MAX = 12, TAP_MAX_MS = 350;
+    addEventListener("touchstart", function (e) {
+      var t = e.touches && e.touches[0]; if (!t) return;
+      tsx = t.clientX; tsy = t.clientY; tst = Date.now();
+    }, { passive: true });
+    addEventListener("touchend", function (e) {
+      if (tsx == null) return;
+      var t = e.changedTouches && e.changedTouches[0]; if (!t) { tsx = null; return; }
+      var dx = t.clientX - tsx, dy = t.clientY - tsy, dt = Date.now() - tst;
+      tsx = null;
+      var token;
+      if (Math.abs(dx) < TAP_MAX && Math.abs(dy) < TAP_MAX && dt < TAP_MAX_MS) token = "tap";
+      else if (Math.max(Math.abs(dx), Math.abs(dy)) >= SWIPE_MIN) token = Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
+      else return; // ambiguous drag — ignore without disturbing progress
+      if (token === touchSeq[ti]) { ti++; if (ti === touchSeq.length) { ti = 0; unseal(); } }
+      else ti = (token === touchSeq[0]) ? 1 : 0;
+    }, { passive: true });
+
     // progress bar + hero parallax
     var sc = function () {
       var h = document.documentElement;
