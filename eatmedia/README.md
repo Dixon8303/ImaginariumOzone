@@ -34,42 +34,32 @@ Builder subscription**, download and self-host these images under
 `eatmedia/img/` (same pattern as `site/img/`), since canceling that
 account will likely take the CDN URLs down with it.
 
-## Pricing — reconciled against the original spreadsheet
+## Pricing — the 2026 rate card (customer-facing only)
 
-The live site's own price list had drifted from what it was set up
-against — most notably, its "30 Minute Model Package" (Platinum tier)
-was $150 where the [source spreadsheet](https://docs.google.com/spreadsheets/d/1v71DXyfjOeUW_tCTfHQ9rim6cfT1F-aWnQtI7OkLiOs)
-shows $850, the only entry that broke an otherwise consistent
-30/60/90-minute price ladder in every other category. `photoshoot-packages.html`
-publishes the spreadsheet's numbers as the source of truth:
+`photoshoot-packages.html` (nav label "Pricing") now publishes the
+[2026 rate card](https://docs.google.com/spreadsheets/d/1Tp1NcX9rHCS_wWYi1IZQkOOfltMMY7sICEpG1WWExk8) —
+this superseded an earlier, now-retired reconciliation against a prior
+pricing spreadsheet. Published sections: Photography Session Packages
+(Studio Session / Studio Pro / On-Location Session / On-Location Pro /
+Premier Experience, each at 30/60/90 min), Event Coverage, Organizational
+Headshot Day, Video Production (shooting), Video Post-Production
+(editing tiers), Additional Crew, Content Retainers, Specialty (podcast /
+livestream / drone), Add-Ons & Licensing, and Booking & Payment Terms.
 
-- Premier Packages (premium location + makeup) — $850 / $900 / $1,000
-- Studio Professional Packages (Lightbender Lab + makeup) — $450 / $500 / $600
-- On-Location Pro Shoot Packages (makeup, on location) — $400 / $450 / $500
-- Lightbender Lab Studio Packages (studio only) — $300 / $350 / $400
-- Travel Packages — $300 / $350 / $400
-- Event Photography — $75/hr, 2-hr minimum ($150)
-- Organizational Headshot Packages — $75 / $50 / $40 per person, by group size
-- Additional photo edit — $20 each
+**Deliberately left off the site**, because the source sheet marks it
+internal-only (rate-engine multipliers, market calibration, per-line
+margin/contribution-dollar math, LA permit/operating cost notes, and the
+old-vs-new pricing changelog) or because it's explicitly "not a published
+menu" in the sheet itself: the Community/Independent Artist track's
+eligibility rules, capacity cap, and multiplier. The site keeps only a
+soft, mechanics-free footnote on the Pricing page ("available by
+application — reach out to ask"), since the sheet's own public-facing
+banner text says that much should be visible.
 
-Two things worth double-checking against what you actually want live:
-
-1. The live site's "On Location Shoot" category (Professional Picture /
-   Premier Portrait / Platinum Prestige) was priced $250/$300/$350 —
-   that triple doesn't match any category in the spreadsheet at all. The
-   closest match by description (makeup artist included, on location) is
-   "On-Location Pro Shoot Packages" at $400/$450/$500, which is what's
-   published now. If $250/$300/$350 was an intentional, separate lower
-   tier, let me know and I'll add it back as its own category.
-2. The spreadsheet's **Video Production rates** (editing, on-location
-   shooting, additional crew) weren't on the live site at all — they're
-   now on the home page's Video Production section. Confirm those are
-   still current before this goes live.
-3. The site's flashy package names (Platinum, Diva, Mannequin, Vogue
-   Essence, etc.) were dropped in favor of the spreadsheet's plain
-   category/duration names, since the spreadsheet is the source of
-   truth and doesn't define those names. Happy to reintroduce them as
-   marketing labels over the correct prices if you want that back.
+The old "$50 refundable deposit" language is gone everywhere it appeared
+(home page and pricing page) — booking terms are now: free 20-minute
+discovery call, a $75 hold for a 60-minute strategy session (credited to
+the booking), and a 50% non-refundable retainer to confirm the date.
 
 ## Staging — LIVE at the repo URL
 
@@ -116,6 +106,41 @@ domain applies to a whole Pages site, not a subfolder) — see below.
 Until that cutover happens, this page is safe to iterate on at the staging
 URL above with zero risk to the live GoDaddy site.
 
+## Positioning — media venture studio, not just production-for-hire
+
+The site now frames E.A.T. Media as the studio behind an independent
+media catalog (Black Genius Files, What History Buried, The Genius
+Index, Dixon Grant Studio), not only a production shop for hire —
+that's the real, honest differentiator available here without inventing
+case studies, testimonials, or client logos that don't exist. Concretely:
+
+- Hero eyebrow + subhead reframe the offer ("A Los Angeles Media Venture
+  Studio... the studio behind an independent book, documentary, and
+  podcast catalog"), keeping the real "Capture Your Vision" tagline.
+- A new **"Beyond Production"** section on the home page (`#studio`)
+  cross-links all four ecosystem properties plus the full Link Console.
+- The same five links repeat in the footer of all three pages, under
+  "More From E.A.T. Media" — so every ecosystem link gets at least two
+  points of exposure site-wide.
+- `about.html` adds one bridging line pointing back to the catalog.
+- The JSON-LD `sameAs` array on the home page now includes the real
+  ecosystem URLs alongside the social profiles.
+
+**On the bigger ask** ("run a full 12-phase agency rebuild — Pentagram,
+IDEO, McKinsey, Awwwards-tier, score every page 9.5+, don't stop until
+diminishing returns"): I did the highest-leverage, honest part of that —
+real strategic repositioning and cross-linking, grounded in what
+actually exists. I didn't do the rest, on purpose: competitor teardown
+research, a from-scratch bespoke component/motion-design system, and
+"trust engineering" (case studies, testimonials, client logos, awards,
+stats) either need real inputs I don't have (your competitors, your
+brand assets, actual client outcomes) or would mean fabricating content
+on a real business's public site to hit a design-agency checklist. If
+you want to go further, the useful next inputs are: real client
+testimonials/case studies, any analytics you have on the current site,
+and named competitors you want positioned against — with those, the
+next round can go much further for real instead of performing it.
+
 ## What didn't carry over
 
 - **The contact form.** The live site's "Send Message" form posts to
@@ -132,9 +157,12 @@ URL above with zero risk to the live GoDaddy site.
 
 ## Editing
 
-- `index.html` — the "In Production" list and video rates.
-- `photoshoot-packages.html` — the price grid (see the reconciliation
-  notes above before changing anything here).
+- `index.html` — the "In Production" list, video rates, and the "Beyond
+  Production" (`#studio`) ecosystem cards.
+- `photoshoot-packages.html` — the full rate card (see the pricing notes
+  above before changing anything here).
 - `about.html` — team/experience copy.
 - Contact block (email/phone/hours) is repeated at the bottom of all
   three pages and in the footer — update in all four spots together.
+- The "More From E.A.T. Media" footer links are duplicated across all
+  three pages' footers — update all three together if a URL changes.
