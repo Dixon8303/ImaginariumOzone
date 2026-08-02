@@ -42,8 +42,8 @@ Everything configurable lives in **one config block** at the top of
 |-----|--------|
 | `PAYHIP_PRODUCT_ID` | ✅ `exquo` → https://payhip.com/b/exquo (static buy-button hrefs match, so the no-JS fallback works too) |
 | `PAYHIP_STORE_URL` | ✅ https://payhip.com/BlackGeniusFiles (hub "Full Bookstore" link) |
-| `PAYHIP_STUDY_URL` | ✅ https://payhip.com/b/R0jgn (Study & Trivia Companion — hub row 07, FAQ Q·05, and a product card in `#acquire`) |
-| `YOUTUBE_URL` | ✅ https://youtube.com/@theblackgeniusfiles |
+| `PAYHIP_STUDY_URL` | ✅ https://payhip.com/b/R0jgn (Study & Trivia Companion — hub row 08, FAQ Q·05, and a product card in `#acquire`) |
+| `YOUTUBE_URL` | ✅ https://www.youtube.com/@theblackgeniusfiles — same URL as the `YT.url` config in `black-genius-files`' `assets/data.js`; keep them matching if either changes |
 | `AMAZON_URL` | ✅ https://a.co/d/0g29KbPj (trade paperback — the Kindle ebook link is intentionally unused) |
 | `GA4_MEASUREMENT_ID` | ✅ `G-FXDJLKSKDG` |
 | `FORM_ACTION` | ✅ Kit form `9748584` (posts `email_address`; the incentive email delivers the Chapter 1 PDF) |
