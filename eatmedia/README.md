@@ -61,6 +61,16 @@ The old "$50 refundable deposit" language is gone everywhere it appeared
 discovery call, a $75 hold for a 60-minute strategy session (credited to
 the booking), and a 50% non-refundable retainer to confirm the date.
 
+**Lightbender Lab is gone.** Every named reference to it — in the rate
+card banner, the Studio Session/Studio Pro package descriptions, and an
+About-page photo caption that called it "E.A.T. Media's exclusive studio
+location" — has been removed. Studio Session and Studio Pro now describe
+the in-house setup (background stands, white and black seamless
+backdrops) instead of naming a studio. When a shoot actually needs a
+dedicated studio space, that's now a pass-through "studio rental" fee
+(Add-Ons & Licensing, and a footnote under the package cards) — at cost,
+same pattern as permits/venue/parking. No studio is named on the site.
+
 ## Staging — LIVE at the repo URL
 
 Deployed by this repo's Pages workflow
