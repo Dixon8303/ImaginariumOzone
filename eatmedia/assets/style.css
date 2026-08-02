@@ -94,6 +94,10 @@ img { max-width: 100%; display: block; }
 .wrap { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
 
 /* header */
+section[id], main [id] {
+  scroll-margin-top: 5rem;
+}
+
 header.top {
   position: sticky;
   top: 0;
@@ -225,7 +229,7 @@ nav.primary a:hover, nav.primary a.current { color: var(--link); }
 .btn.ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.55); }
 .btn.ghost:hover { border-color: #fff; }
 .btn.outline { background: transparent; color: var(--ink); border-color: var(--line); }
-.btn.outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn.outline:hover { border-color: var(--accent); color: var(--link); }
 
 /* sections */
 section { padding: 4rem 0; border-bottom: 1px solid var(--line); }
@@ -240,7 +244,7 @@ section:last-of-type { border-bottom: none; }
   color: var(--link);
   margin: 0 0 0.9rem;
 }
-h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
+h1, h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
 .section-intro { max-width: 62ch; color: var(--muted); margin: 0 0 1.6rem; }
 
 .split { display: grid; gap: 2rem; grid-template-columns: 1fr; align-items: center; }
@@ -248,15 +252,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
 .split.reverse .media { order: 2; }
 .split .media img { border-radius: 10px; border: 1px solid var(--line); }
 .split .media figcaption { margin-top: 0.5rem; font-size: 0.78rem; color: var(--muted); }
-
-.mission {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 1.6rem 1.8rem;
-  margin: 1.6rem 0;
-}
-.mission p { margin: 0; }
 
 .in-production { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
 .in-production li {
@@ -285,12 +280,6 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
 .includes li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
 
 /* pricing */
-.price-group { margin-bottom: 2.6rem; }
-.price-group h3 {
-  font-size: 1.15rem;
-  margin: 0 0 0.4rem;
-}
-.price-group .group-desc { color: var(--muted); max-width: 64ch; margin: 0 0 1.2rem; font-size: 0.94rem; }
 .price-cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .price-card {
   background: var(--surface);
@@ -327,7 +316,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
   border-radius: 999px;
   padding: 0.35rem 0.8rem;
 }
-.jump-nav a:hover { color: var(--accent); border-color: var(--accent); }
+.jump-nav a:hover { color: var(--link); border-color: var(--accent); }
 
 .ratecard-banner {
   background: var(--surface);
@@ -350,6 +339,9 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
 .package-card h3 { margin: 0 0 0.3rem; font-size: 1.1rem; }
 .package-card .pkg-includes { color: var(--muted); font-size: 0.9rem; margin: 0 0 1.1rem; }
 .package-card .pkg-prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+@media (max-width: 480px) {
+  .package-card .pkg-prices { grid-template-columns: 1fr; }
+}
 .package-card .pkg-price-cell { background: var(--surface-inset); border-radius: 8px; padding: 0.7rem; text-align: center; }
 .package-card .pkg-price-cell .dur {
   font-family: 'Montserrat', sans-serif;
@@ -359,8 +351,8 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
   letter-spacing: 0.06em;
   color: var(--muted);
 }
-.package-card .pkg-price-cell .amt { font-family: 'Archivo Black', sans-serif; color: var(--accent); font-size: 1.15rem; margin-top: 0.25rem; }
-.package-card .pkg-best { margin-top: 1rem; font-size: 0.82rem; color: var(--muted); font-style: italic; }
+.package-card .pkg-price-cell .amt { font-family: 'Archivo Black', sans-serif; color: var(--link); font-size: 1.15rem; margin-top: 0.25rem; }
+.package-card .tier-price { font-family: 'Archivo Black', sans-serif; color: var(--link); font-size: 1.6rem; margin: 0 0 0.5rem; }
 
 .terms-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
 .terms-list li {
@@ -412,7 +404,7 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--accent);
+  color: var(--link);
   background: color-mix(in srgb, var(--accent) 14%, transparent);
   border-radius: 999px;
   padding: 0.2rem 0.6rem;
@@ -552,6 +544,6 @@ footer .foot-grid {
 }
 footer .fineprint { color: var(--muted); font-size: 0.78rem; margin: 0.3rem 0 0; }
 footer a { color: var(--muted); }
-footer a:hover { color: var(--accent); }
+footer a:hover { color: var(--link); }
 footer nav.foot-links { display: flex; gap: 1.1rem; flex-wrap: wrap; font-size: 0.85rem; }
 footer nav.foot-links a { text-decoration: none; }
