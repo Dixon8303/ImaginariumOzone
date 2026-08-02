@@ -32,3 +32,25 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'Intersect
     io.observe(el);
   });
 }
+
+var heroFrame = document.getElementById('hero-video');
+if (heroFrame) {
+  var revealHero = function () { heroFrame.classList.add('is-ready'); };
+  heroFrame.addEventListener('load', revealHero);
+  // Safety net: reveal the video even if the load event never fires,
+  // so the hero never gets stuck showing only the poster image.
+  setTimeout(revealHero, 4000);
+
+  // The loop=1 query param is not always reliable on its own for embedded
+  // Vimeo iframes; the Player SDK's 'ended' handler is the documented,
+  // dependable way to guarantee looping. Falls back to native loop=1 if
+  // the SDK fails to load (e.g. blocked by an ad/privacy blocker).
+  if (window.Vimeo && window.Vimeo.Player) {
+    try {
+      var heroPlayer = new window.Vimeo.Player(heroFrame);
+      heroPlayer.on('ended', function () { heroPlayer.play(); });
+    } catch (e) {
+      /* native loop=1 still applies */
+    }
+  }
+}

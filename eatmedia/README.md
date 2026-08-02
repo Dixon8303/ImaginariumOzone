@@ -205,6 +205,53 @@ analytics from the current site, and named competitors you want
 positioned against would unlock Phases 2, 7, and 11 for real instead of
 performing them.
 
+## Verified audit round (6 independent lenses + a skeptical verifier)
+
+Ran a structured audit — six reviewers (customer UX/conversion,
+information architecture, accessibility, technical/SEO/performance,
+content accuracy/cross-page consistency, CSS design-system quality) each
+independently read the real source files, followed by a verifier that
+re-checked every finding against the actual code before anything was
+acted on. 24 of 36 raw findings were confirmed real and fixed, including:
+
+- A real CSS bug: Content Retainer prices ($1,875–$5,625/mo) were
+  silently rendering as unstyled plain text — the `.tier-price` styling
+  rule only matched `.price-card`, but the retainer cards use
+  `.package-card`. Fixed with a proper rule instead of the inline
+  `font-size` hack that was masking it.
+- The homepage's "See Our Work" hero button linked to the ecosystem
+  cross-link section, not the actual "From the Studio" photo gallery —
+  fixed.
+- A genuine self-contradiction on the About page: "over 10 years in the
+  industry" next to the site's own "est. 2020." Reworded to attribute
+  the 10 years to the team's prior experience, distinct from the
+  company's founding date, rather than guessing at a number.
+- The sticky header (with no `scroll-margin-top` anywhere) was hiding
+  the top of every anchor-jump target site-wide — fixed with one rule.
+- Two more spots using the raw brand blue for sub-large text/badges
+  (missed in the earlier contrast pass) — switched to `--link`.
+- `http://bit.ly/abepodcast` (the only plain-http link on the site),
+  `Llc` → `LLC` casing in social-preview meta tags, missing
+  `aria-current`/`h1`/`twitter:site`/`defer` inconsistencies across
+  pages, dead CSS (`.mission`, `.price-group`, an unused `.pkg-best`),
+  a non-responsive 3-column price grid cramped on phones, canonical/og
+  URLs pointing at `eatmediatv.com` before that domain is actually live
+  (now matches `robots.txt`/`sitemap.xml` and the same staging-URL
+  convention `site/` already uses), an invalid `schema.org` value,
+  a missing social-media row on the Pricing page, and a FAQ answer that
+  omitted the 7-day/100%-fee cancellation clause stated elsewhere on the
+  same page.
+
+**Two findings need input, not more code** — deliberately not guessed at:
+- The Zone 1–4 travel-surcharge system is defined relative to "the
+  studio," but no general area is named anywhere on the site (only "Los
+  Angeles"). A customer can't self-estimate their zone. Needs the
+  business owner to supply a general service area to publish.
+- The "From the Studio" gallery's 8 photos still have generic,
+  numbered alt text — real captions need someone who can actually see
+  what's in each photo, which wasn't possible in the environment that
+  built this (the source Flickr images couldn't be loaded/viewed here).
+
 ## What didn't carry over
 
 - **The contact form.** The live site's "Send Message" form posts to
