@@ -242,6 +242,93 @@ h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
 .price-card .tier-detail { color: var(--muted); font-size: 0.88rem; margin: 0; }
 .price-footnote { color: var(--muted); font-size: 0.85rem; margin-top: 1.5rem; }
 
+.jump-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 2rem;
+}
+.jump-nav a {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+}
+.jump-nav a:hover { color: var(--accent); border-color: var(--accent); }
+
+.ratecard-banner {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  margin: 0 0 2rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.ratecard-banner strong { color: var(--ink); }
+
+.package-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 1.1rem;
+}
+.package-card h3 { margin: 0 0 0.3rem; font-size: 1.1rem; }
+.package-card .pkg-includes { color: var(--muted); font-size: 0.9rem; margin: 0 0 1.1rem; }
+.package-card .pkg-prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+.package-card .pkg-price-cell { background: var(--surface-inset); border-radius: 8px; padding: 0.7rem; text-align: center; }
+.package-card .pkg-price-cell .dur {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.package-card .pkg-price-cell .amt { font-family: 'Archivo Black', sans-serif; color: var(--accent); font-size: 1.15rem; margin-top: 0.25rem; }
+.package-card .pkg-best { margin-top: 1rem; font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+.terms-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.terms-list li {
+  border-bottom: 1px solid var(--line);
+  padding: 0.9rem 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.2rem;
+}
+@media (min-width: 640px) { .terms-list li { grid-template-columns: 11rem 1fr; gap: 1rem; align-items: baseline; } }
+.terms-list .term-label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink);
+}
+.terms-list .term-detail { color: var(--muted); font-size: 0.92rem; margin: 0; }
+
+.savings-badge {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+  margin-left: 0.5rem;
+}
+
 .rate-list { list-style: none; margin: 0.9rem 0 0; padding: 0; display: grid; gap: 0.7rem; }
 .rate-list li {
   background: var(--surface);
