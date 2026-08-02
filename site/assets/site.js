@@ -22,7 +22,7 @@ window.BGF_CONFIG = {
   FORM_ACTION: "https://app.kit.com/forms/9748584/subscriptions",
 
   /* links.html hub destinations. */
-  YOUTUBE_URL: "https://youtube.com/@theblackgeniusfiles",
+  YOUTUBE_URL: "https://www.youtube.com/@theblackgeniusfiles",
   PINTEREST_URL: "PINTEREST_URL",
   PODCAST_URL: "https://podcasts.apple.com/us/podcast/the-all-black-everything-podcast/id1527013923",
   CONTACT_EMAIL: "eatmediatv@gmail.com",
