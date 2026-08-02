@@ -450,6 +450,13 @@ const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9L
 /* Paste the book's purchase link here once it's live. Leave empty ("") and the
    intro screen shows a disabled "coming soon" placeholder instead of a dead link. */
 const BOOK_URL = "https://dixon8303.github.io/genius-index-booksite/";
+/* Cross-links to the rest of the E.A.T. Media / Genius Index ecosystem. */
+/* Points at the official What History Buried site, which this same repo
+   builds and deploys from site/ to /book/ (see site/README.md) — a
+   direct, in-repo URL rather than the tinyurl since that site is richer
+   than the plain retail link and its correctness is fully verifiable here. */
+const WHB_URL = "https://dixon8303.github.io/ImaginariumOzone/book/";
+const BLACK_GENIUS_FILES_URL = "https://dixon8303.github.io/black-genius-files/";
 
 /* Optional: Google sign-in (Firebase Auth + Firestore), for people who want a
    saved history of their results and to opt in to hearing about future Genius
@@ -652,6 +659,14 @@ const $ = id=>document.getElementById(id);
 const stage = ()=>$("stage");
 function h(html){ stage().innerHTML = html; window.scrollTo({top:0}); }
 function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+/* Small "more from the author" link row, reused at the bottom of the intro
+   screen and the results page. Links inherit the surrounding text color/size
+   (underlined for affordance) so it reads correctly against both the dark
+   intro theme and the light book theme on the results page. */
+function ecosystemFooterHTML(){
+ const link = (url,label)=>`<a href="${esc(url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">${label}</a>`;
+ return `More from D. Antione Dixon / E.A.T. Media — ${link(BOOK_URL,"The Genius Index")} · ${link(WHB_URL,"What History Buried")} · ${link(BLACK_GENIUS_FILES_URL,"The Black Genius Files")}`;
+}
 function setProg(p){ $("prog").hidden=false; $("progFill").style.width=(p*100).toFixed(1)+"%"; }
 function litCells(n){ const g=$("glyphHead").children; for(let i=0;i<9;i++) g[i].classList.toggle("lit", i<n); }
 (function(){ const g=$("glyphHead"); for(let i=0;i<9;i++) g.appendChild(document.createElement("div")); })();
@@ -842,9 +857,13 @@ function intro(){
     <h3>Why a "braid"</h3>
     <p class="small dim">Genius is rarely a single gift — it's almost always two domains standing out together. The book names all thirty-six of those pairings <strong>braids</strong>, from The Craftsman (Kinetic × Sensory) to The Diplomat (Relational × Perceptive). This instrument scores your nine domains from what you report and how you actually perform, then resolves and explains your own braid — the same material the book covers, personalized to your answers.</p>
     ${sampleBraidCarouselHTML()}
-    ${BOOK_URL
-      ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
-      : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px">
+      ${BOOK_URL
+        ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
+        : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
+      <a class="btn ghost" href="${esc(WHB_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Read What History Buried →</a>
+      <a class="btn ghost" href="${esc(BLACK_GENIUS_FILES_URL)}" target="_blank" rel="noopener" style="text-decoration:none">The Black Genius Files →</a>
+    </div>
   </div>
 
   ${AUTH_ENABLED ? `<div class="card">
@@ -871,6 +890,7 @@ function intro(){
   <button class="btn primary" onclick="S.code=$('pcode').value.trim(); S.consent=true; part1();">Begin Part 1 · The Inventory</button>
   <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and are added anonymously to the study — no name, email, or account is collected":""}. You'll get your full results chart at the end.</p>
   <p class="consentnote">By taking this assessment, you agree to the anonymous, no-account use of your answers described above.</p>
+  <p class="small dim" style="text-align:center;margin-top:14px">${ecosystemFooterHTML()}</p>
  `);
  startSampleCarousel();
 }
@@ -2161,6 +2181,7 @@ function renderResultsPage(m, exportObj, opts){
     <button class="btn book-ghost" id="copyBtn" style="margin-top:8px">Copy results block</button>
    </details>
    <div class="bfoot" style="text-align:center">The Genius Index is a reflective and developmental tool. It is not a test, a diagnosis, or a measure of intelligence. <em>Identify to amplify.</em></div>
+   <div style="text-align:center;color:var(--book-dim);font-size:12px;margin-top:10px">${ecosystemFooterHTML()}</div>
   </div>
  `);
 
