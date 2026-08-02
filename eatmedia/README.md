@@ -1,26 +1,75 @@
 # E.A.T. Media — company site
 
-Pure static homepage for **Everything, All That Media LLC** (E.A.T. Media),
-a video production and photography studio — "Capture Your Vision." No
-build step, no backend — ready for GitHub Pages, same pattern as
+Static site for **Everything, All That Media LLC** (E.A.T. Media), a video
+production and photography studio — "Capture Your Vision." No build step,
+no backend — ready for GitHub Pages, same pattern as
 [`site/`](../site/README.md).
 
 ## What's here
 
-One page ([`index.html`](index.html)) rebuilt from the real copy on the
-current live site (`everythingallthatmediallc.godaddysites.com`), refreshed
-and restructured:
+Three pages, rebuilt from the real content on the current live site
+(`everythingallthatmediallc.godaddysites.com`, exported and supplied
+directly) and the original pricing spreadsheet, refreshed and
+restructured but not reinvented:
 
-- Hero with phone, hours, and two contact CTAs.
-- **Video Production** — the services blurb, the mission statement, and
-  the current "In Production" slate (podcasts + the Godfood documentary).
-- **Photography & Photoshoot Packages** — what's included in every
-  package. The exact price list from the live site wasn't provided, so
-  this points visitors to contact for current pricing instead of guessing
-  numbers — swap in a real price table here if/when you want one published.
-- **Photoshoot & Media Readiness Prep** — the five-area prep guide,
-  copy-credited to Emily London Portraits (as the source copy specifies).
-- **Contact** — email and phone, matching the live site.
+- **`index.html`** (Home) — hero with the real Vimeo background video
+  (`75851958`) the live site uses, phone/hours, the mission statement, the
+  current "In Production" slate (podcasts + the Godfood documentary),
+  video production rates, a photography summary, and the full five-area
+  Photoshoot & Media Readiness Prep guide (copy-credited to Emily London
+  Portraits, per the source).
+- **`about.html`** — Our Vision, Our Team, Our Experience, and social
+  links, matching the live About page.
+- **`photoshoot-packages.html`** — the full photography price menu.
+- **`assets/style.css`** / **`assets/site.js`** — shared styling (real
+  brand font pair, Archivo Black + Montserrat, and real brand blue
+  `#0292eb`) and the one bit of shared JS (footer year).
+- **`assets/manifest.webmanifest`** — same web-app manifest as the live
+  site (name, icons, theme color).
+
+Real assets are hotlinked from the live site's own CDN
+(`img1.wsimg.com`) — the logo, the favicon, and every photo — rather than
+invented placeholders. **Before ever canceling the GoDaddy Website
+Builder subscription**, download and self-host these images under
+`eatmedia/img/` (same pattern as `site/img/`), since canceling that
+account will likely take the CDN URLs down with it.
+
+## Pricing — reconciled against the original spreadsheet
+
+The live site's own price list had drifted from what it was set up
+against — most notably, its "30 Minute Model Package" (Platinum tier)
+was $150 where the [source spreadsheet](https://docs.google.com/spreadsheets/d/1v71DXyfjOeUW_tCTfHQ9rim6cfT1F-aWnQtI7OkLiOs)
+shows $850, the only entry that broke an otherwise consistent
+30/60/90-minute price ladder in every other category. `photoshoot-packages.html`
+publishes the spreadsheet's numbers as the source of truth:
+
+- Premier Packages (premium location + makeup) — $850 / $900 / $1,000
+- Studio Professional Packages (Lightbender Lab + makeup) — $450 / $500 / $600
+- On-Location Pro Shoot Packages (makeup, on location) — $400 / $450 / $500
+- Lightbender Lab Studio Packages (studio only) — $300 / $350 / $400
+- Travel Packages — $300 / $350 / $400
+- Event Photography — $75/hr, 2-hr minimum ($150)
+- Organizational Headshot Packages — $75 / $50 / $40 per person, by group size
+- Additional photo edit — $20 each
+
+Two things worth double-checking against what you actually want live:
+
+1. The live site's "On Location Shoot" category (Professional Picture /
+   Premier Portrait / Platinum Prestige) was priced $250/$300/$350 —
+   that triple doesn't match any category in the spreadsheet at all. The
+   closest match by description (makeup artist included, on location) is
+   "On-Location Pro Shoot Packages" at $400/$450/$500, which is what's
+   published now. If $250/$300/$350 was an intentional, separate lower
+   tier, let me know and I'll add it back as its own category.
+2. The spreadsheet's **Video Production rates** (editing, on-location
+   shooting, additional crew) weren't on the live site at all — they're
+   now on the home page's Video Production section. Confirm those are
+   still current before this goes live.
+3. The site's flashy package names (Platinum, Diva, Mannequin, Vogue
+   Essence, etc.) were dropped in favor of the spreadsheet's plain
+   category/duration names, since the spreadsheet is the source of
+   truth and doesn't define those names. Happy to reintroduce them as
+   marketing labels over the correct prices if you want that back.
 
 ## Staging — LIVE at the repo URL
 
@@ -39,10 +88,12 @@ domain applies to a whole Pages site, not a subfolder) — see below.
 `eatmediatv.com` currently points at a GoDaddy Website Builder site
 (`everythingallthatmediallc.godaddysites.com`). To replace it with this site:
 
-1. **Move this folder to its own Pages site** — a dedicated repo (e.g.
+1. **Self-host the hotlinked images** under `eatmedia/img/` (see above),
+   and update the `src` attributes across the three pages.
+2. **Move this folder to its own Pages site** — a dedicated repo (e.g.
    `eat-media`), with these files at the root. Keep `CNAME` (it contains
    `eatmediatv.com`; Pages reads it automatically).
-2. **Update DNS at the registrar** (GoDaddy, since that's where the domain
+3. **Update DNS at the registrar** (GoDaddy, since that's where the domain
    is registered) — replace whatever records currently point the domain at
    Website Builder with:
 
@@ -54,19 +105,36 @@ domain applies to a whole Pages site, not a subfolder) — see below.
    | A | `@` | `185.199.111.153` |
    | CNAME | `www` | `<your-github-username>.github.io` |
 
-3. In the new repo's **Settings → Pages**, set the custom domain to
+4. In the new repo's **Settings → Pages**, set the custom domain to
    `eatmediatv.com` and **enable HTTPS** once the certificate issues (DNS +
    cert can take up to 24h the first time).
-4. Optionally cancel/downgrade the GoDaddy Website Builder subscription for
-   this site once the cutover is confirmed working — don't touch it before
-   the new site is verified live, so there's no gap where the domain
-   resolves to nothing.
+5. Optionally cancel/downgrade the GoDaddy Website Builder subscription for
+   this site once the cutover is confirmed working — not before, and not
+   until step 1 is done, so there's no gap where images or the domain
+   itself go dark.
 
 Until that cutover happens, this page is safe to iterate on at the staging
 URL above with zero risk to the live GoDaddy site.
 
+## What didn't carry over
+
+- **The contact form.** The live site's "Send Message" form posts to
+  GoDaddy's own hosted form backend (with reCAPTCHA) — that doesn't
+  exist for a static site. For now, Contact sections use direct
+  `mailto:`/`tel:` links instead of a fake form. Wire up a real form
+  backend (Formspree, Netlify Forms, etc.) if you want an inline form
+  back.
+- **The About page's Instagram feed and Reviews widgets** — both were
+  GoDaddy-hosted embeds pulling live/dynamic content. `about.html` links
+  out to the real Instagram profile instead of faking a feed, and drops
+  the Reviews section rather than inventing testimonials — add real
+  ones whenever you have them to publish.
+
 ## Editing
 
-Everything is inline in `index.html` — no separate config file. The "In
-Production" list, the package price note, and the contact block are the
-sections most likely to need updates as projects wrap and new ones start.
+- `index.html` — the "In Production" list and video rates.
+- `photoshoot-packages.html` — the price grid (see the reconciliation
+  notes above before changing anything here).
+- `about.html` — team/experience copy.
+- Contact block (email/phone/hours) is repeated at the bottom of all
+  three pages and in the footer — update in all four spots together.
