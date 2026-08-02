@@ -450,6 +450,9 @@ const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9L
 /* Paste the book's purchase link here once it's live. Leave empty ("") and the
    intro screen shows a disabled "coming soon" placeholder instead of a dead link. */
 const BOOK_URL = "https://dixon8303.github.io/genius-index-booksite/";
+/* Cross-links to the rest of the E.A.T. Media / Genius Index ecosystem. */
+const WHB_URL = "https://tinyurl.com/BGFbook1";
+const BLACK_GENIUS_FILES_URL = "https://dixon8303.github.io/black-genius-files/";
 
 /* Optional: Google sign-in (Firebase Auth + Firestore), for people who want a
    saved history of their results and to opt in to hearing about future Genius
@@ -842,9 +845,13 @@ function intro(){
     <h3>Why a "braid"</h3>
     <p class="small dim">Genius is rarely a single gift — it's almost always two domains standing out together. The book names all thirty-six of those pairings <strong>braids</strong>, from The Craftsman (Kinetic × Sensory) to The Diplomat (Relational × Perceptive). This instrument scores your nine domains from what you report and how you actually perform, then resolves and explains your own braid — the same material the book covers, personalized to your answers.</p>
     ${sampleBraidCarouselHTML()}
-    ${BOOK_URL
-      ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
-      : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px">
+      ${BOOK_URL
+        ? `<a class="btn ghost" href="${esc(BOOK_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Get the book →</a>`
+        : `<button class="btn ghost" disabled>Get the book (link coming soon)</button>`}
+      <a class="btn ghost" href="${esc(WHB_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Read What History Buried →</a>
+      <a class="btn ghost" href="${esc(BLACK_GENIUS_FILES_URL)}" target="_blank" rel="noopener" style="text-decoration:none">The Black Genius Files →</a>
+    </div>
   </div>
 
   ${AUTH_ENABLED ? `<div class="card">
