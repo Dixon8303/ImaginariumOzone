@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dixon8303.github.io/ImaginariumOzone/eatmedia/sitemap.xml
