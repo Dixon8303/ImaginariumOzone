@@ -451,7 +451,11 @@ const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9L
    intro screen shows a disabled "coming soon" placeholder instead of a dead link. */
 const BOOK_URL = "https://dixon8303.github.io/genius-index-booksite/";
 /* Cross-links to the rest of the E.A.T. Media / Genius Index ecosystem. */
-const WHB_URL = "https://tinyurl.com/BGFbook1";
+/* Points at the official What History Buried site, which this same repo
+   builds and deploys from site/ to /book/ (see site/README.md) — a
+   direct, in-repo URL rather than the tinyurl since that site is richer
+   than the plain retail link and its correctness is fully verifiable here. */
+const WHB_URL = "https://dixon8303.github.io/ImaginariumOzone/book/";
 const BLACK_GENIUS_FILES_URL = "https://dixon8303.github.io/black-genius-files/";
 
 /* Optional: Google sign-in (Firebase Auth + Firestore), for people who want a
