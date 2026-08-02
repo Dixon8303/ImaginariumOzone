@@ -25,6 +25,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://player.vimeo.com" />
+<link rel="preconnect" href="https://i.vimeocdn.com" />
 <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
@@ -51,8 +53,8 @@
 <main id="main">
 
   <section class="hero" style="border-bottom:none;">
-    <div class="hero-video-wrap" aria-hidden="true">
-      <iframe src="https://player.vimeo.com/video/75851958?autoplay=1&loop=1&autopause=0&muted=1&title=0&byline=0&portrait=0&controls=0&background=1" allow="autoplay; fullscreen" loading="lazy" tabindex="-1"></iframe>
+    <div class="hero-video-wrap" aria-hidden="true" style="background-image:url('https://i.vimeocdn.com/video/450511290-21ca1a1942724da34c97c2b71b39ebcc40e58e8ae03b3cf8ae62ee56faba2abf-d_640');">
+      <iframe id="hero-video" src="https://player.vimeo.com/video/75851958?autoplay=1&loop=1&autopause=0&muted=1&title=0&byline=0&portrait=0&controls=0" allow="autoplay; fullscreen" tabindex="-1"></iframe>
     </div>
     <div class="hero-scrim"></div>
     <div class="wrap hero-inner">
@@ -79,6 +81,24 @@
           <p>At Everything, All That Media LLC, our mission is to provide high-quality video and film production services to clients of all sizes. We strive to create stunning visuals that capture our clients' vision and exceed their expectations.</p>
           <p><a href="about.html">More about us →</a></p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <p class="eyebrow">Recent Work</p>
+      <h2>From the Studio</h2>
+      <p class="section-intro">A few frames from recent shoots.</p>
+      <div class="work-gallery">
+        <a href="https://live.staticflickr.com/8070/8240115223_99ab7919b9_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/8070/8240115223_99ab7919b9_b.jpg" alt="Work sample from Everything, All That Media LLC — 1" loading="lazy" /></a>
+        <a href="https://live.staticflickr.com/4215/35566220252_2b8531e662_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/4215/35566220252_2b8531e662_b.jpg" alt="Work sample from Everything, All That Media LLC — 2" loading="lazy" /></a>
+        <a href="https://live.staticflickr.com/8470/8143988739_ff05d24db0_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/8470/8143988739_ff05d24db0_b.jpg" alt="Work sample from Everything, All That Media LLC — 3" loading="lazy" /></a>
+        <a href="https://live.staticflickr.com/8475/8143979391_124de242ba_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/8475/8143979391_124de242ba_b.jpg" alt="Work sample from Everything, All That Media LLC — 4" loading="lazy" /></a>
+        <a href="https://live.staticflickr.com/8044/8144006154_91c73af518_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/8044/8144006154_91c73af518_b.jpg" alt="Work sample from Everything, All That Media LLC — 5" loading="lazy" /></a>
+        <a href="https://live.staticflickr.com/8240/8626223259_b65c1479cb_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/8240/8626223259_b65c1479cb_b.jpg" alt="Work sample from Everything, All That Media LLC — 6" loading="lazy" /></a>
+        <a href="https://live.staticflickr.com/65535/49140321291_32cef592d2_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/65535/49140321291_32cef592d2_b.jpg" alt="Work sample from Everything, All That Media LLC — 7" loading="lazy" /></a>
+        <a href="https://live.staticflickr.com/65535/49282071522_059602372a_b.jpg" target="_blank" rel="noopener"><img src="https://live.staticflickr.com/65535/49282071522_059602372a_b.jpg" alt="Work sample from Everything, All That Media LLC — 8" loading="lazy" /></a>
       </div>
     </div>
   </section>
@@ -110,7 +130,7 @@
           <p style="margin:0.8rem 0 0;"><a href="https://dixon8303.github.io/ImaginariumOzone/dixon-grant-studio/" target="_blank" rel="noopener">See the offer →</a></p>
         </div>
       </div>
-      <p><a href="https://dixon8303.github.io/ImaginariumOzone/links.html" target="_blank" rel="noopener">See every project in one place →</a></p>
+      <p><a href="https://dixon8303.github.io/ImaginariumOzone/book/links.html" target="_blank" rel="noopener">See every project in one place →</a></p>
     </div>
   </section>
 
@@ -260,7 +280,7 @@
           <a href="https://dixon8303.github.io/ImaginariumOzone/book/" target="_blank" rel="noopener">What History Buried</a>
           <a href="https://dixon8303.github.io/ImaginariumOzone/" target="_blank" rel="noopener">The Genius Index</a>
           <a href="https://dixon8303.github.io/ImaginariumOzone/dixon-grant-studio/" target="_blank" rel="noopener">Dixon Grant Studio</a>
-          <a href="https://dixon8303.github.io/ImaginariumOzone/links.html" target="_blank" rel="noopener">All Projects</a>
+          <a href="https://dixon8303.github.io/ImaginariumOzone/book/links.html" target="_blank" rel="noopener">All Projects</a>
         </nav>
       </div>
     </div>
@@ -281,6 +301,7 @@
   <a class="btn primary" href="#contact">Get a Quote</a>
 </div>
 
-<script src="assets/site.js"></script>
+<script src="https://player.vimeo.com/api/player.js" defer></script>
+<script src="assets/site.js" defer></script>
 </body>
 </html>
