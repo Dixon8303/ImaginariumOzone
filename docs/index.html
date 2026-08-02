@@ -659,6 +659,14 @@ const $ = id=>document.getElementById(id);
 const stage = ()=>$("stage");
 function h(html){ stage().innerHTML = html; window.scrollTo({top:0}); }
 function esc(s){ return s.replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+/* Small "more from the author" link row, reused at the bottom of the intro
+   screen and the results page. Links inherit the surrounding text color/size
+   (underlined for affordance) so it reads correctly against both the dark
+   intro theme and the light book theme on the results page. */
+function ecosystemFooterHTML(){
+ const link = (url,label)=>`<a href="${esc(url)}" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">${label}</a>`;
+ return `More from D. Antione Dixon / E.A.T. Media — ${link(BOOK_URL,"The Genius Index")} · ${link(WHB_URL,"What History Buried")} · ${link(BLACK_GENIUS_FILES_URL,"The Black Genius Files")}`;
+}
 function setProg(p){ $("prog").hidden=false; $("progFill").style.width=(p*100).toFixed(1)+"%"; }
 function litCells(n){ const g=$("glyphHead").children; for(let i=0;i<9;i++) g[i].classList.toggle("lit", i<n); }
 (function(){ const g=$("glyphHead"); for(let i=0;i<9;i++) g.appendChild(document.createElement("div")); })();
@@ -882,6 +890,7 @@ function intro(){
   <button class="btn primary" onclick="S.code=$('pcode').value.trim(); S.consent=true; part1();">Begin Part 1 · The Inventory</button>
   <p class="small dim" style="margin-top:14px">Free and anonymous. Your responses stay on this device${SUBMIT_URL?" and are added anonymously to the study — no name, email, or account is collected":""}. You'll get your full results chart at the end.</p>
   <p class="consentnote">By taking this assessment, you agree to the anonymous, no-account use of your answers described above.</p>
+  <p class="small dim" style="text-align:center;margin-top:14px">${ecosystemFooterHTML()}</p>
  `);
  startSampleCarousel();
 }
@@ -2172,6 +2181,7 @@ function renderResultsPage(m, exportObj, opts){
     <button class="btn book-ghost" id="copyBtn" style="margin-top:8px">Copy results block</button>
    </details>
    <div class="bfoot" style="text-align:center">The Genius Index is a reflective and developmental tool. It is not a test, a diagnosis, or a measure of intelligence. <em>Identify to amplify.</em></div>
+   <div style="text-align:center;color:var(--book-dim);font-size:12px;margin-top:10px">${ecosystemFooterHTML()}</div>
   </div>
  `);
 
