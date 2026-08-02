@@ -250,7 +250,7 @@ h1, h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 1.2rem; }
 .split { display: grid; gap: 2rem; grid-template-columns: 1fr; align-items: center; }
 @media (min-width: 720px) { .split { grid-template-columns: 1fr 1.2fr; } }
 .split.reverse .media { order: 2; }
-.split .media img { border-radius: 10px; border: 1px solid var(--line); }
+.split .media img { width: 100%; height: auto; border-radius: 10px; border: 1px solid var(--line); }
 .split .media figcaption { margin-top: 0.5rem; font-size: 0.78rem; color: var(--muted); }
 
 .in-production { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; }
