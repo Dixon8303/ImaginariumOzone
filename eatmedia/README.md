@@ -1,15 +1,26 @@
 # E.A.T. Media — company site
 
-Pure static homepage for **Everything All That Media, LLC** (E.A.T. Media),
-D. Antione Dixon's publishing/production house. No build step, no backend —
-ready for GitHub Pages, same pattern as [`site/`](../site/README.md).
+Pure static homepage for **Everything, All That Media LLC** (E.A.T. Media),
+a video production and photography studio — "Capture Your Vision." No
+build step, no backend — ready for GitHub Pages, same pattern as
+[`site/`](../site/README.md).
 
 ## What's here
 
-One page ([`index.html`](index.html)): hero, the three live ventures (The
-Black Genius Files, The Genius Index, Dixon Grant Studio), the book shelf,
-a founder bio, and contact. All outbound links point at real, already-live
-pages in this repo or its ecosystem — nothing here is a placeholder link.
+One page ([`index.html`](index.html)) rebuilt from the real copy on the
+current live site (`everythingallthatmediallc.godaddysites.com`), refreshed
+and restructured:
+
+- Hero with phone, hours, and two contact CTAs.
+- **Video Production** — the services blurb, the mission statement, and
+  the current "In Production" slate (podcasts + the Godfood documentary).
+- **Photography & Photoshoot Packages** — what's included in every
+  package. The exact price list from the live site wasn't provided, so
+  this points visitors to contact for current pricing instead of guessing
+  numbers — swap in a real price table here if/when you want one published.
+- **Photoshoot & Media Readiness Prep** — the five-area prep guide,
+  copy-credited to Emily London Portraits (as the source copy specifies).
+- **Contact** — email and phone, matching the live site.
 
 ## Staging — LIVE at the repo URL
 
@@ -56,6 +67,6 @@ URL above with zero risk to the live GoDaddy site.
 
 ## Editing
 
-Everything is inline in `index.html` — no separate config file. The three
-venture cards, the shelf list, and the contact email are the sections most
-likely to need updates as new books/ventures ship.
+Everything is inline in `index.html` — no separate config file. The "In
+Production" list, the package price note, and the contact block are the
+sections most likely to need updates as projects wrap and new ones start.
