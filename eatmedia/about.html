@@ -14,6 +14,11 @@
 <meta property="og:title" content="About — Everything, All That Media Llc" />
 <meta property="og:description" content="Our vision, our team, and our experience." />
 <meta property="og:url" content="https://eatmediatv.com/about.html" />
+<meta property="og:image" content="https://img1.wsimg.com/isteam/ip/9bf5266b-ebaa-4a84-82a0-843bbd155e05/Tyler_2022-1202.JPG/:/rs=w:1200,cg:true" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="About — Everything, All That Media Llc" />
+<meta name="twitter:description" content="Our vision, our team, and our experience." />
+<meta name="twitter:image" content="https://img1.wsimg.com/isteam/ip/9bf5266b-ebaa-4a84-82a0-843bbd155e05/Tyler_2022-1202.JPG/:/rs=w:1200,cg:true" />
 <link rel="canonical" href="https://eatmediatv.com/about.html" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
@@ -21,13 +26,17 @@
 <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 
 <header class="top">
   <div class="wrap">
     <a class="logo" href="index.html">
       <img src="https://img1.wsimg.com/isteam/ip/9bf5266b-ebaa-4a84-82a0-843bbd155e05/Eat%20media%20transparency%20black.png/:/rs=h:95,cg:true,m/qt=q:95" alt="Everything, All That Media LLC" />
     </a>
-    <nav class="primary" aria-label="Primary">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Toggle navigation">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <nav class="primary" id="primary-nav" aria-label="Primary">
       <a href="index.html">Home</a>
       <a href="about.html" class="current">About</a>
       <a href="photoshoot-packages.html">Pricing</a>
@@ -37,7 +46,7 @@
   </div>
 </header>
 
-<main>
+<main id="main">
 
   <section>
     <div class="wrap">
@@ -130,6 +139,11 @@
     <p class="fineprint">Everything, All That Media LLC — est. 2020</p>
   </div>
 </footer>
+
+<div class="sticky-cta" aria-hidden="false">
+  <a class="btn outline" href="tel:+17738271502">Call</a>
+  <a class="btn primary" href="index.html#contact">Get a Quote</a>
+</div>
 
 <script src="assets/site.js"></script>
 </body>

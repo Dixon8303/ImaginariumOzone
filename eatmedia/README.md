@@ -71,6 +71,50 @@ dedicated studio space, that's now a pass-through "studio rental" fee
 (Add-Ons & Licensing, and a footnote under the package cards) — at cost,
 same pattern as permits/venue/parking. No studio is named on the site.
 
+## Technical, UX, and accessibility pass
+
+A further round against the original 12-phase agency brief — the parts
+of it that were honestly deliverable with the tools and real content
+available, verified rather than just asserted:
+
+- **Market position (real, lightweight).** Checked the rate card against
+  actual 2026 LA market data — headshots run $400-1,200+, small-business
+  video $1,200-8,200. This card sits appropriately in-market; no pricing
+  changed as a result, this was a sanity check, not a rewrite.
+- **Mobile navigation.** The 5-item nav wrapped awkwardly on narrow
+  screens; it now collapses into a proper hamburger toggle
+  (`assets/site.js` + `.nav-toggle` in `assets/style.css`), no dependencies.
+- **Scroll-reveal.** Sections fade/lift in on scroll via
+  `IntersectionObserver`, fully skipped under `prefers-reduced-motion`,
+  and content is never hidden if JS fails (default state is visible).
+  Verified with real incremental scrolling, not just a static screenshot
+  — a `fullPage` Playwright screenshot taken without scrolling first is
+  a false positive/negative for this pattern, worth remembering if you
+  test it again.
+- **Sticky mobile CTA.** A fixed Call / Get a Quote bar on screens
+  ≤720px, since the primary conversion actions were easy to miss once
+  scrolled past the hero.
+- **FAQ (honest trust-building, not fabricated).** New FAQ section on
+  the Pricing page, plus `FAQPage` structured data — six questions, and
+  every answer is a restatement of a policy that already exists
+  elsewhere on the page. Nothing invented.
+- **Open Graph images.** All three pages were missing `og:image` /
+  `twitter:image` entirely (no share-card image at all); now set from
+  real photos already used on each page, with `twitter:card` upgraded to
+  `summary_large_image`.
+- **Accessibility.** Added a skip-to-content link on all three pages.
+  Ran real WCAG contrast math (not eyeballed) on every text/background
+  pairing: the brand blue `#0292eb` is only 3.1-3.3:1 against the
+  site's light backgrounds — fine for large UI (buttons, borders, price
+  numerals) which only need 3:1, but body-size links and small labels
+  need 4.5:1 and were failing. Added a `--link` token (`#0275bc` in
+  light mode, same as `--accent` in dark mode where it already passes)
+  used for regular links, the eyebrow labels, and the small rate-price
+  figures — the brand blue itself is untouched everywhere it was already
+  compliant (buttons, badges, large price display).
+- `robots.txt` / `sitemap.xml` added, matching `site/`'s pattern (inert
+  until the folder is served from a domain root — see below).
+
 ## Staging — LIVE at the repo URL
 
 Deployed by this repo's Pages workflow
@@ -136,20 +180,30 @@ case studies, testimonials, or client logos that don't exist. Concretely:
 - The JSON-LD `sameAs` array on the home page now includes the real
   ecosystem URLs alongside the social profiles.
 
-**On the bigger ask** ("run a full 12-phase agency rebuild — Pentagram,
-IDEO, McKinsey, Awwwards-tier, score every page 9.5+, don't stop until
-diminishing returns"): I did the highest-leverage, honest part of that —
-real strategic repositioning and cross-linking, grounded in what
-actually exists. I didn't do the rest, on purpose: competitor teardown
-research, a from-scratch bespoke component/motion-design system, and
-"trust engineering" (case studies, testimonials, client logos, awards,
-stats) either need real inputs I don't have (your competitors, your
-brand assets, actual client outcomes) or would mean fabricating content
-on a real business's public site to hit a design-agency checklist. If
-you want to go further, the useful next inputs are: real client
-testimonials/case studies, any analytics you have on the current site,
-and named competitors you want positioned against — with those, the
-next round can go much further for real instead of performing it.
+## Honest scorecard against the 12-phase brief
+
+Asked to keep working through the original 12-phase agency brief and
+self-score against it. Real assessment, not inflated to hit a number:
+
+| Phase | Status | Why |
+|---|---|---|
+| 1. Strategic audit | Done | Real diagnosis: production-for-hire framing wasted the owned-catalog differentiator. |
+| 2. Market position | Done (lightweight) | Checked real 2026 LA pricing data — the rate card is market-appropriate. No named-competitor teardown; wasn't asked for and risks inaccurate claims about businesses I can't verify in depth. |
+| 3. Narrative | Done | Hero, About, and site-wide framing rewritten around the venture-studio positioning. |
+| 4. Information architecture | Done | Nav simplified to what's real; mobile nav fixed; jump-nav added to the long pricing page. |
+| 5. Visual system | Partial | One coherent, documented system (type/color/spacing/components) — real brand assets (font pair, blue, logo), not a from-scratch bespoke system built without design input. |
+| 6. Experience design | Partial | Mobile nav, scroll-reveal, sticky CTA, FAQ accordion, focus states all real and verified. No custom video/photo interactions (lightbox, filtering) — not clearly needed yet. |
+| 7. Trust engineering | Capped, honestly | FAQ is real. Case studies/testimonials/awards/client logos are **not fabricated** — this phase cannot score highly without real assets from you. |
+| 8. Conversion optimization | Done | Sticky mobile CTA, consistent primary-action hierarchy, low-friction discovery-call framing repeated at the top of Pricing. |
+| 9. Technical excellence | Done | og:image added (was missing entirely), sitemap/robots added, real WCAG contrast math run and fixed (not eyeballed), skip link, valid structured data. |
+| 10. Brand expansion | Done | Ecosystem cross-linking (this round + the positioning round). |
+| 11. Luxury pass | Partial | Real, verified detail work (contrast, motion, nav) over a system built from real brand assets — not a claim of Apple/Stripe-tier bespoke design, which needs a design process this can't simulate. |
+| 12. Continuous improvement | This table | Every "Partial"/"Capped" row above is capped by a real constraint (no design partner, no client assets to fabricate from) — not by remaining effort. More rounds won't move those without new real inputs. |
+
+If you want to push further: real client testimonials/case studies, any
+analytics from the current site, and named competitors you want
+positioned against would unlock Phases 2, 7, and 11 for real instead of
+performing them.
 
 ## What didn't carry over
 
