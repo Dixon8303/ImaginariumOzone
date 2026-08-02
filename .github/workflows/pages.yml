@@ -6,6 +6,7 @@ on:
     paths:
       - 'docs/**'
       - 'site/**'
+      - 'eatmedia/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -35,14 +36,17 @@ jobs:
           # Enable Pages automatically on first run so no manual Settings toggle is needed.
           enablement: true
 
-      - name: Assemble site (assessment at root, book site at /book/)
+      - name: Assemble site (assessment at root, book site at /book/, company site at /eatmedia/)
         run: |
-          mkdir -p _site/book
+          mkdir -p _site/book _site/eatmedia
           cp -r docs/. _site/
           cp -r site/. _site/book/
-          # CNAME only applies at the artifact root; keep the custom domain
-          # out of play until DNS is set up (see site/README.md).
+          cp -r eatmedia/. _site/eatmedia/
+          # CNAME only applies at the artifact root; keep custom domains
+          # out of play until DNS is set up (see site/README.md and
+          # eatmedia/README.md).
           rm -f _site/book/CNAME
+          rm -f _site/eatmedia/CNAME
           # The book site's 404 is self-contained and must live at the root
           # for GitHub Pages to serve it. The root has no other 404.
           cp site/404.html _site/404.html
