@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>E.A.T. Media — Everything All That Media, LLC</title>
+<meta name="description" content="Everything All That Media, LLC — a Los Angeles publishing and production house. Books, documentaries, and tools built around one idea: identify to amplify." />
+<meta name="theme-color" content="#171410" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.85em%22 font-size=%2290%22>🄴</text></svg>" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="E.A.T. Media" />
+<meta property="og:title" content="E.A.T. Media — Everything All That Media, LLC" />
+<meta property="og:description" content="A Los Angeles publishing and production house. Books, documentaries, and tools built around one idea: identify to amplify." />
+<meta property="og:url" content="https://eatmediatv.com/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="E.A.T. Media — Everything All That Media, LLC" />
+<meta name="twitter:description" content="A Los Angeles publishing and production house. Books, documentaries, and tools built around one idea: identify to amplify." />
+<link rel="canonical" href="https://eatmediatv.com/" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Everything All That Media, LLC","alternateName":"E.A.T. Media","url":"https://eatmediatv.com/","email":"eatmediatv@gmail.com","founder":{"@type":"Person","name":"D. Antione Dixon"},"sameAs":["https://dixon8303.github.io/ImaginariumOzone/book/","https://dixon8303.github.io/ImaginariumOzone/","https://www.youtube.com/@theblackgeniusfiles","https://podcasts.apple.com/us/podcast/the-all-black-everything-podcast/id1527013923"]}</script>
+<style>
+  :root {
+    --ink: #1c1913;
+    --paper: #f6f2e9;
+    --surface: #ffffff;
+    --surface-inset: #efe9db;
+    --line: #ded5bf;
+    --muted: #6b6252;
+    --accent: #a1522c;
+    --accent-ink: #fffaf0;
+    --focus: #a1522c;
+  }
+  :root[data-theme="dark"] {
+    --ink: #ece5d6;
+    --paper: #15130f;
+    --surface: #1c1912;
+    --surface-inset: #211d15;
+    --line: #3a3427;
+    --muted: #a29a86;
+    --accent: #e0a066;
+    --accent-ink: #1c1207;
+    --focus: #e0a066;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #ece5d6;
+      --paper: #15130f;
+      --surface: #1c1912;
+      --surface-inset: #211d15;
+      --line: #3a3427;
+      --muted: #a29a86;
+      --accent: #e0a066;
+      --accent-ink: #1c1207;
+      --focus: #e0a066;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  }
+
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
+
+  body {
+    font-family: 'Newsreader', Georgia, serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); }
+  a:hover { color: var(--ink); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+  .eyebrow, nav a, .pill, .btn, footer .fineprint {
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+
+  header.top {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  header.top .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 0.9rem;
+    padding-bottom: 0.9rem;
+  }
+  .wordmark {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    font-size: 1.05rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+  .wordmark small {
+    display: block;
+    font-weight: 500;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+  nav { display: flex; gap: 1.4rem; flex-wrap: wrap; }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  nav a:hover { color: var(--accent); }
+
+  section { padding: 4rem 0; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: none; }
+
+  .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 0.9rem;
+  }
+
+  h1 {
+    font-size: clamp(2.1rem, 5vw, 3.1rem);
+    line-height: 1.12;
+    margin: 0 0 1.1rem;
+    text-wrap: balance;
+    font-weight: 600;
+  }
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 1.9rem);
+    margin: 0 0 0.4rem;
+    font-weight: 600;
+  }
+  .lede {
+    font-size: 1.18rem;
+    color: var(--muted);
+    max-width: 56ch;
+    margin: 0 0 1.8rem;
+  }
+  .section-intro { max-width: 62ch; color: var(--muted); margin: 0 0 2.2rem; }
+
+  .cta-row { display: flex; gap: 0.9rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 0.75rem 1.3rem;
+    border-radius: 4px;
+    border: 1px solid var(--ink);
+  }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn.ghost:hover { border-color: var(--ink); color: var(--ink); }
+
+  .ventures { display: grid; gap: 1.1rem; }
+  .venture {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.5rem 1.6rem;
+    display: grid;
+    gap: 0.6rem;
+  }
+  .venture .kicker {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .venture p { margin: 0; color: var(--muted); }
+  .venture .go {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-decoration: none;
+    justify-self: start;
+  }
+
+  .shelf { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0.9rem 1.6rem; padding: 0; margin: 0; list-style: none; }
+  .shelf li {
+    padding: 0.9rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .shelf .title { font-weight: 600; display: block; }
+  .shelf .status {
+    font-family: 'Archivo', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+  }
+
+  .about-grid { display: grid; gap: 2rem; grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .about-grid { grid-template-columns: 1fr 1fr; } }
+  blockquote {
+    margin: 1.4rem 0 0;
+    padding-left: 1.1rem;
+    border-left: 3px solid var(--accent);
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .contact-card {
+    background: var(--surface-inset);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 1.8rem 2rem;
+  }
+  .contact-card a.email {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  footer { padding: 2.5rem 0 3.5rem; }
+  footer .wrap { display: flex; flex-direction: column; gap: 0.6rem; }
+  footer .fineprint { color: var(--muted); font-size: 0.78rem; }
+  footer a { color: var(--muted); }
+  footer a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="wordmark" href="#top">E.A.T. Media<small>Everything All That Media, LLC</small></a>
+    <nav aria-label="Primary">
+      <a href="#ventures">Ventures</a>
+      <a href="#shelf">The Shelf</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section id="hero">
+    <div class="wrap">
+      <p class="eyebrow">Everything All That Media, LLC</p>
+      <h1>Big ideas, delivered with craft — not dumbed down.</h1>
+      <p class="lede">A Los Angeles publishing and production house built by one author-producer, D. Antione Dixon. One throughline runs through every book, documentary, and tool: <strong>identify to amplify.</strong></p>
+      <div class="cta-row">
+        <a class="btn primary" href="#ventures">Explore the ventures</a>
+        <a class="btn ghost" href="#about">Meet the founder</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="ventures">
+    <div class="wrap">
+      <p class="eyebrow">What we've shipped</p>
+      <h2>The ventures</h2>
+      <p class="section-intro">Three active properties, each live and public today.</p>
+      <div class="ventures">
+
+        <article class="venture">
+          <span class="kicker">Book · Documentary · Podcast</span>
+          <h2 style="font-size:1.25rem">The Black Genius Files</h2>
+          <p><em>What History Buried</em>, Vol. 1 — twelve case files the record tried to erase, reopened and sourced. Also a video hub and the All Black Everything Podcast, heard in 22+ countries.</p>
+          <a class="go" href="https://dixon8303.github.io/ImaginariumOzone/book/" target="_blank" rel="noopener">Visit the official site →</a>
+        </article>
+
+        <article class="venture">
+          <span class="kicker">Digital assessment</span>
+          <h2 style="font-size:1.25rem">The Genius Index</h2>
+          <p>An 81-item inventory and nine performance stations that map your own multidimensional intelligence — drawn from the book <em>Braid Constellations</em>. Free, in the browser, no account required.</p>
+          <a class="go" href="https://dixon8303.github.io/ImaginariumOzone/" target="_blank" rel="noopener">Take the assessment →</a>
+        </article>
+
+        <article class="venture">
+          <span class="kicker">Grant-writing service</span>
+          <h2 style="font-size:1.25rem">Dixon Grant Studio</h2>
+          <p>Submission-ready grant application packages for small education nonprofits and after-school programs in South Los Angeles — built against the funder's own rubric, scored before it ships.</p>
+          <a class="go" href="https://dixon8303.github.io/ImaginariumOzone/dixon-grant-studio/" target="_blank" rel="noopener">See the offer →</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="shelf">
+    <div class="wrap">
+      <p class="eyebrow">One author, one shelf</p>
+      <h2>The Shelf</h2>
+      <p class="section-intro">Eight-plus books across intelligence, history, philosophy, faith, food, and human potential.</p>
+      <ul class="shelf">
+        <li><span class="title">The Genius Index</span><span class="status"><a href="https://dixon8303.github.io/ImaginariumOzone/" target="_blank" rel="noopener">Take the assessment →</a></span></li>
+        <li><span class="title">What History Buried</span><span class="status"><a href="https://dixon8303.github.io/ImaginariumOzone/book/" target="_blank" rel="noopener">Visit the site →</a></span></li>
+        <li><span class="title">Thinking Through the Edges</span><span class="status">More from the catalog</span></li>
+        <li><span class="title">Gods of Us</span><span class="status">More from the catalog</span></li>
+        <li><span class="title">The Braid Atlas</span><span class="status">More from the catalog</span></li>
+        <li><span class="title">The Path to Greatness</span><span class="status">More from the catalog</span></li>
+        <li><span class="title">The Godfood Cookbook</span><span class="status">More from the catalog</span></li>
+        <li><span class="title">The Circle of Morality</span><span class="status">More from the catalog</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <p class="eyebrow">Who's behind it</p>
+      <h2>D. Antione Dixon</h2>
+      <div class="about-grid">
+        <p>D. Antione Dixon writes books that respect the reader's intelligence — frameworks like <em>The Genius Index</em> and buried stories like <em>What History Buried</em> — because big ideas deserve craft, not a dumbed-down take.</p>
+        <p>He works inside a Title I LAUSD elementary school as an instructional aide and campus technology trainer, is a Watts of Power Foundation Teaching Fellow, holds an MBA in Marketing from LMU, and is a festival-selected documentary producer who has built investor pitch materials for his own films.</p>
+      </div>
+      <blockquote>"Winning is temporary; better is forever."</blockquote>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <p class="eyebrow">Get in touch</p>
+      <h2>Contact</h2>
+      <p class="section-intro">Press, partnerships, grant-writing inquiries, or just to say the Genius Index called it — one inbox for all of it.</p>
+      <div class="contact-card">
+        <a class="email" href="mailto:eatmediatv@gmail.com">eatmediatv@gmail.com</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="fineprint">© <span id="year"></span> Everything All That Media, LLC. All rights reserved.</p>
+    <p class="fineprint">Looking for everything at once? See the full <a href="https://dixon8303.github.io/ImaginariumOzone/links.html" target="_blank" rel="noopener">link console</a>.</p>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+
+</body>
+</html>
