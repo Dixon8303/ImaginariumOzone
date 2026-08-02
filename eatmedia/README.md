@@ -242,15 +242,16 @@ acted on. 24 of 36 raw findings were confirmed real and fixed, including:
   omitted the 7-day/100%-fee cancellation clause stated elsewhere on the
   same page.
 
-**Two findings need input, not more code** — deliberately not guessed at:
-- The Zone 1–4 travel-surcharge system is defined relative to "the
-  studio," but no general area is named anywhere on the site (only "Los
-  Angeles"). A customer can't self-estimate their zone. Needs the
-  business owner to supply a general service area to publish.
-- The "From the Studio" gallery's 8 photos still have generic,
-  numbered alt text — real captions need someone who can actually see
-  what's in each photo, which wasn't possible in the environment that
-  built this (the source Flickr images couldn't be loaded/viewed here).
+**Service area — resolved.** The Zone 1–4 travel-surcharge system is now
+disclosed as based in South Los Angeles (90062) — stated on the Pricing
+page banner and in the home page's JSON-LD (`address`/`areaServed`),
+supplied directly by the business owner rather than guessed at.
+
+**Still open:** the "From the Studio" gallery's photos still have
+generic, numbered alt text — real captions need someone who can
+actually see what's in each photo, which wasn't possible in the
+environment that built this (the source Flickr images couldn't be
+loaded/viewed here).
 
 ## What didn't carry over
 
