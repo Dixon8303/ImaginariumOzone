@@ -19,6 +19,7 @@ using Skybound.Fleet;
 using Skybound.Economy;
 using Skybound.Guild;
 using Skybound.Input;
+using Skybound.Quest;
 
 namespace Skybound.Editor
 {
@@ -131,6 +132,24 @@ namespace Skybound.Editor
             var guildManager = guildGO.AddComponent<GuildManager>();
             SetField(guildManager, "atlas",        atlas);
             SetField(guildManager, "worldManager", worldManager);
+
+            // Quests
+            var questGO      = Child(systemsGO, "QuestManager");
+            var questManager = questGO.AddComponent<QuestManager>();
+            SetField(questManager, "factionStandings", standingManager);
+            SetField(questManager, "economy",          economy);
+            SetField(questManager, "loreArchive",      loreArchive);
+            SetField(questManager, "uiManager",        uiManager);
+            var questAssets = LoadAllAssets<QuestData>("Assets/Data/Quests");
+            if (questAssets.Length > 0)
+            {
+                var so   = new SerializedObject(questManager);
+                var pool = so.FindProperty("allQuests");
+                pool.arraySize = questAssets.Length;
+                for (int i = 0; i < questAssets.Length; i++)
+                    pool.GetArrayElementAtIndex(i).objectReferenceValue = questAssets[i];
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             // UIManager (created here so later systems can reference it)
             var uiManagerGO = Child(systemsGO, "UIManager");
@@ -274,6 +293,9 @@ namespace Skybound.Editor
             SetField(cmdBar, "atlas",          atlas);
             SetField(cmdBar, "navigator",      navigator);
             SetField(cmdBar, "uiManager",      uiManager);
+            SetField(cmdBar, "questManager",   questManager);
+            SetField(cmdBar, "ship",           shipManager);
+            SetField(cmdBar, "questPanel",     questPanel);
             SetField(cmdBar, "buttonContainer", btnContainerGO.transform as RectTransform);
             SetField(cmdBar, "contextLabel",   ctxTmp);
 
@@ -286,6 +308,37 @@ namespace Skybound.Editor
 
             // Wire airship cell-moved events into cooldown tracker
             // (done at runtime by GameBootstrap)
+
+            // ── Quest Panel (centered, hidden by default) ─────────────────────
+            var questPanelGO = MakeCanvasGroup(canvasGO, "QuestPanel");
+            var questPanelCG = questPanelGO.GetComponent<CanvasGroup>();
+            questPanelCG.alpha = 0f; questPanelCG.interactable = false; questPanelCG.blocksRaycasts = false;
+            var questPanelBg = questPanelGO.AddComponent<Image>();
+            questPanelBg.color = new Color(0.06f, 0.04f, 0.14f, 0.96f);
+
+            MakeLabel(questPanelGO, "QuestTitle",   "Quest", new Vector2(0, 180), 22);
+            var questSpeaker = MakeLabel(questPanelGO, "SpeakerLabel", "", new Vector2(0, 130), 15);
+            var questBody    = MakeLabel(questPanelGO, "BodyLabel",    "", new Vector2(0,  40), 13);
+
+            // Choice button container — vertical layout
+            var qChoiceContGO = Child(questPanelGO, "ChoiceContainer");
+            var qChoiceRT     = qChoiceContGO.AddComponent<RectTransform>();
+            qChoiceRT.anchorMin = new Vector2(0.1f, 0.1f);
+            qChoiceRT.anchorMax = new Vector2(0.9f, 0.38f);
+            qChoiceRT.offsetMin = qChoiceRT.offsetMax = Vector2.zero;
+            var vlg = qChoiceContGO.AddComponent<VerticalLayoutGroup>();
+            vlg.spacing = 8;
+            vlg.childForceExpandWidth  = true;
+            vlg.childForceExpandHeight = false;
+            vlg.childAlignment = TextAnchor.UpperCenter;
+
+            var questPanel = questPanelGO.AddComponent<QuestPanel>();
+            SetField(questPanel, "questManager",    questManager);
+            SetField(questPanel, "canvasGroup",     questPanelCG);
+            SetField(questPanel, "titleLabel",      questPanelGO.transform.Find("QuestTitle")?.GetComponent<TextMeshProUGUI>());
+            SetField(questPanel, "speakerLabel",    questSpeaker.GetComponent<TextMeshProUGUI>());
+            SetField(questPanel, "bodyLabel",       questBody.GetComponent<TextMeshProUGUI>());
+            SetField(questPanel, "choiceContainer", qChoiceRT);
 
             // ── Save/Load Panel (centered, hidden by default) ─────────────────
             var savePanel   = MakeCanvasGroup(canvasGO, "SaveLoadPanel");
