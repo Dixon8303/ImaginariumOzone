@@ -457,11 +457,8 @@ const BOOK_URL = "https://dixon8303.github.io/genius-index-booksite/";
    than the plain retail link and its correctness is fully verifiable here. */
 const WHB_URL = "https://dixon8303.github.io/ImaginariumOzone/book/";
 const BLACK_GENIUS_FILES_URL = "https://dixon8303.github.io/black-genius-files/";
-/* The parent company site. eatmediatv.com is still the live GoDaddy site for
-   now (see eatmedia/README.md) -- this repo's own eatmedia/ rebuild is the
-   one that actually cross-links the ecosystem, so point here, not at the
-   domain, until the DNS cutover happens. */
-const EAT_MEDIA_URL = "https://dixon8303.github.io/ImaginariumOzone/eatmedia/";
+/* The parent company site, live at eatmediatv.com. */
+const EAT_MEDIA_URL = "https://eatmediatv.com/";
 
 /* Optional: Google sign-in (Firebase Auth + Firestore), for people who want a
    saved history of their results and to opt in to hearing about future Genius
@@ -653,11 +650,25 @@ const S = {
 };
 DOMAINS.forEach(d=>{S.respA[d.id]=[null,null,null,null,null]; S.respC[d.id]=[null,null,null];});
 
+/* Retest-order randomization: once a taker has completed a full run on this
+   device before (flagged below, at the point results actually finalize),
+   each round's domain order is freshly shuffled on their next visit instead
+   of the canonical DOMAINS order -- same items, same phase/SDR structure
+   (the splice positions just below are untouched), just a different
+   sequence, so a retaker isn't just pattern-matching remembered answer
+   positions. First-time takers always get the canonical order, so the
+   validation study's fixed-form data is unaffected. */
+const RETAKE_ORDER_KEY = "gi_completed_v1";
+function isRetake(){ try{ return !!localStorage.getItem(RETAKE_ORDER_KEY); }catch(e){ return false; } }
+function markCompletedForRetakeOrder(){ try{ localStorage.setItem(RETAKE_ORDER_KEY, "1"); }catch(e){} }
+function shuffled(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
 /* Inventory flow: round-robin A (rows), SDR inserted, then round-robin C */
 const FLOW = [];
-for(let i=0;i<5;i++){ DOMAINS.forEach(d=>FLOW.push({t:"A",d:d.id,i})); }
+const RETAKE_FLOW = isRetake();
+for(let i=0;i<5;i++){ (RETAKE_FLOW?shuffled(DOMAINS):DOMAINS).forEach(d=>FLOW.push({t:"A",d:d.id,i})); }
 FLOW.splice(22,0,{t:"S",i:0}); FLOW.splice(53,0,{t:"S",i:1});
-for(let i=0;i<3;i++){ DOMAINS.forEach(d=>FLOW.push({t:"C",d:d.id,i})); }
+for(let i=0;i<3;i++){ (RETAKE_FLOW?shuffled(DOMAINS):DOMAINS).forEach(d=>FLOW.push({t:"C",d:d.id,i})); }
 
 /* ============ HELPERS ============ */
 const $ = id=>document.getElementById(id);
@@ -2200,6 +2211,7 @@ function renderResultsPage(m, exportObj, opts){
  if(!opts.archived && !S._submitted){
   submitResult(exportObj); S._submitted=true; // submit once, not on nav re-render; never for an archived replay
   saveResultToProfile(exportObj); // separate opt-in write; no-op unless signed in
+  markCompletedForRetakeOrder(); // next visit on this device gets a shuffled item order
  }
  wireWheelTooltip();
  const shareBtn=$("shareBtn");
