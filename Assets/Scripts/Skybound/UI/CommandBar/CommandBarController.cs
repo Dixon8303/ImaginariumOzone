@@ -6,6 +6,7 @@ using Skybound.World;
 using Skybound.Discovery;
 using Skybound.Airship;
 using Skybound.Navigation;
+using Skybound.Quest;
 
 namespace Skybound.UI
 {
@@ -23,11 +24,14 @@ namespace Skybound.UI
     public class CommandBarController : MonoBehaviour
     {
         [Header("Dependencies")]
-        [SerializeField] private SkyWorldManager   worldManager;
-        [SerializeField] private AirshipMovement   airship;
-        [SerializeField] private DiscoveryAtlas    atlas;
-        [SerializeField] private AutoNavigator     navigator;
-        [SerializeField] private Systems.UIManager uiManager;
+        [SerializeField] private SkyWorldManager        worldManager;
+        [SerializeField] private AirshipMovement        airship;
+        [SerializeField] private DiscoveryAtlas         atlas;
+        [SerializeField] private AutoNavigator          navigator;
+        [SerializeField] private Systems.UIManager      uiManager;
+        [SerializeField] private Skybound.Quest.QuestManager  questManager;
+        [SerializeField] private Skybound.Ship.ShipManager    ship;
+        [SerializeField] private QuestPanel             questPanel;
 
         [Header("UI")]
         [SerializeField] private GameObject        buttonPrefab;
@@ -173,6 +177,27 @@ namespace Skybound.UI
                         action = () => uiManager?.AppendFeed("[Void] Rift entry initiated. Crew braced. Reality unstable.")
                     });
                     break;
+            }
+
+            // Quest "Talk" — show if a quest is triggerable here or one is active
+            if (questManager != null && ship != null)
+            {
+                int shipLevel = ship.ShipLevel;
+                var triggerable = questManager.GetTriggerable(cell.Biome, shipLevel);
+                if (triggerable != null && triggerable.Count > 0)
+                {
+                    var quest = triggerable[0];
+                    cmds.Add(new Command
+                    {
+                        label  = "Talk",
+                        color  = new Color(0.45f, 0.25f, 0.65f),
+                        action = () =>
+                        {
+                            questManager.StartQuest(quest);
+                            questPanel?.Show(quest);
+                        }
+                    });
+                }
             }
 
             // Stop auto-nav if active
