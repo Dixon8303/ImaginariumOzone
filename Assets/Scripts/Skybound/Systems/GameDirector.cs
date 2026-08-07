@@ -17,6 +17,9 @@ namespace Skybound.Systems
         [Header("Event Pool")]
         [SerializeField] private List<SkyEvent> eventPool = new List<SkyEvent>();
 
+        [Header("Anti-Repetition")]
+        [SerializeField] private EventCooldownTracker cooldownTracker;
+
         [Header("Pacing")]
         [Tooltip("Master chance (0-100) that ANY event fires on a given CheckForEvent pass.")]
         [SerializeField, Range(0f, 100f)] private float eventChancePerCheck = 35f;
@@ -83,6 +86,7 @@ namespace Skybound.Systems
             if (selected == null) return false;
 
             _activeEvent = selected;
+            cooldownTracker?.RecordEvent(selected.EventId);
             OnEncounterStarted?.Invoke(selected);
             return true;
         }
@@ -111,6 +115,7 @@ namespace Skybound.Systems
             foreach (var evt in eventPool)
             {
                 if (evt == null || !evt.CanTrigger(state)) continue;
+                if (cooldownTracker != null && !cooldownTracker.CanFire(evt.EventId)) continue;
                 float weight = evt.BaseProbability * layerMult;
                 if (weight <= 0f) continue;
                 _weightBuffer.Add(new EventWeight(evt, weight));

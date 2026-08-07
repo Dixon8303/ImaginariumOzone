@@ -4,6 +4,7 @@ using Skybound.World;
 using Skybound.Combat;
 using Skybound.Discovery;
 using Skybound.Crew;
+using Skybound.UI;
 
 namespace Skybound.Systems
 {
@@ -33,6 +34,8 @@ namespace Skybound.Systems
         [SerializeField] private CombatManager      combatManager;
         [SerializeField] private DiscoveryAtlas     atlas;
         [SerializeField] private CrewRosterManager  crewRoster;
+        [SerializeField] private EventCooldownTracker cooldownTracker;
+        [SerializeField] private SaveLoadPanel       saveLoadPanel;
 
         [Header("Starting Crew Names (hired at boot)")]
         [SerializeField] private string[] startingCrewNames = { "Femi", "Amara", "Chidi" };
@@ -48,6 +51,8 @@ namespace Skybound.Systems
                 airship.OnMovementBlocked += msg => Feed($"[Nav] {msg}");
                 airship.SetShipLevel(ship != null ? ship.ShipLevel : 1);
                 airship.SetPosition(Vector2Int.zero);
+                if (cooldownTracker != null)
+                    airship.OnCellEntered += (_, __) => cooldownTracker.OnCellMoved();
             }
 
             if (combatManager != null)
@@ -117,6 +122,13 @@ namespace Skybound.Systems
 
         private void Update()
         {
+            // Escape = toggle Save/Load panel
+            if (Input.GetKeyDown(KeyCode.Escape) && saveLoadPanel != null)
+            {
+                if (saveLoadPanel.IsVisible) saveLoadPanel.Hide();
+                else                         saveLoadPanel.Show();
+            }
+
             // Space = roll for encounter
             if (Input.GetKeyDown(KeyCode.Space))
             {

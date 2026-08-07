@@ -13,6 +13,11 @@ using Skybound.Discovery;
 using Skybound.Crew;
 using Skybound.Airship;
 using Skybound.Navigation;
+using Skybound.NPC;
+using Skybound.Narrative;
+using Skybound.Fleet;
+using Skybound.Economy;
+using Skybound.Guild;
 
 namespace Skybound.Editor
 {
@@ -68,9 +73,14 @@ namespace Skybound.Editor
             SetField(navigator, "airship",      airship);
             SetField(navigator, "worldManager", worldManager);
 
+            // Cooldown tracker (must exist before GameDirector)
+            var cooldownGO      = Child(systemsGO, "EventCooldownTracker");
+            var cooldownTracker = cooldownGO.AddComponent<EventCooldownTracker>();
+
             // GameDirector
             var directorGO = Child(systemsGO, "GameDirector");
             var director   = directorGO.AddComponent<GameDirector>();
+            SetField(director, "cooldownTracker", cooldownTracker);
             var eventAssets = LoadAllAssets<Skybound.Events.SkyEvent>("Assets/Data/SkyEvents");
             if (eventAssets.Length > 0)
             {
@@ -94,7 +104,34 @@ namespace Skybound.Editor
             var rosterGO    = Child(systemsGO, "CrewRoster");
             var crewRoster  = rosterGO.AddComponent<CrewRosterManager>();
 
-            // UIManager
+            // NPC / Faction systems
+            var factionGO      = Child(systemsGO, "FactionSystems");
+            var standingManager = factionGO.AddComponent<FactionStandingManager>();
+            var dialogueEngine  = factionGO.AddComponent<NPCDialogueEngine>();
+            SetField(dialogueEngine, "standingManager", standingManager);
+
+            // Narrative / Lore archive
+            var narrativeGO = Child(systemsGO, "Narrative");
+            var loreArchive = narrativeGO.AddComponent<LoreArchive>();
+
+            // Fleet
+            var fleetGO      = Child(systemsGO, "Fleet");
+            var fleetManager = fleetGO.AddComponent<FleetManager>();
+
+            // Economy & Progression
+            var ecoGO      = Child(systemsGO, "Economy");
+            var economy    = ecoGO.AddComponent<EconomyManager>();
+            var progression = ecoGO.AddComponent<ProgressionManager>();
+            SetField(progression, "ship",     shipManager);
+            SetField(progression, "economy",  economy);
+
+            // Guild
+            var guildGO      = Child(systemsGO, "Guild");
+            var guildManager = guildGO.AddComponent<GuildManager>();
+            SetField(guildManager, "atlas",        atlas);
+            SetField(guildManager, "worldManager", worldManager);
+
+            // UIManager (created here so later systems can reference it)
             var uiManagerGO = Child(systemsGO, "UIManager");
             var uiManager   = uiManagerGO.AddComponent<UIManager>();
             SetField(uiManager, "director", director);
@@ -239,21 +276,91 @@ namespace Skybound.Editor
             SetField(cmdBar, "buttonContainer", btnContainerGO.transform as RectTransform);
             SetField(cmdBar, "contextLabel",   ctxTmp);
 
+            // Wire uiManager references into late systems
+            SetField(fleetManager,  "uiManager", uiManager);
+            SetField(guildManager,  "uiManager", uiManager);
+
             // Wire navigator → director (pause on encounters) and feed
             SetField(navigator, "director", director);
+
+            // Wire airship cell-moved events into cooldown tracker
+            // (done at runtime by GameBootstrap)
+
+            // ── Save/Load Panel (centered, hidden by default) ─────────────────
+            var savePanel   = MakeCanvasGroup(canvasGO, "SaveLoadPanel");
+            var savePanelCG = savePanel.GetComponent<CanvasGroup>();
+            savePanelCG.alpha          = 0f;
+            savePanelCG.interactable   = false;
+            savePanelCG.blocksRaycasts = false;
+            var savePanelBg = savePanel.AddComponent<Image>();
+            savePanelBg.color = new Color(0.05f, 0.05f, 0.12f, 0.95f);
+
+            MakeLabel(savePanel, "PanelTitle", "Save / Load", new Vector2(0, 160), 24);
+
+            var slotLabels  = new TextMeshProUGUI[3];
+            var saveBtns    = new Button[3];
+            var loadBtns    = new Button[3];
+            for (int s = 0; s < 3; s++)
+            {
+                float y = 80f - s * 80f;
+                var row = Child(savePanel, $"Slot{s}");
+                row.AddComponent<RectTransform>().anchoredPosition = new Vector2(0, y);
+
+                var lbl = MakeLabel(row, "Label", $"Slot {s+1}  —  Empty", new Vector2(-120, 0), 14);
+                slotLabels[s] = lbl.GetComponent<TextMeshProUGUI>();
+
+                var sb = MakeButton(row, "SaveBtn", "Save", new Vector2(80, 0));
+                sb.GetComponent<RectTransform>().sizeDelta = new Vector2(90, 36);
+                saveBtns[s] = sb.GetComponent<Button>();
+
+                var lb = MakeButton(row, "LoadBtn", "Load", new Vector2(180, 0));
+                lb.GetComponent<RectTransform>().sizeDelta = new Vector2(90, 36);
+                loadBtns[s] = lb.GetComponent<Button>();
+            }
+            var closeBtn = MakeButton(savePanel, "CloseBtn", "Close", new Vector2(0, -180));
+
+            var savePanelComp = savePanel.AddComponent<SaveLoadPanel>();
+            SetField(savePanelComp, "saveManager", saveManager);
+            // Slot arrays need direct assignment — use SerializedObject for arrays
+            {
+                var so = new SerializedObject(savePanelComp);
+                var lblProp  = so.FindProperty("slotLabels");
+                var saveProp = so.FindProperty("saveButtons");
+                var loadProp = so.FindProperty("loadButtons");
+                if (lblProp != null)
+                {
+                    lblProp.arraySize = 3;
+                    for (int s = 0; s < 3; s++) lblProp.GetArrayElementAtIndex(s).objectReferenceValue = slotLabels[s];
+                }
+                if (saveProp != null)
+                {
+                    saveProp.arraySize = 3;
+                    for (int s = 0; s < 3; s++) saveProp.GetArrayElementAtIndex(s).objectReferenceValue = saveBtns[s];
+                }
+                if (loadProp != null)
+                {
+                    loadProp.arraySize = 3;
+                    for (int s = 0; s < 3; s++) loadProp.GetArrayElementAtIndex(s).objectReferenceValue = loadBtns[s];
+                }
+                so.FindProperty("closeButton")?.objectReferenceValue.Equals(closeBtn.GetComponent<Button>());
+                SetField(savePanelComp, "closeButton", closeBtn.GetComponent<Button>());
+                so.ApplyModifiedPropertiesWithoutUndo();
+            }
 
             // ── GameBootstrap (wires runtime events) ─────────────────────────
             var bootstrapGO = Child(systemsGO, "GameBootstrap");
             var bootstrap   = bootstrapGO.AddComponent<GameBootstrap>();
-            SetField(bootstrap, "ship",         shipManager);
-            SetField(bootstrap, "crew",         crewManager);
-            SetField(bootstrap, "director",     director);
-            SetField(bootstrap, "uiManager",    uiManager);
-            SetField(bootstrap, "worldManager", worldManager);
-            SetField(bootstrap, "airship",      airship);
-            SetField(bootstrap, "combatManager",combatManager);
-            SetField(bootstrap, "atlas",        atlas);
-            SetField(bootstrap, "crewRoster",   crewRoster);
+            SetField(bootstrap, "ship",            shipManager);
+            SetField(bootstrap, "crew",            crewManager);
+            SetField(bootstrap, "director",        director);
+            SetField(bootstrap, "uiManager",       uiManager);
+            SetField(bootstrap, "worldManager",    worldManager);
+            SetField(bootstrap, "airship",         airship);
+            SetField(bootstrap, "combatManager",   combatManager);
+            SetField(bootstrap, "atlas",           atlas);
+            SetField(bootstrap, "crewRoster",      crewRoster);
+            SetField(bootstrap, "cooldownTracker", cooldownTracker);
+            SetField(bootstrap, "saveLoadPanel",   savePanelComp);
 
             // ── Camera ───────────────────────────────────────────────────────
             var camGO = Child(root, "Camera");
