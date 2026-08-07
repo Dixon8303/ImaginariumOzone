@@ -47,5 +47,7 @@ namespace Skybound.Ship
 
         public float HullIntegrity => hullIntegrity01;
         public int ShipLevel => shipLevel;
+
+        public void AdvanceShipLevel() => shipLevel++;
     }
 }
