@@ -18,6 +18,7 @@ using Skybound.Narrative;
 using Skybound.Fleet;
 using Skybound.Economy;
 using Skybound.Guild;
+using Skybound.Input;
 
 namespace Skybound.Editor
 {
@@ -362,6 +363,42 @@ namespace Skybound.Editor
             SetField(bootstrap, "cooldownTracker", cooldownTracker);
             SetField(bootstrap, "saveLoadPanel",   savePanelComp);
 
+            // ── Touch Input ──────────────────────────────────────────────────
+            var touchGO    = Child(systemsGO, "TouchInput");
+            var touchInput = touchGO.AddComponent<TouchInputHandler>();
+            SetField(touchInput, "airship",       airship);
+            SetField(touchInput, "director",      director);
+            SetField(touchInput, "saveLoadPanel", savePanelComp);
+
+            // ── Status Bar (top strip) ────────────────────────────────────────
+            var statusBarGO = Child(canvasGO, "StatusBar");
+            var statusRT    = statusBarGO.AddComponent<RectTransform>();
+            statusRT.anchorMin       = new Vector2(0f, 1f);
+            statusRT.anchorMax       = new Vector2(1f, 1f);
+            statusRT.pivot           = new Vector2(0.5f, 1f);
+            statusRT.sizeDelta       = new Vector2(0, 48);
+            statusRT.anchoredPosition = Vector2.zero;
+            var statusBg = statusBarGO.AddComponent<Image>();
+            statusBg.color = new Color(0.04f, 0.06f, 0.16f, 0.92f);
+
+            var hlgStatus = statusBarGO.AddComponent<HorizontalLayoutGroup>();
+            hlgStatus.childAlignment        = TextAnchor.MiddleCenter;
+            hlgStatus.childForceExpandWidth = true;
+            hlgStatus.spacing               = 16;
+            hlgStatus.padding               = new RectOffset(12, 12, 4, 4);
+
+            var coinsLbl   = MakeStatusLabel(statusBarGO, "CoinsLabel",   "◈ 100",  new Color(1f, 0.85f, 0.3f));
+            var guildLbl   = MakeStatusLabel(statusBarGO, "GuildLabel",   "Guild: Scout · 0 rep", new Color(0.6f, 1f, 0.7f));
+            var factionLbl = MakeStatusLabel(statusBarGO, "FactionLabel", "OYA● KEM● AMR● IMP● VWK●", new Color(0.8f, 0.9f, 1f));
+
+            var statusBar = statusBarGO.AddComponent<StatusBarController>();
+            SetField(statusBar, "economy",          economy);
+            SetField(statusBar, "guild",            guildManager);
+            SetField(statusBar, "factionStandings", standingManager);
+            SetField(statusBar, "coinsLabel",       coinsLbl);
+            SetField(statusBar, "guildLabel",       guildLbl);
+            SetField(statusBar, "factionLabel",     factionLbl);
+
             // ── Camera ───────────────────────────────────────────────────────
             var camGO = Child(root, "Camera");
             var cam   = camGO.AddComponent<Camera>();
@@ -375,8 +412,10 @@ namespace Skybound.Editor
             Selection.activeGameObject = root;
 
             int evtCount = eventAssets.Length;
-            Debug.Log($"[SceneBuilder] Scene built. {evtCount} events loaded. " +
-                      "Play → WASD=move, Space=roll, Enter=resolve, 1-6=combat actions.");
+            Debug.Log($"[SceneBuilder] Scene built. {evtCount} events loaded.\n" +
+                      "Keyboard: WASD=move, Space=roll, Enter=resolve, 1-6=combat, Esc=save panel\n" +
+                      "Touch: swipe=move, tap=roll, 2-finger tap=resolve, 3-finger tap=save panel\n" +
+                      "Run Tools > Skybound > Generate Narrative Assets to populate NPC/Mythic/Lore data.");
         }
 
         // ── Helpers ──────────────────────────────────────────────────────────
@@ -459,6 +498,18 @@ namespace Skybound.Editor
             slider.value = 1f;
             slider.interactable = false;
             return go;
+        }
+
+        static TextMeshProUGUI MakeStatusLabel(GameObject parent, string name, string text, Color color)
+        {
+            var go = Child(parent, name);
+            go.AddComponent<RectTransform>();
+            var tmp    = go.AddComponent<TextMeshProUGUI>();
+            tmp.text      = text;
+            tmp.fontSize  = 12;
+            tmp.color     = color;
+            tmp.alignment = TextAlignmentOptions.Center;
+            return tmp;
         }
 
         static T[] LoadAllAssets<T>(string folder) where T : Object
