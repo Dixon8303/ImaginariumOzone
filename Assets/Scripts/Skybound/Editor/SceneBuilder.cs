@@ -12,6 +12,7 @@ using Skybound.Combat;
 using Skybound.Discovery;
 using Skybound.Crew;
 using Skybound.Airship;
+using Skybound.UI;
 
 namespace Skybound.Editor
 {
@@ -120,6 +121,24 @@ namespace Skybound.Editor
             MakeLabel(combatLayer, "CombatHelp",
                 "1=Fire  2=Evade  3=Ascend  4=Descend  5=Synergy  6=Flee",
                 new Vector2(0, 120), 14);
+
+            // Minimap (top-right corner)
+            var minimapGO = Child(canvasGO, "Minimap");
+            var minimapRT = minimapGO.AddComponent<RectTransform>();
+            minimapRT.anchorMin = new Vector2(1f, 1f);
+            minimapRT.anchorMax = new Vector2(1f, 1f);
+            minimapRT.pivot     = new Vector2(1f, 1f);
+            minimapRT.sizeDelta = new Vector2(160, 160);
+            minimapRT.anchoredPosition = new Vector2(-10, -10);
+            var minimapBg = minimapGO.AddComponent<UnityEngine.UI.Image>();
+            minimapBg.color = new Color(0f, 0f, 0f, 0.6f);
+            var rawImg = minimapGO.AddComponent<UnityEngine.UI.RawImage>();
+            rawImg.color = Color.white;
+
+            var minimap = minimapGO.AddComponent<MinimapRenderer>();
+            SetField(minimap, "worldManager", worldManager);
+            SetField(minimap, "airship",      airship);
+            SetField(minimap, "atlas",        atlas);
 
             // Encounter overlay
             var overlayLayer = MakeCanvasGroup(canvasGO, "EncounterOverlay");
