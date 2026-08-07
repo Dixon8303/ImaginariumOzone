@@ -12,7 +12,7 @@ using Skybound.Combat;
 using Skybound.Discovery;
 using Skybound.Crew;
 using Skybound.Airship;
-using Skybound.UI;
+using Skybound.Navigation;
 
 namespace Skybound.Editor
 {
@@ -55,6 +55,18 @@ namespace Skybound.Editor
             var airshipGO = Child(systemsGO, "Airship");
             var airship   = airshipGO.AddComponent<AirshipMovement>();
             SetField(airship, "world", worldManager);
+
+            // Airship visual (attaches to same GO — follows movement transform)
+            var visualGO = Child(airshipGO, "Visual");
+            var visual   = visualGO.AddComponent<AirshipVisual>();
+            SetField(visual, "movement",     airship);
+            SetField(visual, "worldManager", worldManager);
+
+            // Auto-navigator
+            var navGO    = Child(systemsGO, "AutoNavigator");
+            var navigator = navGO.AddComponent<AutoNavigator>();
+            SetField(navigator, "airship",      airship);
+            SetField(navigator, "worldManager", worldManager);
 
             // GameDirector
             var directorGO = Child(systemsGO, "GameDirector");
@@ -182,6 +194,53 @@ namespace Skybound.Editor
             SetField(feedView, "uiManager",  uiManager);
             SetField(feedView, "feedText",   feedText);
             SetField(feedView, "scrollRect", scrollRect);
+
+            // ── Command Bar (bottom of screen) ───────────────────────────────
+            var cmdBarGO = Child(canvasGO, "CommandBar");
+            var cmdBarRT = cmdBarGO.AddComponent<RectTransform>();
+            cmdBarRT.anchorMin = new Vector2(0f, 0f);
+            cmdBarRT.anchorMax = new Vector2(1f, 0f);
+            cmdBarRT.pivot     = new Vector2(0.5f, 0f);
+            cmdBarRT.sizeDelta = new Vector2(0, 90);
+            cmdBarRT.anchoredPosition = Vector2.zero;
+            var cmdBarBg = cmdBarGO.AddComponent<Image>();
+            cmdBarBg.color = new Color(0.05f, 0.05f, 0.10f, 0.85f);
+
+            // Context label (biome name + island name)
+            var ctxLabelGO = Child(cmdBarGO, "ContextLabel");
+            var ctxRT = ctxLabelGO.AddComponent<RectTransform>();
+            ctxRT.anchorMin = new Vector2(0f, 0.6f);
+            ctxRT.anchorMax = new Vector2(1f, 1f);
+            ctxRT.offsetMin = ctxRT.offsetMax = Vector2.zero;
+            var ctxTmp = ctxLabelGO.AddComponent<TextMeshProUGUI>();
+            ctxTmp.fontSize  = 13;
+            ctxTmp.color     = new Color(0.70f, 0.85f, 1f);
+            ctxTmp.alignment = TextAlignmentOptions.Center;
+
+            // Button container (horizontal row)
+            var btnContainerGO = Child(cmdBarGO, "Buttons");
+            var btnContainerRT = btnContainerGO.AddComponent<RectTransform>();
+            btnContainerRT.anchorMin = new Vector2(0f, 0f);
+            btnContainerRT.anchorMax = new Vector2(1f, 0.58f);
+            btnContainerRT.offsetMin = new Vector2(8, 6);
+            btnContainerRT.offsetMax = new Vector2(-8, -4);
+            var hlg = btnContainerGO.AddComponent<HorizontalLayoutGroup>();
+            hlg.spacing           = 8;
+            hlg.childForceExpandWidth  = false;
+            hlg.childForceExpandHeight = true;
+            hlg.childAlignment    = TextAnchor.MiddleCenter;
+
+            var cmdBar = cmdBarGO.AddComponent<CommandBarController>();
+            SetField(cmdBar, "worldManager",   worldManager);
+            SetField(cmdBar, "airship",        airship);
+            SetField(cmdBar, "atlas",          atlas);
+            SetField(cmdBar, "navigator",      navigator);
+            SetField(cmdBar, "uiManager",      uiManager);
+            SetField(cmdBar, "buttonContainer", btnContainerGO.transform as RectTransform);
+            SetField(cmdBar, "contextLabel",   ctxTmp);
+
+            // Wire navigator → director (pause on encounters) and feed
+            SetField(navigator, "director", director);
 
             // ── GameBootstrap (wires runtime events) ─────────────────────────
             var bootstrapGO = Child(systemsGO, "GameBootstrap");
