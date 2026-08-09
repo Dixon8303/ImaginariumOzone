@@ -23,10 +23,13 @@
 var SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
 var SHEET_NAME = 'results';
 
-// The live assessment site. Used to build each row's results_url -- a link
-// that reopens that exact submission via the site's #view= archived-result
-// mode (see bootFromHash in docs/index.html). Straight quotes only, as above.
-var SITE_URL = 'https://dixon8303.github.io/ImaginariumOzone/';
+// Where each row's results_url points -- a link that reopens that exact
+// submission via #view= archived-result mode. This is the newer in-app
+// version of the assessment, which accepts an identical #view= payload to
+// the original at dixon8303.github.io/ImaginariumOzone/ (see bootFromHash in
+// docs/index.html); either host can replay any row. Straight quotes only, as
+// above.
+var SITE_URL = 'https://dixon8303.github.io/genius-index-booksite/results';
 
 // Manual-recovery path: the results page's "Pilot data" block lets a taker
 // copy their raw JSON if the automatic upload silently failed. Paste that
