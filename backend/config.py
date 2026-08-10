@@ -38,6 +38,10 @@ VIDIQ_API_KEY = os.getenv("VIDIQ_API_KEY", "")
 VIDIQ_BASE_URL = os.getenv("VIDIQ_BASE_URL", "https://api.vidiq.com")
 YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID", "")
 
+# ── Mission Control cloud sync (public dashboard; no-op if token unset) ───
+GITHUB_SYNC_TOKEN = os.getenv("GITHUB_SYNC_TOKEN", "")
+GITHUB_SYNC_REPO = os.getenv("GITHUB_SYNC_REPO", "Dixon8303/ImaginariumOzone")
+
 PROMPTS_DIR  = Path(__file__).parent / "prompts"
 WORKFLOWS_DIR = Path(__file__).parent / "workflows"
 MUSIC_DIR    = Path(__file__).parent / "assets" / "music"

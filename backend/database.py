@@ -273,6 +273,10 @@ async def list_episodes() -> list:
             return [dict(r) for r in await cur.fetchall()]
 
 async def update_episode(episode_id: str, **kwargs):
+    if "status" in kwargs:
+        # Status flips outside the pipeline (approvals, uploads) also sync
+        from services import status_sync
+        status_sync.request_sync()
     kwargs["updated_at"] = datetime.utcnow().isoformat()
     sets = ", ".join(f"{k} = ?" for k in kwargs)
     vals = list(kwargs.values()) + [episode_id]

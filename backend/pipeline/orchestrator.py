@@ -50,6 +50,9 @@ def get_queue(episode_id: str) -> asyncio.Queue:
 
 async def emit(episode_id: str, event: dict):
     await get_queue(episode_id).put(event)
+    # Every pipeline event = a state change worth mirroring to Mission Control
+    from services import status_sync
+    status_sync.request_sync()
 
 async def run_pipeline(episode_id: str, start_from: str | None = None):
     episode = await db.get_episode(episode_id)
