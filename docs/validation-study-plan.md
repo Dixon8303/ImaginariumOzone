@@ -22,7 +22,7 @@ aren't:
 |---|---|---|
 | **Internal consistency** — do items in a domain actually correlate with each other? | First-time completions only | ~100–200 respondents for a stable per-domain alpha |
 | **Test–retest reliability** — do scores hold steady for the same person over time? | The *same* people, twice, weeks apart | ~100+ retest **pairs** (so ~200+ sessions from a smaller pool who complete both) |
-| **Factor structure** — do the nine domains hold up as distinct factors (EFA/CFA on the 81 items)? | First-time completions, item-level | 400–800+ (rule of thumb: 5–10 respondents per item; 81 items make this the largest requirement by far) |
+| **Factor structure** — do the nine domains hold up as distinct factors (EFA/CFA on the 74 items)? | First-time completions, item-level | 370–740+ (rule of thumb: 5–10 respondents per item; 74 items make this the largest requirement by far) |
 | **Predictive validity** — do scores predict real-world performance? | First-time completions **plus** an external, independently-measured criterion | Not primarily a sample-size problem — the criterion doesn't exist yet and has to be designed first |
 
 Fabricated or synthetically-generated "completions" cannot substitute for any of these —
@@ -34,7 +34,7 @@ assumes real, honestly-completed submissions from real people.
 A completion is excluded from the validation dataset (but never from the taker's own
 results — they always see their real chart regardless) if, at the time of analysis:
 
-- **Total time is under 8 minutes** for a full 81-item + 9-station + forced-rank run.
+- **Total time is under 8 minutes** for a full 74-item + 9-station + forced-rank run.
   This threshold is a placeholder until the `minutes` column's real distribution is
   looked at (once there's enough data to see where a "too fast to have engaged" cutoff
   actually falls) — but it must be set by looking at the *distribution shape*, not by

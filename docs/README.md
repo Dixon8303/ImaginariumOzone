@@ -1,6 +1,6 @@
 # The Genius Index — digital assessment
 
-A single self-contained web page: an 81-item inventory, nine short performance
+A single self-contained web page: a 74-item inventory, nine short performance
 stations, a forced ranking, and a **reader-facing results chart** drawn straight from
 the book *Braid Constellations* — a personalized braid card, constellation wheel,
 Complete Index Grid, and Field Guide of all thirty-six braids.

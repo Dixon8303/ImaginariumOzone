@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Genius Index — Find Your Braid</title>
-<meta name="description" content="Everybody carries a genius. This locates yours. 81 items and nine short stations map your nine domains, then name the braid they make — free, anonymous, on your device.">
+<meta name="description" content="Everybody carries a genius. This locates yours. 74 items and nine short stations map your nine domains, then name the braid they make — free, anonymous, on your device.">
 <meta property="og:title" content="The Genius Index — Find Your Braid">
 <meta property="og:description" content="Everybody carries a genius. This locates yours. Nine domains, nine stations, thirty-six braids. Free and anonymous.">
 <meta property="og:type" content="website">
@@ -459,6 +459,16 @@ const WHB_URL = "https://dixon8303.github.io/ImaginariumOzone/book/";
 const BLACK_GENIUS_FILES_URL = "https://dixon8303.github.io/black-genius-files/";
 /* The parent company site, live at eatmediatv.com. */
 const EAT_MEDIA_URL = "https://eatmediatv.com/";
+/* The newer in-app version of this same assessment. It shares this page's
+   data contract exactly -- same scoring, same GI-1.0 export, same #view=
+   share payloads, same Firestore results path -- and adds saved history,
+   progress tracking, and the 30-day protocol tracker. This original page
+   stays live and unchanged: existing share links and sheet rows must keep
+   resolving here. */
+const APP_URL = "https://dixon8303.github.io/genius-index-booksite/";
+const APP_ASSESSMENT_URL = APP_URL + "assessment";
+const APP_PROFILE_URL = APP_URL + "profile";
+const APP_PROTOCOL_URL = APP_URL + "protocol";
 
 /* Optional: Google sign-in (Firebase Auth + Firestore), for people who want a
    saved history of their results and to opt in to hearing about future Genius
@@ -856,7 +866,7 @@ function startSampleCarousel(){
 function intro(){
  h(`
   <h1>Everybody carries a genius.<br>This locates yours.</h1>
-  <p class="dim" style="margin:14px 0 4px">81 items and nine short stations. About 25–35 minutes. Nothing here measures intelligence — the Index locates where ability comes easiest to you, so it can be named and grown. <em>Identify to amplify.</em></p>
+  <p class="dim" style="margin:14px 0 4px">74 items and nine short stations. About 25–35 minutes. Nothing here measures intelligence — the Index locates where ability comes easiest to you, so it can be named and grown. <em>Identify to amplify.</em></p>
 
   <div class="card">
     <h3>What this measures, and why</h3>
@@ -894,6 +904,15 @@ function intro(){
          </label>
          <button class="btn ghost" onclick="signIn($('marketingOptIn').checked)">Sign in with Google</button>`}
   </div>` : ``}
+
+  <div class="card">
+    <h3>There's a fuller version</h3>
+    <p class="small dim">This page is the original Genius Index — complete, free, and staying exactly as it is. The newer app runs the <strong>same assessment with the same scoring</strong>, and adds a saved result history, progress tracking over time, and the 30-day protocol tracker for growing the domain you choose.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px">
+      <a class="btn ghost" href="${esc(APP_ASSESSMENT_URL)}" target="_blank" rel="noopener" style="text-decoration:none">Take it in the app →</a>
+      <a class="btn ghost" href="${esc(APP_PROTOCOL_URL)}" target="_blank" rel="noopener" style="text-decoration:none">The 30-day protocol →</a>
+    </div>
+  </div>
 
   <div class="card">
     <h3>How to take it honestly</h3>
@@ -1944,7 +1963,7 @@ function results(){
   ranksTop:S.ranksTop,ranksBot:S.ranksBot,
   demographics:{...S.demo},
   domains:Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
-  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id),
+  signature:code, braid:m.primary?m.primary.name:null, braidTier:m.primary?m.primary.tier:null, braidPair:m.braidDoms.map(d=>d.id),
   adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
   flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}};
 
@@ -1980,7 +1999,7 @@ function renderArchived(payload){
   ts:payload.ts||"", minutes:payload.minutes||0,
   demographics:payload.demographics||{},
   domains:payload.domains||Object.fromEntries(DOMAINS.map(d=>[d.id,R[d.id]])),
-  signature:code, braid:m.primary?m.primary.name:null, braidPair:m.braidDoms.map(d=>d.id),
+  signature:code, braid:m.primary?m.primary.name:null, braidTier:m.primary?m.primary.tier:null, braidPair:m.braidDoms.map(d=>d.id),
   adjacent:[...m.adjKeys], shape:m.shape, reachable:m.reachable.map(b=>b.name),
   flags:{sdr:sdrFlag, unclaimed:m.unclaimed.map(d=>d.id), aspirational:m.aspir.map(d=>d.id), topUnclaimed:m.topUnclaimed?m.topUnclaimed.id:null, rankOverlap:overlap}
  };
@@ -2177,6 +2196,17 @@ function renderResultsPage(m, exportObj, opts){
   </div>`}
 
   <div class="book">
+   <h2 class="bt">Keep going in the app</h2>
+   <p class="btsub">Your result above is complete and yours to keep. The newer Genius Index app runs this same assessment with the same scoring — and adds a saved history so you can watch these nine scores move, plus a 30-day protocol tracker for the domain you decide to grow.</p>
+   <div class="btnrow" style="margin-top:10px">
+    <a class="btn book-ghost" href="${esc(APP_PROFILE_URL)}" target="_blank" rel="noopener" style="text-decoration:none;max-width:280px">Track my results over time →</a>
+   </div>
+   <div class="btnrow">
+    <a class="btn book-ghost" href="${esc(APP_PROTOCOL_URL)}" target="_blank" rel="noopener" style="text-decoration:none;max-width:280px">Start the 30-day protocol →</a>
+   </div>
+  </div>
+
+  <div class="book">
    <p class="submitstatus" id="submitStatus"></p>
    <p class="submitstatus" id="shareStatus"></p>
    <div class="btnrow">
@@ -2317,7 +2347,7 @@ async function buildShareCardSVG(m){
   ${bars}
   ${collage}
   <text x="${W/2}" y="998" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="24" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
-  <text x="${W/2}" y="1034" text-anchor="middle" font-family="Lato,sans-serif" font-weight="700" font-size="25" letter-spacing="0.4" fill="#7A5B31">Take the assessment → tinyurl.com/geniusindextest</text>
+  <text x="${W/2}" y="1034" text-anchor="middle" font-family="Lato,sans-serif" font-weight="700" font-size="20" letter-spacing="0.2" fill="#7A5B31">Take the assessment → dixon8303.github.io/genius-index-booksite</text>
   <rect x="${W/2-190}" y="1054" width="380" height="1" fill="rgba(122,91,49,.3)"/>
   <text x="${W/2}" y="1086" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="22" fill="#6B6258">↺ Retake it ${esc(retestDate().toLocaleDateString(undefined,{month:"long", day:"numeric"}))} — see what's changed</text>
   <rect y="${H-10}" width="${W}" height="10" fill="url(#edgeBar)"/>
@@ -2357,7 +2387,7 @@ async function shareBraidCard(m){
  const blob = await getShareCardBlob(m);
  const filename = shareCardFilename(m);
  const braidName = m.primary?m.primary.name:"my braid";
- const shareText = `I'm ${braidName} on The Genius Index. Find your braid: https://tinyurl.com/geniusindextest #GeniusIndex`;
+ const shareText = `I'm ${braidName} on The Genius Index. Find your braid: ${APP_ASSESSMENT_URL} #GeniusIndex`;
  try{
   const file = new File([blob], filename, {type:"image/png"});
   if(navigator.canShare && navigator.canShare({files:[file]})){
