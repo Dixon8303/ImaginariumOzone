@@ -87,8 +87,8 @@
   .kw{font-family:'Jost',sans-serif;font-size:13px;color:var(--muted)}
   .kw b{color:var(--ink-2);font-weight:500}
 
-  /* 12-segment stage bar — states carry texture/glyphs, never color alone */
-  .stagebar{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:20px}
+  /* 15-segment stage bar (Pipeline v2) — states carry texture/glyphs, never color alone */
+  .stagebar{display:grid;grid-template-columns:repeat(15,1fr);gap:3px;margin-top:20px}
   .seg{height:26px;border-radius:2px;position:relative;background:transparent;
     border:1px solid var(--faint);cursor:default}
   .seg.done{background:var(--done);border-color:var(--done);opacity:.85}
@@ -194,7 +194,7 @@
 
   <section>
     <h2>THE MACHINE</h2>
-    <p class="sub">The 12-stage pipeline and which AI tier runs each stage</p>
+    <p class="sub">Pipeline Order v2 — 15 stages across 3 parallel tracks · G0.25 VO pilot gates ComfyUI · G0.5 visual budget with 1.20× buffer + FLEX shots</p>
     <div class="pipemap" id="pipemap"></div>
   </section>
 
@@ -216,16 +216,33 @@ const STATUS_API = `https://api.github.com/repos/${REPO}/contents/status/product
 const STATUS_RAW = `https://raw.githubusercontent.com/${REPO}/main/status/production_status.json`;
 const COMMITS_API = `https://api.github.com/repos/${REPO}/commits?sha=main&per_page=8`;
 
+// Pipeline Order v2 — approved 2026-08-11
+// Execution order: linear pre-prod → G0.25 pilot → G0.5 budget → P6 storyboard
+// then 3 parallel tracks → assembly → P10 QA → P9b Shorts → P10.5 Upload
 const STAGES = [
-  ['topic_scoring','P1 · Topic Score','OP'], ['research','P2 · Research','F5'],
-  ['outline','P3 · Outline','OP'],          ['script','P4 · Script','OP'],
-  ['seo','P8 · SEO','HK'],                  ['voice_ssml','P5 · Voiceover','SN'],
-  ['asset_planning','P6 · Storyboard','SN'],['generation','Generation','CU'],
-  ['ken_burns','Ken Burns','FX'],           ['assembly','Assembly','FX'],
-  ['shorts','P9 · Shorts','SN'],            ['qa_gates','P10 · QA Gates','OP'],
+  // ── Pre-production (linear) ──────────────────────────────────────────────
+  ['batch_primer',   'P0.5 · Batch Primer',   'OP'],
+  ['research',       'P1 · Research',          'F5'],
+  ['topic_scoring',  'P2 · Topic Score',       'OP'],
+  ['outline',        'P3 · Outline',           'OP'],
+  ['script',         'P4 · Script',            'OP'],
+  // ── Track A: Visual (starts immediately after script lock) ───────────────
+  ['storyboard',     'P6 · Storyboard',        'SN'],   // moved before VO
+  ['generation',     'Generation',             'CU'],
+  ['ken_burns',      'Ken Burns',              'FX'],
+  // ── Track B: Audio (parallel with Track A) ───────────────────────────────
+  ['voice_ssml',     'P5 · Voiceover',         'SN'],
+  ['audio_prod',     'P5.5 · Audio Prod',      'FX'],
+  // ── Track C: Metadata (parallel — needs script only) ─────────────────────
+  ['titles_seo',     'P7/P8 · Titles + SEO',  'HK'],
+  // ── Post-production (all tracks converge) ────────────────────────────────
+  ['assembly',       'Assembly',               'FX'],
+  ['qa_gates',       'P10 · QA Gates',         'OP'],   // gates before Shorts
+  ['shorts',         'P9b · Shorts',           'SN'],   // always LAST (post-QA)
+  ['upload',         'P10.5 · Upload',         'FX'],
 ];
 const TIER_NAMES = {OP:'Opus 4.8',F5:'Fable 5',SN:'Sonnet 4.6',HK:'Haiku 4.5',
-  CU:'ComfyUI · Wan2.2',FX:'ffmpeg'};
+  CU:'ComfyUI · Flux Dev Q8',FX:'ffmpeg · fast'};
 const STATUS_LABELS = {draft:'Draft',running:'In Production',review:'Awaiting Review',
   halted:'Halted at Gate',failed:'Failed',approved:'Approved',
   uploaded:'Published',published:'Published'};
@@ -316,7 +333,7 @@ function renderEpisodes(data){
       return `<div class="seg ${st}" tabindex="0">
         <span class="tip"><b>${label}</b> · ${TIER_NAMES[tier]} · ${stLbl}</span></div>`;
     }).join('');
-    const gates = ['G1','G2','G3','G4','G5'].map(g => {
+    const gates = ['G0.25','G0.5','G1','G2','G3','G4','G5'].map(g => {
       const gd = (ep.gates||{})[g];
       const cls = !gd ? '' : gd.result==='PASS' ? 'pass' : 'fail';
       const scoreTxt = gd && gd.score != null ? ` ${gd.score}${gd.max_score?'/'+gd.max_score:''}` : '';
