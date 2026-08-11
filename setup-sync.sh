@@ -193,11 +193,29 @@ if [ ! -x "$BACKEND/.venv/bin/python" ]; then
 fi
 
 cd "$BACKEND" || exit 1
-if "$BACKEND/.venv/bin/python" -c "
-import asyncio, sys
+PY="$BACKEND/.venv/bin/python"
+
+# The sync layer needs aiohttp. If it's absent every integration turns itself
+# off silently, so install it rather than reporting a mystery failure.
+if ! "$PY" -c "import aiohttp" >/dev/null 2>&1; then
+  say "  ${dim}Installing a missing component (aiohttp)…${rst}"
+  if "$BACKEND/.venv/bin/pip" install -q aiohttp >/dev/null 2>&1; then
+    ok "Installed aiohttp"
+  else
+    bad "Couldn't install aiohttp — the sync can't run without it."
+    say "  Try:  ${bold}cd backend && .venv/bin/pip install aiohttp${rst}"
+    exit 1
+  fi
+fi
+
+SYNC_OUT="$("$PY" -c "
+import asyncio, sys, traceback
 sys.path.insert(0, '.')
-import database as db
-from services import status_sync
+try:
+    import database as db
+    from services import status_sync
+except Exception:
+    traceback.print_exc(); print('IMPORT_ERROR'); raise SystemExit
 
 async def main():
     await db.init_db()
@@ -205,23 +223,41 @@ async def main():
         print('NOT_CONFIGURED'); return
     print('OK' if await status_sync.sync_now() else 'SYNC_FAILED')
 
-asyncio.run(main())
-" 2>/dev/null | grep -q '^OK$'; then
-  ok "Test sync succeeded — the studio is now connected"
-  say ""
-  say "  ${bold}Open your dashboard:${rst}"
-  say "  $DASHBOARD"
-  say ""
-  say "  ${dim}The chip under the title should read 'Studio live — synced just now'.${rst}"
-  say "  ${dim}Episodes appear on the Production Floor as you run them.${rst}"
-  say ""
-else
-  warn "Token is saved and valid, but the test sync didn't complete."
-  say ""
-  say "  Nothing is broken — the app will retry on its own every time the"
-  say "  pipeline changes state. Start it normally:"
-  say "    ${bold}./start.sh${rst}"
-  say ""
-  say "  If the dashboard is still gray after running an episode, tell Claude."
-  say ""
-fi
+try:
+    asyncio.run(main())
+except Exception:
+    traceback.print_exc(); print('CRASHED')
+" 2>&1)"
+
+case "$SYNC_OUT" in
+  *OK*)
+    ok "Test sync succeeded — the studio is now connected"
+    say ""
+    say "  ${bold}Open your dashboard:${rst}"
+    say "  $DASHBOARD"
+    say ""
+    say "  ${dim}The chip under the title should read 'Studio live — synced just now'.${rst}"
+    say "  ${dim}Episodes appear on the Production Floor as you run them.${rst}"
+    say ""
+    ;;
+  *NOT_CONFIGURED*)
+    bad "The app couldn't read the token back from backend/.env."
+    say "  The token is saved, but something about the file is off."
+    say "  Send Claude this line — it's safe, it hides the token itself:"
+    say "    ${bold}grep -c GITHUB_SYNC_TOKEN backend/.env${rst}"
+    ;;
+  *SYNC_FAILED*)
+    warn "Token works, but GitHub refused the upload."
+    say "  Usually a brief network problem. The app retries automatically —"
+    say "  start it with ${bold}./start.sh${rst} and check the dashboard after a stage runs."
+    ;;
+  *)
+    warn "The test didn't finish. Details below — this is safe to share, it"
+    warn "contains no token:"
+    say ""
+    printf '%s\n' "$SYNC_OUT" | tail -12 | sed 's/^/    /'
+    say ""
+    say "  Your token is saved either way. Start the app with ${bold}./start.sh${rst};"
+    say "  if the dashboard stays gray after running an episode, send Claude the above."
+    ;;
+esac
