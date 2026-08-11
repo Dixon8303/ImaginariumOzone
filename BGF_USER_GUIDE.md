@@ -770,20 +770,36 @@ The page is **unlisted**: search engines are told not to index it, and it's link
 
 ### One-time setup (~5 minutes)
 
-The dashboard gets its data from your Mac. Whenever the pipeline advances, the app automatically publishes a small status file to GitHub. To allow that, create a GitHub token:
+The dashboard gets its data from your Mac. Whenever the pipeline advances, the app publishes a small status file to GitHub. To allow that, it needs a GitHub token — a kind of app password.
 
-1. Go to **github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**
-2. Name it `bgf-sync`, set expiration to 1 year
-3. **Repository access:** "Only select repositories" → choose `ImaginariumOzone`
-4. **Permissions → Repository permissions → Contents:** set to **Read and write** (leave everything else "No access")
-5. Click **Generate token** and copy it (starts with `github_pat_`)
-6. Open `backend/.env` and paste it:
-   ```
-   GITHUB_SYNC_TOKEN=github_pat_...
-   ```
-7. Restart the app (`Ctrl+C`, then `./start.sh`)
+**Run the setup helper. It does everything except the part only you can do:**
 
-That's it. From then on every stage completion, gate decision, and status change syncs to the dashboard within seconds. Without the token, the app runs exactly as before — the dashboard just shows its last-known state.
+```bash
+cd ~/Documents/ImaginariumOzone
+./setup-sync.sh
+```
+
+It prints the exact link and settings for creating the token, waits while you make it, then checks the token, saves it in the right place, and runs a live test so you know it worked before you walk away.
+
+**Creating the token** (the script shows this too). Open
+**https://github.com/settings/personal-access-tokens/new** while signed in to GitHub, and fill in:
+
+| Field | Value |
+|-------|-------|
+| Token name | `bgf-sync` |
+| Expiration | 1 year |
+| Repository access | **Only select repositories** → `ImaginariumOzone` |
+| Permissions → Repository permissions → **Contents** | **Read and write** |
+
+Leave every other permission on "No access." Click **Generate token** at the bottom, copy what it shows you (it starts with `github_pat_` and is shown only once), and paste it into the script when it asks. Your typing stays hidden — that's normal.
+
+> **Why "Read and write" matters:** with Contents set to "Read" only, everything *appears* to work but the dashboard never updates, with no error anywhere. The script catches this specific mistake and tells you, rather than letting you discover it days later.
+
+That's it. From then on every stage completion, gate decision, and status change syncs to the dashboard within seconds. Without a token the app runs exactly as before — the dashboard just shows its last-known state.
+
+**If you'd rather do it by hand:** open `backend/.env`, add the line `GITHUB_SYNC_TOKEN=github_pat_...`, save, and restart the app with `./start.sh`.
+
+**Keeping the token safe:** it lives only in `backend/.env` on your Mac, which is excluded from GitHub so it can never be uploaded by accident. Never paste it into a chat, an email, or a website. If it's ever exposed, delete it at **github.com → Settings → Developer settings → Fine-grained tokens → `bgf-sync` → Delete**, then run `./setup-sync.sh` again with a fresh one.
 
 ### Reading the sync light
 
