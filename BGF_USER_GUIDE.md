@@ -26,6 +26,7 @@ E.A.T. Media · Boombox Pictures
 13. [What the AI Tiers Mean](#13-what-the-ai-tiers-mean)
 14. [When Something Fails](#14-when-something-fails)
 15. [Frequently Asked Questions](#15-frequently-asked-questions)
+16. [Mission Control — Your Dashboard on the Internet](#16-mission-control--your-dashboard-on-the-internet)
 
 ---
 
@@ -753,6 +754,60 @@ A separate feature from an earlier build — accessible at `/circle` in the nav.
 Two places:
 1. **Pipeline Monitor** — the two-letter tier code (F5 / OP / SN / HK) appears on each stage row after it runs
 2. **Control Room → Stage Runs tab** — full table with exact model ID, autonomy mode, and duration for every stage
+
+---
+
+
+---
+
+## 16. Mission Control — Your Dashboard on the Internet
+
+**URL:** `https://dixon8303.github.io/ImaginariumOzone/bgf/`
+
+A read-only mirror of the production floor you can open from **any device, anywhere** — phone, another computer, anywhere with a browser. It shows every episode's stage-by-stage progress, gate verdicts, and topic scores, plus the pipeline map and recent build activity.
+
+The page is **unlisted**: search engines are told not to index it, and it's linked from nowhere public. Anyone with the exact address could view it, but it contains only production progress — never scripts, research, or keys.
+
+### One-time setup (~5 minutes)
+
+The dashboard gets its data from your Mac. Whenever the pipeline advances, the app automatically publishes a small status file to GitHub. To allow that, create a GitHub token:
+
+1. Go to **github.com → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**
+2. Name it `bgf-sync`, set expiration to 1 year
+3. **Repository access:** "Only select repositories" → choose `ImaginariumOzone`
+4. **Permissions → Repository permissions → Contents:** set to **Read and write** (leave everything else "No access")
+5. Click **Generate token** and copy it (starts with `github_pat_`)
+6. Open `backend/.env` and paste it:
+   ```
+   GITHUB_SYNC_TOKEN=github_pat_...
+   ```
+7. Restart the app (`Ctrl+C`, then `./start.sh`)
+
+That's it. From then on every stage completion, gate decision, and status change syncs to the dashboard within seconds. Without the token, the app runs exactly as before — the dashboard just shows its last-known state.
+
+### Reading the sync light
+
+| Chip color | Meaning |
+|-----------|---------|
+| **Green (pulsing)** | Studio live — synced within the last 10 minutes |
+| **Amber** | Last sync within 24 hours |
+| **Gray** | Studio offline — showing the last state it reported |
+
+### Reading the stage bar
+
+Each episode card has a 12-segment bar, one segment per pipeline stage (hover or tap a segment for its name and AI tier):
+
+| Look | Meaning |
+|------|---------|
+| Solid green | Stage complete |
+| Pulsing amber | Running right now |
+| Dim outline | Not reached yet |
+| Orange with ❚❚ | Halted at a gate — needs your decision in the app |
+| Red striped | Failed — check the Pipeline Monitor on the Mac |
+
+Gate chips below the bar show G1–G5 verdicts (✓ pass / ✕ fail) with scores where applicable.
+
+> **Remember:** Mission Control is a mirror, not a remote control. To approve gates, review scripts, or restart stages, use the app on the Mac.
 
 ---
 

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>BGF Mission Control</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%230B0906'/%3E%3Ctext x='24' y='33' font-size='22' text-anchor='middle' fill='%23f59e0b' font-family='Impact,sans-serif'%3EBGF%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=EB+Garamond:ital@0;1&family=Jost:wght@300;400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── BGF identity: warm black, amber, editorial type (mirrors the app) ── */
+  :root{
+    --bg:#0B0906; --bg-deep:#110D08; --bg-warm:#161109;
+    --line:rgba(180,120,30,.18); --line-soft:rgba(180,120,30,.08);
+    --ink:#fef3c7; --ink-2:#d6c9a8; --muted:#8a8072; --faint:#57534e;
+    --amber:#f59e0b; --amber-soft:#b45309;
+    /* status palette — contrast-validated vs surface; never color-alone
+       (failed = striped, halted = pause glyph, running = pulse) */
+    --done:#34d399; --running:#fbbf24; --pending:#57534e;
+    --failed:#f87171; --halted:#fb923c;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'EB Garamond',Georgia,serif; font-size:17px; line-height:1.55;
+    min-height:100vh;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:0 20px 80px}
+  a{color:var(--amber);text-decoration:none}
+
+  /* ── Hero ── */
+  header{padding:56px 0 28px;border-bottom:1px solid var(--line)}
+  .kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.35em;
+    text-transform:uppercase;color:var(--amber-soft);margin-bottom:10px}
+  h1{font-family:'Bebas Neue',Impact,sans-serif;font-weight:400;font-size:clamp(44px,9vw,76px);
+    letter-spacing:.04em;line-height:.95;color:var(--ink)}
+  .tagline{font-style:italic;color:var(--muted);margin-top:10px;font-size:16px}
+
+  .sync-chip{display:inline-flex;align-items:center;gap:9px;margin-top:22px;
+    padding:8px 16px;border:1px solid var(--line);border-radius:2px;
+    font-family:'Jost',sans-serif;font-size:13px;letter-spacing:.05em;color:var(--ink-2)}
+  .sync-dot{width:9px;height:9px;border-radius:50%;background:var(--faint);flex:none}
+  .sync-chip.live .sync-dot{background:var(--done);box-shadow:0 0 8px var(--done);
+    animation:pulse 2s infinite}
+  .sync-chip.recent .sync-dot{background:var(--running)}
+  @keyframes pulse{50%{opacity:.4}}
+
+  /* ── Phase meter ── */
+  .meter{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line-soft);
+    border:1px solid var(--line);margin:34px 0 8px}
+  .meter>div{background:var(--bg-deep);padding:20px 22px;text-align:center}
+  .meter .num{font-family:'Bebas Neue',Impact,sans-serif;font-size:46px;line-height:1;
+    color:var(--amber)}
+  .meter .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.25em;
+    text-transform:uppercase;color:var(--muted);margin-top:6px}
+
+  /* ── Sections ── */
+  section{margin-top:54px}
+  h2{font-family:'Bebas Neue',Impact,sans-serif;font-weight:400;font-size:30px;
+    letter-spacing:.06em;color:var(--ink-2);margin-bottom:4px}
+  .sub{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);
+    letter-spacing:.08em;margin-bottom:20px}
+
+  /* ── Episode cards ── */
+  .card{border:1px solid var(--line);background:var(--bg-deep);padding:24px 26px;
+    margin-bottom:18px}
+  .card-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
+    flex-wrap:wrap}
+  .topic{font-size:20px;color:var(--ink);line-height:1.35;max-width:38em}
+  .badges{display:flex;gap:8px;flex:none;flex-wrap:wrap}
+  .badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;
+    text-transform:uppercase;padding:4px 10px;border:1px solid var(--line);color:var(--muted)}
+  .badge.status-running{color:var(--running);border-color:var(--running);animation:pulse 2s infinite}
+  .badge.status-review{color:var(--amber);border-color:var(--amber)}
+  .badge.status-halted{color:var(--halted);border-color:var(--halted)}
+  .badge.status-failed{color:var(--failed);border-color:var(--failed)}
+  .badge.status-published,.badge.status-uploaded{color:var(--done);border-color:var(--done)}
+
+  .card-meta{display:flex;gap:26px;align-items:center;margin-top:16px;flex-wrap:wrap}
+  .dial{position:relative;width:64px;height:64px;flex:none}
+  .dial svg{transform:rotate(-90deg)}
+  .dial .val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'Bebas Neue',Impact,sans-serif;font-size:22px;color:var(--ink)}
+  .dial-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted);text-align:center;margin-top:4px}
+  .kw{font-family:'Jost',sans-serif;font-size:13px;color:var(--muted)}
+  .kw b{color:var(--ink-2);font-weight:500}
+
+  /* 12-segment stage bar — states carry texture/glyphs, never color alone */
+  .stagebar{display:grid;grid-template-columns:repeat(12,1fr);gap:3px;margin-top:20px}
+  .seg{height:26px;border-radius:2px;position:relative;background:transparent;
+    border:1px solid var(--faint);cursor:default}
+  .seg.done{background:var(--done);border-color:var(--done);opacity:.85}
+  .seg.running{background:var(--running);border-color:var(--running);animation:pulse 1.4s infinite}
+  .seg.failed{background:repeating-linear-gradient(45deg,var(--failed),var(--failed) 4px,
+    #7f1d1d 4px,#7f1d1d 8px);border-color:var(--failed)}
+  .seg.halted{background:var(--halted);border-color:var(--halted)}
+  .seg.halted::after{content:'❚❚';position:absolute;inset:0;display:flex;align-items:center;
+    justify-content:center;font-size:9px;color:#431407}
+  .seg:hover .tip,.seg:focus .tip{opacity:1;pointer-events:auto}
+  .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+    background:var(--bg-warm);border:1px solid var(--line);padding:6px 10px;white-space:nowrap;
+    font-family:'Jost',sans-serif;font-size:12px;color:var(--ink-2);opacity:0;
+    pointer-events:none;transition:opacity .12s;z-index:5}
+  .tip b{color:var(--amber);font-weight:500}
+
+  .gates{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .gate{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;
+    padding:4px 10px;border:1px solid var(--faint);color:var(--faint)}
+  .gate.pass{border-color:var(--amber);color:var(--amber)}
+  .gate.fail{border-color:var(--failed);color:var(--failed);
+    background:repeating-linear-gradient(45deg,transparent,transparent 5px,
+    rgba(248,113,113,.12) 5px,rgba(248,113,113,.12) 10px)}
+
+  .legend{display:flex;gap:20px;flex-wrap:wrap;margin-top:22px;
+    font-family:'Jost',sans-serif;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .chip{width:18px;height:12px;border-radius:2px;border:1px solid var(--faint);flex:none}
+  .chip.done{background:var(--done);border-color:var(--done)}
+  .chip.running{background:var(--running);border-color:var(--running)}
+  .chip.failed{background:repeating-linear-gradient(45deg,var(--failed),var(--failed) 3px,
+    #7f1d1d 3px,#7f1d1d 6px);border-color:var(--failed)}
+  .chip.halted{background:var(--halted);border-color:var(--halted)}
+
+  .empty{border:1px dashed var(--line);padding:44px 30px;text-align:center;
+    color:var(--muted);font-style:italic}
+  .empty .mono{font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:12px;
+    color:var(--amber-soft);margin-top:10px;display:block}
+
+  /* ── Pipeline map ── */
+  .pipemap{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+  .pnode{border:1px solid var(--line);background:var(--bg-deep);padding:12px 14px}
+  .pnode .pnum{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--amber-soft);
+    letter-spacing:.2em}
+  .pnode .pname{font-family:'Jost',sans-serif;font-size:13px;color:var(--ink-2);margin-top:3px}
+  .pnode .ptier{display:inline-block;margin-top:8px;font-family:'IBM Plex Mono',monospace;
+    font-size:9px;letter-spacing:.15em;padding:2px 7px;border:1px solid var(--faint);
+    color:var(--muted)}
+  .ptier.OP{color:#c084fc;border-color:#c084fc}.ptier.F5{color:#f0abfc;border-color:#f0abfc}
+  .ptier.SN{color:#67e8f9;border-color:#67e8f9}.ptier.HK{color:#86efac;border-color:#86efac}
+  .ptier.CU{color:var(--running);border-color:var(--running)}
+  .ptier.FX{color:var(--ink-2);border-color:var(--ink-2)}
+
+  /* ── Activity feed ── */
+  .feed{border-left:2px solid var(--line);padding-left:22px}
+  .commit{margin-bottom:16px;position:relative}
+  .commit::before{content:'';position:absolute;left:-27px;top:8px;width:8px;height:8px;
+    border-radius:50%;background:var(--amber-soft)}
+  .cmsg{font-family:'Jost',sans-serif;font-size:14px;color:var(--ink-2)}
+  .ctime{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px}
+
+  footer{margin-top:70px;padding-top:24px;border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--faint);display:flex;justify-content:space-between;
+    flex-wrap:wrap;gap:10px}
+
+  @media (max-width:560px){
+    .meter{grid-template-columns:1fr}
+    .seg{height:20px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <p class="kicker">§ E.A.T. Media · Boombox Pictures</p>
+    <h1>BGF MISSION CONTROL</h1>
+    <p class="tagline">The Black Genius Files — live production status, mirrored from the studio.</p>
+    <div class="sync-chip" id="syncChip">
+      <span class="sync-dot"></span><span id="syncText">Connecting…</span>
+    </div>
+  </header>
+
+  <div class="meter" id="meter">
+    <div><div class="num" id="mProd">–</div><div class="lbl">In Production</div></div>
+    <div><div class="num" id="mReview">–</div><div class="lbl">Awaiting Review</div></div>
+    <div><div class="num" id="mDone">–</div><div class="lbl">Published</div></div>
+  </div>
+
+  <section>
+    <h2>PRODUCTION FLOOR</h2>
+    <p class="sub">Every episode, stage by stage — hover any segment for detail</p>
+    <div id="episodes"></div>
+    <div class="legend" id="legend" hidden>
+      <span><i class="chip done"></i>Complete</span>
+      <span><i class="chip running"></i>Running now</span>
+      <span><i class="chip"></i>Not reached</span>
+      <span><i class="chip halted"></i>❚❚ Halted at gate</span>
+      <span><i class="chip failed"></i>Failed (striped)</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>THE MACHINE</h2>
+    <p class="sub">The 12-stage pipeline and which AI tier runs each stage</p>
+    <div class="pipemap" id="pipemap"></div>
+  </section>
+
+  <section>
+    <h2>BUILD ACTIVITY</h2>
+    <p class="sub">Latest development on the production system</p>
+    <div class="feed" id="feed"><p class="ctime">Loading…</p></div>
+  </section>
+
+  <footer>
+    <span>BGF Production OS</span>
+    <span id="refreshNote">auto-refreshes every 60s</span>
+  </footer>
+</div>
+
+<script>
+const REPO = 'Dixon8303/ImaginariumOzone';
+const STATUS_API = `https://api.github.com/repos/${REPO}/contents/status/production_status.json`;
+const STATUS_RAW = `https://raw.githubusercontent.com/${REPO}/main/status/production_status.json`;
+const COMMITS_API = `https://api.github.com/repos/${REPO}/commits?sha=main&per_page=8`;
+
+const STAGES = [
+  ['topic_scoring','P1 · Topic Score','OP'], ['research','P2 · Research','F5'],
+  ['outline','P3 · Outline','OP'],          ['script','P4 · Script','OP'],
+  ['seo','P8 · SEO','HK'],                  ['voice_ssml','P5 · Voiceover','SN'],
+  ['asset_planning','P6 · Storyboard','SN'],['generation','Generation','CU'],
+  ['ken_burns','Ken Burns','FX'],           ['assembly','Assembly','FX'],
+  ['shorts','P9 · Shorts','SN'],            ['qa_gates','P10 · QA Gates','OP'],
+];
+const TIER_NAMES = {OP:'Opus 4.8',F5:'Fable 5',SN:'Sonnet 4.6',HK:'Haiku 4.5',
+  CU:'ComfyUI · Wan2.2',FX:'ffmpeg'};
+const STATUS_LABELS = {draft:'Draft',running:'In Production',review:'Awaiting Review',
+  halted:'Halted at Gate',failed:'Failed',approved:'Approved',
+  uploaded:'Published',published:'Published'};
+
+// ── data fetch: Contents API (no CDN lag) → raw fallback → localStorage ──
+async function fetchStatus(){
+  try{
+    const r = await fetch(STATUS_API,{headers:{Accept:'application/vnd.github.raw+json'}});
+    if(r.ok){const d = await r.json();cache('bgf_status',d);return d}
+  }catch(e){}
+  try{
+    const r = await fetch(STATUS_RAW+'?t='+Date.now());
+    if(r.ok){const d = await r.json();cache('bgf_status',d);return d}
+  }catch(e){}
+  return cached('bgf_status');
+}
+async function fetchCommits(){
+  try{
+    const r = await fetch(COMMITS_API);
+    if(r.ok){const d = await r.json();cache('bgf_commits',d);return d}
+  }catch(e){}
+  return cached('bgf_commits');
+}
+function cache(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function cached(k){try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}}
+
+function relTime(iso){
+  if(!iso) return null;
+  const s = (Date.now() - new Date(iso).getTime())/1000;
+  if(s < 90) return 'just now';
+  if(s < 3600) return `${Math.round(s/60)} min ago`;
+  if(s < 86400) return `${Math.round(s/3600)} h ago`;
+  const d = Math.round(s/86400);
+  return d === 1 ? '1 day ago' : `${d} days ago`;
+}
+
+function renderSync(data){
+  const chip = document.getElementById('syncChip');
+  const text = document.getElementById('syncText');
+  chip.classList.remove('live','recent');
+  if(!data || !data.last_synced){
+    text.textContent = 'No sync from the studio yet';
+    return;
+  }
+  const ageMin = (Date.now() - new Date(data.last_synced).getTime())/60000;
+  if(ageMin < 10){chip.classList.add('live');
+    text.textContent = `Studio live — synced ${relTime(data.last_synced)}`}
+  else if(ageMin < 1440){chip.classList.add('recent');
+    text.textContent = `Last sync ${relTime(data.last_synced)}`}
+  else text.textContent = `Studio offline — showing state from ${relTime(data.last_synced)}`;
+}
+
+function scoreDial(score){
+  if(score == null) return '';
+  const r = 26, c = 2*Math.PI*r, off = c*(1 - Math.min(score,100)/100);
+  const col = score >= 80 ? 'var(--done)' : score >= 60 ? 'var(--running)' : 'var(--failed)';
+  return `<div><div class="dial">
+    <svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="32" cy="32" r="${r}" fill="none" stroke="var(--line)" stroke-width="5"/>
+      <circle cx="32" cy="32" r="${r}" fill="none" stroke="${col}" stroke-width="5"
+        stroke-dasharray="${c}" stroke-dashoffset="${off}" stroke-linecap="round"/>
+    </svg><div class="val">${score}</div></div>
+    <div class="dial-lbl">Topic /100</div></div>`;
+}
+
+function renderEpisodes(data){
+  const el = document.getElementById('episodes');
+  const eps = (data && data.episodes) || [];
+  document.getElementById('legend').hidden = eps.length === 0;
+  document.getElementById('mProd').textContent =
+    eps.filter(e=>['running','halted','draft'].includes(e.status)).length;
+  document.getElementById('mReview').textContent =
+    eps.filter(e=>['review','approved'].includes(e.status)).length;
+  document.getElementById('mDone').textContent =
+    eps.filter(e=>['uploaded','published'].includes(e.status)).length;
+
+  if(!eps.length){
+    el.innerHTML = `<div class="empty">Nothing on the floor yet.
+      <span class="mono">Run the app on the studio Mac with GITHUB_SYNC_TOKEN set — episodes appear here automatically.</span></div>`;
+    return;
+  }
+  el.innerHTML = eps.map(ep => {
+    const stageMap = Object.fromEntries((ep.stages||[]).map(s=>[s.name,s.status]));
+    const segs = STAGES.map(([key,label,tier]) => {
+      const st = stageMap[key] || 'pending';
+      const stLbl = st==='done'?'Complete':st==='running'?'Running now':
+        st==='halted'?'Halted':st==='failed'?'Failed':'Not reached';
+      return `<div class="seg ${st}" tabindex="0">
+        <span class="tip"><b>${label}</b> · ${TIER_NAMES[tier]} · ${stLbl}</span></div>`;
+    }).join('');
+    const gates = ['G1','G2','G3','G4','G5'].map(g => {
+      const gd = (ep.gates||{})[g];
+      const cls = !gd ? '' : gd.result==='PASS' ? 'pass' : 'fail';
+      const scoreTxt = gd && gd.score != null ? ` ${gd.score}${gd.max_score?'/'+gd.max_score:''}` : '';
+      const verdict = !gd ? '' : gd.result==='PASS' ? ' ✓' : ' ✕';
+      return `<span class="gate ${cls}">${g}${verdict}${scoreTxt}</span>`;
+    }).join('');
+    const status = STATUS_LABELS[ep.status] || ep.status;
+    return `<div class="card">
+      <div class="card-top">
+        <p class="topic">${esc(ep.topic)}</p>
+        <div class="badges">
+          <span class="badge">${ep.mode||''}</span>
+          <span class="badge status-${ep.status}">${status}</span>
+        </div>
+      </div>
+      <div class="card-meta">
+        ${scoreDial(ep.score)}
+        ${ep.keyword?`<p class="kw">Keyword — <b>${esc(ep.keyword)}</b></p>`:''}
+        ${ep.updated_at?`<p class="kw">Updated ${relTime(ep.updated_at)}</p>`:''}
+      </div>
+      <div class="stagebar">${segs}</div>
+      <div class="gates">${gates}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderPipemap(){
+  document.getElementById('pipemap').innerHTML = STAGES.map(([k,label,tier],i)=>{
+    const [num,...rest] = label.includes('·') ? label.split('·') : ['',label];
+    return `<div class="pnode">
+      <div class="pnum">STAGE ${String(i+1).padStart(2,'0')}</div>
+      <div class="pname">${(rest.join('·')||num).trim()}</div>
+      <span class="ptier ${tier}">${TIER_NAMES[tier]}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderFeed(commits){
+  const el = document.getElementById('feed');
+  if(!commits || !commits.length){
+    el.innerHTML = '<p class="ctime">Activity unavailable right now.</p>';return;
+  }
+  el.innerHTML = commits.map(c=>{
+    const msg = (c.commit.message||'').split('\n')[0];
+    return `<div class="commit"><p class="cmsg">${esc(msg)}</p>
+      <p class="ctime">${relTime(c.commit.author.date)}</p></div>`;
+  }).join('');
+}
+
+function esc(s){const d=document.createElement('div');d.textContent=s??'';return d.innerHTML}
+
+async function refresh(){
+  const [status, commits] = await Promise.all([fetchStatus(), fetchCommits()]);
+  renderSync(status);
+  renderEpisodes(status);
+  renderFeed(commits);
+}
+renderPipemap();
+refresh();
+setInterval(refresh, 60000);
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom'
+import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom'
 import CircleOfMorality from './CircleOfMorality'
+import ScreenplayTracker from './ScreenplayTracker'
 import ProductionDashboard from './components/production/ProductionDashboard'
 import EpisodeManager from './components/production/EpisodeManager'
 import PipelineMonitor from './components/production/PipelineMonitor'
@@ -41,6 +42,16 @@ function Nav() {
   )
 }
 
+function CircleRoute() {
+  const navigate = useNavigate()
+  return <CircleOfMorality onOpenTracker={() => navigate('/tracker')} />
+}
+
+function TrackerRoute() {
+  const navigate = useNavigate()
+  return <ScreenplayTracker onClose={() => navigate('/circle')} />
+}
+
 export default function App() {
   return (
     <div className="min-h-screen bg-stone-950 text-amber-50 pt-12">
@@ -50,7 +61,8 @@ export default function App() {
         <Route path="/new" element={<EpisodeManager />} />
         <Route path="/discover" element={<DiscoveryFeed />} />
         <Route path="/war-room" element={<WarRoom />} />
-        <Route path="/circle" element={<CircleOfMorality />} />
+        <Route path="/circle" element={<CircleRoute />} />
+        <Route path="/tracker" element={<TrackerRoute />} />
         <Route path="/episodes/:id/pipeline" element={<PipelineMonitor />} />
         <Route path="/episodes/:id/script" element={<ScriptEditor />} />
         <Route path="/episodes/:id/assets" element={<AssetGallery />} />
