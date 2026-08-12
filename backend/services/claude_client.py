@@ -135,10 +135,26 @@ async def generate_ssml(narration_text: str, mode: str) -> str:
 
 # ── P6 Storyboard (Sonnet) ───────────────────────────────────────────────────
 
-async def plan_assets(title: str, script_json: list) -> list:
+async def plan_assets(title: str, script_json: list, shot_target: int = None) -> list:
+    """P6 storyboard. shot_target comes from the G0.5 Visual Budget and is the
+    BUFFERED count — planning to the unbuffered minimum is what causes the
+    ComfyUI return trips the buffer exists to prevent."""
     system = _load_bible()
     user = _load_prompt("asset_planning", title=title, script_json=json.dumps(script_json, indent=2))
-    raw = await complete_with_model(config.MODEL_SONNET, system, user, max_tokens=5000)
+    if shot_target:
+        user += (
+            f"\n\nSHOT COUNT (from G0.5 Visual Budget — binding): produce exactly "
+            f"{shot_target} AI shots. This is the buffered count, not the minimum; "
+            f"do not reduce it.\n"
+            f"Flux Dev specs for every shot including hero: "
+            f"{config.BGF_IMAGE_WIDTH}x{config.BGF_IMAGE_HEIGHT}, "
+            f"steps {config.BGF_FLUX_STEPS} (hero max {config.BGF_FLUX_STEPS_HERO}), "
+            f"guidance {config.BGF_FLUX_CFG}. Never 1920x1088.\n"
+            f"Flux uses no negative prompts — express negatives as positive "
+            f"avoidance language inside the prompt itself.\n"
+            f"First shot in the list is the strongest thumbnail candidate."
+        )
+    raw = await complete_with_model(config.MODEL_SONNET, system, user, max_tokens=8000)
     return _parse_json(raw, "asset_planning")
 
 # ── P7 Thumbnails / Packaging (Sonnet) ───────────────────────────────────────
@@ -193,7 +209,7 @@ async def evaluate_qa_gates(episode_id: str, script_data: dict,
         "  B4 visual_hook_clarity (/15)\n\n"
         "G4 PREDICTIVE PERFORMANCE:\n"
         "  Estimate CTR_likelihood (0-10), retention_likelihood (0-10)\n"
-        "  vs. BGF benchmarks: CTR ≥6% threshold, retention ≥30% first-mark\n\n"
+        "  vs. BGF benchmarks: CTR ≥6% threshold, retention ≥45% AVD\n\n"
         "G5 MONETIZATION + ETHICS:\n"
         "  advertiser_safety_score (/50) — ≥36 to pass\n"
         "  ethics_check: sensitive_content?, historical_accuracy_risk?, exploitative_framing?\n\n"

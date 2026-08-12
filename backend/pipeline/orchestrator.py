@@ -1,26 +1,37 @@
 """
-BGF Pipeline Orchestrator — multi-tier model routing + G1-G5 gate system.
+BGF Pipeline Orchestrator — Pipeline Order v2.
 
-Stage → Tier mapping (BGF Orchestration Spec):
-  P1 Ideation/Score  → Opus 4.8   (pre-work: Ollama title candidates)
-  P2 Research        → Fable 5
-  P3 Outline         → Opus 4.8
-  P4 Script          → Opus 4.8    (AUTO + async review flag)
-  P5 SSML/Voice      → Sonnet 4.6  (then: ElevenLabs/say + Whisper)
-  P6 Storyboard      → Sonnet 4.6  (pre-work: Ollama shot drafts → Flux/ComfyUI)
-  P7 Thumbnails      → Sonnet 4.6  (pre-work: Ollama title pool)
-  P8 SEO             → Haiku 4.5
-  P9 Shorts          → Sonnet 4.6  (pre-work: Ollama captions)
-  P10 QA + Gates     → Opus 4.8   (G3, G4, G5 — CHECKPOINT)
+Doctrine: BGF_PROMPT_STACK.md (stage contracts, v2 order) and
+BGF_PACING_CONSTITUTION.md (§3 pacing curve, §6 Flux specs, §14 gates).
 
-Gate autonomy:
-  CHECKPOINT → P1 (topic lock), P10 (go/no-go)
-  HARD_HALT  → any gate FAIL
-  AUTO       → all other stages
+Order (15 stages). Pre-production is linear; storyboard is pulled ahead of
+voiceover so ComfyUI starts days earlier; QA gates the master BEFORE Shorts
+extraction so a re-render never forces a 13-clip re-extract.
+
+  P0.5 Batch Primer -> P1 Score -> P2 Research -> P3 Outline -> P4 Script
+       -> [G0.25 VO pilot] [G0.5 visual budget] -> P6 Storyboard
+       -> Track A: Generation, Ken Burns
+          Track B: P5 Voiceover, P5.5 Audio Prod
+          Track C: P7a/P8 Titles + SEO
+       -> Assembly -> P10 QA -> P9b Shorts -> P10.5 Upload
+
+Tiers: Opus 4.8 (score/outline/script/QA) · Fable 5 (research) ·
+Sonnet 4.6 (storyboard/VO/shorts) · Haiku 4.5 (titles+SEO) ·
+ComfyUI Flux Dev (generation) · ffmpeg (motion/audio/assembly).
+
+Gates:
+  G0.25 VO Pilot      — calibrates real VO duration; blocks ComfyUI queuing
+  G0.5  Visual Budget — buffered shot count (1.20x, or 1.25x un-piloted)
+  G1/G2 at P1         — editorial perspective, 100-pt score (CHECKPOINT)
+  G3/G4/G5 at P10     — hook, predictive, monetization+ethics (CHECKPOINT)
+  Any FAIL -> HardHalt, remediation row, pipeline stops.
+
+Upload is a CHECKPOINT in every mode. There is no unattended-publish path.
 """
 
 import asyncio
 import json
+import math
 from pathlib import Path
 import config
 import database as db
@@ -29,18 +40,26 @@ import database as db
 _queues: dict[str, asyncio.Queue] = {}
 
 ROUTING = {
+    # ── Pre-production (linear) ──────────────────────────────────────────
+    "batch_primer":   {"tier": config.MODEL_OPUS,   "pre": None,              "autonomy": "AUTO"},
     "topic_scoring":  {"tier": config.MODEL_OPUS,   "pre": "ollama_titles",   "autonomy": "CHECKPOINT"},
     "research":       {"tier": config.MODEL_FABLE,  "pre": None,              "autonomy": "AUTO"},
     "outline":        {"tier": config.MODEL_OPUS,   "pre": None,              "autonomy": "AUTO"},
     "script":         {"tier": config.MODEL_OPUS,   "pre": None,              "autonomy": "AUTO_REVIEW"},
-    "seo":            {"tier": config.MODEL_HAIKU,  "pre": "ollama_tags",     "autonomy": "AUTO"},
-    "voice_ssml":     {"tier": config.MODEL_SONNET, "pre": None,              "autonomy": "AUTO"},
-    "asset_planning": {"tier": config.MODEL_SONNET, "pre": "ollama_shots",    "autonomy": "AUTO"},
+    # ── Track A · Visual (storyboard moved ahead of VO; carries G0.25/G0.5) ──
+    "storyboard":     {"tier": config.MODEL_SONNET, "pre": "ollama_shots",    "autonomy": "AUTO"},
     "generation":     {"tier": "comfyui",           "pre": None,              "autonomy": "AUTO"},
     "ken_burns":      {"tier": "ffmpeg",            "pre": None,              "autonomy": "AUTO"},
+    # ── Track B · Audio ──────────────────────────────────────────────────
+    "voice_ssml":     {"tier": config.MODEL_SONNET, "pre": None,              "autonomy": "AUTO"},
+    "audio_prod":     {"tier": "ffmpeg",            "pre": None,              "autonomy": "AUTO"},
+    # ── Track C · Metadata (needs script only) ───────────────────────────
+    "titles_seo":     {"tier": config.MODEL_HAIKU,  "pre": "ollama_tags",     "autonomy": "AUTO"},
+    # ── Post-production (tracks converge) ────────────────────────────────
     "assembly":       {"tier": "ffmpeg",            "pre": None,              "autonomy": "AUTO"},
-    "shorts":         {"tier": config.MODEL_SONNET, "pre": "ollama_captions", "autonomy": "AUTO"},
     "qa_gates":       {"tier": config.MODEL_OPUS,   "pre": "code_checks",     "autonomy": "CHECKPOINT"},
+    "shorts":         {"tier": config.MODEL_SONNET, "pre": "ollama_captions", "autonomy": "AUTO"},
+    "upload":         {"tier": "youtube",           "pre": None,              "autonomy": "CHECKPOINT"},
 }
 
 def get_queue(episode_id: str) -> asyncio.Queue:
@@ -66,25 +85,42 @@ async def run_pipeline(episode_id: str, start_from: str | None = None):
     await db.update_episode(episode_id, status="running")
     await emit(episode_id, {"type": "pipeline_start", "mode": mode})
 
+    # Pipeline Order v2 (BGF_PROMPT_STACK.md). Execution is sequential; the
+    # Track A/B/C grouping is the doctrine's concurrency model and is honoured
+    # in ordering (visual work front-loaded so ComfyUI starts as early as
+    # possible). Running the tracks truly concurrently is a later change —
+    # the stage outputs are identical either way.
     stages = [
+        # Pre-production — linear. P1 scores before P2 researches: G2 kills
+        # sub-60 topics, and P2's own spec requires a locked topic.
+        ("batch_primer",   _stage_batch_primer),
         ("topic_scoring",  _stage_topic_scoring),
         ("research",       _stage_research),
         ("outline",        _stage_outline),
         ("script",         _stage_script),
-        ("seo",            _stage_seo),
-        ("voice_ssml",     _stage_voice_ssml),
-        ("asset_planning", _stage_asset_planning),
+        # Track A — visual. storyboard runs G0.25 + G0.5 before any shot.
+        ("storyboard",     _stage_storyboard),
         ("generation",     _stage_generation),
         ("ken_burns",      _stage_ken_burns),
+        # Track B — audio.
+        ("voice_ssml",     _stage_voice_ssml),
+        ("audio_prod",     _stage_audio_prod),
+        # Track C — metadata.
+        ("titles_seo",     _stage_titles_seo),
+        # Post — QA gates the master BEFORE Shorts, so a re-render never
+        # forces a 13-clip re-extract.
         ("assembly",       _stage_assembly),
-        ("shorts",         _stage_shorts),
         ("qa_gates",       _stage_qa_gates),
+        ("shorts",         _stage_shorts),
+        ("upload",         _stage_upload),
     ]
 
+    # 'upload' is a CHECKPOINT in every mode — there is no unattended-publish
+    # path. See CLAUDE.md hard rules.
     human_gates = {
-        "ASSISTED":  ["script", "generation", "assembly", "qa_gates"],
-        "SEMI_AUTO": ["assembly", "qa_gates"],
-        "FULL_AUTO": ["qa_gates"],
+        "ASSISTED":  ["script", "generation", "assembly", "qa_gates", "upload"],
+        "SEMI_AUTO": ["assembly", "qa_gates", "upload"],
+        "FULL_AUTO": ["qa_gates", "upload"],
     }
     gate_stages = set(human_gates.get(mode, ["qa_gates"]))
 
@@ -181,6 +217,30 @@ async def _hard_halt(episode_id: str, gate_id: str, rationale: str,
 
 
 # ─── Stage Implementations ────────────────────────────────────────────────────
+
+async def _stage_batch_primer(episode_id: str, output_dir: Path, mode: str) -> dict:
+    """
+    P0.5 Cluster Batch Primer (BGF_PROMPT_STACK.md).
+
+    Only meaningful when producing 3-5 episodes on a shared theme: it loads
+    the research and canon modules once for the whole cluster instead of per
+    episode, which is the main token saving of cluster production.
+
+    A single-episode run has no cluster to prime, so this passes through and
+    records why. It never blocks — the bypass-and-publish rule says one
+    blocked episode must not freeze the others.
+    """
+    episode = await db.get_episode(episode_id)
+    cluster_theme = (episode.get("production_notes") or "").strip() if episode else ""
+    result = {
+        "cluster": False,
+        "reason": "single-episode run — no cluster batch to prime",
+        "topic": episode["topic"] if episode else None,
+    }
+    (output_dir / "batch_primer.json").write_text(json.dumps(result, indent=2))
+    await db.update_episode(episode_id, production_stage="P0_5_BATCH_PRIMER")
+    return result
+
 
 async def _stage_topic_scoring(episode_id: str, output_dir: Path, mode: str) -> dict:
     from services import claude_client
@@ -307,7 +367,7 @@ async def _stage_script(episode_id: str, output_dir: Path, mode: str) -> dict:
     return result
 
 
-async def _stage_seo(episode_id: str, output_dir: Path, mode: str) -> dict:
+async def _stage_titles_seo(episode_id: str, output_dir: Path, mode: str) -> dict:
     from services import claude_client
     from services import ollama_client
     episode = await db.get_episode(episode_id)
@@ -327,7 +387,7 @@ async def _stage_seo(episode_id: str, output_dir: Path, mode: str) -> dict:
     merged = list(dict.fromkeys(existing + tag_drafts))[:30]
     result["tags"] = merged
     (output_dir / "seo.json").write_text(json.dumps(result, indent=2))
-    await db.update_episode(episode_id, production_stage="P8_SEO")
+    await db.update_episode(episode_id, production_stage="P7_P8_TITLES_SEO")
     return result
 
 
@@ -347,7 +407,251 @@ async def _stage_voice_ssml(episode_id: str, output_dir: Path, mode: str) -> dic
     return {"ssml_text": ssml_text, "scene_count": len(scenes)}
 
 
-async def _stage_asset_planning(episode_id: str, output_dir: Path, mode: str) -> dict:
+def _script_words(script_data: dict) -> str:
+    """Flatten a script's narration to a single string."""
+    return " ".join(
+        s.get("narration", "") for s in script_data.get("scenes", [])
+    ).strip()
+
+
+async def _gate_g0_25_vo_pilot(episode_id: str, output_dir: Path,
+                                script_data: dict) -> dict:
+    """
+    G0.25 — VO PILOT RENDER (BGF_PACING_CONSTITUTION.md §14).
+
+    Renders the first ~250 words, measures the real duration, and derives the
+    scale factor between estimated and actual VO. ComfyUI queuing is blocked
+    until this closes: without it, image counts are computed against an
+    estimate that ran 27% short on EP40, which is what forced re-generation.
+
+    Never hard-halts. If the render is impossible the gate closes as
+    ESTIMATED, which promotes the buffer from 1.20x to 1.25x downstream.
+    """
+    from ffmpeg import assembler
+
+    full_text = _script_words(script_data)
+    total_words = len(full_text.split())
+    pilot_text = " ".join(full_text.split()[:config.BGF_PILOT_WORD_TARGET])
+    pilot_words = len(pilot_text.split())
+
+    if not pilot_words:
+        raise ValueError("G0.25: script has no narration to pilot")
+
+    estimated_seg_sec = pilot_words / config.BGF_WORDS_PER_SECOND
+    scale, actual_seg_sec, method = None, None, "ESTIMATED"
+
+    try:
+        pilot_path = output_dir / "audio" / "vo_pilot.mp3"
+        await assembler.generate_narration(pilot_text, pilot_path)
+        actual_seg_sec = await assembler.get_duration(pilot_path)
+        if actual_seg_sec and estimated_seg_sec > 0:
+            scale = actual_seg_sec / estimated_seg_sec
+            method = "PILOT_RENDER"
+    except Exception:
+        scale = None  # TTS unavailable — fall through to ESTIMATED
+
+    if scale is None:
+        scale = 1.0
+        buffer_mult = config.BGF_BUFFER_NO_PILOT
+    else:
+        buffer_mult = config.BGF_BUFFER_WITH_PILOT
+
+    calibrated_vo_sec = (total_words / config.BGF_WORDS_PER_SECOND) * scale
+
+    result = {
+        "pilot_scale_factor": round(scale, 3) if method == "PILOT_RENDER" else "ESTIMATED",
+        "calibrated_VO_sec": round(calibrated_vo_sec, 1),
+        "buffer_multiplier": buffer_mult,
+        "method": method,
+        "pilot_words": pilot_words,
+        "total_words": total_words,
+        "estimated_seg_sec": round(estimated_seg_sec, 2),
+        "actual_seg_sec": round(actual_seg_sec, 2) if actual_seg_sec else None,
+    }
+
+    await db.write_gate_decision(
+        episode_id, "G0.25", "PASS",
+        rationale=(
+            f"{method}: scale {result['pilot_scale_factor']}, "
+            f"calibrated VO {result['calibrated_VO_sec']}s from {total_words} words, "
+            f"buffer {buffer_mult}x"
+        ),
+        decided_by="pipeline",
+    )
+    (output_dir / "g0_25_vo_pilot.json").write_text(json.dumps(result, indent=2))
+    await emit(episode_id, {"type": "gate_passed", "gate": "G0.25", "data": result})
+    return result
+
+
+async def _gate_g0_5_visual_budget(episode_id: str, output_dir: Path,
+                                    pilot: dict) -> dict:
+    """
+    G0.5 — VISUAL BUDGET (BGF_PACING_CONSTITUTION.md §14).
+
+    Per §3 phase, derives minimum visual events from the calibrated VO
+    duration and the phase ASL midpoint, then applies the buffer. The buffer
+    is non-negotiable doctrine — it absorbs VO variance, assembly retiming,
+    and shot-level quality failures without a second ComfyUI pass.
+    """
+    calibrated = pilot["calibrated_VO_sec"]
+    buffer_mult = pilot["buffer_multiplier"]
+
+    per_phase, min_total, buffered_total = [], 0, 0
+    for phase in config.BGF_PHASES:
+        duration = calibrated * phase["pct"]
+        min_events = math.ceil(duration / phase["asl"])
+        buffered = math.ceil(min_events * buffer_mult)
+        flex = math.ceil(buffered * config.BGF_FLEX_PCT)
+        per_phase.append({
+            "phase": phase["name"],
+            "duration_sec": round(duration, 1),
+            "asl": phase["asl"],
+            "min_visual_events": min_events,
+            "buffered_count": buffered,
+            "flex_count": flex,
+        })
+        min_total += min_events
+        buffered_total += buffered
+
+    flex_total = math.ceil(buffered_total * config.BGF_FLEX_PCT)
+    ai_shots = max(0, buffered_total - config.BGF_ARCHIVAL_MINIMUM)
+
+    budget = {
+        "target_runtime_sec": calibrated,
+        "pilot_scale_factor": pilot["pilot_scale_factor"],
+        "min_visual_events_total": min_total,
+        "buffered_shot_count": buffered_total,
+        "flex_shots_count": flex_total,
+        "archival_minimum": config.BGF_ARCHIVAL_MINIMUM,
+        "AI_shots_needed": ai_shots,
+        "buffer_multiplier": buffer_mult,
+        "per_phase": per_phase,
+    }
+
+    # The constitution requires Visual_Budget_EP##.md to exist as an artifact.
+    lines = [
+        f"# Visual Budget — {episode_id}", "",
+        f"- target_runtime_sec: {calibrated}",
+        f"- pilot_scale_factor: {pilot['pilot_scale_factor']}",
+        f"- min_visual_events_total: {min_total}",
+        f"- buffered_shot_count: {buffered_total}  ({buffer_mult}x buffer)",
+        f"- flex_shots_count: {flex_total}",
+        f"- archival_minimum: {config.BGF_ARCHIVAL_MINIMUM}",
+        f"- AI_shots_needed: {ai_shots}", "",
+        "## Per-beat allocation", "",
+        "| Phase | Duration | ASL | Min | Buffered | FLEX |",
+        "|-------|----------|-----|-----|----------|------|",
+    ] + [
+        f"| {p['phase']} | {p['duration_sec']}s | {p['asl']}s | "
+        f"{p['min_visual_events']} | {p['buffered_count']} | {p['flex_count']} |"
+        for p in per_phase
+    ]
+    (output_dir / f"Visual_Budget_{episode_id[:8]}.md").write_text("\n".join(lines))
+
+    await db.write_gate_decision(
+        episode_id, "G0.5", "PASS",
+        score=buffered_total, max_score=buffered_total,
+        rationale=(
+            f"{buffered_total} shots ({min_total} min x {buffer_mult}), "
+            f"{flex_total} FLEX, {ai_shots} AI after {config.BGF_ARCHIVAL_MINIMUM} archival"
+        ),
+        decided_by="pipeline",
+    )
+    (output_dir / "g0_5_visual_budget.json").write_text(json.dumps(budget, indent=2))
+    await emit(episode_id, {"type": "gate_passed", "gate": "G0.5", "data": budget})
+    return budget
+
+
+async def _stage_audio_prod(episode_id: str, output_dir: Path, mode: str) -> dict:
+    """
+    P5.5 Audio Production (BGF_PROMPT_STACK.md).
+
+    Renders per-scene narration, runs the BGF mastering chain, and — the part
+    assembly depends on — measures the ACTUAL VO duration and writes the
+    rescale factor to state. Storyboard timestamps are estimates until this
+    runs; assembly multiplies by this factor to retime beats.
+    """
+    from ffmpeg import assembler
+
+    script_data = await db.get_stage_output(episode_id, "script")
+    if not script_data:
+        script_data = json.loads((output_dir / "script.json").read_text())
+    scenes = script_data.get("scenes", [])
+    audio_dir = output_dir / "audio"
+    audio_dir.mkdir(parents=True, exist_ok=True)
+
+    drone = config.MUSIC_DIR / "BGF_d_minor_drone.wav"
+    rendered, total_sec = [], 0.0
+    for scene in scenes:
+        idx = scene.get("scene_number", 1) - 1
+        text = (scene.get("narration") or "")
+        for marker in ("[PAUSE]", "[BEAT]", "[SLOW]", "[EMPHASIS]"):
+            text = text.replace(marker, "")
+        if not text.strip():
+            continue
+        raw = audio_dir / f"scene_{idx:03d}_raw.mp3"
+        out = audio_dir / f"scene_{idx:03d}.mp3"
+        try:
+            await assembler.generate_narration(text.strip(), raw)
+            await assembler.master_narration(raw, out, drone_path=drone)
+            dur = await assembler.get_duration(out)
+            total_sec += dur or 0.0
+            rendered.append({"scene": idx, "path": str(out), "duration_sec": dur})
+        except Exception as e:
+            rendered.append({"scene": idx, "error": str(e)})
+
+    # Reconcile against G0.25's projection so assembly can retime.
+    pilot_path = output_dir / "g0_25_vo_pilot.json"
+    calibrated = None
+    if pilot_path.exists():
+        calibrated = json.loads(pilot_path.read_text()).get("calibrated_VO_sec")
+    assembly_scale = (total_sec / calibrated) if calibrated else 1.0
+
+    result = {
+        "scenes_rendered": len([r for r in rendered if "path" in r]),
+        "actual_VO_duration_sec": round(total_sec, 1),
+        "calibrated_VO_sec": calibrated,
+        "assembly_scale_factor": round(assembly_scale, 3),
+        "loudness_target": "-14 LUFS / -1 dBTP",
+        "clips": rendered,
+    }
+    (output_dir / "audio_prod.json").write_text(json.dumps(result, indent=2))
+    await db.update_episode(episode_id, production_stage="P5_5_AUDIO_PROD")
+    return result
+
+
+async def _stage_upload(episode_id: str, output_dir: Path, mode: str) -> dict:
+    """
+    P10.5 Upload / release.
+
+    Assembles the release package and stops. This stage is a CHECKPOINT in
+    every operating mode — it never publishes on its own. Publishing happens
+    only when the operator confirms from the Upload Panel.
+    """
+    final_dir = output_dir / "final"
+    episode = await db.get_episode(episode_id)
+    seo = await db.get_stage_output(episode_id, "titles_seo") or {}
+    video = final_dir / "episode.mp4"
+    thumb = final_dir / "thumbnail.jpg"
+
+    result = {
+        "ready_for_upload": video.exists(),
+        "awaiting_operator_approval": True,
+        "video_path": str(video) if video.exists() else None,
+        "thumbnail_path": str(thumb) if thumb.exists() else None,
+        "title": seo.get("title") or (episode or {}).get("topic"),
+        "description": seo.get("description"),
+        "tags": seo.get("tags", []),
+    }
+    (output_dir / "upload_package.json").write_text(json.dumps(result, indent=2))
+    await db.update_episode(episode_id, production_stage="P10_5_UPLOAD")
+    return result
+
+
+async def _stage_storyboard(episode_id: str, output_dir: Path, mode: str) -> dict:
+    """P6 Storyboard — runs immediately after script lock, ahead of VO, so
+    ComfyUI starts days earlier. G0.25 and G0.5 close before any shot is
+    planned; the shotlist is sized to the buffered count, never the minimum."""
     from services import claude_client
     from services import ollama_client
     script_data = await db.get_stage_output(episode_id, "script")
@@ -356,11 +660,23 @@ async def _stage_asset_planning(episode_id: str, output_dir: Path, mode: str) ->
     title = script_data.get("title", "")
     scenes = script_data.get("scenes", [])
 
+    # G0.25 → G0.5 must both close before ComfyUI is queued.
+    pilot = await _gate_g0_25_vo_pilot(episode_id, output_dir, script_data)
+    budget = await _gate_g0_5_visual_budget(episode_id, output_dir, pilot)
+
     # Pre-work: Ollama shot row drafts
     shot_drafts = await ollama_client.draft_shot_rows(scenes)
 
-    asset_plan = await claude_client.plan_assets(title, scenes)
-    for asset_spec in asset_plan:
+    asset_plan = await claude_client.plan_assets(
+        title, scenes, shot_target=budget["AI_shots_needed"])
+    # FLEX designation: the last 15-20% of the shotlist. These are symbolic /
+    # atmospheric and can be dropped in anywhere within their chapter, so
+    # assembly can absorb VO overrun without a second ComfyUI pass. They are
+    # rendered in the primary batch — never a second pass — and unused ones
+    # are simply discarded.
+    flex_start = max(0, len(asset_plan) - budget["flex_shots_count"])
+    for i, asset_spec in enumerate(asset_plan):
+        asset_spec["flex_flag"] = i >= flex_start
         await db.create_asset(
             episode_id=episode_id,
             scene_index=asset_spec.get("scene_index", 0),
@@ -371,7 +687,14 @@ async def _stage_asset_planning(episode_id: str, output_dir: Path, mode: str) ->
         )
     (output_dir / "asset_plan.json").write_text(json.dumps(asset_plan, indent=2))
     await db.update_episode(episode_id, production_stage="P6_VISUAL")
-    return {"asset_count": len(asset_plan), "plan": asset_plan, "shot_drafts": shot_drafts}
+    return {
+        "asset_count": len(asset_plan),
+        "flex_count": sum(1 for a in asset_plan if a.get("flex_flag")),
+        "budget": budget,
+        "pilot": pilot,
+        "plan": asset_plan,
+        "shot_drafts": shot_drafts,
+    }
 
 
 async def _stage_generation(episode_id: str, output_dir: Path, mode: str) -> dict:
@@ -470,8 +793,10 @@ async def _stage_assembly(episode_id: str, output_dir: Path, mode: str) -> dict:
                 replace("[SLOW]","").replace("[EMPHASIS]","")
             raw_audio = audio_dir / f"scene_{idx:03d}_raw.mp3"
             norm_audio = audio_dir / f"scene_{idx:03d}.mp3"
-            await generate_narration(clean, raw_audio)
-            await normalize_audio(raw_audio, norm_audio)
+            # P5.5 already mastered this scene — don't re-render it.
+            if not norm_audio.exists():
+                await generate_narration(clean, raw_audio)
+                await normalize_audio(raw_audio, norm_audio)
             narration_clips.append(norm_audio)
         else:
             continue
