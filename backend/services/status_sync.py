@@ -31,9 +31,13 @@ DEBOUNCE_SECONDS = 5.0
 
 # Canonical stage order — mirrors orchestrator.py's stages list
 STAGE_ORDER = [
-    "topic_scoring", "research", "outline", "script", "seo",
-    "voice_ssml", "asset_planning", "generation", "ken_burns",
-    "assembly", "shorts", "qa_gates",
+    # Pipeline Order v2 — must match orchestrator.stages and the dashboard's
+    # STAGES array in docs/bgf/index.html.
+    "batch_primer", "topic_scoring", "research", "outline", "script",
+    "storyboard", "generation", "ken_burns",
+    "voice_ssml", "audio_prod",
+    "titles_seo",
+    "assembly", "qa_gates", "shorts", "upload",
 ]
 
 _pending_task: asyncio.Task | None = None

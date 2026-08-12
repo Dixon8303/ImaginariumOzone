@@ -46,6 +46,38 @@ async def generate_narration(text: str, output_path: Path, voice: str = "Alex", 
     aiff_path.unlink(missing_ok=True)
     return output_path
 
+async def master_narration(input_path: Path, output_path: Path,
+                            drone_path: Optional[Path] = None) -> Path:
+    """
+    P5.5 BGF mastering chain (BGF_PROMPT_STACK.md).
+
+    silenceremove (max 0.5s gap) -> optional D-minor drone bed at -20dB
+    -> loudnorm -14 LUFS / -1 dBTP -> 48kHz 24-bit mono WAV.
+
+    The -14 LUFS target is YouTube spec; -16 (the generic web value) leaves
+    the episode quiet against the platform's normalization.
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    trim = ("silenceremove=stop_periods=-1:stop_duration=0.5:stop_threshold=-50dB")
+    loud = "loudnorm=I=-14:TP=-1:LRA=11"
+
+    if drone_path and drone_path.exists():
+        cmd = [
+            FFMPEG, "-y", "-i", str(input_path), "-i", str(drone_path),
+            "-filter_complex",
+            f"[0:a]{trim}[vo];"
+            f"[1:a]volume=-20dB,aloop=loop=-1:size=2e9[bed];"
+            f"[vo][bed]amix=inputs=2:duration=first:dropout_transition=0,{loud}[out]",
+            "-map", "[out]",
+        ]
+    else:
+        cmd = [FFMPEG, "-y", "-i", str(input_path), "-af", f"{trim},{loud}"]
+
+    cmd += ["-ar", "48000", "-ac", "1", "-c:a", "pcm_s24le", str(output_path)]
+    await _run(cmd)
+    return output_path
+
+
 async def normalize_audio(input_path: Path, output_path: Path) -> Path:
     """EBU R128 loudness normalization."""
     output_path.parent.mkdir(parents=True, exist_ok=True)

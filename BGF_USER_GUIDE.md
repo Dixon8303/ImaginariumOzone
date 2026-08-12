@@ -239,22 +239,54 @@ The pipeline will not advance until you take action.
 
 ## 6. What Each Stage Does
 
+The pipeline runs 15 stages in Pipeline Order v2. Three things changed from the
+original order, and each one saves you real time:
+
+- **Storyboard now runs right after the script**, before the voiceover. Image
+  generation is the slowest step, so starting it earlier gets the episode done days sooner.
+- **QA now happens before Shorts are cut.** If QA sends the episode back for a
+  re-render, you don't have to re-cut a dozen Shorts clips afterward.
+- **Two new checks run before any image is made** (see the table below) — these
+  exist to stop the "ran out of images halfway through assembly" problem.
+
 | # | Stage | Model | What it produces | Time |
 |---|-------|-------|-----------------|------|
-| P1 | **Topic Score + G1/G2** | Opus 4.8 (+ Ollama pre-work) | Editorial gate check, 100-pt score, keyword, title candidates | 30–60s |
+| P0.5 | **Batch Primer** | Opus 4.8 | Cluster setup when you're making 3–5 episodes on one theme; skipped for a single episode | 5s |
+| P1 | **Topic Score + G1/G2** | Opus 4.8 (+ Ollama) | Editorial gate check, 100-pt score, keyword, title candidates | 30–60s |
 | P2 | **Research** | Fable 5 | Deep research brief with per-claim source verification, bibliography | 2–5 min |
-| P3 | **Outline** | Opus 4.8 | 6–8 beat structure with curiosity loops, arc notes | 45s |
+| P3 | **Outline** | Opus 4.8 | 6–8 beat structure with curiosity loops, thumbnail concept | 45s |
 | P4 | **Script** | Opus 4.8 | Full narration scenes with visual direction per scene | 60–90s |
-| P8 | **SEO** | Haiku 4.5 (+ Ollama tags) | YouTube title/description/tags package | 20s |
+| P6 | **Storyboard** *(runs G0.25 + G0.5 first)* | Sonnet 4.6 (+ Ollama) | Voiceover timing check, image budget, then the full shot list with Flux prompts | 2–3 min |
+| — | **Generation** | ComfyUI · Flux Dev | AI images for every shot | 5–20 min |
+| — | **Ken Burns** | ffmpeg | Pan/zoom motion applied to stills | 1–2 min |
 | P5 | **Voice & SSML** | Sonnet 4.6 | Narration markup for TTS pacing and emphasis | 30s |
-| P6 | **Storyboard** | Sonnet 4.6 (+ Ollama shots) | Asset spec per scene with ComfyUI prompts | 45s |
-| — | **Generation** | ComfyUI | AI images/videos for each scene | 5–20 min |
-| — | **Ken Burns** | ffmpeg | Pan/zoom motion applied to still images | 1–2 min |
+| P5.5 | **Audio Production** | ffmpeg | Narration rendered and mastered to broadcast loudness (−14 LUFS) | 2–4 min |
+| P7/P8 | **Titles + SEO** | Haiku 4.5 (+ Ollama) | YouTube title, description, tags package | 20s |
 | — | **Assembly** | ffmpeg | Full episode assembled with narration, music, transitions | 2–5 min |
-| P9 | **Shorts** | Sonnet 4.6 (+ Ollama captions) | YouTube Shorts cut from episode, 9:16 reformat | 2–3 min |
 | P10 | **QA Gates G3–G5** | Opus 4.8 | Hook diagnostic, predictive performance, monetization/ethics | 60s |
+| P9b | **Shorts** | Sonnet 4.6 (+ Ollama) | Shorts cut from the approved episode, 9:16 reformat | 2–3 min |
+| P10.5 | **Upload** | YouTube | Release package assembled — **then waits for your approval** | 10s |
 
----
+### The two new checks (G0.25 and G0.5)
+
+These run automatically inside the Storyboard stage. You don't do anything —
+but it helps to know what they're for.
+
+**G0.25 — Voiceover Pilot.** The app narrates the first ~250 words of your
+script for real and times it. Word-count estimates are unreliable: on EP40 the
+actual narration ran noticeably longer than predicted, which meant the shot list
+came up short and images had to be generated a second time. Measuring a real
+sample first removes the guesswork.
+
+**G0.5 — Visual Budget.** Using that measured timing, the app calculates how
+many images each part of the episode needs, then **adds 20% on top** (25% if the
+voiceover sample couldn't be rendered). The last 15–20% of each chapter's images
+are marked **FLEX** — atmospheric shots that can slot in anywhere if the timing
+shifts. Extra images cost nothing because they're made in the same batch;
+running out costs you another full generation round.
+
+You'll see both as gate chips on Mission Control, and a `Visual_Budget` file
+appears in the episode's output folder showing the math.
 
 ## 7. Human Gates — When You're Called In
 

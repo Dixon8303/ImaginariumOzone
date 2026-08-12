@@ -3,6 +3,11 @@ uvicorn[standard]==0.29.0
 aiosqlite==0.20.0
 anthropic==0.28.0
 httpx==0.27.0
+# Required by services/: status_sync, elevenlabs_client, vidiq_client,
+# ollama_client. Each degrades to a silent no-op if this is missing, so
+# omitting it disables Mission Control sync and every optional integration
+# with no error surfaced anywhere.
+aiohttp==3.9.5
 aiofiles==23.2.1
 google-api-python-client==2.131.0
 google-auth-oauthlib==1.2.0

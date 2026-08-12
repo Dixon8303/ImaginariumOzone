@@ -222,8 +222,8 @@ const COMMITS_API = `https://api.github.com/repos/${REPO}/commits?sha=main&per_p
 const STAGES = [
   // ── Pre-production (linear) ──────────────────────────────────────────────
   ['batch_primer',   'P0.5 · Batch Primer',   'OP'],
-  ['research',       'P1 · Research',          'F5'],
-  ['topic_scoring',  'P2 · Topic Score',       'OP'],
+  ['topic_scoring',  'P1 · Topic Score',       'OP'],
+  ['research',       'P2 · Research',          'F5'],
   ['outline',        'P3 · Outline',           'OP'],
   ['script',         'P4 · Script',            'OP'],
   // ── Track A: Visual (starts immediately after script lock) ───────────────
@@ -239,10 +239,10 @@ const STAGES = [
   ['assembly',       'Assembly',               'FX'],
   ['qa_gates',       'P10 · QA Gates',         'OP'],   // gates before Shorts
   ['shorts',         'P9b · Shorts',           'SN'],   // always LAST (post-QA)
-  ['upload',         'P10.5 · Upload',         'FX'],
+  ['upload',         'P10.5 · Upload',         'YT'],
 ];
 const TIER_NAMES = {OP:'Opus 4.8',F5:'Fable 5',SN:'Sonnet 4.6',HK:'Haiku 4.5',
-  CU:'ComfyUI · Flux Dev Q8',FX:'ffmpeg · fast'};
+  CU:'ComfyUI · Flux Dev Q8',FX:'ffmpeg · fast',YT:'YouTube · gated'};
 const STATUS_LABELS = {draft:'Draft',running:'In Production',review:'Awaiting Review',
   halted:'Halted at Gate',failed:'Failed',approved:'Approved',
   uploaded:'Published',published:'Published'};

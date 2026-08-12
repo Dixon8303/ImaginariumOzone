@@ -42,6 +42,49 @@ YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID", "")
 GITHUB_SYNC_TOKEN = os.getenv("GITHUB_SYNC_TOKEN", "")
 GITHUB_SYNC_REPO = os.getenv("GITHUB_SYNC_REPO", "Dixon8303/ImaginariumOzone")
 
+# ── Pacing Constitution constants (BGF_PACING_CONSTITUTION.md §14, §3) ───
+# Single source of truth for the G0.25/G0.5 math. Changing the doctrine means
+# changing it here, not in a stage function.
+
+# §14 "Calibrated rate: 75 words/minute (1.25 words/second)" — verified against
+# EP40 (1,254 words → 991.76s) and EP38. NOTE: the doc writes the formula as
+# `estimated_seg_sec = seg_word_count ÷ 75`, which yields MINUTES, not seconds.
+# We use words ÷ 1.25 (= words × 0.8), the only reading consistent with both
+# the stated 1.25 words/sec and the EP40 measurement.
+BGF_WORDS_PER_SECOND = 1.25
+
+# §14 image buffer — non-negotiable. 1.20× with a pilot render, 1.25× without.
+BGF_BUFFER_WITH_PILOT = 1.20
+BGF_BUFFER_NO_PILOT   = 1.25
+
+# §14 FLEX shots: last 15–20% of each chapter's AI shots. Midpoint.
+BGF_FLEX_PCT = 0.175
+
+# §14 archival floor: portraits ≥2, primary event, geographic, institutional,
+# liberation context.
+BGF_ARCHIVAL_MINIMUM = 15
+
+# §3 pacing curve. pct = share of the 13:30 master runtime; asl = midpoint of
+# the phase's master-target ASL band, used as the visual-event divisor.
+BGF_PHASES = [
+    {"name": "hook",       "pct": 0.0185, "asl": 1.5},
+    {"name": "setup",      "pct": 0.0926, "asl": 2.4},
+    {"name": "body_i",     "pct": 0.2593, "asl": 3.75},
+    {"name": "body_ii",    "pct": 0.3704, "asl": 4.75},
+    {"name": "climax",     "pct": 0.2222, "asl": 2.5},
+    {"name": "resolution", "pct": 0.0370, "asl": 5.0},
+]
+
+# §14 G0.25 pilot sample size (hook + chapter 1 opening ≈ 200–300 words).
+BGF_PILOT_WORD_TARGET = 250
+
+# §6 Flux Dev 1 image standard — 1344×768 for ALL shots including hero.
+BGF_IMAGE_WIDTH  = 1344
+BGF_IMAGE_HEIGHT = 768
+BGF_FLUX_STEPS       = 28
+BGF_FLUX_STEPS_HERO  = 32   # §P6: hero shots cap at 32, never higher
+BGF_FLUX_CFG         = 3.5  # §6.2: Flux Dev collapses at SD-style CFG 7–12
+
 PROMPTS_DIR  = Path(__file__).parent / "prompts"
 WORKFLOWS_DIR = Path(__file__).parent / "workflows"
 MUSIC_DIR    = Path(__file__).parent / "assets" / "music"
