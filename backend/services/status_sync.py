@@ -22,6 +22,7 @@ import database as db
 
 try:
     import aiohttp
+    from services import http as _http
     _AIOHTTP_AVAILABLE = True
 except ImportError:
     _AIOHTTP_AVAILABLE = False
@@ -134,7 +135,7 @@ async def sync_now() -> bool:
         "Accept": "application/vnd.github+json",
         "X-GitHub-Api-Version": "2022-11-28",
     }
-    async with aiohttp.ClientSession() as session:
+    async with _http.session() as session:
         for attempt in range(2):
             sha = await _get_sha(session, url, headers)
             body = {

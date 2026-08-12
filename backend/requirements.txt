@@ -22,6 +22,14 @@ httpx>=0.27.0
 # with no error surfaced anywhere.
 aiohttp>=3.9.5
 
+# aiohttp verifies HTTPS against OpenSSL's default CA paths, which are EMPTY on
+# python.org macOS builds until the bundled "Install Certificates.command" is
+# run — every request then dies with CERTIFICATE_VERIFY_FAILED. certifi gives
+# services/http.py a bundle to point at so a stock install just works. (httpx,
+# and therefore the Anthropic SDK, already trusts certifi — which is why Claude
+# calls worked on a machine where sync, vidIQ and ElevenLabs all failed.)
+certifi>=2024.2.2
+
 aiofiles>=23.2.1
 google-api-python-client>=2.131.0
 google-auth-oauthlib>=1.2.0

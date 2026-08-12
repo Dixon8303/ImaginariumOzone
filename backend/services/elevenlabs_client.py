@@ -11,6 +11,7 @@ import config
 
 try:
     import aiohttp
+    from services import http as _http
     _AIOHTTP_AVAILABLE = True
 except ImportError:
     _AIOHTTP_AVAILABLE = False
@@ -52,7 +53,7 @@ async def synthesize(text: str, output_path: Path, voice_id: str = None) -> Path
         "output_format": "mp3_44100_192",
     }
     try:
-        async with aiohttp.ClientSession() as session:
+        async with _http.session() as session:
             async with session.post(
                 url, json=payload, headers=headers,
                 timeout=aiohttp.ClientTimeout(total=120),
@@ -71,7 +72,7 @@ async def list_voices() -> list[dict]:
     if not is_configured():
         return []
     try:
-        async with aiohttp.ClientSession() as session:
+        async with _http.session() as session:
             async with session.get(
                 f"{API_BASE}/voices",
                 headers={"xi-api-key": config.ELEVENLABS_API_KEY},

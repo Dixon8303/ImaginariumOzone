@@ -10,6 +10,7 @@ import config
 
 try:
     import aiohttp
+    from services import http as _http
     _AIOHTTP_AVAILABLE = True
 except ImportError:
     _AIOHTTP_AVAILABLE = False
@@ -26,7 +27,7 @@ async def complete(prompt: str, model: str = None, max_tokens: int = 512) -> str
         "options": {"num_predict": max_tokens},
     }
     try:
-        async with aiohttp.ClientSession() as session:
+        async with _http.session() as session:
             async with session.post(
                 f"{config.OLLAMA_BASE_URL}/api/generate",
                 json=payload,
