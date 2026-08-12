@@ -12,6 +12,7 @@ import config
 
 try:
     import aiohttp
+    from services import http as _http
     _AIOHTTP_AVAILABLE = True
 except ImportError:
     _AIOHTTP_AVAILABLE = False
@@ -32,7 +33,7 @@ async def _get(path: str, params: dict = None) -> dict | None:
     if not is_configured():
         return None
     try:
-        async with aiohttp.ClientSession() as session:
+        async with _http.session() as session:
             async with session.get(
                 f"{config.VIDIQ_BASE_URL}{path}",
                 params=params, headers=_headers(),
@@ -49,7 +50,7 @@ async def _post(path: str, payload: dict) -> dict | None:
     if not is_configured():
         return None
     try:
-        async with aiohttp.ClientSession() as session:
+        async with _http.session() as session:
             async with session.post(
                 f"{config.VIDIQ_BASE_URL}{path}",
                 json=payload, headers=_headers(),
