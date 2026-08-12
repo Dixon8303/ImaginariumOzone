@@ -195,15 +195,18 @@ fi
 cd "$BACKEND" || exit 1
 PY="$BACKEND/.venv/bin/python"
 
-# The sync layer needs aiohttp. If it's absent every integration turns itself
-# off silently, so install it rather than reporting a mystery failure.
-if ! "$PY" -c "import aiohttp" >/dev/null 2>&1; then
-  say "  ${dim}Installing a missing component (aiohttp)…${rst}"
-  if "$BACKEND/.venv/bin/pip" install -q aiohttp >/dev/null 2>&1; then
-    ok "Installed aiohttp"
+# Make sure the whole dependency set is present, not just the sync library.
+# A venv created before a requirements change will be missing whatever was
+# added since, and each missing package fails differently, so install the
+# full set rather than guessing at one name.
+if ! "$PY" -c "import aiosqlite, aiohttp, dotenv" >/dev/null 2>&1; then
+  say "  ${dim}Installing missing Python packages…${rst}"
+  if "$BACKEND/.venv/bin/pip" install -q -r "$BACKEND/requirements.txt" >/dev/null 2>&1; then
+    ok "Dependencies installed"
   else
-    bad "Couldn't install aiohttp — the sync can't run without it."
-    say "  Try:  ${bold}cd backend && .venv/bin/pip install aiohttp${rst}"
+    bad "Couldn't install the Python dependencies."
+    say "  Try this, then run me again:"
+    say "    ${bold}cd backend && .venv/bin/pip install -r requirements.txt${rst}"
     exit 1
   fi
 fi

@@ -25,10 +25,20 @@ fi
 if [ ! -d "$BACKEND/.venv" ]; then
   echo "→ Creating Python virtual environment..."
   python3 -m venv "$BACKEND/.venv"
-  source "$BACKEND/.venv/bin/activate"
-  pip install -q -r "$BACKEND/requirements.txt"
-else
-  source "$BACKEND/.venv/bin/activate"
+fi
+source "$BACKEND/.venv/bin/activate"
+
+# Always sync dependencies. This used to run only when the venv was first
+# created, which meant any package added to requirements.txt afterwards never
+# reached an existing install — the feature just silently didn't work. pip is
+# fast and does nothing when everything is already satisfied.
+echo "→ Checking Python dependencies..."
+if ! pip install -q -r "$BACKEND/requirements.txt"; then
+  echo ""
+  echo "⚠  Could not install Python dependencies."
+  echo "   Try:  cd backend && .venv/bin/pip install -r requirements.txt"
+  echo ""
+  exit 1
 fi
 
 echo "→ Starting backend on http://localhost:8001"
