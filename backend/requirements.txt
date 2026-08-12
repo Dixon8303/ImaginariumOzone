@@ -1,16 +1,34 @@
-fastapi==0.111.0
-uvicorn[standard]==0.29.0
-aiosqlite==0.20.0
-anthropic==0.28.0
-httpx==0.27.0
+# Versions are MINIMUMS, not exact pins.
+#
+# An exact pin breaks the install outright once macOS/Homebrew upgrades Python
+# past the last release that shipped a prebuilt wheel for that version: pip
+# falls back to compiling from source and fails. That is what happened with
+# Pillow==10.3.0 on Python 3.13 — and because pip aborts the whole run on the
+# first failure, every package after it silently went uninstalled too, which
+# is why the app reported missing modules that were "already in requirements".
+#
+# Floors keep the install reproducible enough while letting pip choose a build
+# that actually works on whatever Python is present.
+
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+aiosqlite>=0.20.0
+anthropic>=0.28.0
+httpx>=0.27.0
+
 # Required by services/: status_sync, elevenlabs_client, vidiq_client,
 # ollama_client. Each degrades to a silent no-op if this is missing, so
 # omitting it disables Mission Control sync and every optional integration
 # with no error surfaced anywhere.
-aiohttp==3.9.5
-aiofiles==23.2.1
-google-api-python-client==2.131.0
-google-auth-oauthlib==1.2.0
-python-multipart==0.0.9
-python-dotenv==1.0.1
-Pillow==10.3.0
+aiohttp>=3.9.5
+
+aiofiles>=23.2.1
+google-api-python-client>=2.131.0
+google-auth-oauthlib>=1.2.0
+python-multipart>=0.0.9
+python-dotenv>=1.0.1
+
+# NOTE: Pillow was listed here but is imported nowhere in backend/. It was
+# removed rather than re-pinned — an unused dependency that blocks the whole
+# install is pure cost. If image manipulation is added later, add it back with
+# a floor (Pillow>=11) so it resolves to a wheel on current Python.
