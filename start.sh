@@ -6,6 +6,29 @@
 set -e
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 
+# ── Clear stale servers from a previous run ──────────────────────────────────
+# uvicorn --reload runs a reloader plus a worker, and `npm run dev` runs vite
+# as a child. Killing only the launcher leaves the real server alive holding
+# the port, so closing the terminal (or an incomplete Ctrl+C) strands them and
+# the next run fails with "Address already in use". Clear our own ports first.
+free_port() {
+  local port="$1" label="$2" pids
+  command -v lsof >/dev/null 2>&1 || return 0
+  pids="$(lsof -ti tcp:"$port" 2>/dev/null || true)"
+  [ -n "$pids" ] || return 0
+  echo "→ Port $port ($label) still held by an earlier run — stopping it..."
+  echo "$pids" | xargs kill 2>/dev/null || true
+  sleep 1
+  pids="$(lsof -ti tcp:"$port" 2>/dev/null || true)"
+  if [ -n "$pids" ]; then
+    echo "$pids" | xargs kill -9 2>/dev/null || true
+    sleep 1
+  fi
+}
+
+free_port 8001 "backend"
+free_port 5173 "frontend"
+
 # ── Backend ──────────────────────────────────────────────────────────────────
 BACKEND="$ROOT/backend"
 
@@ -59,7 +82,18 @@ npm run dev &
 FRONTEND_PID=$!
 
 # ── Cleanup on exit ──────────────────────────────────────────────────────────
-trap "kill $BACKEND_PID $FRONTEND_PID 2>/dev/null; echo 'Stopped.'" EXIT INT TERM
+# Kill the children too. uvicorn --reload's worker and npm's vite process are
+# what actually hold the ports; killing only the launchers orphans them, which
+# is what left ports 8001/5173 occupied between runs.
+cleanup() {
+  for pid in $BACKEND_PID $FRONTEND_PID; do
+    [ -n "$pid" ] || continue
+    pkill -P "$pid" 2>/dev/null || true
+    kill "$pid" 2>/dev/null || true
+  done
+  echo 'Stopped.'
+}
+trap cleanup EXIT INT TERM
 
 echo ""
 echo "  BGF Production OS running."
