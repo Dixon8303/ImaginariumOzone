@@ -182,14 +182,26 @@ unset TOKEN
 say ""
 say "${bold}Running a live test sync…${rst}"
 
-if [ ! -x "$BACKEND/.venv/bin/python" ]; then
-  warn "The app's Python environment isn't built yet, so I can't test right now."
-  say ""
-  say "  That's fine — setup is complete. Just start the app:"
-  say "    ${bold}./start.sh${rst}"
-  say "  It will sync automatically the first time the pipeline does anything."
-  say ""
-  exit 0
+# Build or repair the Python environment. A venv can be missing, half-built,
+# or stale — the last happens when Homebrew upgrades Python out from under it,
+# which leaves .venv/bin/python pointing at an interpreter that no longer
+# exists. Reinstalling packages can't fix that; only recreating can. The venv
+# holds nothing but downloaded packages, so rebuilding is always safe.
+VENV="$BACKEND/.venv"
+if [ -x "$VENV/bin/python" ] && ! "$VENV/bin/python" -c "pass" >/dev/null 2>&1; then
+  warn "The Python environment is broken (usually a Python upgrade). Rebuilding…"
+  rm -rf "$VENV"
+fi
+
+if [ ! -x "$VENV/bin/python" ]; then
+  say "  ${dim}Building the Python environment (first time — takes a minute)…${rst}"
+  if ! python3 -m venv "$VENV" >/dev/null 2>&1; then
+    bad "Couldn't create the Python environment."
+    say "  Check that Python 3 is installed:  ${bold}python3 --version${rst}"
+    say "  If that fails:  ${bold}brew install python${rst}"
+    exit 1
+  fi
+  ok "Python environment created"
 fi
 
 cd "$BACKEND" || exit 1
@@ -200,15 +212,29 @@ PY="$BACKEND/.venv/bin/python"
 # added since, and each missing package fails differently, so install the
 # full set rather than guessing at one name.
 if ! "$PY" -c "import aiosqlite, aiohttp, dotenv" >/dev/null 2>&1; then
-  say "  ${dim}Installing missing Python packages…${rst}"
-  if "$BACKEND/.venv/bin/pip" install -q -r "$BACKEND/requirements.txt" >/dev/null 2>&1; then
-    ok "Dependencies installed"
-  else
-    bad "Couldn't install the Python dependencies."
-    say "  Try this, then run me again:"
-    say "    ${bold}cd backend && .venv/bin/pip install -r requirements.txt${rst}"
+  say "  ${dim}Installing Python packages (may take a minute)…${rst}"
+  # `python -m pip` rather than the pip script: pip's shebang hard-codes an
+  # absolute path, so it breaks if the project folder was ever moved or renamed.
+  PIP_LOG="$(mktemp)"
+  if ! "$PY" -m pip install -q -r "$BACKEND/requirements.txt" >"$PIP_LOG" 2>&1; then
+    bad "Couldn't install the Python dependencies. pip said:"
+    say ""
+    tail -15 "$PIP_LOG" | sed 's/^/    /'
+    say ""
+    say "  Send Claude the lines above — they contain no secrets."
+    rm -f "$PIP_LOG"
     exit 1
   fi
+  rm -f "$PIP_LOG"
+
+  # Confirm it actually took, rather than assuming a zero exit means success.
+  if ! "$PY" -c "import aiosqlite, aiohttp, dotenv" >/dev/null 2>&1; then
+    bad "Packages installed but still won't import — the environment is unhealthy."
+    say "  Rebuild it from scratch with:"
+    say "    ${bold}rm -rf backend/.venv && ./setup-sync.sh${rst}"
+    exit 1
+  fi
+  ok "Dependencies installed"
 fi
 
 SYNC_OUT="$("$PY" -c "
