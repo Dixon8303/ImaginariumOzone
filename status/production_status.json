@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-08-13T03:30:00.722622Z",
+  "last_synced": "2026-08-13T16:39:32.295493Z",
   "app": "BGF Production OS v1.0",
   "episodes": [
     {
@@ -81,7 +81,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "WhVpdmY13ww",
       "publish_at": null
     },
@@ -164,7 +164,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "IYOWYmjX8BA",
       "publish_at": null
     },
@@ -247,7 +247,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "ELRqlSZDJyM",
       "publish_at": null
     },
@@ -330,7 +330,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "Jx5ZiRQ6myI",
       "publish_at": null
     },
@@ -413,7 +413,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "6dDRHLl_IsI",
       "publish_at": null
     },
@@ -496,7 +496,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "bFpWJXcBgI0",
       "publish_at": null
     },
@@ -579,7 +579,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "ovaVD3uow58",
       "publish_at": null
     },
@@ -662,7 +662,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "ik0-WkjcdOo",
       "publish_at": "2026-08-15T14:00:00Z"
     },
@@ -745,7 +745,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "dGXhcljM0U4",
       "publish_at": "2026-08-18T14:00:00Z"
     },
@@ -828,7 +828,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "ECGD3w9GocU",
       "publish_at": "2026-08-22T14:00:00Z"
     },
@@ -911,7 +911,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "YM6MEaOLGS4",
       "publish_at": "2026-08-25T14:00:00Z"
     },
@@ -994,7 +994,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "qGvEBKFHJJM",
       "publish_at": "2026-08-28T14:00:00Z"
     },
@@ -1077,7 +1077,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "updated_at": "2026-08-13T16:39:32.295493Z",
       "video_id": "2BfUsIHkbsw",
       "publish_at": "2026-09-01T14:00:00Z"
     },
@@ -1085,7 +1085,7 @@
       "id": "EP35",
       "topic": "Bob Marley: The Revolution They Bought",
       "mode": "standalone",
-      "status": "review",
+      "status": "uploaded",
       "keyword": "bob marley music ownership",
       "score": null,
       "stages": [
@@ -1147,7 +1147,7 @@
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {
@@ -1160,35 +1160,37 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z"
+      "updated_at": "2026-08-13T16:39:32.295493Z",
+      "video_id": "H0rcOt6o2K8",
+      "publish_at": "2026-09-04T14:00:00Z"
     },
     {
       "id": "EP36",
       "topic": "The Digital Pivot",
       "mode": "standalone",
-      "status": "review",
+      "status": "uploaded",
       "keyword": "music streaming black artists",
       "score": null,
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -1204,15 +1206,15 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -1224,11 +1226,11 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {
@@ -1241,35 +1243,37 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z"
+      "updated_at": "2026-08-13T16:39:32.295493Z",
+      "video_id": "P3rpqmm640I",
+      "publish_at": "2026-09-08T14:00:00Z"
     },
     {
       "id": "EP37",
       "topic": "Counter Models: Black Ownership in Music",
       "mode": "standalone",
-      "status": "review",
+      "status": "uploaded",
       "keyword": "black music ownership independence",
       "score": null,
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -1285,15 +1289,15 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -1305,11 +1309,11 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {
@@ -1322,43 +1326,45 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z"
+      "updated_at": "2026-08-13T16:39:32.295493Z",
+      "video_id": "vOEAqJJ_OEU",
+      "publish_at": "2026-09-11T14:00:00Z"
     },
     {
       "id": "EP38",
       "topic": "Who Owns the Sound?",
       "mode": "standalone",
-      "status": "review",
+      "status": "uploaded",
       "keyword": "music copyright ownership",
       "score": null,
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "generation",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "ken_burns",
@@ -1366,15 +1372,15 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -1386,11 +1392,11 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {
@@ -1403,7 +1409,9 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z"
+      "updated_at": "2026-08-13T16:39:32.295493Z",
+      "video_id": "GgN8chUsYPM",
+      "publish_at": "2026-09-15T14:00:00Z"
     },
     {
       "id": "EP39",
@@ -1475,7 +1483,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-08-13T03:30:00.722622Z"
+      "updated_at": "2026-08-13T16:39:32.295493Z"
     },
     {
       "id": "EP40",
@@ -1556,7 +1564,7 @@
           "score": null
         }
       },
-      "updated_at": "2026-08-13T03:30:00.722622Z"
+      "updated_at": "2026-08-13T16:39:32.295493Z"
     }
   ]
 }
