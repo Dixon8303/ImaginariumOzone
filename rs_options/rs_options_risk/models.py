@@ -159,6 +159,7 @@ class TradeCandidate:
     holds_overnight: bool = False
     thesis_bullish: bool = True
     wash_sale_group: str = ""                 # defaults to ticker
+    edge_half_life_seconds: Optional[float] = None   # §38 latency-class gate
 
     def __post_init__(self):
         if not self.wash_sale_group:
@@ -226,6 +227,7 @@ class RiskDecision:
     margin: Optional[MarginImpact] = None
     tax: Optional[TaxAssessment] = None
     latency_state: Optional[LatencyState] = None
+    gate_margins: dict = field(default_factory=dict)   # §63 rejection forensics
 
     @property
     def authorized(self) -> bool:
@@ -281,4 +283,5 @@ class RiskDecision:
             "Latency": {
                 "Latency_State": self.latency_state.value if self.latency_state else None,
             },
+            "Gate_Margins": {k: round(v, 4) for k, v in self.gate_margins.items()},
         }

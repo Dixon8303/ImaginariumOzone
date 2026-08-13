@@ -74,6 +74,20 @@ class RiskEngine:
         if account.open_positions >= self.risk.max_open_positions:
             return self._final(d, DecisionStatus.REJECT, "MAX_OPEN_POSITIONS")
 
+        # ── latency class discipline (§38) ───────────────────────────
+        if candidate.edge_half_life_seconds is not None:
+            pipe_ms = self.latency.pipe_latency_p95_ms()
+            if pipe_ms is None:
+                # Declared fast edge + unmeasured pipe → unverifiable → fail closed.
+                return self._final(d, DecisionStatus.REJECT,
+                                   "EDGE_HALF_LIFE_UNVERIFIABLE")
+            required_ms = self.gates.edge_half_life_min_multiple * pipe_ms
+            d.gate_margins["edge_half_life_margin_ms"] = (
+                candidate.edge_half_life_seconds * 1000.0 - required_ms)
+            if candidate.edge_half_life_seconds * 1000.0 < required_ms:
+                return self._final(d, DecisionStatus.REJECT,
+                                   "EDGE_FASTER_THAN_PIPE")
+
         # ── scenario risk (§6) ───────────────────────────────────────
         scenarios = scenario_grid(candidate, self.scenario_cfg)
         d.scenarios = scenarios
@@ -93,6 +107,7 @@ class RiskEngine:
         # ── position sizing (§7) ─────────────────────────────────────
         budget = account.equity * self.risk.max_trade_risk_pct
         d.risk_budget = budget
+        d.gate_margins["risk_headroom_per_contract"] = budget - risk_per_contract
         if risk_per_contract > budget:
             return self._final(d, DecisionStatus.REJECT, "RISK_LIMIT")
 
@@ -119,6 +134,11 @@ class RiskEngine:
                            - account.open_risk_dollars)
         contracts = min(contracts, self._fit(room_concurrent, risk_per_contract))
 
+        d.gate_margins["underlying_exposure_headroom"] = (
+            room_underlying - max(contracts, 1) * cost_per_contract)
+        d.gate_margins["concurrent_risk_headroom"] = (
+            room_concurrent - max(contracts, 1) * risk_per_contract)
+
         if contracts < 1:
             return self._final(d, DecisionStatus.REJECT, "NO_VALID_QUANTITY")
 
@@ -130,6 +150,9 @@ class RiskEngine:
             holds_overnight=candidate.holds_overnight,
         )
         d.margin = margin
+        bp_floor = (0.0 if margin.account_type.value == "cash"
+                    else self.margin_engine.cfg.min_bp_buffer_pct * account.equity)
+        d.gate_margins["bp_headroom"] = margin.bp_after - bp_floor
         if not margin.ok:
             return self._final(d, DecisionStatus.REJECT, *margin.reasons)
 
@@ -165,6 +188,10 @@ class RiskEngine:
             required += self.gates.yellow_score_add
             contracts = max(1, math.floor(contracts * self.gates.yellow_size_mult))
             d.reasons.append("LATENCY_YELLOW_DEGRADE")
+
+        d.gate_margins["score_margin"] = float(net_score - required)
+        if ev_r is not None:
+            d.gate_margins["ev_margin_r"] = ev_r - self.gates.min_expected_value_r
 
         if net_score < required:
             return self._final(d, DecisionStatus.REJECT, "INSUFFICIENT_EDGE_SCORE")
