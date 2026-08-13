@@ -1,13 +1,22 @@
 #!/usr/bin/env python3
-"""Demo: one candidate through the full gate stack. Spec §81."""
+"""Demo: canary self-test, then one candidate through the full gate stack.
+Spec §61, §81."""
 import json
 from datetime import date
 
 from rs_options_risk import (AccountState, AccountType, LatencySample, Mode,
                              OptionQuote, ProbabilityEstimate, Right,
-                             RiskEngine, TradeCandidate, UnderlyingContext)
+                             RiskEngine, TradeCandidate, UnderlyingContext,
+                             run_canary_suite)
 
 engine = RiskEngine()
+
+# Session-start self-test: prove the brakes work before trading (§61).
+report = run_canary_suite(engine, today=date(2026, 8, 13))
+print(report.summary())
+if not report.ok:
+    raise SystemExit("LEVEL 0 HALT: gate stack failed canary suite")
+print()
 
 # Calibrate the latency ladder (normally fed by the telemetry engine).
 for i in range(60):

@@ -1,6 +1,8 @@
-# rs_options_risk — Foundational Risk Engine
+# rs_options_risk — Foundational Risk Engine (v0.2)
 
-Reference implementation of the Risk Engine for the **RS Options Research & Execution Engine spec v2.1**. Pure Python 3.10+, zero dependencies (pytest for tests only).
+Reference implementation of the Risk Engine for the **RS Options Research & Execution Engine spec v2.2**. Pure Python 3.10+, zero dependencies (pytest for tests only).
+
+v0.2 (assessment response): `BrokerReconciler` (debounced, fail-conservative, EFFECTIVE_BP = min(model, broker)), session-start canary suite (§61), rejection forensics via `gate_margins` (§63), and the `EDGE_FASTER_THAN_PIPE` latency-class gate (§38).
 
 ## Spec Mapping
 
@@ -9,7 +11,8 @@ Reference implementation of the Risk Engine for the **RS Options Research & Exec
 | `config.py` | §4, §8, §36, §38 | Hard risk constants + subsystem configuration |
 | `models.py` | §6–§9, §62 | Domain objects, decision record, telemetry blocks |
 | `scenario.py` | §6 | Black-Scholes stress grid (Base + Stress A–D) at invalidation |
-| `margin.py` | §8 | Margin_Impact: BP gates, T+1 settlement, GFV, PDT, broker reconciliation |
+| `margin.py` | §8 | Margin_Impact: BP gates, T+1 settlement, GFV, PDT; `BrokerReconciler` (debounced lower-of-two) |
+| `canary.py` | §61 | Session-start self-test: must-reject synthetics; any authorization = Level 0 halt |
 | `tax.py` | §36 | Wash-sale ledger, 30-day lookback, Q4 escalation, year-end hard block |
 | `latency.py` | §38 | Latency ladder (GREEN/YELLOW/RED/BLACK) with hysteresis; fail-closed when uncalibrated |
 | `vol_surface.py` | §25 | RR25 / BF25, skew percentiles, skew-state classification |
@@ -21,11 +24,14 @@ Reference implementation of the Risk Engine for the **RS Options Research & Exec
 ```
 data integrity → broker health → latency (BLACK→HALT, RED→SHADOW) →
 portfolio drawdown → daily loss → macro block → max positions →
+edge half-life vs measured pipe (EDGE_FASTER_THAN_PIPE) →
 scenario worst-case ≤ 1% budget → position sizing → exposure caps
 (underlying / cluster / concurrent) → margin & buying power →
 wash-sale gate → skew/latency/tax penalties → score + EV thresholds →
 AUTHORIZE
 ```
+
+Every decision carries `gate_margins` (distance-to-pass per gate) so rejections are diagnosable: edge absent vs edge eaten by friction (§63).
 
 Nothing downstream can override a risk rejection (spec §82).
 

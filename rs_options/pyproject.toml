@@ -1,6 +1,6 @@
 [project]
 name = "rs-options-risk"
-version = "0.1.0"
+version = "0.2.0"
 description = "Foundational Risk Engine for the RS Options Research & Execution Engine spec v2.1"
 requires-python = ">=3.10"
 dependencies = []
