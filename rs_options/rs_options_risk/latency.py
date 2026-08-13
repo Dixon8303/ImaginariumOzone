@@ -69,6 +69,14 @@ class LatencyMonitor:
             return LatencyState.YELLOW       # degraded until re-arm window passes
         return s
 
+    def pipe_latency_p95_ms(self) -> float | None:
+        """End-to-end pipe estimate: p95 data age + p95 order RTT (§38).
+        None when uncalibrated — callers must fail closed via the ladder."""
+        if len(self._samples) < self.cfg.min_samples:
+            return None
+        return (_p95([s.data_age_ms for s in self._samples])
+                + _p95([s.order_rtt_ms for s in self._samples]))
+
     @property
     def sample_count(self) -> int:
         return len(self._samples)

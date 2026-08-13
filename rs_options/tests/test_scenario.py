@@ -4,7 +4,7 @@ import math
 from rs_options_risk import Right, bs_delta, bs_price, scenario_grid, worst_case
 from rs_options_risk.config import ScenarioConfig
 
-from conftest import make_candidate
+from tests.test_engine import make_candidate
 
 
 def test_bs_price_atm_call_positive():

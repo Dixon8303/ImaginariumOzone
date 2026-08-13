@@ -1,9 +1,29 @@
-# RS OPTIONS RESEARCH & EXECUTION ENGINE v2.0
+# RS OPTIONS RESEARCH & EXECUTION ENGINE v2.2
 
-## Relative Strength + Regime + Volatility + Risk + Execution + Learning
+## Relative Strength + Regime + Volatility Surface + Risk + Margin + Execution + Learning
 
-**Status:** Research/engineering specification  
+**Status:** Research/engineering specification
 **Primary objective:** Discover, validate, and—only after passing explicit safety gates—execute a repeatable options day-trading strategy centered on hierarchical relative strength.
+
+**v2.2 changelog (external assessment response):**
+
+- §8 — broker reconciliation made debounced and fail-conservative: EFFECTIVE_BP = min(model, broker); OK → WARN → RECONCILE_HALT ladder replaces single-poll freeze
+- §38 — Latency Class Discipline: the system is a latency-taker; EDGE_FASTER_THAN_PIPE hard gate; marketable sweeps prohibited as default tactic
+- §61 — session-start canary suite: synthetic must-reject candidates prove the gate stack works before every session; any canary authorized = Level 0 halt
+- §63 — rejection forensics: every rejection records per-gate distance-to-pass, making stagnation diagnosable (edge absent vs edge eaten by friction)
+- §87 — Minimum Viable Engine: enforced build-order de-scoping; full architecture is a target state, not a build order
+- §68 — release gate gains canary + forensics checks
+- Companion: `rs_options_risk` v0.2 (BrokerReconciler, canary suite, gate-margin forensics, edge-half-life gate)
+
+**v2.1 changelog (integrated subsystems):**
+
+- §8 — Margin & Buying Power Engine (Margin_Impact record, T+1 settlement ledger, GFV prevention, PDT tracking, broker reconciliation)
+- §25 — Volatility Surface & Skew Engine (RR25/BF25, skew states, hedging-demand regime overlay)
+- §36 — Wash-Sale & Tax Gating Engine (30-day lookback, year-end escalation, tax profiles)
+- §38 — Latency & Execution Infrastructure Engine (latency state ladder, auto-revert to SHADOW)
+- §46 — Data Pipeline Architecture (OPRA-scale tiered storage; columnar OLAP: ClickHouse / ArcticDB)
+- Cross-cutting: regime vector gains a skew dimension; telemetry schema gains Margin_Impact / Tax / Latency / Vol_Surface blocks; kill-switch hierarchy gains Level 0-E; hard/soft gates, decision logic, laws (21–24), production release gate, and roadmap updated.
+- Companion artifact: foundational Risk Engine reference implementation (`rs_options_risk` Python package).
 
 ---
 
@@ -59,20 +79,21 @@ The correct sequence is:
                          ┌───────────────────────┐
                          │      DATA ENGINE      │
                          │ Market + Options +    │
-                         │ Macro + Corporate    │
+                         │ Macro + Corporate     │
+                         │ OLAP Tick/Chain Store │
                          └───────────┬───────────┘
                                      │
                                      ▼
                          ┌───────────────────────┐
-                         │   DATA INTEGRITY      │
-                         │ Freshness + Completeness│
-                         │ Timestamp Alignment   │
+                         │    DATA INTEGRITY     │
+                         │ Freshness + Complete- │
+                         │ ness + Clock/Latency  │
                          └───────────┬───────────┘
                                      │
                                      ▼
                          ┌───────────────────────┐
                          │     MACRO ENGINE      │
-                         │ Expected/Actual/       │
+                         │ Expected/Actual/      │
                          │ Surprise/Event State  │
                          └───────────┬───────────┘
                                      │
@@ -80,7 +101,8 @@ The correct sequence is:
                          ┌───────────────────────┐
                          │    REGIME ENGINE      │
                          │ Trend/Vol/Momentum/   │
-                         │ Breadth/Liquidity     │
+                         │ Breadth/Liquidity/    │
+                         │ Skew Overlay          │
                          └───────────┬───────────┘
                                      │
                     ┌────────────────┴────────────────┐
@@ -107,9 +129,9 @@ The correct sequence is:
                                      ▼
                          ┌───────────────────────┐
                          │   OPTIONS ENGINE      │
-                         │ Delta/Gamma/Theta/    │
-                         │ Vega/IV/DTE/Spread/   │
-                         │ Expected Move         │
+                         │ Greeks/IV/DTE/Spread/ │
+                         │ Expected Move +       │
+                         │ Vol Surface & Skew    │
                          └───────────┬───────────┘
                                      │
                                      ▼
@@ -117,32 +139,37 @@ The correct sequence is:
                          │     RISK ENGINE       │
                          │ Position Size +       │
                          │ Scenario Loss +       │
-                         │ Portfolio Exposure    │
+                         │ Portfolio Exposure +  │
+                         │ Margin/Buying Power   │
                          └───────────┬───────────┘
                                      │
                                      ▼
                          ┌───────────────────────┐
                          │  PROBABILITY / EV     │
                          │ Conditional Outcome   │
-                         │ Distribution           │
+                         │ Distribution          │
                          └───────────┬───────────┘
                                      │
                                      ▼
                          ┌───────────────────────┐
                          │ EXECUTION GATE        │
-                         │ All hard/soft gates   │
+                         │ Hard/Soft Gates +     │
+                         │ Wash-Sale/Tax Gate    │
                          └───────────┬───────────┘
                                      │
                                      ▼
                          ┌───────────────────────┐
                          │ EXECUTION ENGINE      │
                          │ Paper / Shadow / Live │
+                         │ Latency State Ladder  │
                          └───────────┬───────────┘
                                      │
                                      ▼
                          ┌───────────────────────┐
                          │ TELEMETRY ENGINE      │
                          │ Full event/trade log  │
+                         │ Latency + Margin +    │
+                         │ Tax + Surface blocks  │
                          └───────────┬───────────┘
                                      │
                                      ▼
@@ -195,6 +222,8 @@ The engine compares:
 
 Shadow mode must remain active long enough to establish that live behavior resembles the backtest.
 
+Shadow is also the automatic fallback state whenever execution-path latency enters RED (§38). Live transmission may not resume until the latency ladder re-arms.
+
 ## 3.4 PRODUCTION
 
 Real capital.
@@ -215,6 +244,10 @@ MAX_SINGLE_UNDERLYING_EXPOSURE_PCT = 0.05
 DAILY_LOSS_LIMIT_PCT = configurable
 MAX_OPEN_POSITIONS = configurable
 MAX_CONCURRENT_RISK_PCT = configurable
+MIN_BP_BUFFER_PCT = configurable
+WASH_SALE_LOOKBACK_DAYS = 30
+LATENCY_RED_FORCES_SHADOW = True
+CLOCK_SKEW_KILL_MS = configurable
 ```
 
 ## Required behavior
@@ -244,6 +277,18 @@ Stop trading immediately.
 Stop trading immediately.
 
 ### Model/configuration mismatch
+
+Stop trading immediately.
+
+### Buying-power or settlement breach
+
+Reject trade.
+
+### Latency RED
+
+Revert to SHADOW. No live transmission.
+
+### Clock-skew breach
 
 Stop trading immediately.
 
@@ -349,7 +394,127 @@ If no valid contract quantity remains:
 
 ---
 
-# 8. MARKET REGIME ENGINE
+# 8. MARGIN & BUYING POWER ENGINE
+
+Risk-based sizing (§7) is necessary but not sufficient.
+
+The broker's margin computer will enforce buying power regardless of what the model believes. A trade that passes every risk gate but fails buying power produces either a rejected order (execution drift) or a forced liquidation (capital destruction).
+
+Therefore:
+
+**Buying power is a first-class hard gate, evaluated before authorization — never discovered at the broker.**
+
+## Account Modes
+
+The engine must be configured with exactly one account mode:
+
+```text
+CASH
+REG_T_MARGIN
+PORTFOLIO_MARGIN
+```
+
+Behavior differs materially by mode. The engine must refuse to run with an undeclared mode.
+
+## Margin_Impact Record
+
+For every candidate, compute before authorization:
+
+```json
+{
+  "Margin_Impact": {
+    "Account_Type": "cash | margin | portfolio_margin",
+    "BP_Before": 0.0,
+    "BP_Reduction": 0.0,
+    "BP_After": 0.0,
+    "Overnight_Maintenance_Req": 0.0,
+    "Settled_Cash": 0.0,
+    "Unsettled_Proceeds": 0.0,
+    "Next_Settlement": "YYYY-MM-DD",
+    "Day_Trades_Used_5D": 0,
+    "PDT_Restricted": false,
+    "GFV_Risk": false
+  }
+}
+```
+
+## Buying-Power Reduction (BPR) by Structure
+
+```text
+Long option (call/put):   BPR = debit + fees (long premium is not marginable)
+Debit spread:             BPR = net debit + fees
+Credit spread:            BPR = (width − credit) × multiplier
+Naked short option:       BPR = broker formula (adapter required)
+```
+
+For short structures the engine must implement broker-specific margin adapters and take the **maximum** of applicable formulas. Until an adapter is validated in Shadow, naked short structures are prohibited.
+
+## Cash Accounts — Settlement & Good Faith Violations
+
+US settlement is T+1.
+
+The engine must maintain a settlement ledger:
+
+```text
+settled_cash
+pending_settlements = [(settle_date, amount), ...]
+```
+
+Rules:
+
+- New debits must be funded from settled cash.
+- Buying with unsettled proceeds and closing that position before the funding sale settles = Good Faith Violation.
+- Default behavior: any order that creates GFV risk is **REJECTED**.
+- Cash accounts are exempt from PDT but not from free-riding/GFV restrictions.
+
+For a day-trading engine in a cash account, the settlement ledger is not accounting overhead. It is the true buying-power calculation.
+
+## Margin Accounts — PDT & Maintenance
+
+- Track a rolling 5-business-day day-trade counter.
+- If account equity < $25,000 and the candidate would be the 4th day trade in 5 business days: **REJECT (PDT_LIMIT).**
+- Day-trading buying power (PDT-flagged accounts): up to 4× maintenance excess. Overnight: 2×.
+- Positions intended to be held overnight must satisfy overnight maintenance at a configurable session cutoff. A projected deficiency freezes new risk and raises an alert.
+
+## Hard Gates Added
+
+```text
+BP_After < MIN_BP_BUFFER_PCT × equity      → REJECT
+Settled funds insufficient (cash account)   → REJECT
+GFV risk                                    → REJECT
+PDT limit breach                            → REJECT
+Projected maintenance deficiency            → FREEZE new risk
+```
+
+## Model-vs-Broker Reconciliation
+
+Poll broker-reported buying power on a fixed cadence.
+
+Retail broker APIs are assumed noisy and laggy — especially immediately after fills and during volatility. Reconciliation is therefore **debounced and fail-conservative**: noise costs conservatism, never uptime.
+
+```text
+EFFECTIVE_BP = min(model_BP, last_good_broker_BP)
+
+OK              divergence within tolerance → breach counter resets
+WARN            single-poll divergence > tolerance → fast re-poll;
+                trading continues against EFFECTIVE_BP
+RECONCILE_HALT  divergence persists N consecutive polls (default 3)
+                OR broker data stale beyond max age
+                → stop new risk, reconcile
+```
+
+Because the engine always sizes against the **lower** of the two numbers, divergence alone never creates risk. Only persistent, unexplained divergence — or missing broker data — halts the system (§61).
+
+Divergence events are telemetry: they build a per-broker quality baseline, and the tolerance is calibrated in Shadow, not assumed.
+
+## Kill Behavior
+
+- Margin call / maintenance deficiency received from broker → freeze system (Level 4 semantics, §60).
+- Settlement-ledger divergence → fail closed.
+
+---
+
+# 9. MARKET REGIME ENGINE
 
 Do not represent regime as a single crude label.
 
@@ -362,7 +527,8 @@ The regime must be a vector.
   "momentum": "positive | neutral | negative",
   "liquidity": "normal | thin | stressed",
   "breadth": "strong | mixed | weak",
-  "macro": "risk_on | neutral | risk_off"
+  "macro": "risk_on | neutral | risk_off",
+  "skew": "call_skew | flat | normal_put_skew | steep_put_skew | extreme_put_skew"
 }
 ```
 
@@ -373,12 +539,13 @@ The engine may additionally generate a human-readable composite:
 - Range
 - High Volatility
 - Transitional
+- Bull with Hedging Overlay (steep index put skew, §25)
 
 But the underlying vector must remain available for analysis.
 
 ---
 
-# 9. MARKET INPUTS
+# 10. MARKET INPUTS
 
 At minimum:
 
@@ -401,7 +568,7 @@ The system must avoid using future information.
 
 ---
 
-# 10. MACRO ENGINE
+# 11. MACRO ENGINE
 
 The macro engine must track scheduled events and their outcomes.
 
@@ -432,7 +599,7 @@ Where appropriate, use standardized surprise measures rather than raw difference
 
 ---
 
-# 11. MACRO EVENT STATES
+# 12. MACRO EVENT STATES
 
 Instead of a single 60-minute blackout:
 
@@ -480,7 +647,7 @@ from:
 
 ---
 
-# 12. RELATIVE STRENGTH ENGINE
+# 13. RELATIVE STRENGTH ENGINE
 
 Relative strength must be hierarchical.
 
@@ -521,7 +688,7 @@ RS_industry = stock_return - industry_return
 
 ---
 
-# 13. DYNAMIC BENCHMARK SELECTION
+# 14. DYNAMIC BENCHMARK SELECTION
 
 Benchmark selection should depend on the underlying.
 
@@ -541,7 +708,7 @@ The engine may retain SPY as a universal reference, but should never assume SPY 
 
 ---
 
-# 14. RS PERSISTENCE
+# 15. RS PERSISTENCE
 
 Track:
 
@@ -562,7 +729,7 @@ The exact feature definition must be versioned and tested.
 
 ---
 
-# 15. RS STRESS TEST
+# 16. RS STRESS TEST
 
 A high-value signal is:
 
@@ -584,7 +751,7 @@ This becomes a dedicated setup family.
 
 ---
 
-# 16. SETUP ENGINE
+# 17. SETUP ENGINE
 
 Initial setup library:
 
@@ -646,7 +813,7 @@ Each setup must have its own:
 
 ---
 
-# 17. OPTIONS ENGINE
+# 18. OPTIONS ENGINE
 
 For each candidate, evaluate:
 
@@ -668,11 +835,12 @@ For each candidate, evaluate:
 - volume;
 - open interest;
 - expected move;
-- moneyness.
+- moneyness;
+- surface skew context (RR25 / BF25, skew percentile — §25).
 
 ---
 
-# 18. DELTA
+# 19. DELTA
 
 Initial research range:
 
@@ -702,7 +870,7 @@ Production Delta limits may only be selected after out-of-sample validation.
 
 ---
 
-# 19. GAMMA
+# 20. GAMMA
 
 Track Gamma as a first-class risk variable.
 
@@ -722,7 +890,7 @@ Gamma must influence:
 
 ---
 
-# 20. THETA
+# 21. THETA
 
 Theta must be quantitative.
 
@@ -740,7 +908,7 @@ Thresholds must be empirically validated.
 
 ---
 
-# 21. VEGA
+# 22. VEGA
 
 Track sensitivity to IV changes.
 
@@ -760,7 +928,7 @@ For catalyst trades, IV behavior becomes a mandatory part of the expectancy calc
 
 ---
 
-# 22. IV RANK AND IV PERCENTILE
+# 23. IV RANK AND IV PERCENTILE
 
 Store both.
 
@@ -776,7 +944,7 @@ Prefer distributions segmented by:
 
 ---
 
-# 23. IV TERM STRUCTURE
+# 24. IV TERM STRUCTURE
 
 Track:
 
@@ -796,7 +964,87 @@ Identify:
 
 ---
 
-# 24. CATALYST PROTOCOL
+# 25. VOLATILITY SURFACE & SKEW ENGINE
+
+IV, IV Rank, and IV Percentile describe a single point.
+
+The volatility surface describes what the market is actually pricing — including directional fear that price trend does not show.
+
+The engine must not evaluate an option in isolation from its surface.
+
+## Required Surface Metrics
+
+Per underlying, per tenor (at minimum: front weekly, ~30D, ~60D):
+
+```text
+ATM_IV
+RR25 = IV(25Δ call) − IV(25Δ put)          # 25-delta risk reversal
+BF25 = (IV(25Δc) + IV(25Δp)) / 2 − ATM_IV  # 25-delta butterfly (wings)
+Put_Skew_Slope  = ΔIV per 10Δ on the put wing
+Call_Skew_Slope = ΔIV per 10Δ on the call wing
+Term_Slope      = IV(60D) − IV(7D)
+```
+
+Each metric must also be stored as a percentile against its own trailing history (default 252 sessions), per underlying. Raw skew values are not comparable across names; percentiles are.
+
+## Surface Construction
+
+- Compute per-strike IV from chain snapshots (vendor IV or model-inverted).
+- Map strikes into delta space.
+- Fit a robust smooth curve per tenor (research grade: SVI or low-order polynomial in delta; store both raw and fitted values).
+- Snapshot cadence follows the data tiers in §46.
+
+## Skew States
+
+```text
+CALL_SKEW         speculative call demand (squeeze/crowding dynamics)
+FLAT
+NORMAL_PUT_SKEW   equity baseline
+STEEP_PUT_SKEW    RR25 below configurable percentile (default: 20th)
+EXTREME_PUT_SKEW  RR25 below extreme percentile (default: 5th)
+```
+
+Thresholds are research parameters and must be validated like any other (§53, §73).
+
+## Regime Integration
+
+The regime vector (§9) gains a skew dimension.
+
+Critical rule:
+
+**Steep or extreme index put skew (SPY/SPX, QQQ) while trend reads bullish = hedging-demand overlay.**
+
+When institutions pay up for downside protection into strength, the engine must:
+
+- downgrade bullish regime confidence;
+- raise the required net score (configurable, default +1);
+- apply a size multiplier (configurable, default 0.75×);
+- prefer defined-risk structures over naked long premium;
+- record the overlay in telemetry for learning-engine attribution.
+
+Trend describes what price did. Skew describes what size is paying to avoid. When they disagree, the engine must notice.
+
+## Single-Name Skew Context
+
+For the candidate underlying:
+
+- steep put skew → long calls are relatively cheap, but the market is pricing downside asymmetry: apply a soft-gate penalty to bullish theses on high-beta names;
+- call-wing richening → crowding/squeeze context: penalize chasing and flag IV-crush exposure;
+- event kink in the front tenor → route through the Catalyst Protocol (§26).
+
+## Learning Requirements
+
+Skew state at entry becomes a mandatory conditioning variable:
+
+```text
+Setup × Regime × SkewState expectancy
+```
+
+Skew is context first. It becomes a signal only after it survives out-of-sample validation like everything else.
+
+---
+
+# 26. CATALYST PROTOCOL
 
 When a Tier 1 catalyst exists:
 
@@ -814,7 +1062,7 @@ A generic long-option trade must not automatically pass simply because a catalys
 
 ---
 
-# 25. LIQUIDITY ENGINE
+# 27. LIQUIDITY ENGINE
 
 Minimum requirements should evaluate:
 
@@ -837,7 +1085,7 @@ A contract with a 5% spread and almost no depth may still be worse than a contra
 
 ---
 
-# 26. EXPECTED MOVE
+# 28. EXPECTED MOVE
 
 Approximate expected move:
 
@@ -860,7 +1108,7 @@ A trade requiring an implausibly large move relative to the priced expected move
 
 ---
 
-# 27. TRADE PROBABILITY ENGINE
+# 29. TRADE PROBABILITY ENGINE
 
 The system must eventually estimate conditional probabilities such as:
 
@@ -891,7 +1139,7 @@ They are estimates conditioned on the historical sample and model version.
 
 ---
 
-# 28. EXPECTANCY
+# 30. EXPECTANCY
 
 Basic:
 
@@ -920,9 +1168,11 @@ The canonical strategy metric should be:
 
 **Net Expectancy per Trade in R.**
 
+For taxable accounts, wash-sale friction is tracked separately (§36). Tax-adjusted expectancy is a reporting metric — not a production gate outside the configured year-end windows.
+
 ---
 
-# 29. R-MULTIPLE FRAMEWORK
+# 31. R-MULTIPLE FRAMEWORK
 
 Define:
 
@@ -944,7 +1194,7 @@ This normalizes trades across different account sizes and contract prices.
 
 ---
 
-# 30. TRADE SCORING
+# 32. TRADE SCORING
 
 Retain a 10-point interpretability score.
 
@@ -971,7 +1221,7 @@ A catalyst is not inherently bullish.
 
 ---
 
-# 31. CORRELATION CONTROL
+# 33. CORRELATION CONTROL
 
 The score must not double-count related variables.
 
@@ -986,7 +1236,7 @@ Feature attribution should be reported.
 
 ---
 
-# 32. RISK PENALTY SCORE
+# 34. RISK PENALTY SCORE
 
 Add a separate penalty model.
 
@@ -1001,6 +1251,9 @@ Unstable market regime: -2
 Insufficient volume: -2
 Excessive theta burden: -2
 Required move too large: -3
+Wash-sale flag (taxable): -2 → -4 in Q4 (§36)
+Steep index put skew vs bullish thesis: -2 (§25)
+Latency YELLOW: -1 (§38)
 Data quality issue: HARD REJECT
 ```
 
@@ -1013,7 +1266,7 @@ OpportunityScore - RiskPenalty
 
 ---
 
-# 33. HARD GATES VS SOFT GATES
+# 35. HARD GATES VS SOFT GATES
 
 ## HARD GATES
 
@@ -1030,7 +1283,13 @@ Examples:
 - portfolio drawdown;
 - daily loss limit;
 - maximum exposure;
-- invalid option chain.
+- invalid option chain;
+- insufficient buying power / settled funds (§8);
+- Good Faith Violation risk (cash accounts, §8);
+- PDT restriction breach (§8);
+- wash-sale hard-block window (§36);
+- latency state RED or BLACK — no live transmission (§38);
+- clock skew beyond tolerance.
 
 ## SOFT GATES
 
@@ -1042,13 +1301,83 @@ Examples:
 - elevated IV;
 - marginal RS;
 - lower volume;
-- imperfect technical structure.
+- imperfect technical structure;
+- wash-sale flag outside the hard-block window (§36);
+- latency state YELLOW (§38);
+- steep index put skew against a bullish thesis (§25).
 
 This prevents one imperfect feature from automatically destroying every otherwise valid trade.
 
 ---
 
-# 34. EXECUTION ENGINE
+# 36. WASH-SALE & TAX GATING ENGINE
+
+Net expectancy (§30) accounts for fees and slippage but not tax friction.
+
+For taxable accounts, high-frequency re-entry into the same underlying routinely triggers wash sales (IRC §1091): a loss is disallowed when a substantially identical position is acquired within 30 days before or after the losing sale. The disallowed loss is deferred into the basis of the replacement position.
+
+Consequences the engine must model:
+
+- Deferred losses inflate current-year taxable income.
+- Deferrals that cross the tax-year boundary trap the deduction in the wrong year.
+- Replacement purchases inside an IRA destroy the loss permanently.
+
+## Substantially-Identical Grouping
+
+Default conservative grouping: **underlying root** — shares and all options on that root form one wash-sale group.
+
+The grouping map must be configurable and versioned.
+
+## Realized-Loss Ledger
+
+Maintain per group:
+
+```text
+realized_losses = [(date, amount), ...]
+deferred_loss_estimate
+replacement_window_end = loss_date + 30 days
+```
+
+## EXECUTION GATE Additions
+
+```text
+WASH_SALE_LOOKBACK_DAYS = 30
+```
+
+On every candidate:
+
+1. If a realized loss exists in the group within the lookback window → set Wash_Sale_Flag.
+2. Default behavior: soft gate — risk penalty (default −2).
+3. Year-end escalation window (default Oct 1 – Dec 31): penalty escalates (default −4).
+4. Hard-block window (default Dec 1 – Dec 31): re-entry after a lookback loss is **REJECTED**, because the deferral would cross the tax-year boundary.
+
+All windows and penalties are configurable per tax profile.
+
+## Tax Profiles
+
+```text
+TAXABLE    full gating (default)
+MTM_475F   §475(f) mark-to-market election: wash-sale gating disabled
+IRA        strictest: cross-account replacement risk; earliest hard block
+```
+
+## Reporting
+
+The engine must produce:
+
+- cumulative deferred-loss estimate by group;
+- a year-end exposure report (deferrals at risk of crossing the boundary);
+- tax-adjusted expectancy as a **reporting metric** — never a production gate outside the configured windows.
+
+## Boundary of Responsibility
+
+The engine produces flags and estimates for a tax professional.
+
+It is not tax advice, and it must never silently "optimize taxes" by overriding risk logic. Per the spirit of LAW 18: tax uncertainty is a reason to flag, not improvise.
+
+---
+
+# 37. EXECUTION ENGINE
 
 The execution engine must support:
 
@@ -1066,7 +1395,112 @@ The engine must never chase a trade indefinitely.
 
 ---
 
-# 35. ENTRY EXECUTION
+# 38. LATENCY & EXECUTION INFRASTRUCTURE ENGINE
+
+This is a short-horizon system. Its edges decay in seconds.
+
+Stale data plus a slow order path converts modeled edge into adverse selection: professional liquidity providers reprice faster than the engine can act, and the engine's marketable orders get filled precisely when they are wrong (colloquially "getting front-run"; mechanically, stale-quote pick-off).
+
+Latency limits are therefore risk limits.
+
+## Measured Quantities
+
+The TELEMETRY ENGINE must stamp and log, for every decision and order:
+
+```text
+data_age_ms          exchange_ts → receipt_ts at decision time
+decision_latency_ms  signal complete → order ready
+order_rtt_ms         submit → broker acknowledgment
+fill_latency_ms      submit → fill or cancel
+heartbeat_gap_ms     max gap between feed heartbeats
+clock_skew_ms        local clock vs NTP reference
+```
+
+Rolling p50 / p95 / p99 must be computed continuously.
+
+## Clock Discipline
+
+- NTP (chrony) is the minimum standard; verify offset on a fixed cadence.
+- clock_skew_ms beyond tolerance → timestamps are unreliable → **Level 0 data kill (§60).**
+
+## Latency State Ladder
+
+Defaults below are placeholders. Production thresholds must be calibrated empirically per broker and feed during Paper and Shadow (§3).
+
+```text
+GREEN   p95 data_age < 250ms AND p95 order_rtt < 300ms
+        → full operation
+
+YELLOW  p95 data_age 250–750ms OR p95 order_rtt 300–750ms
+        → size multiplier 0.5×
+        → required net score +1
+        → 0–1 DTE prohibited
+
+RED     p95 data_age > 750ms OR p95 order_rtt > 750ms
+        OR heartbeat_gap > 5s
+        → AUTO-REVERT TO SHADOW
+        → signals and telemetry continue; no live transmission
+
+BLACK   feed loss, clock-skew breach, or integrity failure
+        → Level 0 stop (§60)
+```
+
+An uncalibrated system (insufficient latency samples) defaults to **RED**. No live orders until the ladder has data.
+
+## Latency Class Discipline
+
+**This system is a latency-taker, not a latency-competitor.**
+
+Declared class: MEDIUM-HORIZON INTRADAY — holds measured in tens of minutes to hours, edges sourced from conditional probability (RS persistence), not from speed.
+
+The state ladder above measures **decision validity** — is the picture fresh enough to act on — not competitiveness with market-maker infrastructure. No threshold in this section makes a speed-competitive strategy viable, and none is intended to.
+
+Hard rule:
+
+```text
+EDGE_FASTER_THAN_PIPE
+Any setup whose modeled edge half-life is shorter than a configurable
+multiple (default 10×) of the measured end-to-end latency envelope
+(p95 data age + p95 order RTT) is structurally REJECTED —
+regardless of backtest performance.
+```
+
+Consequences:
+
+- scalping and 0DTE gamma harvesting are out of scope at this latency class;
+- execution defaults to patient limit orders at or inside mid with bounded cancel/replace ladders (§37); marketable sweeps are prohibited as a default tactic;
+- net expectancy is always computed at **measured** latency (Shadow-calibrated), never at theoretical zero;
+- if a trade only works when the fill is instant, the trade does not work at this latency class.
+
+## Hysteresis & Re-Arm
+
+- RED → GREEN requires sustained compliance (default: 15 minutes below YELLOW thresholds).
+- In PRODUCTION, re-arming live transmission after RED requires human acknowledgment or an explicit release policy (§65 semantics).
+
+Flapping between states is itself a drift signal.
+
+## Infrastructure Requirements
+
+```text
+Wired ethernet (no Wi-Fi in production)
+UPS on trading host and network gear
+Redundant WAN (failover acceptable for orderly shutdown, not for trading)
+Optional: VPS in the broker's region (e.g., US-East for most US brokers)
+NTP sync verified on cadence; skew logged
+Process isolation; no swap pressure on the trading host
+```
+
+Measure. Do not assume.
+
+## Downstream Integration
+
+- The slippage model (§48) must condition on measured latency state.
+- Latency distributions join drift detection (§59): live RTT vs the Shadow-calibrated baseline.
+- Latency state is logged on every trade and every rejected signal (§62, §63).
+
+---
+
+# 39. ENTRY EXECUTION
 
 Before sending:
 
@@ -1085,7 +1519,7 @@ If any material variable changes:
 
 ---
 
-# 36. EXIT EXECUTION
+# 40. EXIT EXECUTION
 
 Exit conditions may include:
 
@@ -1108,7 +1542,7 @@ from:
 
 ---
 
-# 37. TRAILING-STOP RESEARCH
+# 41. TRAILING-STOP RESEARCH
 
 Test at minimum:
 
@@ -1140,7 +1574,7 @@ Select using out-of-sample MFE/MAE evidence.
 
 ---
 
-# 38. MAE/MFE ENGINE
+# 42. MAE/MFE ENGINE
 
 For every trade calculate:
 
@@ -1164,7 +1598,7 @@ Use this data to determine:
 
 ---
 
-# 39. TIME-OF-DAY ENGINE
+# 43. TIME-OF-DAY ENGINE
 
 Segment trades by:
 
@@ -1186,7 +1620,7 @@ expectancy.
 
 ---
 
-# 40. BACKTEST ENGINE
+# 44. BACKTEST ENGINE
 
 The backtester must be event-driven.
 
@@ -1196,9 +1630,11 @@ At time T, the system may only access information that would have been known at 
 
 ---
 
-# 41. REQUIRED HISTORICAL DATA
+# 45. REQUIRED HISTORICAL DATA
 
 For realistic options backtesting:
+
+> Storage, partitioning, and query architecture for everything below is specified in §46.
 
 ### Underlying
 
@@ -1237,7 +1673,148 @@ For realistic options backtesting:
 
 ---
 
-# 42. EXECUTION MODEL
+# 46. DATA PIPELINE ARCHITECTURE (OPRA-SCALE STORAGE)
+
+The data requirements in §45 collide with a physical reality: the consolidated US options tape (OPRA) runs on the order of tens of billions of messages and multiple terabytes per day, and it grows every year.
+
+Storing "everything, raw, forever" in a general-purpose database is not an architecture. It is a failure mode.
+
+## Architectural Decision
+
+**Columnar OLAP for market data. Row-store OLTP only for metadata.**
+
+```text
+Market/options time series → ClickHouse   (primary recommendation)
+                             ArcticDB     (Python-native alternative)
+                             DuckDB + partitioned Parquet (bootstrap tier)
+
+Config, versions, telemetry,
+macro calendar, universe    → PostgreSQL  (SQLite acceptable at bootstrap)
+```
+
+Standard row stores and document stores (Postgres-as-tick-store, MongoDB) are explicitly rejected for the historical tick/chain workload: billions-of-row scans, aggressive compression, and as-of temporal joins are OLAP problems.
+
+Decision lens:
+
+```text
+ClickHouse → largest scale, concurrent dashboards, SQL, ASOF JOIN, TTL tiering
+ArcticDB   → pandas-first research ergonomics, S3-backed, versioned datasets
+DuckDB     → zero-ops single-node start; graduates cleanly to ClickHouse via Parquet
+```
+
+## Tiered Data Reduction
+
+Do not store the full tape. Store what the research questions require.
+
+```text
+TIER A — research universe (≈ 50–200 liquid underlyings)
+  options NBBO snapshots (1s or on-change, conflated) + trades
+  full chain snapshots every 5 minutes (point-in-time reconstruction)
+  underlying: tick or 1-second bars
+
+TIER B — extended universe
+  options 1-minute OHLCV + EOD chain snapshots (OI, IV, Greeks)
+  underlying: 1-minute bars
+
+TIER C — everything else
+  EOD chains only
+```
+
+Tier membership is versioned over time (survivorship protection, §50).
+
+## Partitioning & Compression (ClickHouse Reference)
+
+```sql
+CREATE TABLE options_nbbo (
+    trade_date   Date,
+    ts           DateTime64(3, 'UTC') CODEC(DoubleDelta, LZ4),
+    underlying   LowCardinality(String),
+    expiry       Date,
+    strike       Decimal(10, 2),
+    right        Enum8('C' = 1, 'P' = 2),
+    bid          Float64 CODEC(Gorilla, ZSTD(3)),
+    ask          Float64 CODEC(Gorilla, ZSTD(3)),
+    bid_size     UInt32,
+    ask_size     UInt32,
+    exchange_ts  DateTime64(3, 'UTC') CODEC(DoubleDelta, LZ4),
+    receipt_ts   DateTime64(3, 'UTC') CODEC(DoubleDelta, LZ4)
+)
+ENGINE = MergeTree
+PARTITION BY toYYYYMM(trade_date)
+ORDER BY (underlying, expiry, strike, right, ts)
+TTL trade_date + INTERVAL 90 DAY TO VOLUME 'warm',
+    trade_date + INTERVAL 2 YEAR TO VOLUME 'cold';
+```
+
+Companion tables: `options_trades`, `options_bars_1m`, `chains_eod`, `underlying_bars`, `iv_surface_snapshots`, `macro_events` (full DDL ships with the reference implementation).
+
+Expected compression: roughly 10–30× versus raw row storage with per-column codecs.
+
+Retention tiers:
+
+```text
+HOT   NVMe      ~90 days of Tier A snapshots
+WARM  HDD/SSD   ~2 years of 1-minute bars + chains
+COLD  Object    full history as partitioned Parquet
+```
+
+## Query Patterns That Must Be Fast
+
+```text
+1. Point-in-time chain reconstruction at timestamp T (backtester, §44)
+2. ASOF JOIN: option quote ↔ underlying quote alignment
+3. Setup scans across the full research window
+4. Surface history pulls (skew percentiles, §25)
+5. Bar aggregation from snapshots
+```
+
+If a query pattern the backtester depends on is slow, that is a data-engineering defect, not a research inconvenience.
+
+## Dual Timestamps (Non-Negotiable)
+
+Every record carries:
+
+```text
+exchange_ts  when the event occurred
+receipt_ts   when the system received it
+```
+
+The backtester may only condition on information where `receipt_ts ≤ T` (§49). Latency telemetry (§38) is derived from the same two stamps.
+
+## Build vs Buy
+
+Raw OPRA direct feeds require licensing, bandwidth, and infrastructure appropriate to market makers — not to this system.
+
+Practical acquisition path: consolidated vendors (e.g., Polygon, Theta Data, ORATS, Cboe DataShop, dxFeed) supplying NBBO snapshots, 1-minute bars, and EOD chains with IV/Greeks.
+
+Requirements regardless of vendor:
+
+- normalize into the canonical schema;
+- stamp `receipt_ts` at ingestion;
+- version every data source;
+- never silently mix adjusted and unadjusted series;
+- store corporate-action factors separately from raw prices.
+
+## Ingestion & QA
+
+```text
+feed handler → normalizer → batched OLAP inserts + Parquet archive
+               (message bus optional until scale demands it)
+```
+
+Daily automated QA feeding the Data Integrity Engine (§61):
+
+- bar-count completeness vs expected trading minutes;
+- chain integrity (monotonic strikes; no persistently crossed markets);
+- put-call parity outlier flags;
+- gap detection;
+- schema drift detection.
+
+Backfills must be idempotent.
+
+---
+
+# 47. EXECUTION MODEL
 
 Backtests must not assume fills at the last traded price.
 
@@ -1267,7 +1844,7 @@ All assumptions must be configurable and reported.
 
 ---
 
-# 43. SLIPPAGE MODEL
+# 48. SLIPPAGE MODEL
 
 Model slippage as a function of:
 
@@ -1276,13 +1853,14 @@ Model slippage as a function of:
 - volatility;
 - order size;
 - liquidity;
-- time of day.
+- time of day;
+- measured latency state (§38).
 
 Do not use a universal fixed slippage number unless validated.
 
 ---
 
-# 44. LOOK-AHEAD BIAS PROTECTION
+# 49. LOOK-AHEAD BIAS PROTECTION
 
 The backtester must prevent use of:
 
@@ -1295,7 +1873,7 @@ The backtester must prevent use of:
 
 ---
 
-# 45. SURVIVORSHIP BIAS PROTECTION
+# 50. SURVIVORSHIP BIAS PROTECTION
 
 The historical universe must include securities that later:
 
@@ -1309,7 +1887,7 @@ Otherwise results will be artificially optimistic.
 
 ---
 
-# 46. WALK-FORWARD VALIDATION
+# 51. WALK-FORWARD VALIDATION
 
 Required pipeline:
 
@@ -1332,7 +1910,7 @@ Production parameters must be selected using only information available before t
 
 ---
 
-# 47. MONTE CARLO
+# 52. MONTE CARLO
 
 Run thousands of randomized trade-order simulations.
 
@@ -1347,7 +1925,7 @@ Report:
 
 ---
 
-# 48. PARAMETER STABILITY
+# 53. PARAMETER STABILITY
 
 A parameter is suspicious when a tiny change creates a huge performance change.
 
@@ -1379,7 +1957,7 @@ Delta 0.55–0.70 consistently positive
 
 ---
 
-# 49. OBJECTIVE FUNCTION
+# 54. OBJECTIVE FUNCTION
 
 Do not optimize raw profit.
 
@@ -1412,7 +1990,7 @@ NetExpectancy
 
 ---
 
-# 50. COMPLEXITY PENALTY
+# 55. COMPLEXITY PENALTY
 
 A strategy requiring 75 tightly tuned parameters should be considered less robust than a simpler strategy with similar performance.
 
@@ -1426,7 +2004,7 @@ over:
 
 ---
 
-# 51. REGIME-SPECIFIC REPORTING
+# 56. REGIME-SPECIFIC REPORTING
 
 Every backtest must report:
 
@@ -1451,7 +2029,7 @@ and compare:
 
 ---
 
-# 52. SETUP-SPECIFIC REPORTING
+# 57. SETUP-SPECIFIC REPORTING
 
 Every setup must have independent statistics.
 
@@ -1471,7 +2049,7 @@ No setup should be hidden inside aggregate performance.
 
 ---
 
-# 53. STRATEGY HEALTH MONITOR
+# 58. STRATEGY HEALTH MONITOR
 
 Production monitoring must continuously calculate:
 
@@ -1489,7 +2067,7 @@ Compare live performance with validated historical ranges.
 
 ---
 
-# 54. DRIFT DETECTION
+# 59. DRIFT DETECTION
 
 Flag when live behavior materially deviates from research.
 
@@ -1503,6 +2081,9 @@ Live MFE lower than historical
 Live MAE higher than historical
 RS feature distribution shifted
 IV distribution shifted
+Live order RTT above shadow-calibrated envelope
+Live data age above calibrated envelope
+Skew-state distribution shifted
 ```
 
 A drift warning does not automatically imply strategy failure.
@@ -1511,13 +2092,19 @@ But it should trigger review.
 
 ---
 
-# 55. KILL-SWITCH HIERARCHY
+# 60. KILL-SWITCH HIERARCHY
 
 ## LEVEL 0 — DATA KILL
 
 Bad/stale/incomplete data.
 
 **Immediate stop.**
+
+## LEVEL 0-E — EXECUTION DEGRADE (LATENCY)
+
+Latency state RED (§38).
+
+**Auto-revert to SHADOW. Signals and telemetry continue. No live orders.**
 
 ## LEVEL 1 — TRADE KILL
 
@@ -1545,7 +2132,7 @@ Maximum drawdown reached.
 
 ---
 
-# 56. DATA INTEGRITY ENGINE
+# 61. DATA INTEGRITY ENGINE
 
 Reject trading when:
 
@@ -1558,15 +2145,27 @@ Reject trading when:
 - benchmark data unavailable;
 - broker connection unhealthy;
 - timestamps cannot be synchronized;
-- market status is ambiguous.
+- market status is ambiguous;
+- clock skew exceeds tolerance (§38);
+- model and broker buying power diverge beyond tolerance (§8).
 
 Default behavior:
 
 **FAIL CLOSED.**
 
+## Session-Start Self-Test (Canary Gates)
+
+Before each session, run a canary suite: synthetic candidates that MUST be rejected — risk breach, stale data, macro block, GFV, PDT, year-end wash sale, drawdown freeze, insufficient edge — are pushed through the live gate stack.
+
+Any canary that comes back authorized means the brakes are broken.
+
+**Level 0 halt. No trading until the gate stack is fixed and the suite passes.**
+
+The system must prove its own brakes work every morning before it is allowed to drive.
+
 ---
 
-# 57. TELEMETRY SCHEMA
+# 62. TELEMETRY SCHEMA
 
 Every signal, rejected trade, paper trade, shadow trade, and live trade must be logged.
 
@@ -1664,6 +2263,16 @@ Every signal, rejected trade, paper trade, shadow trade, and live trade must be 
     "Spread_Percentage": 0.0
   },
 
+  "Vol_Surface": {
+    "ATM_IV": 0.0,
+    "RR25": 0.0,
+    "BF25": 0.0,
+    "Put_Skew_Slope": 0.0,
+    "Skew_Percentile": 0.0,
+    "Skew_State": "STRING",
+    "Term_Slope": 0.0
+  },
+
   "Risk": {
     "Account_Equity": 0.0,
     "Max_Trade_Risk": 0.0,
@@ -1674,6 +2283,29 @@ Every signal, rejected trade, paper trade, shadow trade, and live trade must be 
     "Total_Risk": 0.0,
     "Underlying_Exposure": 0.0,
     "Portfolio_Risk": 0.0
+  },
+
+  "Margin_Impact": {
+    "Account_Type": "cash|margin|portfolio_margin",
+    "BP_Before": 0.0,
+    "BP_Reduction": 0.0,
+    "BP_After": 0.0,
+    "Overnight_Maintenance_Req": 0.0,
+    "Settled_Cash": 0.0,
+    "Unsettled_Proceeds": 0.0,
+    "Next_Settlement": "YYYY-MM-DD",
+    "Day_Trades_Used_5D": 0,
+    "PDT_Restricted": false,
+    "GFV_Risk": false
+  },
+
+  "Tax": {
+    "Tax_Profile": "taxable|mtm_475f|ira",
+    "Wash_Sale_Group": "STRING",
+    "Realized_Loss_30D": 0.0,
+    "Wash_Sale_Flag": false,
+    "Window": "normal|escalation|hard_block",
+    "Deferred_Loss_Estimate": 0.0
   },
 
   "Scoring": {
@@ -1697,6 +2329,16 @@ Every signal, rejected trade, paper trade, shadow trade, and live trade must be 
     "Exit_Reason": "STRING"
   },
 
+  "Latency": {
+    "Data_Age_MS": 0,
+    "Decision_Latency_MS": 0,
+    "Order_RTT_MS": 0,
+    "Fill_Latency_MS": 0,
+    "Heartbeat_Gap_MS": 0,
+    "Clock_Skew_MS": 0,
+    "Latency_State": "green|yellow|red|black"
+  },
+
   "Result": {
     "PnL": 0.0,
     "Return_Pct": 0.0,
@@ -1713,7 +2355,7 @@ Every signal, rejected trade, paper trade, shadow trade, and live trade must be 
 
 ---
 
-# 58. SIGNAL LOGGING
+# 63. SIGNAL LOGGING
 
 Rejected opportunities must also be logged.
 
@@ -1730,6 +2372,7 @@ Score
 Risk
 Option
 Reject_Reason
+Gate_Margins   # per-gate distance-to-pass
 ```
 
 Otherwise the system only learns from trades it took.
@@ -1742,9 +2385,17 @@ and:
 
 **trades deliberately rejected.**
 
+## Rejection Forensics
+
+For every rejection, record how far each gate was from passing: score margin, EV margin, risk headroom, buying-power headroom, exposure headroom, latency margin.
+
+This distinguishes **edge absent** from **edge eaten by friction** — the difference between a failed hypothesis and a fixable execution tactic.
+
+Aggregate weekly: which gate kills the most signals, and by how much. A system that rejects everything and cannot say why is not conservative. It is blind.
+
 ---
 
-# 59. LEARNING ENGINE
+# 64. LEARNING ENGINE
 
 The learning engine must analyze:
 
@@ -1764,6 +2415,10 @@ DTE
 Delta
 ×
 Liquidity
+×
+SkewState
+×
+LatencyState
 ```
 
 and estimate conditional outcomes.
@@ -1778,11 +2433,12 @@ It should answer:
 - Which time windows?
 - Which sectors?
 - Which market conditions?
+- Which skew states?
 - Which exit methods?
 
 ---
 
-# 60. LEARNING ENGINE SAFETY
+# 65. LEARNING ENGINE SAFETY
 
 The learning engine may:
 
@@ -1807,7 +2463,7 @@ Production changes require:
 
 ---
 
-# 61. STRATEGY VERSION CONTROL
+# 66. STRATEGY VERSION CONTROL
 
 Every production configuration must have a version.
 
@@ -1833,7 +2489,7 @@ Never silently overwrite a validated configuration.
 
 ---
 
-# 62. PRODUCTION RELEASE GATE
+# 67. PRODUCTION RELEASE GATE
 
 A candidate strategy must satisfy all required criteria.
 
@@ -1853,13 +2509,18 @@ Example:
 [ ] Shadow execution validation
 [ ] Data integrity validation
 [ ] Broker execution validation
+[ ] Margin/BP model reconciled against broker
+[ ] Latency thresholds calibrated and validated in shadow
+[ ] Wash-sale ledger verified against fills
+[ ] Canary suite passes (every must-reject candidate rejected)
+[ ] Rejection forensics reviewed (stagnation is diagnosable)
 ```
 
 A single mandatory failure blocks production.
 
 ---
 
-# 63. RESEARCH REPORT
+# 68. RESEARCH REPORT
 
 Every completed experiment should generate:
 
@@ -1929,7 +2590,7 @@ Every completed experiment should generate:
 
 ---
 
-# 64. THE META-STRATEGY
+# 69. THE META-STRATEGY
 
 The central decision framework is:
 
@@ -1963,7 +2624,7 @@ without treating that as a failure.
 
 ---
 
-# 65. THE PRIMARY ALPHA HYPOTHESIS
+# 70. THE PRIMARY ALPHA HYPOTHESIS
 
 The initial research hypothesis is:
 
@@ -1975,7 +2636,7 @@ It must be tested.
 
 ---
 
-# 66. PRIMARY RESEARCH VARIABLES
+# 71. PRIMARY RESEARCH VARIABLES
 
 The first research sweep should investigate:
 
@@ -2016,7 +2677,8 @@ The first research sweep should investigate:
 - IV Percentile;
 - DTE;
 - expected move;
-- spread.
+- spread;
+- skew state (RR25 percentile).
 
 ### Time
 
@@ -2028,7 +2690,7 @@ The first research sweep should investigate:
 
 ---
 
-# 67. FIRST EXPERIMENT MATRIX
+# 72. FIRST EXPERIMENT MATRIX
 
 Do not optimize everything simultaneously.
 
@@ -2082,11 +2744,15 @@ Regime.
 
 Exit method.
 
+## Experiment M
+
+Skew state.
+
 Each experiment should isolate variables wherever possible.
 
 ---
 
-# 68. ANTI-OVERFITTING RULE
+# 73. ANTI-OVERFITTING RULE
 
 No parameter may be selected because it produces the highest historical return alone.
 
@@ -2101,7 +2767,7 @@ A parameter should be preferred when:
 
 ---
 
-# 69. MINIMUM SAMPLE SIZE
+# 74. MINIMUM SAMPLE SIZE
 
 Do not trust a setup with:
 
@@ -2121,7 +2787,7 @@ Production promotion should require enough observations to estimate the distribu
 
 ---
 
-# 70. CONFIDENCE INTERVALS
+# 75. CONFIDENCE INTERVALS
 
 Where appropriate, report uncertainty.
 
@@ -2145,7 +2811,7 @@ from:
 
 ---
 
-# 71. STRATEGY DEGRADATION
+# 76. STRATEGY DEGRADATION
 
 The engine must distinguish:
 
@@ -2169,7 +2835,7 @@ These require different responses.
 
 ---
 
-# 72. CAPITAL ALLOCATION
+# 77. CAPITAL ALLOCATION
 
 Do not allocate equal capital to every setup automatically.
 
@@ -2188,7 +2854,7 @@ But all allocations remain bounded by the global risk architecture.
 
 ---
 
-# 73. CORRELATED POSITIONS
+# 78. CORRELATED POSITIONS
 
 The engine must recognize that:
 
@@ -2219,7 +2885,7 @@ The system should not accidentally create a 15% effective portfolio bet while ev
 
 ---
 
-# 74. PORTFOLIO RISK
+# 79. PORTFOLIO RISK
 
 Track:
 
@@ -2240,7 +2906,7 @@ This converts the system from isolated trade management into portfolio risk mana
 
 ---
 
-# 75. PRODUCTION DASHBOARD
+# 80. PRODUCTION DASHBOARD
 
 Display:
 
@@ -2260,7 +2926,8 @@ Display:
 - momentum;
 - liquidity;
 - breadth;
-- macro.
+- macro;
+- skew.
 
 ## OPPORTUNITIES
 
@@ -2279,33 +2946,47 @@ Display:
 - daily P&L;
 - drawdown;
 - open risk;
-- portfolio Delta/Gamma/Vega/Theta.
+- portfolio Delta/Gamma/Vega/Theta;
+- buying power + settled cash;
+- day trades used (5D);
+- margin state.
 
 ## EXECUTION
 
 - pending orders;
 - fills;
 - slippage;
-- broker health.
+- broker health;
+- latency state + order RTT p95.
 
 ## SYSTEM
 
 - data health;
 - model version;
 - strategy version;
-- kill-switch status.
+- kill-switch status;
+- latency ladder state;
+- data pipeline QA status.
 
 ---
 
-# 76. DEFAULT DECISION LOGIC
+# 81. DEFAULT DECISION LOGIC
 
 Pseudocode:
 
 ```python
 def evaluate_candidate(candidate):
 
+    # ── FAIL-CLOSED PRECONDITIONS ───────────────────────
     if not data_integrity_ok(candidate):
         return REJECT("DATA_INTEGRITY")
+
+    latency = latency_state()                    # §38
+    if latency == BLACK:
+        return HALT("LATENCY_BLACK")
+    if latency == RED:
+        force_mode(SHADOW)                       # no live orders;
+                                                 # signals continue
 
     if not broker_health_ok():
         return REJECT("BROKER_HEALTH")
@@ -2321,7 +3002,8 @@ def evaluate_candidate(candidate):
     if macro_state.hard_block:
         return REJECT("MACRO_EVENT")
 
-    regime = evaluate_regime(candidate)
+    # ── CONTEXT ───────────────────────────────────────
+    regime = evaluate_regime(candidate)          # includes skew (§9, §25)
 
     rs = evaluate_relative_strength(candidate)
 
@@ -2330,6 +3012,7 @@ def evaluate_candidate(candidate):
     if not setup.valid:
         return REJECT("SETUP_INVALID")
 
+    # ── OPTION SELECTION ───────────────────────────────
     option_candidates = scan_option_chain(candidate)
 
     option = select_option(
@@ -2337,12 +3020,14 @@ def evaluate_candidate(candidate):
         delta_range=RESEARCH_RANGE,
         dte_range=RESEARCH_RANGE,
         iv_context=True,
+        surface_context=True,                    # §25
         liquidity=True
     )
 
     if option is None:
         return REJECT("OPTION_INVALID")
 
+    # ── RISK ──────────────────────────────────────────
     risk = calculate_scenario_risk(
         candidate,
         option,
@@ -2352,55 +3037,71 @@ def evaluate_candidate(candidate):
     if risk.worst_case > max_trade_risk():
         return REJECT("RISK_LIMIT")
 
-    probability = estimate_conditional_outcomes(
-        candidate,
-        regime,
-        setup,
-        option
-    )
-
-    ev = calculate_net_expectancy(
-        probability,
-        risk,
-        execution_costs()
-    )
-
-    opportunity_score = calculate_opportunity_score(
-        regime,
-        setup,
-        rs,
-        option
-    )
-
-    risk_penalty = calculate_risk_penalty(
-        macro_state,
-        regime,
-        option,
-        liquidity_state()
-    )
-
-    net_score = opportunity_score - risk_penalty
-
-    if not meets_production_threshold(ev, net_score):
-        return REJECT("INSUFFICIENT_EDGE")
-
-    quantity = calculate_position_size(risk)
+    quantity = calculate_position_size(risk)     # §7 + exposure caps
 
     if quantity < 1:
         return REJECT("POSITION_TOO_LARGE_FOR_RISK")
+
+    # ── MARGIN / BUYING POWER (§8) ───────────────────────
+    margin = margin_engine.evaluate(account, option, quantity)
+
+    if not margin.ok:
+        return REJECT(margin.reason)             # BP / settled funds /
+                                                 # GFV / PDT
+
+    # ── TAX / WASH SALE (§36) ───────────────────────────
+    tax = wash_sale_gate(candidate.underlying_group, today())
+
+    if tax.hard_block:
+        return REJECT("WASH_SALE_YEAR_END")
+
+    # ── EXPECTANCY & SCORING ────────────────────────────
+    probability = estimate_conditional_outcomes(
+        candidate, regime, setup, option
+    )
+
+    ev = calculate_net_expectancy(
+        probability, risk, execution_costs()
+    )
+
+    opportunity_score = calculate_opportunity_score(
+        regime, setup, rs, option
+    )
+
+    risk_penalty = calculate_risk_penalty(
+        macro_state, regime, option, liquidity_state()
+    )
+
+    risk_penalty += tax.penalty                  # §36
+    risk_penalty += skew_overlay_penalty(regime) # §25
+    risk_penalty += latency_penalty(latency)     # §38 (YELLOW)
+
+    net_score = opportunity_score - risk_penalty
+
+    required = production_threshold()
+    if latency == YELLOW:
+        required += 1
+        quantity = max(1, floor(quantity * 0.5))
+
+    if not meets_threshold(ev, net_score, required):
+        return REJECT("INSUFFICIENT_EDGE")
 
     return AUTHORIZE(
         candidate=candidate,
         option=option,
         quantity=quantity,
         expected_value=ev,
-        score=net_score
+        score=net_score,
+        margin_impact=margin,
+        tax=tax,
+        latency=latency,
+        mode=current_mode()                      # may be forced SHADOW
     )
 ```
 
 ---
 
-# 77. ABSOLUTE PRODUCTION RULE
+# 82. ABSOLUTE PRODUCTION RULE
 
 No component may override the Risk Engine.
 
@@ -2423,7 +3124,7 @@ the system says:
 
 ---
 
-# 78. MACHINE LEARNING POLICY
+# 83. MACHINE LEARNING POLICY
 
 Machine learning may eventually be used for:
 
@@ -2447,7 +3148,7 @@ If ML cannot outperform the baseline out of sample after costs:
 
 ---
 
-# 79. BASELINE STRATEGY
+# 84. BASELINE STRATEGY
 
 The first production candidate should remain simple:
 
@@ -2471,7 +3172,7 @@ Only after proving this baseline should complexity be added.
 
 ---
 
-# 80. WHAT SUCCESS LOOKS LIKE
+# 85. WHAT SUCCESS LOOKS LIKE
 
 The project succeeds if it can eventually produce a statement such as:
 
@@ -2483,7 +3184,7 @@ Not a prediction.
 
 ---
 
-# 81. FINAL SYSTEM LAWS
+# 86. FINAL SYSTEM LAWS
 
 ### LAW 1
 **Capital preservation outranks opportunity.**
@@ -2545,9 +3246,80 @@ Not a prediction.
 ### LAW 20
 **The only acceptable production edge is one that survives out-of-sample evidence.**
 
+### LAW 21
+**A trade that fails buying power was never a trade. The engine must reject it before the broker does.**
+
+### LAW 22
+**Tax friction is real friction. Expectancy that ignores it is overstated.**
+
+### LAW 23
+**Stale data is no data. Latency limits are risk limits, and RED means SHADOW.**
+
+### LAW 24
+**A single IV number is one strike's opinion. The surface is the market's full statement. Read the whole statement.**
+
 ---
 
-# 82. IMPLEMENTATION ROADMAP
+# 87. MINIMUM VIABLE ENGINE (BUILD-ORDER DISCIPLINE)
+
+The complexity penalty (§55) applies to the codebase as much as the strategy. An architecture this rigorous fails most often not by losing money but by never shipping.
+
+Therefore the full architecture is a **target state**, not a build order.
+
+## The Rule
+
+A subsystem may be built only when a research question or a release-gate requirement demands it.
+
+One box. One process. One operator.
+
+## MVE v0 — Build This First
+
+```text
+KEEP (non-negotiable core)
+  Risk engine (scenario grid, sizing, exposure caps)     §5–§7
+  Margin/settlement ledger + debounced reconciliation    §8
+  Wash-sale ledger                                       §36
+  Latency ladder + session-start canary suite            §38, §61
+  Telemetry with rejection forensics                     §62, §63
+  Two setups only: RS-01, RS-02                          §17
+  Long premium only
+
+DATA (bought, not built)
+  Vendor 1-minute bars + EOD chains with IV/Greeks       §46 Tier B/C
+  DuckDB + partitioned Parquet                           §46 bootstrap
+  Static macro calendar (CSV, weekly refresh)            §11
+  EOD RR25/BF25 from vendor chains (no surface fitting)  §25
+
+DEFER (until a graduation trigger fires)
+  Tick NBBO; intraday chain snapshots
+  ClickHouse migration
+  Fitted vol surfaces (SVI)
+  Message bus; distributed ingestion
+  ML probability models                                  §83
+  Additional setups; short structures
+```
+
+## Graduation Triggers
+
+```text
+DuckDB → ClickHouse       backtest queries take minutes, or Tier A
+                          intraday snapshots enter scope
+EOD skew → intraday       skew-state features prove out-of-sample value
+2 setups → N              both baseline setups have verdicts (either way)
+Long-only → spreads       broker margin adapter validated in Shadow (§8)
+```
+
+## What This Preserves
+
+Every law (§86), every hard gate, and the full research honesty of the system — at roughly one-fifth of the engineering surface. The MVE can reach Phase 5 (Paper) as a single Python process reading vendor data on one machine.
+
+The fastest route to knowing whether the RS hypothesis (§70) survives friction is not more infrastructure. It is the smallest honest test of the hypothesis.
+
+---
+
+# 88. IMPLEMENTATION ROADMAP
+
+The phases below describe the **full** architecture. §87 defines the reduced MVE build of Phases 1–3 for a single operator; graduate per its triggers.
 
 ## PHASE 1 — DATA FOUNDATION
 
@@ -2560,7 +3332,11 @@ Build:
 - sector mapping;
 - corporate-action handling;
 - timestamp normalization;
-- data-integrity service.
+- data-integrity service;
+- OLAP analytical store (§46): ClickHouse / ArcticDB (or DuckDB + Parquet bootstrap);
+- tiered retention policy (hot/warm/cold);
+- point-in-time universe membership;
+- automated data-QA checks.
 
 **No trading.**
 
@@ -2577,7 +3353,10 @@ Build:
 - Greeks;
 - IV analytics;
 - expected move;
-- risk engine.
+- risk engine;
+- volatility surface & skew engine (§25);
+- margin & buying-power model (§8);
+- wash-sale ledger (§36).
 
 **No trading.**
 
@@ -2594,7 +3373,8 @@ Build:
 - commissions;
 - MAE/MFE;
 - walk-forward;
-- Monte Carlo.
+- Monte Carlo;
+- latency-conditioned slippage model (§38, §48).
 
 **No trading.**
 
@@ -2628,7 +3408,8 @@ Measure:
 - signal frequency;
 - quote quality;
 - execution assumptions;
-- live vs historical feature distributions.
+- live vs historical feature distributions;
+- latency baseline calibration (data age, order RTT percentiles).
 
 **No capital.**
 
@@ -2645,7 +3426,9 @@ Measure:
 - slippage;
 - latency;
 - missed opportunities;
-- execution drift.
+- execution drift;
+- latency ladder validation (GREEN/YELLOW/RED transitions);
+- margin/BP reconciliation vs broker.
 
 **No capital.**
 
@@ -2663,6 +3446,8 @@ The objective is:
 
 **validate that the production system behaves like the research system.**
 
+Including: broker margin/BP agreement, settlement-ledger accuracy (cash accounts), PDT counters, wash-sale ledger accuracy, and latency-state behavior under live load.
+
 ---
 
 ## PHASE 8 — CONTROLLED SCALE
@@ -2676,7 +3461,7 @@ Increase capital only when:
 
 ---
 
-# 83. FINAL ARCHITECTURAL OBJECTIVE
+# 89. FINAL ARCHITECTURAL OBJECTIVE
 
 The completed platform is not merely:
 

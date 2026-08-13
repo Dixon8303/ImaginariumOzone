@@ -48,7 +48,9 @@ class MarginConfig:
     pdt_max_day_trades_5d: int = 3        # the 4th is rejected under equity min
     enforce_gfv: bool = True
     settlement_days: int = 1              # T+1
-    broker_bp_divergence_tolerance: float = 0.02  # §8 reconciliation
+    broker_bp_divergence_tolerance: float = 0.02  # §8 reconciliation (CALIBRATE)
+    recon_consecutive_breaches: int = 3   # WARN → RECONCILE_HALT debounce
+    broker_data_max_age_s: float = 30.0   # stale broker data → halt new risk
 
 
 @dataclass(frozen=True)
@@ -90,3 +92,6 @@ class GateConfig:
     yellow_score_add: int = 1
     skew_overlay_penalty: int = 2         # steep/extreme index put skew vs bullish thesis
     latency_yellow_penalty: int = 1
+    # §38 Latency Class Discipline: edge half-life must exceed this multiple
+    # of the measured p95 pipe latency (data age + order RTT).
+    edge_half_life_min_multiple: float = 10.0

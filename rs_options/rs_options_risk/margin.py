@@ -75,7 +75,58 @@ class MarginEngine:
 
     def broker_reconciliation_ok(self, model_bp: float, broker_bp: float,
                                  equity: float) -> bool:
-        """Spec §8: |model_BP − broker_BP| > tolerance → stop and reconcile."""
+        """Single-poll tolerance check. Prefer BrokerReconciler for the
+        debounced, fail-conservative protocol (spec §8)."""
         if equity <= 0:
             return False
         return abs(model_bp - broker_bp) <= self.cfg.broker_bp_divergence_tolerance * equity
+
+
+class BrokerReconciler:
+    """Debounced, fail-conservative broker reconciliation (spec §8).
+
+    - EFFECTIVE_BP = min(model_BP, last_good_broker_BP): divergence alone
+      never creates risk, because sizing always uses the lower number.
+    - Single-poll divergence → WARN (fast re-poll, keep trading).
+    - N consecutive divergent polls, or stale/missing broker data →
+      RECONCILE_HALT (stop new risk; noise costs conservatism, not uptime).
+    """
+
+    OK = "OK"
+    WARN = "WARN"
+    HALT = "RECONCILE_HALT"
+
+    def __init__(self, cfg: MarginConfig | None = None):
+        self.cfg = cfg or MarginConfig()
+        self._consecutive = 0
+        self._last_broker_bp: float | None = None
+        self._last_broker_ts: float | None = None
+
+    def update(self, model_bp: float, broker_bp: float, ts: float,
+               equity: float) -> str:
+        """Feed one reconciliation poll; returns OK | WARN | RECONCILE_HALT."""
+        self._last_broker_bp = broker_bp
+        self._last_broker_ts = ts
+        if equity <= 0:
+            self._consecutive += 1
+        else:
+            tol = self.cfg.broker_bp_divergence_tolerance * equity
+            if abs(model_bp - broker_bp) <= tol:
+                self._consecutive = 0
+                return self.OK
+            self._consecutive += 1
+        if self._consecutive >= self.cfg.recon_consecutive_breaches:
+            return self.HALT
+        return self.WARN
+
+    def effective_bp(self, model_bp: float) -> float:
+        """The number sizing must use: min(model, last good broker read)."""
+        if self._last_broker_bp is None:
+            return model_bp
+        return min(model_bp, self._last_broker_bp)
+
+    def broker_data_stale(self, now: float) -> bool:
+        """Stale/missing broker data is a halt condition (fail closed)."""
+        if self._last_broker_ts is None:
+            return True
+        return (now - self._last_broker_ts) > self.cfg.broker_data_max_age_s
