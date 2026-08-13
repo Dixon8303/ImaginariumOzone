@@ -1,5 +1,1562 @@
 {
-  "last_synced": "2026-08-12T15:43:13.663586Z",
+  "last_synced": "2026-08-13T03:30:00.722622Z",
   "app": "BGF Production OS v1.0",
-  "episodes": []
+  "episodes": [
+    {
+      "id": "EP22",
+      "topic": "Berry Gordy: The Motown Machine",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "berry gordy motown",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "WhVpdmY13ww",
+      "publish_at": null
+    },
+    {
+      "id": "EP23",
+      "topic": "Great Zimbabwe: The City They Erased",
+      "mode": "cluster",
+      "status": "uploaded",
+      "keyword": "great zimbabwe",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "IYOWYmjX8BA",
+      "publish_at": null
+    },
+    {
+      "id": "EP24",
+      "topic": "Mali's Collapse: Who Burned Timbuktu?",
+      "mode": "cluster",
+      "status": "uploaded",
+      "keyword": "mali empire collapse",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "ELRqlSZDJyM",
+      "publish_at": null
+    },
+    {
+      "id": "EP25",
+      "topic": "Timbuktu & Songhai: The Lost Universities",
+      "mode": "cluster",
+      "status": "uploaded",
+      "keyword": "timbuktu songhai",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "Jx5ZiRQ6myI",
+      "publish_at": null
+    },
+    {
+      "id": "EP26",
+      "topic": "Djenne: The City That Predated Islam",
+      "mode": "cluster",
+      "status": "uploaded",
+      "keyword": "djenne mosques",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "6dDRHLl_IsI",
+      "publish_at": null
+    },
+    {
+      "id": "EP27",
+      "topic": "Sunni Ali and the Songhai Empire",
+      "mode": "cluster",
+      "status": "uploaded",
+      "keyword": "sunni ali songhai",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "bFpWJXcBgI0",
+      "publish_at": null
+    },
+    {
+      "id": "EP28",
+      "topic": "House of Dragon: What They Stole From Africans",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "game of thrones africa influence",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "ovaVD3uow58",
+      "publish_at": null
+    },
+    {
+      "id": "EP29",
+      "topic": "Buffalo Soldiers: America's Forgotten Black Army",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "buffalo soldiers history",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "ik0-WkjcdOo",
+      "publish_at": "2026-08-15T14:00:00Z"
+    },
+    {
+      "id": "EP30",
+      "topic": "Igbo Landing: The Rebellion They Couldn't Erase",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "igbo landing rebellion",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "dGXhcljM0U4",
+      "publish_at": "2026-08-18T14:00:00Z"
+    },
+    {
+      "id": "EP31",
+      "topic": "The Origin of Race Records",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "race records history origin",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "ECGD3w9GocU",
+      "publish_at": "2026-08-22T14:00:00Z"
+    },
+    {
+      "id": "EP32",
+      "topic": "Berry Gordy's System",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "berry gordy system hitsville",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "YM6MEaOLGS4",
+      "publish_at": "2026-08-25T14:00:00Z"
+    },
+    {
+      "id": "EP33",
+      "topic": "Clive Davis: The Gatekeeper",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "clive davis music industry",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "qGvEBKFHJJM",
+      "publish_at": "2026-08-28T14:00:00Z"
+    },
+    {
+      "id": "EP34",
+      "topic": "Whitney Houston: The Asset",
+      "mode": "standalone",
+      "status": "uploaded",
+      "keyword": "whitney houston music industry",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z",
+      "video_id": "2BfUsIHkbsw",
+      "publish_at": "2026-09-01T14:00:00Z"
+    },
+    {
+      "id": "EP35",
+      "topic": "Bob Marley: The Revolution They Bought",
+      "mode": "standalone",
+      "status": "review",
+      "keyword": "bob marley music ownership",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "done"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z"
+    },
+    {
+      "id": "EP36",
+      "topic": "The Digital Pivot",
+      "mode": "standalone",
+      "status": "review",
+      "keyword": "music streaming black artists",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z"
+    },
+    {
+      "id": "EP37",
+      "topic": "Counter Models: Black Ownership in Music",
+      "mode": "standalone",
+      "status": "review",
+      "keyword": "black music ownership independence",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z"
+    },
+    {
+      "id": "EP38",
+      "topic": "Who Owns the Sound?",
+      "mode": "standalone",
+      "status": "review",
+      "keyword": "music copyright ownership",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "done"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z"
+    },
+    {
+      "id": "EP39",
+      "topic": "TBD \u2014 Awaiting Script",
+      "mode": "standalone",
+      "status": "draft",
+      "keyword": "",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "halted"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-08-13T03:30:00.722622Z"
+    },
+    {
+      "id": "EP40",
+      "topic": "Michael Jackson's Foreclosure: The ATV Catalog",
+      "mode": "standalone",
+      "status": "running",
+      "keyword": "michael jackson atv catalog sony",
+      "score": null,
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "running"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {
+        "G0.25": {
+          "result": "PASS",
+          "score": null
+        },
+        "G0.5": {
+          "result": "PASS",
+          "score": null
+        }
+      },
+      "updated_at": "2026-08-13T03:30:00.722622Z"
+    }
+  ]
 }
