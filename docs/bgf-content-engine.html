@@ -1,96 +1,92 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&family=Crimson+Pro:ital,wght@0,400;0,500;0,600;1,400&family=Special+Elite&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <title>Black Genius Files Content Engine</title>
 <meta name="description" content="A private, single-user automation tool that publishes promotional Pins for self-published Black Genius Files books to its operator's own Pinterest boards.">
+<link rel="canonical" href="https://dixon8303.github.io/ImaginariumOzone/bgf-content-engine.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Black Genius Files Content Engine">
+<meta property="og:description" content="A private, single-user automation tool that publishes promotional Pins for self-published Black Genius Files books to its operator's own Pinterest boards.">
 <style>
-  :root{--ink:#141210;--paper:#faf7f2;--amber:#b8791f;--rule:#e2dace;--muted:#5b544c}
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--paper);color:var(--ink);
-       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Georgia,serif}
-  .wrap{max-width:760px;margin:0 auto;padding:56px 24px 96px}
-  header{border-bottom:2px solid var(--amber);padding-bottom:20px;margin-bottom:36px}
-  .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:700}
-  h1{font-size:32px;line-height:1.15;margin:10px 0 8px;letter-spacing:-.015em}
-  .sub{color:var(--muted);font-size:15px;margin:0}
-  h2{font-size:18px;margin:34px 0 10px;letter-spacing:-.01em}
-  p,li{color:#2c2721}
-  ul{padding-left:20px} li{margin:6px 0}
-  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
-  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
-  th{background:#f3eee5;font-weight:700;width:34%}
-  code{background:#f0ebe2;padding:1px 5px;border-radius:3px;font-size:13px}
-  .box{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--amber);
-       padding:16px 18px;margin:24px 0;border-radius:2px}
-  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);
-         color:var(--muted);font-size:13px}
-  a{color:var(--amber)}
+html{scroll-behavior:smooth}
+:focus-visible{outline:2px solid #e8c070;outline-offset:3px;border-radius:4px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:#000000;color:#eef1f4;font-family:'Work Sans',system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:#e8c070;text-decoration:none}a:hover{color:#f4d795}
+::selection{background:rgba(201,168,76,.4);color:#fff}
+.hv-gold:hover{color:#e8c070}
+table{border-collapse:collapse;width:100%}
+th,td{text-align:left;padding:12px 16px;vertical-align:top;border-bottom:1px solid rgba(201,168,76,.14)}
+tr:last-child th,tr:last-child td{border-bottom:0}
+th{font-family:'Special Elite',monospace;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#c9a84c;font-weight:400;width:34%;white-space:nowrap}
+td{font-family:'Crimson Pro',Georgia,serif;font-size:15px;line-height:1.55;color:#c4c9d0}
+code{background:#1a1b1f;border:1px solid rgba(201,168,76,.25);color:#e8c070;padding:1px 7px;border-radius:4px;font-size:13px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div style="position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(1200px 700px at 82% -8%,rgba(130,12,16,.20),transparent 60%),radial-gradient(1000px 620px at 4% 4%,rgba(120,10,14,.16),transparent 55%),radial-gradient(900px 900px at 50% 118%,rgba(80,6,10,.32),transparent 62%)"></div>
+<div style="position:relative;z-index:1">
 
-<header>
-  <div class="kicker">E.A.T. Media &middot; Black Genius Files</div>
-  <h1>Black Genius Files Content Engine</h1>
-  <p class="sub">A private, single-user tool for scheduling promotional Pins to its operator's own Pinterest boards.</p>
+<header style="position:sticky;top:0;z-index:60;backdrop-filter:blur(14px);background:linear-gradient(180deg,rgba(1,1,1,.95),rgba(1,1,1,.72));border-bottom:1px solid rgba(201,168,76,.16)">
+  <div style="max-width:820px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 24px;flex-wrap:wrap">
+    <a href="https://dixon8303.github.io/black-genius-files/" style="display:flex;align-items:center;gap:11px;color:#eef1f4" aria-label="The Black Genius Files home">
+      <span style="width:36px;height:36px;border-radius:50%;border:1.5px solid #c9a84c;display:grid;place-items:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:#e8c070;background:radial-gradient(circle at 35% 28%,rgba(232,192,112,.25),#000000 65%);flex-shrink:0">B</span>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:1.5px;white-space:nowrap">BLACK GENIUS <span style="color:#e8c070">FILES</span></span>
+    </a>
+    <span style="font-family:'Special Elite',monospace;font-size:10.5px;letter-spacing:1.5px;color:#969ba3;white-space:nowrap">DEVELOPER DISCLOSURE</span>
+  </div>
 </header>
 
-<div class="box">
-  <strong>Scope in one line.</strong> One operator, one Pinterest account, first-party content
-  only — approximately one Pin per day promoting books the operator wrote and published.
-  Not a product. Not a service. No third-party users.
-</div>
+<main>
+<section style="max-width:760px;margin:0 auto;padding:clamp(48px,7vw,72px) 24px 8px">
+  <span style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:3px;color:#c9a84c">◆ E.A.T. MEDIA &middot; BLACK GENIUS FILES</span>
+  <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:clamp(30px,4.6vw,44px);font-weight:800;line-height:1.12;margin:12px 0 12px;background:linear-gradient(92deg,#fafbfc 8%,#e8c070 55%,#c9a84c 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent">Black Genius Files Content Engine</h1>
+  <p style="font-family:'Crimson Pro',Georgia,serif;font-size:17px;color:#bfc4cb;line-height:1.6;margin:0;max-width:620px;text-wrap:pretty">A private, single-user tool for scheduling promotional Pins to its operator's own Pinterest boards.</p>
 
-<h2>What it does</h2>
-<p>Black Genius Files is an independent publishing and documentary project by E.A.T. Media,
-preserving and retelling overlooked Black history. The project self-publishes two book
-collections — one poetry, one history. The Content Engine is a small script that saves the
-operator from manually uploading the same promotional graphics to Pinterest every day.</p>
+  <div style="margin:28px 0;background:linear-gradient(165deg,#141519,#000000);border:1px dashed rgba(201,168,76,.4);border-radius:16px;padding:20px 24px">
+    <p style="margin:0;font-family:'Crimson Pro',Georgia,serif;font-size:15.5px;color:#c4c9d0;line-height:1.6"><strong style="color:#e8c070">Scope in one line.</strong> One operator, one Pinterest account, first-party content only — approximately one Pin per day promoting books the operator wrote and published. Not a product. Not a service. No third-party users.</p>
+  </div>
 
-<p>Each day the script selects one pre-approved book graphic and caption from a local
-library, and publishes it as a Pin to one of the operator's own Pinterest boards, linking
-back to the operator's own book pages.</p>
+  <h2 style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:#e8c070;margin:40px 0 12px">What It Does</h2>
+  <p style="font-family:'Crimson Pro',Georgia,serif;font-size:15.5px;color:#c4c9d0;line-height:1.65;margin:0 0 14px;text-wrap:pretty">Black Genius Files is an independent publishing and documentary project by E.A.T. Media, preserving and retelling overlooked Black history. The project self-publishes two book collections — one poetry, one history. The Content Engine is a small script that saves the operator from manually uploading the same promotional graphics to Pinterest every day.</p>
+  <p style="font-family:'Crimson Pro',Georgia,serif;font-size:15.5px;color:#c4c9d0;line-height:1.65;margin:0;text-wrap:pretty">Each day the script selects one pre-approved book graphic and caption from a local library, and publishes it as a Pin to one of the operator's own Pinterest boards, linking back to the operator's own book pages.</p>
 
-<h2>How it works</h2>
-<table>
-  <tr><th>Authentication</th><td>OAuth 2.0 authorization code flow against a single Pinterest
-      account — the operator's own. No password collection, no session cookies, no
-      credential storage on behalf of anyone else.</td></tr>
-  <tr><th>Scopes requested</th><td><code>boards:read</code>, <code>boards:write</code>,
-      <code>pins:read</code>, <code>pins:write</code></td></tr>
-  <tr><th>Why each scope</th><td><code>boards:read</code> — resolve the operator's own board IDs.
-      <code>boards:write</code> — create or update the operator's own promotional boards.
-      <code>pins:write</code> — publish the daily Pin. <code>pins:read</code> — confirm the Pin
-      published and prevent duplicates.</td></tr>
-  <tr><th>Volume</th><td>Approximately 1 Pin per day; roughly 30&ndash;40 API calls per day
-      total, well inside trial rate limits.</td></tr>
-  <tr><th>Content source</th><td>Original artwork and copy for books authored and owned by the
-      operator. No scraped, licensed, or third-party content.</td></tr>
-  <tr><th>Hosting</th><td>Runs locally on the operator's own machine on a daily schedule. No
-      public endpoint, no multi-tenant infrastructure.</td></tr>
-</table>
+  <h2 style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:#e8c070;margin:40px 0 12px">How It Works</h2>
+  <div style="background:linear-gradient(165deg,#121316,#000000);border:1px solid rgba(201,168,76,.16);border-radius:14px;padding:4px 20px;overflow-x:auto">
+  <table>
+    <tr><th>Authentication</th><td>OAuth 2.0 authorization code flow against a single Pinterest account — the operator's own. No password collection, no session cookies, no credential storage on behalf of anyone else.</td></tr>
+    <tr><th>Scopes requested</th><td><code>boards:read</code>, <code>boards:write</code>, <code>pins:read</code>, <code>pins:write</code></td></tr>
+    <tr><th>Why each scope</th><td><code>boards:read</code> — resolve the operator's own board IDs. <code>boards:write</code> — create or update the operator's own promotional boards. <code>pins:write</code> — publish the daily Pin. <code>pins:read</code> — confirm the Pin published and prevent duplicates.</td></tr>
+    <tr><th>Volume</th><td>Approximately 1 Pin per day; roughly 30&ndash;40 API calls per day total, well inside trial rate limits.</td></tr>
+    <tr><th>Content source</th><td>Original artwork and copy for books authored and owned by the operator. No scraped, licensed, or third-party content.</td></tr>
+    <tr><th>Hosting</th><td>Runs locally on the operator's own machine on a daily schedule. No public endpoint, no multi-tenant infrastructure.</td></tr>
+  </table>
+  </div>
 
-<h2>What it explicitly does not do</h2>
-<ul>
-  <li>It is not offered, sold, licensed, or distributed to any other person or business.</li>
-  <li>It does not resell, proxy, sublicense, or broker Pinterest API access.</li>
-  <li>It does not manage, post to, or authenticate any Pinterest account other than the
-      operator's own.</li>
-  <li>It does not read, collect, store, or analyze any other Pinterest user's data.</li>
-  <li>It does not run ads, sell data, or integrate any third-party analytics.</li>
-</ul>
+  <h2 style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:#e8c070;margin:40px 0 12px">What It Explicitly Does Not Do</h2>
+  <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px">
+    <li style="display:flex;gap:10px;font-family:'Crimson Pro',Georgia,serif;font-size:15px;color:#c4c9d0;line-height:1.5"><span style="color:#c9a84c;font-size:11px;margin-top:4px;flex-shrink:0">◆</span>It is not offered, sold, licensed, or distributed to any other person or business.</li>
+    <li style="display:flex;gap:10px;font-family:'Crimson Pro',Georgia,serif;font-size:15px;color:#c4c9d0;line-height:1.5"><span style="color:#c9a84c;font-size:11px;margin-top:4px;flex-shrink:0">◆</span>It does not resell, proxy, sublicense, or broker Pinterest API access.</li>
+    <li style="display:flex;gap:10px;font-family:'Crimson Pro',Georgia,serif;font-size:15px;color:#c4c9d0;line-height:1.5"><span style="color:#c9a84c;font-size:11px;margin-top:4px;flex-shrink:0">◆</span>It does not manage, post to, or authenticate any Pinterest account other than the operator's own.</li>
+    <li style="display:flex;gap:10px;font-family:'Crimson Pro',Georgia,serif;font-size:15px;color:#c4c9d0;line-height:1.5"><span style="color:#c9a84c;font-size:11px;margin-top:4px;flex-shrink:0">◆</span>It does not read, collect, store, or analyze any other Pinterest user's data.</li>
+    <li style="display:flex;gap:10px;font-family:'Crimson Pro',Georgia,serif;font-size:15px;color:#c4c9d0;line-height:1.5"><span style="color:#c9a84c;font-size:11px;margin-top:4px;flex-shrink:0">◆</span>It does not run ads, sell data, or integrate any third-party analytics.</li>
+  </ul>
 
-<h2>Policies</h2>
-<p><a href="./privacy.html">Privacy Policy</a> &middot;
-   Contact: <a href="mailto:eatmediatv@gmail.com">eatmediatv@gmail.com</a></p>
+  <h2 style="font-family:'Special Elite',monospace;font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:#e8c070;margin:40px 0 12px">Policies</h2>
+  <p style="font-family:'Crimson Pro',Georgia,serif;font-size:15.5px;color:#c4c9d0;margin:0"><a href="./privacy.html" class="hv-gold" style="font-weight:600">Privacy Policy</a> &middot; Contact: <a href="mailto:eatmediatv@gmail.com" class="hv-gold" style="font-weight:600">eatmediatv@gmail.com</a></p>
+</section>
+</main>
 
-<footer>
-  Black Genius Files is a project of E.A.T. Media. &middot;
-  <a href="./">Return to site</a>
-  <a href="https://eatmediatv.com">Return to site</a>
+<footer style="border-top:1px solid rgba(201,168,76,.14);padding:40px 24px 56px;margin-top:56px;background:linear-gradient(180deg,transparent,rgba(110,8,12,.08))">
+  <div style="max-width:760px;margin:0 auto;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;color:#969ba3;font-size:13px">
+    <span>Black Genius Files is a project of E.A.T. Media.</span>
+    <a href="https://eatmediatv.com" class="hv-gold" style="color:#c4c9d0;font-weight:600">Return to site ↗</a>
+  </div>
 </footer>
 
 </div>
