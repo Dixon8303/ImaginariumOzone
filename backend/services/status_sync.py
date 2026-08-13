@@ -77,9 +77,14 @@ async def _debounced_sync():
 async def build_payload() -> dict:
     """Production metadata snapshot for the public dashboard."""
     episodes = await db.list_episodes()
+    # Episode numbers count up in production order. list_episodes() returns
+    # newest-first, so the oldest episode is number 1 and a new episode always
+    # takes the next number up — an episode's number never changes once given.
+    total = len(episodes)
     out = []
-    for ep in episodes:
+    for index, ep in enumerate(episodes):
         eid = ep["id"]
+        number = total - index
         stage_rows = {s["stage_name"]: s for s in await _list_pipeline_stages(eid)}
         stages = [
             {"name": name, "status": stage_rows.get(name, {}).get("status", "pending")}
@@ -93,6 +98,7 @@ async def build_payload() -> dict:
                               "max_score": gd.get("max_score")}
         out.append({
             "id": eid,
+            "number": number,
             "topic": ep["topic"],
             "mode": ep["mode"],
             "status": ep["status"],
@@ -126,6 +132,15 @@ async def sync_now() -> bool:
     if not is_configured():
         return False
     payload = await build_payload()
+
+    # Never publish an empty episode list. bgf.db starts empty, and production
+    # state is also written by the standalone artifact-driven sync — so an
+    # empty push here carries no information and can only erase real data
+    # that the other writer put there. Refusing costs nothing: the first push
+    # with actual episodes goes through normally.
+    if not payload["episodes"]:
+        return False
+
     content_b64 = base64.b64encode(
         json.dumps(payload, indent=2).encode()).decode()
     url = (f"https://api.github.com/repos/{config.GITHUB_SYNC_REPO}"

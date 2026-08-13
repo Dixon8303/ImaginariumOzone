@@ -64,7 +64,21 @@
 
   /* ── Episode cards ── */
   .card{border:1px solid var(--line);background:var(--bg-deep);padding:24px 26px;
-    margin-bottom:18px}
+    margin-bottom:18px;display:flex;gap:22px;align-items:flex-start}
+  .card-body{flex:1;min-width:0}   /* min-width:0 lets long topics wrap, not overflow */
+
+  /* Episode number — watermark. Deliberately recessive: it labels the card
+     without competing with the topic, so it sits well below body-text
+     contrast and is marked aria-hidden (the topic already names the episode). */
+  /* Alpha lives in the colors, not in `opacity` on the wrapper: opacity
+     composites the whole subtree, which crushed the EP label to invisibility.
+     Separate alphas let the numeral stay a watermark while its label stays
+     readable. */
+  .epnum{flex:none;font-family:'Bebas Neue',Impact,sans-serif;font-size:76px;
+    line-height:.78;letter-spacing:.01em;color:rgba(245,158,11,.22);
+    user-select:none;margin-top:-4px;font-variant-numeric:tabular-nums}
+  .epnum small{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;
+    letter-spacing:.3em;color:rgba(245,158,11,.5);margin-top:2px;text-align:center}
   .card-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;
     flex-wrap:wrap}
   .topic{font-size:20px;color:var(--ink);line-height:1.35;max-width:38em}
@@ -158,6 +172,9 @@
   @media (max-width:560px){
     .meter{grid-template-columns:1fr}
     .seg{height:20px}
+    .card{gap:14px;padding:20px 18px}
+    .epnum{font-size:44px}
+    .epnum small{font-size:8px;letter-spacing:.2em}
   }
 </style>
 </head>
@@ -324,7 +341,7 @@ function renderEpisodes(data){
       <span class="mono">Run the app on the studio Mac with GITHUB_SYNC_TOKEN set — episodes appear here automatically.</span></div>`;
     return;
   }
-  el.innerHTML = eps.map(ep => {
+  el.innerHTML = eps.map((ep, i) => {
     const stageMap = Object.fromEntries((ep.stages||[]).map(s=>[s.name,s.status]));
     const segs = STAGES.map(([key,label,tier]) => {
       const st = stageMap[key] || 'pending';
@@ -341,7 +358,15 @@ function renderEpisodes(data){
       return `<span class="gate ${cls}">${g}${verdict}${scoreTxt}</span>`;
     }).join('');
     const status = STATUS_LABELS[ep.status] || ep.status;
+    // Episode number, best source first: the id carries the real one
+    // ("EP22" -> 22) in the artifact-driven payload; `number` is what the
+    // FastAPI sync emits; position is the last resort.
+    const fromId = /^ep[\s_-]*(\d+)/i.exec(ep.id || '');
+    const num = fromId ? fromId[1]
+              : (ep.number != null ? ep.number : (eps.length - i));
     return `<div class="card">
+      <div class="epnum" aria-hidden="true">${String(num).padStart(2,'0')}<small>EP</small></div>
+      <div class="card-body">
       <div class="card-top">
         <p class="topic">${esc(ep.topic)}</p>
         <div class="badges">
@@ -356,6 +381,7 @@ function renderEpisodes(data){
       </div>
       <div class="stagebar">${segs}</div>
       <div class="gates">${gates}</div>
+      </div>
     </div>`;
   }).join('');
 }
