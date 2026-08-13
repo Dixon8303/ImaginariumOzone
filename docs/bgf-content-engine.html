@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Black Genius Files Content Engine</title>
+<meta name="description" content="A private, single-user automation tool that publishes promotional Pins for self-published Black Genius Files books to its operator's own Pinterest boards.">
+<style>
+  :root{--ink:#141210;--paper:#faf7f2;--amber:#b8791f;--rule:#e2dace;--muted:#5b544c}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Georgia,serif}
+  .wrap{max-width:760px;margin:0 auto;padding:56px 24px 96px}
+  header{border-bottom:2px solid var(--amber);padding-bottom:20px;margin-bottom:36px}
+  .kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:700}
+  h1{font-size:32px;line-height:1.15;margin:10px 0 8px;letter-spacing:-.015em}
+  .sub{color:var(--muted);font-size:15px;margin:0}
+  h2{font-size:18px;margin:34px 0 10px;letter-spacing:-.01em}
+  p,li{color:#2c2721}
+  ul{padding-left:20px} li{margin:6px 0}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+  th{background:#f3eee5;font-weight:700;width:34%}
+  code{background:#f0ebe2;padding:1px 5px;border-radius:3px;font-size:13px}
+  .box{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--amber);
+       padding:16px 18px;margin:24px 0;border-radius:2px}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--rule);
+         color:var(--muted);font-size:13px}
+  a{color:var(--amber)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">E.A.T. Media &middot; Black Genius Files</div>
+  <h1>Black Genius Files Content Engine</h1>
+  <p class="sub">A private, single-user tool for scheduling promotional Pins to its operator's own Pinterest boards.</p>
+</header>
+
+<div class="box">
+  <strong>Scope in one line.</strong> One operator, one Pinterest account, first-party content
+  only — approximately one Pin per day promoting books the operator wrote and published.
+  Not a product. Not a service. No third-party users.
+</div>
+
+<h2>What it does</h2>
+<p>Black Genius Files is an independent publishing and documentary project by E.A.T. Media,
+preserving and retelling overlooked Black history. The project self-publishes two book
+collections — one poetry, one history. The Content Engine is a small script that saves the
+operator from manually uploading the same promotional graphics to Pinterest every day.</p>
+
+<p>Each day the script selects one pre-approved book graphic and caption from a local
+library, and publishes it as a Pin to one of the operator's own Pinterest boards, linking
+back to the operator's own book pages.</p>
+
+<h2>How it works</h2>
+<table>
+  <tr><th>Authentication</th><td>OAuth 2.0 authorization code flow against a single Pinterest
+      account — the operator's own. No password collection, no session cookies, no
+      credential storage on behalf of anyone else.</td></tr>
+  <tr><th>Scopes requested</th><td><code>boards:read</code>, <code>boards:write</code>,
+      <code>pins:read</code>, <code>pins:write</code></td></tr>
+  <tr><th>Why each scope</th><td><code>boards:read</code> — resolve the operator's own board IDs.
+      <code>boards:write</code> — create or update the operator's own promotional boards.
+      <code>pins:write</code> — publish the daily Pin. <code>pins:read</code> — confirm the Pin
+      published and prevent duplicates.</td></tr>
+  <tr><th>Volume</th><td>Approximately 1 Pin per day; roughly 30&ndash;40 API calls per day
+      total, well inside trial rate limits.</td></tr>
+  <tr><th>Content source</th><td>Original artwork and copy for books authored and owned by the
+      operator. No scraped, licensed, or third-party content.</td></tr>
+  <tr><th>Hosting</th><td>Runs locally on the operator's own machine on a daily schedule. No
+      public endpoint, no multi-tenant infrastructure.</td></tr>
+</table>
+
+<h2>What it explicitly does not do</h2>
+<ul>
+  <li>It is not offered, sold, licensed, or distributed to any other person or business.</li>
+  <li>It does not resell, proxy, sublicense, or broker Pinterest API access.</li>
+  <li>It does not manage, post to, or authenticate any Pinterest account other than the
+      operator's own.</li>
+  <li>It does not read, collect, store, or analyze any other Pinterest user's data.</li>
+  <li>It does not run ads, sell data, or integrate any third-party analytics.</li>
+</ul>
+
+<h2>Policies</h2>
+<p><a href="./privacy.html">Privacy Policy</a> &middot;
+   Contact: <a href="mailto:eatmediatv@gmail.com">eatmediatv@gmail.com</a></p>
+
+<footer>
+  Black Genius Files is a project of E.A.T. Media. &middot;
+  <a href="./">Return to site</a>
+</footer>
+
+</div>
+</body>
+</html>
