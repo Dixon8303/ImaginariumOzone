@@ -11,6 +11,8 @@ def log_trade(trade: Dict[str, Any]) -> None:
     os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
     trades = load_trades()
     trade["logged_at"] = datetime.now(timezone.utc).isoformat()
+    if "execution_result" not in trade:
+        trade["execution_result"] = {}
     trades.append(trade)
     with open(LOG_FILE, "w") as f:
         json.dump(trades, f, indent=2)

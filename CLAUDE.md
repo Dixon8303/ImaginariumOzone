@@ -8,7 +8,7 @@ git history and a Pages deploy, nothing else. Never wire one into another.
 | 1 | **BGF Production OS** | `backend/`, `src/`, `start.sh` | The main system. Autonomous video-production pipeline for *The Black Genius Files*. Runs locally on the operator's Mac. |
 | 2 | **Mission Control** | `docs/bgf/`, `status/` | Public read-only dashboard mirroring pipeline state. Static page on GitHub Pages. |
 | 3 | **Published sites** | `docs/`, `site/`, `eatmedia/` | Three static sites deployed by one workflow. |
-| 4 | **HoneyDrip Bot** | `honeydrip_bot/` | Python trading methodology framework. **Paper trading only** — see Hard Rules. |
+| 4 | **HoneyDrip Bot** | `honeydrip_bot/` | Python trading methodology framework. Live agentic trading via Robinhood Trading MCP — see Hard Rules. |
 | 5 | **Marvel Release Tracker** | `marvel_tracker/` | Personal automation. Daily GitHub Actions cron watching TMDb. |
 | 6 | **Circle of Morality / Screenplay Tracker** | `src/CircleOfMorality.jsx`, `src/ScreenplayTracker.jsx` | Earlier React features, preserved at `/circle` and `/tracker`. |
 | 7 | **Dixon Grant Studio** | `dixon-grant-studio/` | Grant-writing pipeline and outreach assets. |
@@ -25,11 +25,14 @@ the backend work for tests but not the full media pipeline.
 
 | Rule | Enforcement |
 |------|-------------|
-| `PAPER = True` always | Hard-coded in `honeydrip_bot/config.py` |
-| `LIVE_TRADING_ENABLED = False` always | Hard-coded in `honeydrip_bot/config.py` and `engine.py` |
-| Abort if `HONEYDRIP_ARMED != "YES"` | Double interlock: `config.py` + `engine.py` |
-| Alpaca for automation only | `alpaca_client.py` hard-codes the paper endpoint |
-| Robinhood for manual trades only | No programmatic Robinhood path exists or is authorized |
+| `HONEYDRIP_MODE` controls execution | `"paper"` (default) → Alpaca paper endpoint; `"live_mcp"` → Robinhood Trading MCP |
+| Abort if `HONEYDRIP_ARMED != "YES"` | Interlock in `config.py` + `engine.py` — required in every mode |
+| Alpaca for paper mode only | `alpaca_client.py` hard-codes the paper endpoint |
+| Robinhood via official Trading MCP | Authorized for agentic live execution via `https://agent.robinhood.com/mcp/trading` |
+| Max position size: 5% of equity | Enforced in `risk_manager.py` |
+| Max daily loss: 2% of equity | Hard stop in `risk_manager.py` — no further trades that session |
+| All trades logged | `trade_logger.py` records every execution including result |
+| Execution playbook | See `honeydrip_bot/robinhood_mcp_guide.md` |
 
 ### Secrets — all components
 
@@ -212,32 +215,18 @@ One workflow, `.github/workflows/pages.yml`, triggered by pushes to `docs/**`,
 
 ---
 
-## 4. HoneyDrip Bot — build plan
+## 4. HoneyDrip Bot
 
-### Phase 1 — Manual Paper Trading (CURRENT)
-- Execute trades manually on thinkorswim and Robinhood
-- Log each trade via `honeydrip_bot/trade_logger.py`
-- **Gate:** 20 trades must be logged before Phase 2 begins
-- No automated execution of any kind during Phase 1
+Live agentic trading via Robinhood's official Trading MCP. Signal generation and risk gating run in Python; Claude Code executes approved signals via the MCP.
 
-### Phase 2 — Programmatic Paper Validation (LOCKED until Phase 1 complete)
-- Backtests and signal bridges run against Alpaca Paper Trading endpoints only
-- All scripts must pass the double interlock before executing
-- `HONEYDRIP_ARMED=YES` must be set explicitly in the local shell environment
+### Execution modes
 
-### Live-Readiness Gate (LOCKED)
-- May not be assessed until Phase 2 is fully validated
-- Requires a separate authorization step
-- Real capital is strictly prohibited until the gate is passed
+| Mode | `HONEYDRIP_MODE` | Platform | Use |
+|------|-----------------|----------|-----|
+| Paper | `paper` (default) | Alpaca paper endpoint | Backtesting, methodology validation |
+| Live MCP | `live_mcp` | Robinhood Trading MCP | Live agentic execution |
 
-### Architectural drift reference
-
-| Parameter | Authorized constraint |
-|-----------|----------------------|
-| Execution Mode | Decision-support and accountability engine only. No auto-trading. |
-| Platform Target | Alpaca Paper Trading for automation. Robinhood for manual execution only. |
-| Operational Phase | PAPER phase. No live capital until the Live-Readiness Gate is passed. |
-
+### Running — paper mode
 ```bash
 export APCA_API_KEY_ID=your_paper_key
 export APCA_API_SECRET_KEY=your_paper_secret
@@ -246,7 +235,25 @@ pip install -r honeydrip_bot/requirements.txt
 python -m honeydrip_bot.engine
 ```
 
-Without `HONEYDRIP_ARMED=YES` the engine aborts immediately.
+### Running — live MCP mode
+```bash
+export HONEYDRIP_MODE=live_mcp
+export HONEYDRIP_ARMED=YES
+export HONEYDRIP_EQUITY_ESTIMATE=<your account equity>
+pip install -r honeydrip_bot/requirements.txt
+python -m honeydrip_bot.engine
+# Engine writes approved signals to honeydrip_bot/pending_signals.json
+# Then ask Claude Code (with Robinhood MCP connected) to execute them
+# See honeydrip_bot/robinhood_mcp_guide.md for the full playbook
+```
+
+### One-time MCP setup (on your local machine)
+```bash
+claude mcp add robinhood-trading --transport http https://agent.robinhood.com/mcp/trading
+# Then: /mcp → select robinhood-trading → authenticate
+```
+
+Without `HONEYDRIP_ARMED=YES` the engine aborts immediately in any mode.
 
 ---
 
