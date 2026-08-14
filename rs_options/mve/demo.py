@@ -10,6 +10,7 @@ from __future__ import annotations
 import tempfile
 from datetime import date
 
+from mve.picklist import build_picklist, format_picklist
 from mve.session import run_research_session
 from mve.store import DataStore
 from mve.telemetry import TelemetryLog
@@ -53,7 +54,9 @@ def main() -> None:
         print("Rejection forensics (gate -> count):")
         for reason, count in forensics.items():
             print(f"  {reason}: {count}")
-    print(f"telemetry: {telemetry.path}")
+    print()
+    print(format_picklist(build_picklist(telemetry.records())))
+    print(f"\ntelemetry: {telemetry.path}")
 
 
 if __name__ == "__main__":
