@@ -38,9 +38,16 @@ Nothing downstream can override a risk rejection (spec §82).
 ## Run
 
 ```bash
-python -m pytest tests/ -q     # unit tests
+python -m pytest tests/ -q     # unit tests (risk engine + MVE)
 python demo.py                 # sample evaluation → telemetry JSON
+python -m mve.demo             # MVE research session (canary-first, synthetic data)
 ```
+
+## MVE (spec §87)
+
+`mve/` is the Minimum Viable Engine build on top of this package: DuckDB +
+Parquet data layer, vendor seam, static macro calendar, RS-01/RS-02
+detectors, and a canary-first research session runner. See `mve/README.md`.
 
 ## Deliberate Boundaries
 
