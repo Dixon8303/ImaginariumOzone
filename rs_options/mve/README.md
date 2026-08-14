@@ -27,6 +27,21 @@ python -m mve.demo                  # synthetic end-to-end session
 python -m pytest tests/ -q          # full suite (risk engine + MVE)
 ```
 
+## Backtest on real history (free data)
+
+```bash
+python -m mve.backfill              # ~5y of daily bars, full universe
+                                    # (Stooq, Yahoo fallback — no API key)
+python -m mve.backtest              # replay RS-01/RS-02 across history
+python -m mve.backtest 2023-01-01   # restrict the date range
+```
+
+What it validates: the RS setup signal on the **underlying**, in
+R-multiples, point-in-time (signals fire on close, entries fill at the
+next open, stop wins same-bar ties). What it cannot validate: options
+P&L — historical chains are paid data. Results are the first hurdle of
+the §72 experiment matrix, not a green light (LAW 19/20).
+
 ## Feeding real data
 
 Drop normalized CSVs (`bars_*.csv`, `chains_*.csv` in the canonical store
