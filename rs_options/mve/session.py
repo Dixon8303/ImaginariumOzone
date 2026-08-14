@@ -13,6 +13,7 @@ RESEARCH/PAPER modes only. There is no order transmission path in the MVE.
 """
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta, timezone
 
@@ -26,6 +27,8 @@ from .rs_features import compute_features
 from .setups import detect_all
 from .store import DataStore
 from .telemetry import TelemetryLog
+from .vol_context import (IVHistory, atm_iv_from_chain, iv_percentile,
+                          iv_rank, volatility_penalty)
 
 EXPECTED_HOLD_MINUTES = 780.0     # ~2 trading days at 6.5h — CALIBRATE
 NOTIONAL_EQUITY = 100_000.0       # research-mode notional account
@@ -75,6 +78,7 @@ def run_research_session(store: DataStore, universe: list, as_of: str,
         macro = macro_state(load_calendar(macro_csv), now)
 
     bench_bars = store.bars(benchmark, end=as_of)
+    iv_history = IVHistory(os.path.join(store.root, "iv_history"))
     result = SessionResult(as_of=as_of, canary_ok=True)
 
     account = AccountState(
@@ -96,13 +100,28 @@ def run_research_session(store: DataStore, universe: list, as_of: str,
         sector_bars = store.bars(sector_ticker, end=as_of) if sector_ticker else None
         features = compute_features(bars, bench_bars, sector_bars)
 
+        # Volatility context (§23, §34): rank today's ATM IV against the
+        # trailing history recorded on prior scan days — point-in-time only.
+        chain = store.chain(ticker, as_of)
+        atm_iv = atm_iv_from_chain(chain)
+        rank = pctile = None
+        if atm_iv is not None:
+            history = iv_history.series(ticker, before=as_of)
+            rank = iv_rank(history, atm_iv)
+            pctile = iv_percentile(history, atm_iv)
+            iv_history.record(ticker, as_of, atm_iv)
+        vol_pen, vol_label = volatility_penalty(rank)
+
         for hit in detect_all(bars, features):
             result.candidates += 1
-            option = select_call(store.chain(ticker, as_of), as_of)
+            option = select_call(chain, as_of)
             record = {"type": "evaluation", "as_of": as_of, "ticker": ticker,
                       "setup": hit["setup_id"], "rationale": hit["rationale"],
                       "invalidation_price": hit["invalidation_price"],
-                      "features": {k: v for k, v in features.items()}}
+                      "features": {k: v for k, v in features.items()},
+                      "iv_context": {"atm_iv": atm_iv, "iv_rank": rank,
+                                     "iv_percentile": pctile,
+                                     "label": vol_label, "penalty": vol_pen}}
 
             if option is None:
                 record["decision"] = {"Decision": {"Status": "REJECT",
@@ -128,6 +147,7 @@ def run_research_session(store: DataStore, universe: list, as_of: str,
                 expected_hold_minutes=EXPECTED_HOLD_MINUTES,
                 trade_date=today,
                 opportunity_score=hit["opportunity_score"],
+                base_risk_penalty=vol_pen,     # volatility box (§34)
                 is_day_trade=False,
                 holds_overnight=True,
             )

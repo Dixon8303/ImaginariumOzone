@@ -107,6 +107,24 @@ For every open options position from `data/executions.jsonl`:
 | Structures | Long calls only |
 | Order type | Limit at mid, day only |
 
+## Volatility context (the "volatility box")
+
+Each scan computes an ATM-IV reading per ticker from the day's chain and
+ranks it against the trailing history of prior scans (spec §23, §34).
+For this long-premium engine, **rich IV is a headwind** — buying expensive
+premium — so high IV Rank penalizes the candidate's score:
+
+| IV Rank | Effect |
+|---|---|
+| unknown (< 20 recorded sessions) | no penalty — reported as "uncalibrated" |
+| < 60 | no penalty |
+| 60–80 | −1 score (rich premium) |
+| > 80 | −2 score (extreme — §34) |
+
+The gate activates automatically as scan history accumulates; do not
+hand-enter IV values to force it. Premium *selling* in high IV remains
+prohibited until short-structure margin adapters are validated (§8).
+
 ## Track record → autonomy
 
 Every scan and execution accrues in telemetry. When the logged history is
