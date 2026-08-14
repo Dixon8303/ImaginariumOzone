@@ -31,7 +31,8 @@ def run(seeded, tmp_path, **kw):
     telemetry = TelemetryLog(str(tmp_path / "telemetry.jsonl"))
     result = run_research_session(
         seeded, universe=["RUNR", "LAGG"], as_of=AS_OF, telemetry=telemetry,
-        benchmark="SPY", sector_map={"RUNR": "XLK", "LAGG": "XLK"}, **kw)
+        benchmark="SPY", sector_map={"RUNR": "XLK", "LAGG": "XLK"},
+        active_setups=("RS-01", "RS-02"), **kw)
     return result, telemetry
 
 
@@ -59,7 +60,8 @@ def test_broken_gates_halt_session_before_scanning(seeded, tmp_path):
     telemetry = TelemetryLog(str(tmp_path / "t.jsonl"))
     with pytest.raises(CanaryFailure):
         run_research_session(seeded, universe=["RUNR"], as_of=AS_OF,
-                             telemetry=telemetry, engine=broken)
+                             telemetry=telemetry, engine=broken,
+                             active_setups=("RS-01", "RS-02"))
     types = [r["type"] for r in telemetry.records()]
     assert types == ["canary"]                  # nothing scanned (§61)
 

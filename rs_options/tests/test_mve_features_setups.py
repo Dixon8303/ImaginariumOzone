@@ -105,3 +105,24 @@ def _chain_delta(chain, q):
     row = chain[(chain["strike"] == q.strike) & (chain["right"] == "call")
                 & (chain["iv"].round(4) == round(q.iv, 4))].iloc[0]
     return float(row["delta"])
+
+
+# --------------------------------------------------- setup kill (§60 L2)
+def test_rs01_disabled_in_live_doctrine():
+    """RS-01 killed 2026-08-14: -0.145R over 234 backtested trades.
+    detect_all's default must exclude it until re-validated (LAW 20)."""
+    from mve.setups import ACTIVE_SETUPS, DETECTORS
+    assert "RS-01" not in ACTIVE_SETUPS
+    assert "RS-02" in ACTIVE_SETUPS
+    assert set(ACTIVE_SETUPS) <= set(DETECTORS)
+
+
+def test_detect_all_honors_active_default():
+    from mve.setups import detect_all
+    stock = bars_from_closes([100 * 1.002 ** i for i in range(40)])
+    bench = bars_from_closes([500.0] * 29 + [500 * (1 - 0.002 * i) for i in range(1, 12)])
+    f = compute_features(stock, bench)
+    # This pattern fires RS-01 — but RS-01 is not in the live doctrine.
+    assert detect_all(stock, f) == []
+    explicit = detect_all(stock, f, active=("RS-01",))
+    assert explicit and explicit[0]["setup_id"] == "RS-01"

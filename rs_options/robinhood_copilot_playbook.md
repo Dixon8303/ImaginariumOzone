@@ -107,6 +107,19 @@ For every open options position from `data/executions.jsonl`:
 | Structures | Long calls only |
 | Order type | Limit at mid, day only |
 
+## Active setups (§60 Level 2 — setup kill)
+
+The live scan honors `mve/setups.py :: ACTIVE_SETUPS`. Current doctrine:
+
+| Setup | Status | Evidence (5y daily-bar backtest, 2026-08-14) |
+|---|---|---|
+| RS-02 breakout | **ACTIVE** | +0.25R/trade over 160 trades, max DD −4.4R (in-sample) |
+| RS-01 weakness absorption | **KILLED** | −0.145R/trade over 234 trades, max DD −47R |
+
+Do not re-enable RS-01 by editing the tuple ad hoc. It earns its way back
+only when a re-parameterized version shows positive OUT-OF-SAMPLE
+expectancy in the backtester (LAW 20). Research tools still evaluate it.
+
 ## Volatility context (the "volatility box")
 
 Each scan computes an ATM-IV reading per ticker from the day's chain and

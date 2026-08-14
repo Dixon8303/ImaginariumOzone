@@ -86,7 +86,8 @@ def test_session_records_iv_context_and_applies_penalty(tmp_path):
 
     telemetry = TelemetryLog(str(tmp_path / "t.jsonl"))
     run_research_session(store, universe=["RUNR"], as_of=AS_OF,
-                         telemetry=telemetry, benchmark="SPY")
+                         telemetry=telemetry, benchmark="SPY",
+                         active_setups=("RS-01", "RS-02"))
 
     evaluations = [r for r in telemetry.records() if r["type"] == "evaluation"]
     assert evaluations
@@ -109,7 +110,8 @@ def test_session_uncalibrated_iv_applies_no_penalty(tmp_path):
 
     telemetry = TelemetryLog(str(tmp_path / "t.jsonl"))
     run_research_session(store, universe=["RUNR"], as_of=AS_OF,
-                         telemetry=telemetry, benchmark="SPY")
+                         telemetry=telemetry, benchmark="SPY",
+                         active_setups=("RS-01", "RS-02"))
     ctx = [r for r in telemetry.records()
            if r["type"] == "evaluation"][0]["iv_context"]
     assert ctx["label"] == "uncalibrated" and ctx["penalty"] == 0
