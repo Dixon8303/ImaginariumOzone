@@ -12,7 +12,7 @@ git history and a Pages deploy, nothing else. Never wire one into another.
 | 5 | **Marvel Release Tracker** | `marvel_tracker/` | Personal automation. Daily GitHub Actions cron watching TMDb. |
 | 6 | **Circle of Morality / Screenplay Tracker** | `src/CircleOfMorality.jsx`, `src/ScreenplayTracker.jsx` | Earlier React features, preserved at `/circle` and `/tracker`. |
 | 7 | **Dixon Grant Studio** | `dixon-grant-studio/` | Grant-writing pipeline and outreach assets. |
-| 8 | **RS Options Risk Engine** | `rs_options/` | Research-stage risk engine for the RS Options spec. Pure Python, zero deps. **No live trading** — see `rs_options/README.md` boundaries. |
+| 8 | **RS Options Engine** | `rs_options/` | Risk engine + MVE for the RS Options spec. **Co-pilot mode:** autonomous trade selection via the scan playbook; execution requires the operator's explicit word per trade session. Unattended execution stays locked behind the spec §67 release gate. See `rs_options/robinhood_copilot_playbook.md`. |
 
 **Target platform:** macOS (Apple Silicon). `start.sh` uses BSD `sed -i ''`, narration
 falls back to the macOS `say` command, and ComfyUI is tuned for MPS. Linux/CI runs of

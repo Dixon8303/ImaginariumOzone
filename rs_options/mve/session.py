@@ -14,7 +14,7 @@ RESEARCH/PAPER modes only. There is no order transmission path in the MVE.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from rs_options_risk import (AccountState, AccountType, Mode, RiskEngine,
                              TradeCandidate, UnderlyingContext,
@@ -101,6 +101,7 @@ def run_research_session(store: DataStore, universe: list, as_of: str,
             option = select_call(store.chain(ticker, as_of), as_of)
             record = {"type": "evaluation", "as_of": as_of, "ticker": ticker,
                       "setup": hit["setup_id"], "rationale": hit["rationale"],
+                      "invalidation_price": hit["invalidation_price"],
                       "features": {k: v for k, v in features.items()}}
 
             if option is None:
@@ -111,6 +112,12 @@ def run_research_session(store: DataStore, universe: list, as_of: str,
                 telemetry.write(record)
                 continue
 
+            record["option"] = {
+                "strike": option.strike,
+                "expiry": str(today + timedelta(days=int(option.dte_days))),
+                "dte": option.dte_days, "bid": option.bid, "ask": option.ask,
+                "iv": option.iv,
+            }
             candidate = TradeCandidate(
                 underlying=UnderlyingContext(
                     ticker=ticker, price=hit["close"],
