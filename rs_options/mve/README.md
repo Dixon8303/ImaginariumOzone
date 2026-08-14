@@ -42,6 +42,19 @@ next open, stop wins same-bar ties). What it cannot validate: options
 P&L — historical chains are paid data. Results are the first hurdle of
 the §72 experiment matrix, not a green light (LAW 19/20).
 
+## Research studies (after backfill)
+
+```bash
+python -m mve.walkforward           # §51: does the RS-02 edge hold per period?
+python -m mve.exit_study            # §41-§42: exit policies, train vs test
+python -m mve.alpaca_data           # Alpaca daily bars (APCA_* env keys)
+python -m mve.alpaca_data --minute  # Alpaca minute bars, ~60d (intraday research)
+```
+
+Exit-study discipline: pick the winning policy on TRAIN (≤ 2024),
+confirm on TEST (≥ 2025). If they disagree, the improvement is noise —
+keep the baseline (LAW 12/20).
+
 ## Feeding real data
 
 Drop normalized CSVs (`bars_*.csv`, `chains_*.csv` in the canonical store
