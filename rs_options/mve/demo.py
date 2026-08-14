@@ -42,6 +42,7 @@ def main() -> None:
     result = run_research_session(
         store, universe=["RUNR", "LAGG"], as_of=AS_OF, telemetry=telemetry,
         benchmark="SPY", sector_map={"RUNR": "XLK", "LAGG": "XLK"},
+        active_setups=("RS-01", "RS-02"),   # demo exercises ALL setups
     )
 
     print(f"Session {result.as_of} — canary: {'PASS' if result.canary_ok else 'FAIL'}")

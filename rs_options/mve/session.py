@@ -55,7 +55,8 @@ def run_research_session(store: DataStore, universe: list, as_of: str,
                          sector_map: dict | None = None,
                          macro_csv: str | None = None,
                          mode: Mode = Mode.RESEARCH,
-                         engine: RiskEngine | None = None) -> SessionResult:
+                         engine: RiskEngine | None = None,
+                         active_setups: tuple | None = None) -> SessionResult:
     if mode not in (Mode.RESEARCH, Mode.PAPER):
         raise ValueError("MVE runs RESEARCH or PAPER only — no live modes (§87)")
 
@@ -112,7 +113,7 @@ def run_research_session(store: DataStore, universe: list, as_of: str,
             iv_history.record(ticker, as_of, atm_iv)
         vol_pen, vol_label = volatility_penalty(rank)
 
-        for hit in detect_all(bars, features):
+        for hit in detect_all(bars, features, active=active_setups):
             result.candidates += 1
             option = select_call(chain, as_of)
             record = {"type": "evaluation", "as_of": as_of, "ticker": ticker,

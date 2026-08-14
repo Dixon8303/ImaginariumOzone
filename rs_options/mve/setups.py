@@ -21,6 +21,15 @@ RS02_BENCH_MIN_RETURN = -0.02   # market not in freefall
 
 INVALIDATION_LOOKBACK = 5       # swing-low window for the stop (CALIBRATE)
 
+# Setups the LIVE scanner runs (spec §60 Level 2 — SETUP KILL).
+# RS-01 disabled 2026-08-14: first 5y real-data backtest showed negative
+# expectancy (-0.145R over 234 trades, max DD -47R). It remains available
+# to the backtester for re-parameterization; re-enable only after a
+# revised version shows positive OUT-OF-SAMPLE expectancy (LAW 20).
+# RS-02 backtested +0.25R over 160 trades in-sample — stays active
+# pending walk-forward validation.
+ACTIVE_SETUPS = ("RS-02",)
+
 
 def detect_rs01(stock: pd.DataFrame, features: dict) -> dict | None:
     close = stock["close"]
@@ -102,10 +111,16 @@ def _candidate(stock: pd.DataFrame, features: dict, setup_id: str,
     }
 
 
-def detect_all(stock: pd.DataFrame, features: dict) -> list:
+DETECTORS = {"RS-01": detect_rs01, "RS-02": detect_rs02}
+
+
+def detect_all(stock: pd.DataFrame, features: dict,
+               active: tuple | None = None) -> list:
+    """Run detectors. Default: ACTIVE_SETUPS only (the live doctrine).
+    Research tools (backtester) pass every setup explicitly."""
     hits = []
-    for detector in (detect_rs01, detect_rs02):
-        c = detector(stock, features)
+    for setup_id in (active if active is not None else ACTIVE_SETUPS):
+        c = DETECTORS[setup_id](stock, features)
         if c:
             hits.append(c)
     return hits

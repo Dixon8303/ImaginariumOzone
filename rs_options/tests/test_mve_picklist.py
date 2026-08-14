@@ -32,7 +32,8 @@ def test_picklist_from_live_session(tmp_path):
     telemetry = TelemetryLog(str(tmp_path / "t.jsonl"))
     run_research_session(store, universe=["RUNR"], as_of=AS_OF,
                          telemetry=telemetry, benchmark="SPY",
-                         sector_map={"RUNR": "XLK"})
+                         sector_map={"RUNR": "XLK"},
+                         active_setups=("RS-01", "RS-02"))
 
     picks = build_picklist(telemetry.records())
     assert len(picks) == 1
