@@ -79,3 +79,38 @@ auto-adoption. No trading path exists in any of this code.
 **Awaiting**: operator's `mve.hypotheses` + updated `mve.exit_study`
 reports (H1/H2 verdicts, H3 avwap_trail vs wide) and the first
 `--minute-deep` + `intraday_study` run.
+
+## 2026-08-15 — Hypothesis verdicts: H1/H2 entry filters, H3 AVWAP exit
+
+Operator ran `mve.hypotheses` and the updated `mve.exit_study` on the
+27-ticker history (CONTROL: train n=110 +0.346R, test n=57 +0.229R).
+
+| Variant | Train | Test | Verdict |
+|---|---|---|---|
+| H1a 52wk-high 5% | +0.377R (n=68) | +0.225R (n=43) | **NOISE** |
+| H1b 52wk-high 10% | +0.384R (n=78) | +0.228R (n=49) | **NOISE** |
+| H2a SPY > 200d | +0.444R (n=91) | +0.207R (n=55) | **NOISE** |
+| H2b stock > 200d | +0.415R (n=95) | +0.239R (n=53) | **ADOPT-CANDIDATE** |
+
+- **H1 rejected (both widths)**: RS-02's breakout condition already
+  selects stocks near their highs — the extra filter mostly just cut
+  sample (filtered 82–111 signals) without improving out-of-sample
+  expectancy. The George-Hwang effect is likely already embedded in the
+  setup, not absent from the market.
+- **H2a rejected**: the market-level regime stitch improved train
+  strongly (+0.444R) but *degraded* test — textbook overfit shape.
+- **H2b (stock above its own 200-day)**: the only variant that improved
+  both windows. Honest read: the test margin is thin (+0.010R on n=53)
+  — real shrinkage from the +0.069R train margin. Mechanism is sound
+  (regime filter on the instrument actually traded; MARKET_THEORY §5)
+  and the filter is cheap (skipped 37 signals over ~5y) and fail-closed.
+  Encoding awaits the operator's word per LAW 12/20.
+
+**H3 anchored-VWAP trail: REJECTED.** avwap_trail scored train +0.205R
+/ test +0.162R — *below* the adopted wide policy on both windows (train
++0.384R, test +0.181R) and the worst train performer of all five
+policies. The daily-bar AVWAP ratchets too close to price and cuts
+winners early (wr 49%/42%). The idea may deserve a minute-data retest
+once H7 history accumulates, but as specified it is falsified. Wide
+(3R / 15-bar) remains the adopted exit; atr_trail stays on the
+watch-list (best test again at +0.198R, still not the train winner).
