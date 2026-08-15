@@ -89,7 +89,8 @@ def test_select_call_within_research_band():
     q = select_call(chain, "2026-08-12")
     assert q is not None
     assert DELTA_RANGE[0] <= _chain_delta(chain, q) <= DELTA_RANGE[1]
-    assert 7 <= q.dte_days <= 45
+    from mve.chain_select import DTE_RANGE
+    assert DTE_RANGE[0] <= q.dte_days <= DTE_RANGE[1]
     assert q.spread_pct <= 0.10
 
 

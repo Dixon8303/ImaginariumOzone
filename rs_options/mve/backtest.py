@@ -25,8 +25,12 @@ from .setups import detect_all
 from .store import DataStore
 from .universe import BENCHMARK, SECTOR_ETF, UNIVERSE
 
-TARGET_R = 2.0          # CALIBRATE
-MAX_HOLD_BARS = 10      # CALIBRATE
+# Exit doctrine per the 2026-08-15 exit-policy study (150 real signals):
+# "wide" won on TRAIN (+0.384R vs baseline +0.295R) and CONFIRMED on TEST
+# (+0.181R vs baseline +0.026R). ATR-trail scored best on test but was not
+# the train winner — watch-list only, per the pre-registered discipline.
+TARGET_R = 3.0          # CALIBRATE — study-selected
+MAX_HOLD_BARS = 15      # CALIBRATE — study-selected
 MIN_HISTORY = 60        # bars required before a ticker is eligible
 DATA_ROOT = "data/parquet"
 

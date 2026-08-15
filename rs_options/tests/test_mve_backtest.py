@@ -5,8 +5,8 @@ import pandas as pd
 import pytest
 
 from mve.backfill import parse_stooq_csv, stooq_symbol
-from mve.backtest import (MAX_HOLD_BARS, Position, manage_position,
-                          run_backtest)
+from mve.backtest import (MAX_HOLD_BARS, TARGET_R, Position,
+                          manage_position, run_backtest)
 from mve.store import DataStore
 from mve.vendors import SyntheticVendor
 
@@ -69,7 +69,7 @@ def test_backtest_end_to_end_on_synthetic_history(tmp_path):
         assert t.exit_date > t.entry_date                # entry at NEXT open
         assert t.exit_reason in ("gap_stop", "stop", "target", "time")
         if t.exit_reason == "target":
-            assert t.r_multiple == pytest.approx(2.0, abs=0.01)
+            assert t.r_multiple == pytest.approx(TARGET_R, abs=0.01)
         if t.exit_reason == "stop":
             assert t.r_multiple == pytest.approx(-1.0, abs=0.01)
 

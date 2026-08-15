@@ -85,13 +85,18 @@ authorize. If any Robinhood call errors, stop and report — no retries.
 
 ## Position management (each scan day, before new picks)
 
-For every open options position from `data/executions.jsonl`:
+Exit doctrine per the 2026-08-15 exit-policy study ("wide" won on train
+AND confirmed on test; the old 2R/10-day baseline nearly zeroed out on
+recent data). For every open options position from `data/executions.jsonl`:
 1. Fetch the underlying's current price
-2. If it closed below the pick's `invalidation_price` → sell the position
-   (limit at mid), log the exit with realized P&L
-3. If DTE ≤ 5 → sell (never ride long premium into the final week —
+2. If it closed below the pick's `invalidation_price` → sell (limit at
+   mid), log the exit with realized P&L
+3. If the underlying reached the pick's +3R level (entry + 3 × (entry −
+   invalidation)) → sell and log — target reached
+4. If the position is 15 trading days old → sell at the close — time exit
+5. If DTE ≤ 5 → sell (never ride long premium into the final week —
    CALIBRATE)
-4. Otherwise hold and report: position, P&L, distance to invalidation
+6. Otherwise hold and report: position, P&L, distance to invalidation
 
 ---
 
