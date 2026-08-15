@@ -7,8 +7,10 @@ track (§38 latency class still applies: intraday ≠ speed-competitive).
 
 Run from rs_options/ on a machine with the keys set:
 
-    python -m mve.alpaca_data                # daily bars, full universe
-    python -m mve.alpaca_data --minute NVDA  # minute bars, one ticker
+    python -m mve.alpaca_data                     # daily bars, full universe
+    python -m mve.alpaca_data --minute NVDA       # minute bars, ~60d
+    python -m mve.alpaca_data --minute-deep       # minute bars, ~2y (H7)
+    python -m mve.alpaca_data --minute-deep SPY   # deep, one ticker
 """
 from __future__ import annotations
 
@@ -27,6 +29,9 @@ from .universe import required_tickers
 DATA_URL = "https://data.alpaca.markets/v2/stocks/{symbol}/bars"
 DATA_ROOT = "data/parquet"
 MINUTE_DAYS = 60          # CALIBRATE — intraday research window
+DEEP_MINUTE_DAYS = 730    # H7 — ~2y for the ORB / intraday-momentum lab
+DEEP_TICKERS = ("SPY", "QQQ")   # H7 default: liquid index ETFs first
+DEEP_CHUNK_DAYS = 90      # fetch window per request loop; progress survives
 DAILY_YEARS = 5
 
 
@@ -118,11 +123,41 @@ class IntradayStore:
         return sorted(f[:-8] for f in os.listdir(d) if f.endswith(".parquet"))
 
 
+def deep_minute_backfill(tickers, days: int = DEEP_MINUTE_DAYS,
+                         chunk_days: int = DEEP_CHUNK_DAYS,
+                         root: str = DATA_ROOT) -> None:
+    """H7 backfill: ~2y of minute bars, fetched in chunks so an
+    interrupted run keeps everything already ingested (idempotent store —
+    rerunning skips nothing but overwrites duplicates harmlessly)."""
+    from datetime import date, timedelta
+    intraday = IntradayStore(root)
+    today = date.today()
+    for t in tickers:
+        total = 0
+        chunk_start = today - timedelta(days=days)
+        while chunk_start < today:
+            chunk_end = min(chunk_start + timedelta(days=chunk_days), today)
+            try:
+                bars = fetch_bars(t, "1Min", str(chunk_start), str(chunk_end))
+                n = intraday.ingest(bars) if not bars.empty else 0
+                total += n
+                print(f"{t:<6} {chunk_start} -> {chunk_end}: {n:>7} bars "
+                      f"({total:,} total)")
+            except Exception as e:
+                print(f"{t:<6} {chunk_start} -> {chunk_end}: FAILED: {e}")
+            chunk_start = chunk_end
+        print(f"{t:<6} DONE — {len(intraday.days(t))} sessions on disk")
+
+
 def main() -> None:
     from datetime import date, timedelta
     args = sys.argv[1:]
     store = DataStore(DATA_ROOT)
     end = str(date.today())
+
+    if args and args[0] == "--minute-deep":
+        deep_minute_backfill(args[1:] or list(DEEP_TICKERS))
+        return
 
     if args and args[0] == "--minute":
         tickers = args[1:] or required_tickers()
