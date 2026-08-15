@@ -114,3 +114,15 @@ winners early (wr 49%/42%). The idea may deserve a minute-data retest
 once H7 history accumulates, but as specified it is falsified. Wide
 (3R / 15-bar) remains the adopted exit; atr_trail stays on the
 watch-list (best test again at +0.198R, still not the train winner).
+
+## 2026-08-15 — H2b ADOPTED (operator decision)
+
+The operator adopted H2b: RS-02 entries now require the stock above its
+own 200-day SMA, fail-closed under 200 bars of history. Encoded in
+`mve/setups.py` as `ENTRY_FILTERS`, applied on the live-doctrine path
+of `detect_all` only — research tools that pass `active` explicitly
+still see raw signals, so future hypothesis studies keep an unfiltered
+CONTROL. The hypothesis module now imports the same `above_sma`
+implementation the scanner runs, so the studied filter and the live
+filter cannot drift apart. Playbook updated. Cost in history: 37
+filtered signals over ~5 years.
