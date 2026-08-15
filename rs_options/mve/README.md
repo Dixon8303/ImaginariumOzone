@@ -50,6 +50,8 @@ python -m mve.exit_study            # §41-§42: exit policies incl. H3 avwap_tr
 python -m mve.hypotheses            # §72: H1 52wk-high + H2 200d-regime filters
 python -m mve.alpaca_data           # Alpaca daily bars (APCA_* env keys)
 python -m mve.alpaca_data --minute  # Alpaca minute bars, ~60d (intraday research)
+python -m mve.alpaca_data --minute-deep   # ~2y minute bars, SPY/QQQ (H7)
+python -m mve.intraday_study        # H7: ORB + intraday momentum, train/test
 ```
 
 Exit-study discipline: pick the winning policy on TRAIN (≤ 2024),

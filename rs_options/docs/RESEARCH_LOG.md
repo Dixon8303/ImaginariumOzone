@@ -50,3 +50,32 @@ it as a fresh hypothesis when new out-of-sample data accumulates.
 H2 200d regime filter, H3 anchored VWAP (minute data now on disk —
 27 tickers, ~16k bars each), H4 quality screen, H5 earnings blackout,
 H6 one-day-spike guard.
+
+## 2026-08-15 — H7 intraday lab built (ORB + intraday momentum)
+
+Operator greenlit the shorter-horizon research track. Built, not yet run
+on real data:
+
+- **Deep minute backfill**: `python -m mve.alpaca_data --minute-deep`
+  pulls ~2 years of 1-min bars (SPY, QQQ by default) in 90-day chunks
+  into the idempotent intraday store. An interrupted run keeps its
+  progress.
+- **`python -m mve.intraday_study`** runs two documented effects through
+  the same pre-registered discipline as the exit study (first 70% of
+  sessions = TRAIN, rest = TEST, verdicts CANDIDATE / REJECT / NOISE /
+  INCONCLUSIVE with min-n guards 40/20):
+  - **ORB**: 15-min opening range; 1-min close beyond it enters at the
+    next open, stop at the opposite bound, exit stop-or-session-close.
+    R-multiples, conservative fills, 2 bps friction.
+  - **Intraday momentum** (Gao/Han/Li/Zhou 2018): sign of the first-30-min
+    return positions the last 30 minutes only. Reported in bps net of
+    friction.
+
+Boundaries restated: entries are on 1-min closes, not ticks — §38
+EDGE_FASTER_THAN_PIPE still bars anything speed-competitive. A CANDIDATE
+verdict earns a walk-forward pass and an operator decision, never
+auto-adoption. No trading path exists in any of this code.
+
+**Awaiting**: operator's `mve.hypotheses` + updated `mve.exit_study`
+reports (H1/H2 verdicts, H3 avwap_trail vs wide) and the first
+`--minute-deep` + `intraday_study` run.
