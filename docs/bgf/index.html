@@ -112,11 +112,12 @@
   .seg.halted{background:var(--halted);border-color:var(--halted)}
   .seg.halted::after{content:'❚❚';position:absolute;inset:0;display:flex;align-items:center;
     justify-content:center;font-size:9px;color:#431407}
-  .seg:hover .tip,.seg:focus .tip{opacity:1;pointer-events:auto}
-  .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  .seg:hover .tip,.seg:focus .tip{display:block}
+  .tip{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;
+    transform:translateX(-50%);
     background:var(--bg-warm);border:1px solid var(--line);padding:6px 10px;white-space:nowrap;
-    font-family:'Jost',sans-serif;font-size:12px;color:var(--ink-2);opacity:0;
-    pointer-events:none;transition:opacity .12s;z-index:5}
+    font-family:'Jost',sans-serif;font-size:12px;color:var(--ink-2);
+    pointer-events:none;z-index:5}
   .tip b{color:var(--amber);font-weight:500}
 
   .gates{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
@@ -141,6 +142,76 @@
     color:var(--muted);font-style:italic}
   .empty .mono{font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:12px;
     color:var(--amber-soft);margin-top:10px;display:block}
+
+  /* ── Release calendar ── */
+  .calbar{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+  .calnav,.caltoday{background:transparent;border:1px solid var(--line);color:var(--ink-2);
+    font-family:'Jost',sans-serif;cursor:pointer;padding:5px 12px;border-radius:2px;
+    font-size:14px;line-height:1.2}
+  .calnav{font-size:18px;padding:2px 12px}
+  .calnav:hover,.caltoday:hover{border-color:var(--amber);color:var(--amber)}
+  .caltoday{margin-left:auto;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+  .calmonth{font-family:'Bebas Neue',Impact,sans-serif;font-size:24px;letter-spacing:.06em;
+    color:var(--ink);min-width:9em}
+
+  /* Filter row doubles as the legend: colour swatch + episode number together,
+     so identity is never carried by colour alone. */
+  .calfilters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+  .calf{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);
+    background:transparent;color:var(--muted);font-family:'IBM Plex Mono',monospace;
+    font-size:10px;letter-spacing:.1em;padding:4px 9px;cursor:pointer;border-radius:2px}
+  .calf:hover{border-color:var(--amber-soft);color:var(--ink-2)}
+  .calf[aria-pressed="true"]{color:var(--ink);border-color:currentColor}
+  .calf i{width:9px;height:9px;border-radius:2px;flex:none;background:currentColor}
+  .calf.all{letter-spacing:.16em}
+
+  .calscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .calgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;
+    min-width:266px;
+    background:var(--line-soft);border:1px solid var(--line)}
+  .cald{background:var(--bg-deep);min-height:92px;padding:6px 6px 8px;position:relative;
+    min-width:0;overflow:hidden}
+  .cald.dow{min-height:0;padding:7px 6px;text-align:center;background:var(--bg-warm);
+    font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--muted)}
+  .cald.pad{background:#0d0a07}
+  .cald .dnum{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--faint)}
+  .cald.today{box-shadow:inset 0 0 0 1px var(--amber)}
+  .cald.today .dnum{color:var(--amber)}
+
+  .ev{display:flex;align-items:center;gap:5px;margin-top:4px;padding:2px 5px;
+    border-radius:2px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;
+    letter-spacing:.04em;cursor:default;position:relative;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Episode = filled chip. Short = outlined + dot. Shape carries the type, not
+     colour, so the two stay distinguishable under any CVD. */
+  .ev.episode{color:#0B0906;font-weight:600}
+  .ev.short{background:transparent;border:1px solid currentColor}
+  .ev.short::before{content:'';width:4px;height:4px;border-radius:50%;
+    background:currentColor;flex:none}
+  .ev:hover .evtip,.ev:focus .evtip{display:block}
+  .evtip{display:none;position:absolute;bottom:calc(100% + 6px);left:0;z-index:6;
+    background:var(--bg-warm);border:1px solid var(--line);padding:6px 9px;
+    font-family:'Jost',sans-serif;font-size:11.5px;color:var(--ink-2);
+    white-space:normal;width:max-content;max-width:230px;
+    pointer-events:none;letter-spacing:0;line-height:1.4}
+  .evtip b{color:var(--amber);font-weight:500}
+
+  .callegend{display:flex;gap:18px;flex-wrap:wrap;margin-top:14px;align-items:center;
+    font-family:'Jost',sans-serif;font-size:12px;color:var(--muted)}
+  .callegend span{display:inline-flex;align-items:center;gap:7px}
+  .callegend .dim{color:var(--faint);font-size:11px;font-style:italic}
+  .lg-ep{width:16px;height:10px;border-radius:2px;background:var(--amber);flex:none}
+  .lg-sh{width:16px;height:10px;border-radius:2px;border:1px solid var(--amber);flex:none}
+  .calnote{margin-top:10px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;
+    color:var(--faint);letter-spacing:.04em}
+
+  @media (max-width:560px){
+    .cald{min-height:62px;padding:4px 3px 6px}
+    .ev{font-size:8px;padding:1px 3px;gap:3px}
+    .evtip{left:auto;right:0}
+    .calmonth{font-size:19px;min-width:7em}
+  }
 
   /* ── Pipeline map ── */
   .pipemap{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
@@ -207,6 +278,29 @@
       <span><i class="chip halted"></i>❚❚ Halted at gate</span>
       <span><i class="chip failed"></i>Failed (striped)</span>
     </div>
+  </section>
+
+  <section id="calSection" hidden>
+    <h2>RELEASE CALENDAR</h2>
+    <p class="sub">Episode drops and their Shorts — click an episode to filter</p>
+
+    <div class="calbar">
+      <button class="calnav" id="calPrev" aria-label="Previous month">‹</button>
+      <span class="calmonth" id="calMonth"></span>
+      <button class="calnav" id="calNext" aria-label="Next month">›</button>
+      <button class="caltoday" id="calToday">Today</button>
+    </div>
+
+    <div class="calfilters" id="calFilters" role="group" aria-label="Filter by episode"></div>
+
+    <div class="calscroll"><div class="calgrid" id="calGrid"></div></div>
+
+    <div class="callegend">
+      <span><i class="lg-ep"></i>Episode release</span>
+      <span><i class="lg-sh"></i>Short</span>
+      <span class="dim">Colour groups by episode — the number on each chip is what identifies it</span>
+    </div>
+    <p class="calnote" id="calNote"></p>
   </section>
 
   <section>
@@ -377,6 +471,11 @@ function renderEpisodes(data){
       <div class="card-meta">
         ${scoreDial(ep.score)}
         ${ep.keyword?`<p class="kw">Keyword — <b>${esc(ep.keyword)}</b></p>`:''}
+        ${ep.publish_at?`<p class="kw">${new Date(ep.publish_at) > new Date() ? 'Releases' : 'Released'} — <b>${
+          new Date(ep.publish_at).toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'})
+        }</b></p>`:''}
+        ${(ep.shorts && ep.shorts.length)?`<p class="kw">Shorts — <b>${ep.shorts.length}</b></p>`
+          :(ep.shorts_count?`<p class="kw">Shorts — <b>${ep.shorts_count}</b></p>`:'')}
         ${ep.updated_at?`<p class="kw">Updated ${relTime(ep.updated_at)}</p>`:''}
       </div>
       <div class="stagebar">${segs}</div>
@@ -384,6 +483,144 @@ function renderEpisodes(data){
       </div>
     </div>`;
   }).join('');
+}
+
+// ── Release calendar ────────────────────────────────────────────────────────
+// Eight hues, fixed order, validated against this surface (OKLCH L .48–.67,
+// all >=3:1, worst adjacent CVD dE 8.4). There are more episodes than hues, and
+// no palette can separate ~20 series by colour — so every chip is DIRECTLY
+// LABELLED with its episode number and colour is only a grouping aid. That is
+// the composite-encoding path, not colour-alone identity.
+const EP_HUES = ['#3987e5','#d95926','#199e70','#c98500',
+                 '#d55181','#008300','#9085e9','#e66767'];
+const epColor = n => EP_HUES[(Number(n) || 0) % EP_HUES.length];
+
+let _lastStatus = null;
+const cal = { month: null, selected: null };   // selected null = show all
+
+function epNumOf(ep){
+  const m = /^ep[\s_-]*(\d+)/i.exec(ep.id || '');
+  return m ? m[1] : (ep.number != null ? String(ep.number) : '?');
+}
+
+/** Flatten episodes into dated events. Shorts are optional: an episode may
+ *  carry `shorts: [{publish_at, title, status}]`, or `shorts_count` alone. */
+function calEvents(eps){
+  const out = [];
+  (eps || []).forEach(ep => {
+    const num = epNumOf(ep);
+    if (ep.publish_at) {
+      out.push({date:new Date(ep.publish_at), epId:ep.id, num, kind:'episode',
+                title:ep.topic, status:ep.status, videoId:ep.video_id});
+    }
+    (ep.shorts || []).forEach((s, i) => {
+      if (!s || !s.publish_at) return;
+      out.push({date:new Date(s.publish_at), epId:ep.id, num, kind:'short',
+                title:s.title || `Short ${i+1}`, status:s.status,
+                videoId:s.video_id});
+    });
+  });
+  return out.filter(e => !isNaN(e.date));
+}
+
+function renderCalFilters(eps, events){
+  const el = document.getElementById('calFilters');
+  const withDates = (eps || []).filter(ep => events.some(e => e.epId === ep.id));
+  const showingAll = cal.selected === null;
+  const parts = [`<button class="calf all" aria-pressed="${showingAll}"
+      data-ep="__all">${showingAll ? '✓ ' : ''}ALL EPISODES</button>`];
+  withDates.forEach(ep => {
+    const num = epNumOf(ep);
+    const on = showingAll || cal.selected.has(ep.id);
+    const c = epColor(num);
+    parts.push(`<button class="calf" aria-pressed="${on}" data-ep="${esc(ep.id)}"
+      style="${on ? `color:${c};border-color:${c}` : ''}"
+      title="${esc(ep.topic || '')}"><i></i>EP${num}</button>`);
+  });
+  el.innerHTML = parts.join('');
+  el.querySelectorAll('.calf').forEach(b => b.onclick = () => {
+    const id = b.dataset.ep;
+    if (id === '__all') cal.selected = null;
+    else {
+      // First click from "all" isolates that episode — the common intent.
+      if (cal.selected === null) cal.selected = new Set([id]);
+      else if (cal.selected.has(id)) cal.selected.delete(id);
+      else cal.selected.add(id);
+      if (cal.selected.size === 0) cal.selected = null;
+    }
+    renderCalendar(_lastStatus);
+  });
+}
+
+function renderCalendar(data){
+  const eps = (data && data.episodes) || [];
+  const all = calEvents(eps);
+  document.getElementById('calSection').hidden = all.length === 0;
+  if (!all.length) return;
+
+  const events = cal.selected === null ? all
+               : all.filter(e => cal.selected.has(e.epId));
+
+  // Open on the month holding the next upcoming release, else the last one.
+  if (!cal.month) {
+    const now = Date.now();
+    const next = all.filter(e => e.date.getTime() >= now)
+                    .sort((a,b) => a.date - b.date)[0]
+              || all.slice().sort((a,b) => b.date - a.date)[0];
+    cal.month = new Date(next.date.getFullYear(), next.date.getMonth(), 1);
+  }
+
+  renderCalFilters(eps, all);
+
+  const y = cal.month.getFullYear(), m = cal.month.getMonth();
+  document.getElementById('calMonth').textContent =
+    cal.month.toLocaleDateString(undefined, {month:'long', year:'numeric'}).toUpperCase();
+
+  const byDay = {};
+  events.forEach(e => {
+    if (e.date.getFullYear() !== y || e.date.getMonth() !== m) return;
+    (byDay[e.date.getDate()] ||= []).push(e);
+  });
+
+  const first = new Date(y, m, 1).getDay();
+  const days = new Date(y, m + 1, 0).getDate();
+  const today = new Date();
+  const isThisMonth = today.getFullYear() === y && today.getMonth() === m;
+
+  let cells = ['S','M','T','W','T','F','S']
+    .map(d => `<div class="cald dow">${d}</div>`).join('');
+  for (let i = 0; i < first; i++) cells += '<div class="cald pad"></div>';
+
+  for (let d = 1; d <= days; d++) {
+    const evs = (byDay[d] || []).sort((a,b) => a.date - b.date);
+    const chips = evs.map(e => {
+      const c = epColor(e.num);
+      const style = e.kind === 'episode' ? `background:${c}` : `color:${c}`;
+      const when = e.date.toLocaleString(undefined,
+        {weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+      return `<div class="ev ${e.kind}" style="${style}" tabindex="0">EP${e.num}${
+        e.kind === 'short' ? ' ·S' : ''}<span class="evtip"><b>EP${e.num}${
+        e.kind === 'short' ? ' — Short' : ''}</b><br>${esc(e.title || '')}<br>${when}${
+        e.status ? ` · ${esc(e.status)}` : ''}</span></div>`;
+    }).join('');
+    cells += `<div class="cald${isThisMonth && today.getDate() === d ? ' today' : ''}">
+      <div class="dnum">${d}</div>${chips}</div>`;
+  }
+  document.getElementById('calGrid').innerHTML = cells;
+
+  const shorts = all.filter(e => e.kind === 'short').length;
+  const epCount = all.filter(e => e.kind === 'episode').length;
+  const undated = eps.length - new Set(all.filter(e => e.kind === 'episode')
+                                          .map(e => e.epId)).size;
+  document.getElementById('calNote').textContent =
+    `${epCount} scheduled release${epCount === 1 ? '' : 's'}` +
+    (shorts ? ` · ${shorts} shorts` : ' · no Shorts dates in the feed yet') +
+    (undated > 0 ? ` · ${undated} episode${undated === 1 ? '' : 's'} without a date` : '');
+}
+
+function shiftMonth(n){
+  cal.month = new Date(cal.month.getFullYear(), cal.month.getMonth() + n, 1);
+  renderCalendar(_lastStatus);
 }
 
 function renderPipemap(){
@@ -413,10 +650,20 @@ function esc(s){const d=document.createElement('div');d.textContent=s??'';return
 
 async function refresh(){
   const [status, commits] = await Promise.all([fetchStatus(), fetchCommits()]);
+  _lastStatus = status;
   renderSync(status);
   renderEpisodes(status);
+  renderCalendar(status);
   renderFeed(commits);
 }
+
+document.getElementById('calPrev').onclick = () => shiftMonth(-1);
+document.getElementById('calNext').onclick = () => shiftMonth(1);
+document.getElementById('calToday').onclick = () => {
+  const n = new Date();
+  cal.month = new Date(n.getFullYear(), n.getMonth(), 1);
+  renderCalendar(_lastStatus);
+};
 renderPipemap();
 refresh();
 setInterval(refresh, 60000);
