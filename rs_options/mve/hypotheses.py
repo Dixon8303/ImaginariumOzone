@@ -17,27 +17,18 @@ from __future__ import annotations
 import pandas as pd
 
 from .backtest import DATA_ROOT, run_backtest
+from .setups import above_sma  # canonical impl — H2b adopted into live doctrine
 from .store import DataStore
 
 TRAIN_END = "2024-12-31"
 TEST_START = "2025-01-01"
 HIGH_WINDOW = 252               # trailing sessions ~ 52 weeks
-SMA_LEN = 200
 
 
 def near_52wk_high(bars: pd.DataFrame, pct: float) -> bool:
     """Close within `pct` of the trailing 252-bar high (point-in-time)."""
     highs = bars["high"].iloc[-HIGH_WINDOW:]
     return float(bars["close"].iloc[-1]) >= float(highs.max()) * (1.0 - pct)
-
-
-def above_sma(bars: pd.DataFrame, length: int = SMA_LEN) -> bool:
-    """Close above the length-bar SMA. Insufficient history -> False
-    (a regime filter with no established regime blocks, fail-closed)."""
-    if len(bars) < length:
-        return False
-    sma = float(bars["close"].iloc[-length:].mean())
-    return float(bars["close"].iloc[-1]) > sma
 
 
 VARIANTS = {

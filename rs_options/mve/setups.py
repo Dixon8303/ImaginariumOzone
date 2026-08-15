@@ -30,6 +30,26 @@ INVALIDATION_LOOKBACK = 5       # swing-low window for the stop (CALIBRATE)
 # pending walk-forward validation.
 ACTIVE_SETUPS = ("RS-02",)
 
+# H2b regime filter — ADOPTED 2026-08-15 by operator decision after the
+# §72 hypothesis study: requiring the stock above its own 200-day SMA
+# improved RS-02 on TRAIN (+0.415R vs +0.346R, n=95) AND TEST (+0.239R
+# vs +0.229R, n=53); every other variant (52wk-high, SPY-regime) was
+# noise. Applies to the LIVE doctrine path only — research tools that
+# pass `active` explicitly get unfiltered signals, so future studies
+# keep a clean CONTROL. Fail-closed: with fewer than REGIME_SMA_LEN bars
+# there is no established regime, so no entry.
+REGIME_SMA_LEN = 200
+
+
+def above_sma(bars: pd.DataFrame, length: int = REGIME_SMA_LEN) -> bool:
+    if len(bars) < length:
+        return False
+    sma = float(bars["close"].iloc[-length:].mean())
+    return float(bars["close"].iloc[-1]) > sma
+
+
+ENTRY_FILTERS = {"RS-02": above_sma}
+
 
 def detect_rs01(stock: pd.DataFrame, features: dict) -> dict | None:
     close = stock["close"]
@@ -116,11 +136,18 @@ DETECTORS = {"RS-01": detect_rs01, "RS-02": detect_rs02}
 
 def detect_all(stock: pd.DataFrame, features: dict,
                active: tuple | None = None) -> list:
-    """Run detectors. Default: ACTIVE_SETUPS only (the live doctrine).
-    Research tools (backtester) pass every setup explicitly."""
+    """Run detectors. Default: ACTIVE_SETUPS only (the live doctrine),
+    with adopted ENTRY_FILTERS applied as setup entry conditions.
+    Research tools (backtester, hypothesis studies) pass `active`
+    explicitly and get raw signals — their studies apply filters
+    themselves against an unfiltered CONTROL."""
+    live = active is None
     hits = []
     for setup_id in (active if active is not None else ACTIVE_SETUPS):
         c = DETECTORS[setup_id](stock, features)
-        if c:
-            hits.append(c)
+        if not c:
+            continue
+        if live and setup_id in ENTRY_FILTERS and not ENTRY_FILTERS[setup_id](stock):
+            continue
+        hits.append(c)
     return hits

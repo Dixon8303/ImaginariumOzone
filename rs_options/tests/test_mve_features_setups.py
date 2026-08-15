@@ -127,3 +127,34 @@ def test_detect_all_honors_active_default():
     assert detect_all(stock, f) == []
     explicit = detect_all(stock, f, active=("RS-01",))
     assert explicit and explicit[0]["setup_id"] == "RS-01"
+
+
+# ------------------------------------------- H2b regime filter (adopted)
+def test_above_sma_regime_semantics():
+    from mve.setups import above_sma
+    assert above_sma(bars_from_closes([100 + 0.1 * i for i in range(220)]))
+    assert not above_sma(bars_from_closes([300 - 0.5 * i for i in range(220)]))
+    assert not above_sma(bars_from_closes([100.0] * 50))     # fail-closed
+
+
+def test_rs02_live_doctrine_blocks_without_regime():
+    """H2b adopted 2026-08-15: the live path requires the stock above its
+    own 200-day SMA (fail-closed under 200 bars). Research paths that
+    pass `active` explicitly stay unfiltered (clean CONTROL)."""
+    closes = [100.0 + 0.3 * i for i in range(39)] + [100.0 + 0.3 * 38 + 5.0]
+    stock = bars_from_closes(closes, last_volume=2_000_000)
+    bench = bars_from_closes([500.0 + 0.05 * i for i in range(40)])
+    f = compute_features(stock, bench)
+    assert detect_rs02(stock, f) is not None            # detector fires
+    assert detect_all(stock, f) == []                   # live: no regime yet
+    research = detect_all(stock, f, active=("RS-02",))  # research: unfiltered
+    assert research and research[0]["setup_id"] == "RS-02"
+
+
+def test_rs02_live_doctrine_passes_with_regime():
+    closes = [100.0 + 0.3 * i for i in range(219)] + [100.0 + 0.3 * 218 + 8.0]
+    stock = bars_from_closes(closes, last_volume=2_000_000)
+    bench = bars_from_closes([500.0 + 0.05 * i for i in range(220)])
+    f = compute_features(stock, bench)
+    hits = detect_all(stock, f)                         # live path, regime OK
+    assert hits and hits[0]["setup_id"] == "RS-02"
