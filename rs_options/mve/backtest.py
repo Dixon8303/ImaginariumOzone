@@ -65,6 +65,7 @@ class Trade:
 class BacktestResult:
     trades: list = field(default_factory=list)
     skipped_signals: int = 0
+    filtered_signals: int = 0      # rejected by an entry_filter (no silent caps)
 
     def per_setup(self) -> dict:
         out = {}
@@ -130,10 +131,13 @@ def manage_position(pos: Position, bar) -> tuple:
 def run_backtest(store: DataStore, universe: list | None = None,
                  benchmark: str = BENCHMARK, sector_map: dict | None = None,
                  start: str | None = None, end: str | None = None,
-                 active: tuple = ("RS-01", "RS-02")) -> BacktestResult:
+                 active: tuple = ("RS-01", "RS-02"),
+                 entry_filter=None) -> BacktestResult:
     # Research evaluates ALL setups, including disabled ones — that is how
     # a killed setup earns its way back (LAW 20). The live scanner honors
     # setups.ACTIVE_SETUPS instead.
+    # entry_filter: optional callable(ticker, bars, bench_slice) -> bool,
+    # applied point-in-time at the signal bar (hypothesis studies, §72).
     universe = [t for t in (universe or list(UNIVERSE)) if t != benchmark]
     sector_map = sector_map if sector_map is not None else SECTOR_ETF
 
@@ -202,6 +206,10 @@ def run_backtest(store: DataStore, universe: list | None = None,
                       if sector_ticker in all_bars else None)
             features = compute_features(bars, bench_slice, sector)
             for hit in detect_all(bars, features, active=active):
+                if entry_filter is not None and not entry_filter(
+                        ticker, bars, bench_slice):
+                    result.filtered_signals += 1
+                    break
                 pending.append({"ticker": ticker, "setup": hit["setup_id"],
                                 "invalidation": hit["invalidation_price"],
                                 "date": d})

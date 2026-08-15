@@ -36,6 +36,13 @@ POLICIES = {
     "wide": dict(target_r=3.0, max_hold=15, atr_trail=None, breakeven_at=None),
     "atr_trail": dict(target_r=None, max_hold=20, atr_trail=2.0, breakeven_at=None),
     "breakeven": dict(target_r=2.0, max_hold=10, atr_trail=None, breakeven_at=1.0),
+    # H3 — anchored VWAP from the entry day as a trailing floor (§2.1 of
+    # MARKET_THEORY: institutional cost basis of the breakout). DAILY-BAR
+    # APPROXIMATION (typical price x volume); minute-precision AVWAP comes
+    # when enough intraday history accumulates. Grace bars let the level
+    # establish before it can stop the trade out.
+    "avwap_trail": dict(target_r=None, max_hold=20, atr_trail=None,
+                        breakeven_at=None, avwap=True, avwap_grace=3),
 }
 
 
@@ -55,6 +62,7 @@ def simulate(path: pd.DataFrame, entry: float, stop0: float, r_denom: float,
     target = (entry + policy["target_r"] * r_denom
               if policy["target_r"] else None)
     mfe = mae = 0.0
+    cum_pv = cum_v = 0.0            # anchored-VWAP accumulators (H3)
     for i, (_, bar) in enumerate(path.iterrows(), start=1):
         mfe = max(mfe, (bar["high"] - entry) / r_denom)
         mae = min(mae, (bar["low"] - entry) / r_denom)
@@ -72,6 +80,14 @@ def simulate(path: pd.DataFrame, entry: float, stop0: float, r_denom: float,
             stop = max(stop, entry)
         if policy["atr_trail"]:
             stop = max(stop, float(bar["close"]) - policy["atr_trail"] * entry_atr)
+        if policy.get("avwap"):
+            typical = (float(bar["high"]) + float(bar["low"])
+                       + float(bar["close"])) / 3.0
+            vol = float(bar.get("volume", 0.0) or 1.0)
+            cum_pv += typical * vol
+            cum_v += vol
+            if cum_v > 0 and i >= policy.get("avwap_grace", 3):
+                stop = max(stop, cum_pv / cum_v)
         if i >= policy["max_hold"]:
             return dict(r=(float(bar["close"]) - entry) / r_denom, reason="time",
                         bars=i, mfe=mfe, mae=mae)
