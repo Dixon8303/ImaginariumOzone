@@ -11,7 +11,11 @@ import pandas as pd
 
 from rs_options_risk import OptionQuote, Right
 
-DTE_RANGE = (7, 45)           # CALIBRATE research window (§19/§24 buckets)
+# Min DTE raised 2026-08-15: the exit study moved the hold to 15 trading
+# days (~21 calendar), and an option must comfortably outlive its hold
+# (playbook still force-closes at DTE <= 5). Mechanical consistency, not
+# a fitted parameter.
+DTE_RANGE = (21, 60)          # CALIBRATE research window (§19/§24 buckets)
 DELTA_RANGE = (0.40, 0.80)    # §19 initial research range
 DELTA_TARGET = 0.60           # tie-break preference inside the band
 MAX_SPREAD_PCT = 0.10         # §27 initial spread rule
