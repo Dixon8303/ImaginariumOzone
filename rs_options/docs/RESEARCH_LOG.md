@@ -162,3 +162,24 @@ sizing entry slippage assumptions for the daily setups).
 
 **Remaining queue:** H4 quality screen, H5 earnings blackout,
 H6 one-day-spike guard — all on the daily track.
+
+## 2026-08-16 — Hypothesis round 2 built: H4 quality + H6 spike guard
+
+`mve.hypotheses` now runs round 2. Methodology change: variants are
+tested INCREMENTALLY — every variant includes the adopted H2b regime
+filter, and verdicts compare against BASELINE_H2b, not the raw CONTROL.
+A filter earns adoption only by improving the system actually being run.
+
+- **H4 momentum-quality**: require positive (H4a) or ≥10% (H4b) trailing
+  12-1 month return at signal time — a mechanical, point-in-time quality
+  proxy. The motivating forensics (AAL/BAC the only consistent RS-02
+  losers) came from in-sample inspection, so tickers are never named;
+  the screen must earn adoption on the pre-registered train/test rule.
+- **H6 one-day-spike guard**: skip signals whose breakout day itself
+  gained ≥5% (H6a) / ≥8% (H6b) — don't chase a stretched move into the
+  short-term-reversal window.
+- **H5 earnings blackout: DEFERRED** — needs per-ticker earnings dates;
+  no free offline source wired yet.
+
+Awaiting the operator's next `python3 -m mve.hypotheses` run (report now
+lands in docs/reports/hypotheses.txt).
