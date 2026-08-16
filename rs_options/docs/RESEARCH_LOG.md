@@ -183,3 +183,32 @@ A filter earns adoption only by improving the system actually being run.
 
 Awaiting the operator's next `python3 -m mve.hypotheses` run (report now
 lands in docs/reports/hypotheses.txt).
+
+## 2026-08-16 — Round-2 verdicts: H4b ADOPTED, H6 dead
+
+Operator ran round 2 (verdicts vs BASELINE_H2b, train n=95 +0.415R /
+test n=53 +0.239R):
+
+| Variant | Train | Test | Verdict |
+|---|---|---|---|
+| H4a mom > 0 | +0.482R (n=62) | +0.248R (n=43) | ADOPT-CANDIDATE |
+| H4b mom ≥ 10% | **+0.516R** (n=50) | **+0.324R** (n=34) | **ADOPTED** |
+| H6a no-spike 5% | +0.483R (n=76) | +0.136R (n=47) | NOISE |
+| H6b no-spike 8% | +0.405R (n=89) | +0.196R (n=50) | REJECT |
+
+- **H4b adopted by operator decision** — the strongest single finding so
+  far: monotone dose-response (tighter screen → higher expectancy in
+  BOTH windows), which is the signature of a real effect rather than a
+  fitted one. RS-02 live entries now require the 200-day regime AND
+  12-1 momentum ≥ +10%, both fail-closed. Canonical implementations
+  moved to `setups.py`; `hypotheses.py` imports them. Cost: roughly
+  half the signals (~84 vs 148 over 5y) — fewer, better trades.
+- **H6 spike guard rejected** — a strong breakout day is not a defect
+  of this setup; skipping spike days destroyed test expectancy (H6a
+  +0.136R). The short-term-reversal concern does not apply at this
+  holding horizon.
+- The motivating AAL/BAC forensics resolved honestly: the mechanical
+  screen confirms the quality hypothesis without ever naming tickers.
+
+**Queue:** H5 earnings blackout (needs earnings-date source). Doctrine
+now: RS-02 + wide exit (3R/15-bar) + H2b regime + H4b quality.

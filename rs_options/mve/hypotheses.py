@@ -2,8 +2,12 @@
 
 Round 1 (2026-08-15, resolved): H1 52wk-high (both widths) NOISE;
 H2a SPY-regime NOISE; H2b stock-above-own-200d ADOPTED into doctrine.
+Round 2 (2026-08-16, resolved): H4a/H4b momentum-quality both
+ADOPT-CANDIDATES with a dose-response pattern; operator ADOPTED H4b
+(>= +10% 12-1 momentum). H6 spike guard: 5% NOISE, 8% REJECT.
 
-Round 2 (current) tests INCREMENTALLY on top of the adopted doctrine —
+Round 2 methodology (kept for the record) tested INCREMENTALLY on top
+of the then-adopted doctrine —
 every variant includes the H2b regime filter, and verdicts compare
 against BASELINE_H2b, not the raw CONTROL. A filter only earns adoption
 if it improves the system actually being run.
@@ -31,16 +35,16 @@ from __future__ import annotations
 
 import pandas as pd
 
+# canonical impls live in setups — adopted filters cannot drift from
+# the studied ones (H2b: above_sma; H4b: mom_12_1/quality_mom)
 from .backtest import DATA_ROOT, run_backtest
-from .setups import above_sma  # canonical impl — H2b adopted into live doctrine
+from .setups import above_sma, mom_12_1, quality_mom
 from .store import DataStore
 
 TRAIN_END = "2024-12-31"
 TEST_START = "2025-01-01"
 HIGH_WINDOW = 252               # trailing sessions ~ 52 weeks
-MOM_LOOKBACK = 252              # 12-1 momentum window (CALIBRATE)
-MOM_SKIP = 21                   # skip the reversal-prone last month
-BASELINE = "BASELINE_H2b"       # verdicts compare against adopted doctrine
+BASELINE = "BASELINE_H2b"       # round-2 comparison baseline
 
 
 def near_52wk_high(bars: pd.DataFrame, pct: float) -> bool:
@@ -48,21 +52,6 @@ def near_52wk_high(bars: pd.DataFrame, pct: float) -> bool:
     (Round 1: NOISE at both widths — kept for re-research.)"""
     highs = bars["high"].iloc[-HIGH_WINDOW:]
     return float(bars["close"].iloc[-1]) >= float(highs.max()) * (1.0 - pct)
-
-
-def mom_12_1(bars: pd.DataFrame) -> float | None:
-    """Trailing 12-1 month return: close 21 bars ago vs 252 bars ago.
-    None (fail-closed at the filter) with insufficient history."""
-    if len(bars) < MOM_LOOKBACK + 1:
-        return None
-    c = bars["close"]
-    return float(c.iloc[-MOM_SKIP]) / float(c.iloc[-MOM_LOOKBACK]) - 1.0
-
-
-def quality_mom(bars: pd.DataFrame, min_mom: float = 0.0) -> bool:
-    """H4: positive (or better) 12-1 momentum. Fail-closed."""
-    m = mom_12_1(bars)
-    return m is not None and m > min_mom
 
 
 def calm_breakout(bars: pd.DataFrame, max_gain: float) -> bool:
@@ -78,7 +67,7 @@ VARIANTS = {
     "CONTROL":            None,                       # context only
     "BASELINE_H2b":       lambda t, bars, bench: above_sma(bars),
     "H4a_mom_pos":        lambda t, bars, bench: (above_sma(bars)
-                                                  and quality_mom(bars)),
+                                                  and quality_mom(bars, 0.0)),
     "H4b_mom_10pct":      lambda t, bars, bench: (above_sma(bars)
                                                   and quality_mom(bars, 0.10)),
     "H6a_no_spike_5pct":  lambda t, bars, bench: (above_sma(bars)
