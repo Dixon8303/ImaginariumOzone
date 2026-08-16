@@ -181,3 +181,28 @@ def test_data_is_fresh_detects_missing_benchmark():
     assert not data_is_fresh({}, TODAY)
     assert not data_is_fresh({"SPY": pd.DataFrame()}, TODAY)
     assert data_is_fresh(breakout_universe(), TODAY)
+
+
+# ── dependency isolation (regression: CI ModuleNotFoundError) ────────
+def test_paper_track_imports_without_duckdb(monkeypatch):
+    """The paper trader fetches bars directly and never queries a
+    DataStore, so its import chain must not require duckdb — the
+    scheduled run has only pandas installed."""
+    import builtins
+    import importlib
+    import sys
+
+    real_import = builtins.__import__
+
+    def no_duckdb(name, *args, **kwargs):
+        if name == "duckdb":
+            raise ModuleNotFoundError("No module named 'duckdb'")
+        return real_import(name, *args, **kwargs)
+
+    for mod in [m for m in sys.modules
+                if m.startswith(("mve.", "paper.")) or m in ("mve", "paper")]:
+        monkeypatch.delitem(sys.modules, mod, raising=False)
+    monkeypatch.delitem(sys.modules, "duckdb", raising=False)
+    monkeypatch.setattr(builtins, "__import__", no_duckdb)
+
+    importlib.import_module("paper.daily")          # must not raise

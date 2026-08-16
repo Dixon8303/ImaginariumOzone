@@ -15,8 +15,23 @@ from __future__ import annotations
 
 import os
 
-import duckdb
 import pandas as pd
+
+# duckdb is imported lazily (see _duckdb) so that importing this module
+# for its schema constants does not require the dependency. Consumers
+# that only fetch/shape bars — e.g. the paper shadow track — never touch
+# a DataStore and must not be forced to install a query engine.
+
+
+def _duckdb():
+    try:
+        import duckdb
+    except ModuleNotFoundError as e:      # pragma: no cover - env-specific
+        raise ModuleNotFoundError(
+            "duckdb is required for DataStore queries. Install it with "
+            "`pip install duckdb` (see mve/requirements.txt).") from e
+    return duckdb
+
 
 BAR_COLS = ["ticker", "trade_date", "open", "high", "low", "close", "volume"]
 CHAIN_COLS = ["underlying", "trade_date", "expiry", "strike", "right",
@@ -75,7 +90,7 @@ class DataStore:
         if end:
             clauses.append("trade_date <= ?"); params.append(end)
         where = ("WHERE " + " AND ".join(clauses)) if clauses else ""
-        return duckdb.execute(
+        return _duckdb().execute(
             f"SELECT * FROM read_parquet('{path}') {where} ORDER BY trade_date",
             params).df()
 
@@ -83,7 +98,7 @@ class DataStore:
         path = self._chain_path(underlying, trade_date)
         if not os.path.exists(path):
             return pd.DataFrame(columns=CHAIN_COLS)
-        return duckdb.execute(f"SELECT * FROM read_parquet('{path}')").df()
+        return _duckdb().execute(f"SELECT * FROM read_parquet('{path}')").df()
 
     def tickers(self) -> list:
         return sorted(f[:-8] for f in os.listdir(self._bars_dir)
