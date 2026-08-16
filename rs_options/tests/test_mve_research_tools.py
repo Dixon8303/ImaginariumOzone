@@ -1,4 +1,5 @@
 """Alpaca fetcher parsing, walk-forward, exit-policy study (spec §41-§42, §51)."""
+import os
 from datetime import date
 
 import pandas as pd
@@ -144,3 +145,18 @@ def test_exit_study_runs_all_policies(breakout_store):
             assert o["mfe"] >= 0 >= o["mae"]
     text = exit_summary(study)
     assert "EXIT-POLICY STUDY" in text and "baseline" in text
+
+
+# ------------------------------------------------------------- reports
+def test_save_report_writes_committable_file(tmp_path, monkeypatch, capsys):
+    monkeypatch.chdir(tmp_path)
+    from mve.report import save_and_print, save_report
+    path = save_report("demo_study", "LINE 1\nLINE 2\n")
+    assert path == os.path.join("docs", "reports", "demo_study.txt")
+    text = open(path).read()
+    assert text.startswith("generated: ") and "LINE 2" in text
+    save_report("demo_study", "OVERWRITTEN")          # idempotent overwrite
+    assert "OVERWRITTEN" in open(path).read()
+    save_and_print("demo_study", "SUMMARY BODY")
+    out = capsys.readouterr().out
+    assert "SUMMARY BODY" in out and "git add docs/reports" in out

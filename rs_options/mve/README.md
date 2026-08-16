@@ -58,6 +58,14 @@ Exit-study discipline: pick the winning policy on TRAIN (≤ 2024),
 confirm on TEST (≥ 2025). If they disagree, the improvement is noise —
 keep the baseline (LAW 12/20).
 
+Every study also saves its summary to `docs/reports/<name>.txt`. Commit
+and push that folder after a run so the cloud session can read results
+straight from the repo:
+
+```bash
+git add docs/reports && git commit -m "research reports" && git push
+```
+
 ## Feeding real data
 
 Drop normalized CSVs (`bars_*.csv`, `chains_*.csv` in the canonical store
