@@ -1,0 +1,42 @@
+generated: 2026-08-15
+
+TRADE JOURNAL — broker history, aggregate statistics only
+
+period: 2023-04-10 -> 2026-06-08
+closed round trips: 1429   day trades: 1213 (85%)   avg hold: 1.0 days
+open positions still on the book: 16
+
+win rate: 58%   avg win: $+19.64
+avg loss: $-33.15   largest loss: $-441.30
+expectancy: $-2.64/trade   (-3.5% of position cost)
+profit factor: 0.81
+total trading P&L: $-3,770.00   fees paid: $2,386.24
+max drawdown (closed-trade curve): $-3,867.47
+net contributions (deposits - withdrawals): $+0.00   other income: $+1.04
+
+monthly P&L:
+  2023-04: $-5.39
+  2023-05: $-380.16
+  2023-06: $-354.67
+  2023-07: $-171.10
+  2023-08: $-230.48
+  2023-09: $+6.36
+  2023-10: $-145.88
+  2023-11: $-163.22
+  2023-12: $-589.86
+  2024-01: $-561.28
+  2024-02: $+635.74
+  2024-03: $+1,285.26
+  2024-04: $-1,080.37
+  2024-05: $-214.26
+  2024-06: $-178.52
+  2024-07: $-1,710.32
+  2024-08: $+32.43
+  2024-09: $+9.68
+  2025-01: $+1.68
+  2026-03: $+42.40
+  2026-06: $+1.96
+
+Read with LAW 19: winning trades do not prove an edge. Dollar
+expectancy here has no stop data, so R-multiples are not
+computable — % of position cost is the closest honest analogue.
