@@ -249,3 +249,23 @@ the two failure modes the adopted doctrine already corrects (3R wide
 target, defined invalidation stops, fewer/filtered entries). Personal
 evidence now agrees with market evidence: the daily-timeframe system is
 the path.
+
+## 2026-08-16 — Hard limit added: no long premium on volatility ETPs
+
+Adopted from the broker-history forensics, on MECHANISM rather than
+data mining: VXX-class products (VXX, UVXY, and kin) decay structurally
+from contango roll, so long calls fight a built-in downward drift on
+top of theta. The operator's record illustrates it — 18 VXX trades at a
+67% win rate still lost $857, with the three longest holds (60–68 days)
+accounting for ~$871 — but the rule stands on the product's structure,
+not on those 18 trades. Encoded in the playbook's hard-limits table.
+The 18-ticker live universe never contained these products; this closes
+the door on adding them.
+
+The rest of the outside analysis of the broker CSV was reviewed and
+mostly declined: the "intraday edge" claim is confounded by the
+disposition effect (duration is an effect of outcomes, not a cause —
+winners cashed same-day, losers carried), and the per-ticker / per-DTE
+"sweet spots" are small-n bucket mining with no monotone structure. Any
+of those ideas can still earn adoption the normal way: pre-registered,
+train/test, vs the current doctrine baseline.

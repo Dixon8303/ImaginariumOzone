@@ -110,6 +110,7 @@ recent data). For every open options position from `data/executions.jsonl`:
 | Max daily loss | 3% → session HALT |
 | Max drawdown | 10% → system FREEZE |
 | Structures | Long calls only |
+| Volatility ETPs (VXX, UVXY, and kin) | **NO long premium, ever** — these products decay structurally (contango roll), so long calls fight a built-in downward drift on top of theta. Mechanism-based rule, adopted 2026-08-16 after broker-history forensics (18 VXX trades, 67% win rate, −$857). |
 | Order type | Limit at mid, day only |
 
 ## Active setups (§60 Level 2 — setup kill)
