@@ -12,22 +12,24 @@ every variant includes the H2b regime filter, and verdicts compare
 against BASELINE_H2b, not the raw CONTROL. A filter only earns adoption
 if it improves the system actually being run.
 
-H4 — momentum-quality screen (Jegadeesh-Titman 12-1 momentum, skipping
-     the last month to avoid the short-term-reversal window): does
-     requiring positive long-term momentum — a mechanical, point-in-time
-     proxy for "quality" that never names tickers — improve RS-02?
-     (Motivating forensics: AAL/BAC were the only consistent RS-02
-     losers. Hard-coding those tickers out would be peeking; a
-     pre-registered mechanical screen is the honest version.)
-H6 — one-day-spike guard (short-term reversal): does skipping signals
-     whose breakout DAY itself gained more than X% — buying into an
-     already-stretched move — improve RS-02?
-H5 — earnings blackout: DEFERRED, needs per-ticker earnings dates
-     (no free offline source wired yet).
+Round 3 (current): H5 earnings blackout — does skipping RS-02 signals
+with an earnings announcement in the near future improve the system?
+Two pre-registered widths: 3 calendar days ahead (avoid entering right
+into the print) and 21 calendar days ahead (the whole expected hold).
+Honest caveat, stated before the data: breakouts sometimes happen
+BECAUSE of earnings momentum, so the blackout could as easily cut
+winners as losers — that is why it is tested, not assumed.
 
-Adoption rule (pre-registered, LAW 12/20): beat BASELINE_H2b on TRAIN
-and CONFIRM on TEST. Fewer trades with equal expectancy is NOT an
-improvement.
+Round-3 variants include the FULL adopted doctrine (H2b regime + H4b
+quality) and verdicts compare against BASELINE_DOCTRINE. Requires
+earnings dates on disk: run `python -m mve.earnings` first
+(ALPHAVANTAGE_API_KEY env var). Tickers with no earnings file pass the
+blackout untouched — correct for ETFs; for stocks it means the fetch
+has not run, so fetch before judging.
+
+Adoption rule (pre-registered, LAW 12/20): beat BASELINE_DOCTRINE on
+TRAIN and CONFIRM on TEST. Fewer trades with equal expectancy is NOT
+an improvement.
 
     python -m mve.hypotheses
 """
@@ -37,14 +39,19 @@ import pandas as pd
 
 # canonical impls live in setups — adopted filters cannot drift from
 # the studied ones (H2b: above_sma; H4b: mom_12_1/quality_mom)
+from datetime import date as _date
+
 from .backtest import DATA_ROOT, run_backtest
-from .setups import above_sma, mom_12_1, quality_mom
+from .earnings import load_earnings
+from .setups import above_sma, mom_12_1, quality_mom, rs02_entry_ok
 from .store import DataStore
 
 TRAIN_END = "2024-12-31"
 TEST_START = "2025-01-01"
 HIGH_WINDOW = 252               # trailing sessions ~ 52 weeks
-BASELINE = "BASELINE_H2b"       # round-2 comparison baseline
+BASELINE = "BASELINE_DOCTRINE"  # round-3 comparison baseline
+BLACKOUT_SHORT = 3              # calendar days ahead (entry into the print)
+BLACKOUT_HOLD = 21              # calendar days ahead (whole expected hold)
 
 
 def near_52wk_high(bars: pd.DataFrame, pct: float) -> bool:
@@ -63,23 +70,43 @@ def calm_breakout(bars: pd.DataFrame, max_gain: float) -> bool:
     return float(c.iloc[-1]) / float(c.iloc[-2]) - 1.0 < max_gain
 
 
-VARIANTS = {
-    "CONTROL":            None,                       # context only
-    "BASELINE_H2b":       lambda t, bars, bench: above_sma(bars),
-    "H4a_mom_pos":        lambda t, bars, bench: (above_sma(bars)
-                                                  and quality_mom(bars, 0.0)),
-    "H4b_mom_10pct":      lambda t, bars, bench: (above_sma(bars)
-                                                  and quality_mom(bars, 0.10)),
-    "H6a_no_spike_5pct":  lambda t, bars, bench: (above_sma(bars)
-                                                  and calm_breakout(bars, 0.05)),
-    "H6b_no_spike_8pct":  lambda t, bars, bench: (above_sma(bars)
-                                                  and calm_breakout(bars, 0.08)),
-}
+def earnings_clear(earnings: dict, ticker: str, bars, days_ahead: int) -> bool:
+    """True when no earnings announcement falls within `days_ahead`
+    calendar days AFTER the signal date. Tickers with no earnings on
+    file pass untouched (ETFs; unfetched stocks — fetch first)."""
+    dates = earnings.get(ticker)
+    if not dates:
+        return True
+    d = _date.fromisoformat(str(bars["trade_date"].iloc[-1]))
+    return not any(0 <= (e - d).days <= days_ahead for e in dates)
 
 
-def run_hypotheses(store: DataStore, setup: str = "RS-02") -> dict:
+def build_variants(earnings: dict) -> dict:
+    return {
+        "CONTROL":           None,                    # context only
+        "BASELINE_DOCTRINE": lambda t, b, s: rs02_entry_ok(b),
+        "H5a_blackout_3d":   lambda t, b, s: (rs02_entry_ok(b)
+                                              and earnings_clear(
+                                                  earnings, t, b, BLACKOUT_SHORT)),
+        "H5b_blackout_21d":  lambda t, b, s: (rs02_entry_ok(b)
+                                              and earnings_clear(
+                                                  earnings, t, b, BLACKOUT_HOLD)),
+    }
+
+
+VARIANT_NAMES = ("CONTROL", "BASELINE_DOCTRINE",
+                 "H5a_blackout_3d", "H5b_blackout_21d")
+
+
+def run_hypotheses(store: DataStore, setup: str = "RS-02",
+                   earnings: dict | None = None) -> dict:
+    if earnings is None:
+        earnings = load_earnings()
+        if not earnings:
+            raise SystemExit("No earnings dates on disk. "
+                             "Run: python -m mve.earnings")
     out = {}
-    for name, f in VARIANTS.items():
+    for name, f in build_variants(earnings).items():
         train = run_backtest(store, end=TRAIN_END, active=(setup,),
                              entry_filter=f)
         test = run_backtest(store, start=TEST_START, active=(setup,),
@@ -93,7 +120,7 @@ def run_hypotheses(store: DataStore, setup: str = "RS-02") -> dict:
 
 
 def summary(results: dict) -> str:
-    lines = ["HYPOTHESIS STUDY — RS-02 entry filters, round 2 (H4/H6, §72)",
+    lines = ["HYPOTHESIS STUDY — RS-02 entry filters, round 3 (H5, §72)",
              f"train <= {TRAIN_END} | test >= {TEST_START} | "
              f"verdicts vs {BASELINE} (adopted doctrine)", ""]
 

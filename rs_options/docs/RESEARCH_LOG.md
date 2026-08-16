@@ -269,3 +269,28 @@ winners cashed same-day, losers carried), and the per-ticker / per-DTE
 "sweet spots" are small-n bucket mining with no monotone structure. Any
 of those ideas can still earn adoption the normal way: pre-registered,
 train/test, vs the current doctrine baseline.
+
+## 2026-08-16 — H5 built (earnings blackout) + universe expanded to 22
+
+**H5 earnings blackout, round 3 of the hypothesis lab.** New
+`mve.earnings` fetches historical reported dates from Alpha Vantage
+(ALPHAVANTAGE_API_KEY env var; free tier fits the stock list in one
+run) into data/earnings/. `mve.hypotheses` round 3 tests two
+pre-registered blackout widths — 3 and 21 calendar days ahead of the
+signal — against BASELINE_DOCTRINE (H2b + H4b). Caveat stated before
+the data: breakouts sometimes happen BECAUSE of earnings momentum, so
+the blackout may cut winners as easily as losers. Tickers without an
+earnings file pass untouched (ETFs). Awaiting the operator's run.
+
+**Universe: 18 → 22 tickers.** Added TSLA (ev_auto/XLY), MU (semis/SMH),
+PLTR (software/XLK), SBUX (consumer/XLY) on STRUCTURAL criteria — deep
+options liquidity and cluster coverage — explicitly NOT on the
+operator's per-ticker P&L (small-n noise both directions; the same
+standard that declined the "natural strengths" list). Declined: SPXW
+(index options, outside §87 scope), VXX (banned ETP), PLUG (price and
+spread structure unfit for long calls). Required follow-up on the
+operator's Mac: `python3 -m mve.backfill` (pulls the new tickers'
+history), then re-run `python3 -m mve.backtest` and
+`python3 -m mve.walkforward` — the strategy-level edge must be
+confirmed on the expanded universe before the new names carry live
+trust. Earnings fetch auto-includes the new stocks (20 ≤ 25/day cap).
