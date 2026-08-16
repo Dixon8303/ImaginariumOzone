@@ -368,3 +368,101 @@ A verdict label is an input to the decision, not the decision.
 
 Doctrine unchanged: RS-02 + wide exit (3R/15-bar) + H2b regime + H4b
 quality + no volatility ETPs. The §72 hypothesis queue is now empty.
+
+## 2026-08-16 — position_manager recovered, completed, adopted
+
+A local session authored `mve/position_manager.py` + tests; the commit
+was dropped during a rebase and the files existed nowhere on GitHub.
+Recovered from the operator's reflog (branch `recovered-pm`), reviewed,
+and completed.
+
+What it is: a PURE decision function for open long-call positions —
+HOLD or EXIT with accumulated reasons. No sizing, no contract choice,
+no order placement (§67 execution stays human-confirmed). It moves the
+playbook's exit rules from prose (skippable under pressure, which is
+when they matter) into deterministic, testable code.
+
+As recovered it encoded 2 of the playbook's 5 exit rules (DTE floor,
+invalidation). Completed here with the two the exit study actually
+validated:
+- **TARGET** at +TARGET_R on the underlying, and
+- **TIME_EXIT** at MAX_HOLD_BARS trading days,
+both imported from `backtest` rather than re-typed, so a doctrine
+number still lives in exactly one place.
+
+Also added: `not_evaluated` on the verdict. A rule whose inputs are
+missing (older records lack entry_date / entry_underlying) is reported
+as NOT CHECKED rather than silently passing — the same principle as the
+"no silent caps" rule in the backtester.
+
+Provenance correction: the module's docstring cites Robinhood figures
+(116 trades, −$918 of expirations) that are NOT reproducible from this
+repo. Marked as the motivating anecdote, not verified evidence — while
+noting that the independent Schwab/thinkorswim analysis reached the
+same diagnosis on a different account (1,429 round trips, avg win
+$19.64 vs avg loss $33.15). Two accounts, two analyses, one failure
+mode: unbounded losers, clipped winners.
+
+Not yet wired into a caller — it is the exit authority the co-pilot
+flow should consult, and wiring it is the next operational step, not a
+research one. 193 tests passing.
+
+## 2026-08-16 — Daily run now reviews held options (co-pilot side)
+
+`position_manager` is wired into the autonomous daily run. The equity
+side was already self-enforcing (Alpaca brackets + time exit); the
+option side — where the operator's real money and real failure mode
+live — had no daily check. Now it does.
+
+`paper/open_options.json` holds the contracts the operator is carrying
+in Robinhood; the daily run applies all four exit rules to each and
+prints a POSITION REVIEW in the report. The file is committed, so it
+can be edited directly on github.com without touching the Mac.
+
+Two design points worth keeping:
+- **Held options are reviewed even on non-trading days.** The freshness
+  gate blocks scanning and orders, but days-to-expiry keeps running
+  over a weekend — a position can cross the DTE floor while the market
+  is shut. The holiday report says plainly that prices are the last
+  available, not today's.
+- **A malformed row raises rather than being skipped.** A position the
+  review silently drops is a position nobody is watching, which is the
+  precise failure the module exists to prevent. Same rule for tickers
+  outside the universe: reported as NOT PRICED, never omitted.
+
+201 tests passing.
+
+## 2026-08-16 — H8 built: VIX term structure as a regime filter
+
+Answering "what else can be learned to read market fluctuations," the
+first Tier-1 item: a volatility-regime reading that needs no new data
+vendor and no API key.
+
+`mve/vix_regime.py` fetches VIX and VIX3M daily closes (CBOE's public
+CSV, Yahoo fallback) and computes the ratio. Below 1.0 the curve is in
+CONTANGO — the normal state, more risk priced further out. At or above
+1.0 it is BACKWARDATION: near-term fear exceeds three-month, i.e. the
+market pricing stress now.
+
+Mechanism stated before the test (as always): breakouts bet on
+continuation, and backwardation is precisely when continuation breaks —
+correlations converge and trends whipsaw, the momentum-crash regime in
+MARKET_THEORY §1.4. Two pre-registered thresholds, round 4 of the
+hypothesis lab: ratio < 1.00 (skip backwardation) and < 0.95 (require
+real contango). Fails closed — a date with no reading blocks rather
+than assuming calm.
+
+The regime also prints in the daily paper report as CONTEXT ONLY. It
+gates nothing until H8 is judged and adopted; the report says so on the
+line itself, so a reader cannot mistake context for doctrine.
+
+**The H5 lesson is now automatic.** `hypotheses.summary` prints total-R
+alongside expectancy for every variant, and an ADOPT-CANDIDATE that
+raised the per-trade average while lowering total return now prints a
+CAUTION line saying so — as does one where fewer than 8 trades differ
+from baseline. A regression test replays the exact round-3 H5 numbers
+and asserts both cautions fire. The reasoning that caught H5 by hand is
+now part of the instrument.
+
+210 tests passing. Awaiting the operator's `mve.vix_regime` +
+`mve.hypotheses` run for the H8 verdict.

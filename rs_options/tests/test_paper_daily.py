@@ -206,3 +206,83 @@ def test_paper_track_imports_without_duckdb(monkeypatch):
     monkeypatch.setattr(builtins, "__import__", no_duckdb)
 
     importlib.import_module("paper.daily")          # must not raise
+
+
+# ── option-position review (co-pilot side) ───────────────────────────
+import json as _json
+from datetime import date as _d
+
+from paper.daily import load_open_options, review_open_options
+
+ROW = dict(ticker="NVDA", contract="NVDA 2026-09-18 220C", quantity=1,
+           entry_price=5.0, expiry="2026-09-18", invalidation_price=100.0,
+           entry_date="2026-08-10", entry_underlying=110.0)
+
+
+def _options_file(tmp_path, rows):
+    p = tmp_path / "open_options.json"
+    p.write_text(_json.dumps({"positions": rows}))
+    return str(p)
+
+
+def test_load_open_options_parses_rows(tmp_path):
+    pos = load_open_options(_options_file(tmp_path, [ROW]))
+    assert len(pos) == 1
+    assert pos[0].ticker == "NVDA" and pos[0].expiry == _d(2026, 9, 18)
+    assert pos[0].target_price == 140.0            # 110 + 3 x 10
+
+
+def test_load_open_options_missing_file_is_empty():
+    assert load_open_options("/nonexistent/open_options.json") == []
+
+
+def test_load_open_options_surfaces_bad_rows(tmp_path):
+    """A silently dropped position is a position nobody is watching."""
+    bad = dict(ROW, expiry="not-a-date")
+    with pytest.raises(ValueError, match="Unreadable entries"):
+        load_open_options(_options_file(tmp_path, [bad]))
+
+
+def test_review_flags_exit_and_holds():
+    bars = breakout_universe()
+    nvda_close = float(bars["NVDA"]["close"].iloc[-1])
+    from mve.position_manager import OpenPosition
+    holding = OpenPosition("NVDA", "NVDA 2026-09-18 220C", 1, 5.0,
+                           _d(2026, 9, 18), nvda_close - 50,
+                           entry_date=_d(2026, 8, 10),
+                           entry_underlying=nvda_close - 20)
+    expiring = OpenPosition("NVDA", "NVDA 2026-08-17 220C", 1, 5.0,
+                            _d(2026, 8, 17), 1.0)
+    text = review_open_options([holding, expiring], bars, TODAY)
+    assert "POSITION REVIEW — 2 open" in text
+    assert "DTE_FLOOR" in text                     # the expiring one
+    assert "NOT CHECKED" in text                   # expiring lacks entry data
+
+
+def test_review_reports_unpriced_positions():
+    from mve.position_manager import OpenPosition
+    orphan = OpenPosition("ZZZZ", "ZZZZ 2026-09-18 10C", 1, 1.0,
+                          _d(2026, 9, 18), 5.0)
+    text = review_open_options([orphan], breakout_universe(), TODAY)
+    assert "NOT PRICED" in text and "ZZZZ" in text
+
+
+def test_review_empty_gives_instructions():
+    assert "none on file" in review_open_options([], {}, TODAY)
+
+
+def test_holiday_run_still_reviews_options(monkeypatch, tmp_path):
+    """DTE ticks over a weekend — held options must still be reviewed."""
+    monkeypatch.setattr(daily, "OPTIONS_PATH", _options_file(tmp_path, [ROW]))
+    broker = FakeBroker()
+    text = run(broker, breakout_universe(), "2099-01-01")
+    assert "No session today" in text
+    assert "last available" in text
+    assert "POSITION REVIEW" in text               # review still ran
+    assert broker.brackets == []                   # but no orders
+
+
+def test_daily_report_includes_option_section():
+    broker = FakeBroker()
+    text = run(broker, breakout_universe(), TODAY)
+    assert "OPTION POSITIONS" in text or "POSITION REVIEW" in text

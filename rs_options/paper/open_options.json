@@ -1,0 +1,17 @@
+{
+  "_comment": [
+    "Open option positions held in Robinhood (co-pilot flow). The daily run",
+    "reads this file and applies mve.position_manager's exit rules to each",
+    "entry, printing a POSITION REVIEW in docs/reports/paper_trading.txt.",
+    "",
+    "Add a line when you execute a trade; delete it when you close.",
+    "Editable directly on github.com — no Mac needed.",
+    "",
+    "Fields: ticker, contract (label only), quantity, entry_price (premium",
+    "per contract), expiry YYYY-MM-DD, invalidation_price and",
+    "entry_underlying (from the pick that generated the trade), entry_date.",
+    "Omitting entry_underlying or entry_date is allowed — the rules that",
+    "need them report NOT CHECKED rather than silently passing."
+  ],
+  "positions": []
+}

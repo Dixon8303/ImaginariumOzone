@@ -12,20 +12,26 @@ every variant includes the H2b regime filter, and verdicts compare
 against BASELINE_H2b, not the raw CONTROL. A filter only earns adoption
 if it improves the system actually being run.
 
-Round 3 (current): H5 earnings blackout — does skipping RS-02 signals
-with an earnings announcement in the near future improve the system?
-Two pre-registered widths: 3 calendar days ahead (avoid entering right
-into the print) and 21 calendar days ahead (the whole expected hold).
-Honest caveat, stated before the data: breakouts sometimes happen
-BECAUSE of earnings momentum, so the blackout could as easily cut
-winners as losers — that is why it is tested, not assumed.
+Round 3 (2026-08-16, resolved): H5 earnings blackout REJECTED. The
+3-day variant was labelled ADOPT-CANDIDATE, but the margin came from
+excluding 3 trades per window and those trades were PROFITABLE — total
+return fell in both windows while the per-trade average rose. No
+dose-response either. See the total-R columns below: they exist
+because of H5.
 
-Round-3 variants include the FULL adopted doctrine (H2b regime + H4b
-quality) and verdicts compare against BASELINE_DOCTRINE. Requires
-earnings dates on disk: run `python -m mve.earnings` first
-(ALPHAVANTAGE_API_KEY env var). Tickers with no earnings file pass the
-blackout untouched — correct for ETFs; for stocks it means the fetch
-has not run, so fetch before judging.
+Round 4 (current): H8 volatility regime — does requiring the VIX term
+structure to be in contango (VIX / VIX3M below a threshold) improve
+RS-02? Mechanism first: breakouts bet on continuation, and
+backwardation is the market pricing near-term stress, which is when
+continuation historically breaks (MARKET_THEORY momentum crashes).
+Two pre-registered thresholds: ratio < 1.00 (skip backwardation only)
+and ratio < 0.95 (require real contango).
+
+Round-4 variants include the FULL adopted doctrine (H2b regime + H4b
+quality) and verdicts compare against BASELINE_DOCTRINE. Requires the
+term structure on disk: run `python -m mve.vix_regime` first (free,
+no API key). The filter fails closed — a date with no VIX reading
+blocks rather than assuming calm.
 
 Adoption rule (pre-registered, LAW 12/20): beat BASELINE_DOCTRINE on
 TRAIN and CONFIRM on TEST. Fewer trades with equal expectancy is NOT
@@ -45,6 +51,7 @@ from .backtest import DATA_ROOT, run_backtest
 from .earnings import load_earnings
 from .setups import above_sma, mom_12_1, quality_mom, rs02_entry_ok
 from .store import DataStore
+from .vix_regime import calm_regime, load_term_structure
 
 TRAIN_END = "2024-12-31"
 TEST_START = "2025-01-01"
@@ -81,32 +88,34 @@ def earnings_clear(earnings: dict, ticker: str, bars, days_ahead: int) -> bool:
     return not any(0 <= (e - d).days <= days_ahead for e in dates)
 
 
-def build_variants(earnings: dict) -> dict:
+def signal_date(bars) -> str:
+    return str(bars["trade_date"].iloc[-1])
+
+
+def build_variants(vix) -> dict:
     return {
         "CONTROL":           None,                    # context only
         "BASELINE_DOCTRINE": lambda t, b, s: rs02_entry_ok(b),
-        "H5a_blackout_3d":   lambda t, b, s: (rs02_entry_ok(b)
-                                              and earnings_clear(
-                                                  earnings, t, b, BLACKOUT_SHORT)),
-        "H5b_blackout_21d":  lambda t, b, s: (rs02_entry_ok(b)
-                                              and earnings_clear(
-                                                  earnings, t, b, BLACKOUT_HOLD)),
+        "H8a_no_backwardation": lambda t, b, s: (
+            rs02_entry_ok(b) and calm_regime(vix, signal_date(b), 1.00)),
+        "H8b_contango_095": lambda t, b, s: (
+            rs02_entry_ok(b) and calm_regime(vix, signal_date(b), 0.95)),
     }
 
 
 VARIANT_NAMES = ("CONTROL", "BASELINE_DOCTRINE",
-                 "H5a_blackout_3d", "H5b_blackout_21d")
+                 "H8a_no_backwardation", "H8b_contango_095")
 
 
 def run_hypotheses(store: DataStore, setup: str = "RS-02",
-                   earnings: dict | None = None) -> dict:
-    if earnings is None:
-        earnings = load_earnings()
-        if not earnings:
-            raise SystemExit("No earnings dates on disk. "
-                             "Run: python -m mve.earnings")
+                   vix=None) -> dict:
+    if vix is None:
+        vix = load_term_structure()
+        if vix.empty:
+            raise SystemExit("No VIX term structure on disk. "
+                             "Run: python -m mve.vix_regime")
     out = {}
-    for name, f in build_variants(earnings).items():
+    for name, f in build_variants(vix).items():
         train = run_backtest(store, end=TRAIN_END, active=(setup,),
                              entry_filter=f)
         test = run_backtest(store, start=TEST_START, active=(setup,),
@@ -119,20 +128,26 @@ def run_hypotheses(store: DataStore, setup: str = "RS-02",
     return out
 
 
+def total_r(s) -> float:
+    """Sum of R across the window. Expectancy-per-trade alone can rise
+    while total return falls — that is how H5 nearly earned adoption."""
+    return 0.0 if s is None else s["trades"] * s["expectancy_r"]
+
+
 def summary(results: dict) -> str:
-    lines = ["HYPOTHESIS STUDY — RS-02 entry filters, round 3 (H5, §72)",
+    lines = ["HYPOTHESIS STUDY — RS-02 entry filters, round 4 (H8, §72)",
              f"train <= {TRAIN_END} | test >= {TEST_START} | "
              f"verdicts vs {BASELINE} (adopted doctrine)", ""]
 
     def fmt(s):
         if s is None:
-            return "n=  0  exp=   n/a  wr=n/a "
+            return "n=  0  exp=   n/a  wr=n/a  totR=   n/a"
         return (f"n={s['trades']:>3} exp={s['expectancy_r']:+.3f}R "
-                f"wr={s['win_rate']:.0%}")
+                f"wr={s['win_rate']:.0%} totR={total_r(s):+7.2f}")
 
     for name, r in results.items():
-        lines.append(f"{name:<19} train: {fmt(r['train'])}   "
-                     f"test: {fmt(r['test'])}   filtered={r['filtered']}")
+        lines.append(f"{name:<21} train: {fmt(r['train'])}   "
+                     f"test: {fmt(r['test'])}")
     lines.append("")
 
     base = results.get(BASELINE, {})
@@ -153,9 +168,28 @@ def summary(results: dict) -> str:
                        else "REJECT (train did not improve)" if not train_up
                        else "NOISE (train improved, test did not confirm)")
             lines.append(f"  {name}: {verdict}")
+
+            # H5 lesson, now automatic: a filter can raise the per-trade
+            # average purely by deleting profitable-but-below-average
+            # trades. Surface that instead of leaving it to be noticed.
+            dn = (bt["trades"] - t["trades"]) + (bs["trades"] - s["trades"])
+            dr = (total_r(bt) - total_r(t)) + (total_r(bs) - total_r(s))
+            if verdict == "ADOPT-CANDIDATE":
+                if dr > 0:
+                    lines.append(
+                        f"      CAUTION: removed {dn} trades worth "
+                        f"{dr:+.2f}R of TOTAL return "
+                        f"({dr / dn:+.3f}R each) — the average rose while "
+                        "the total fell.")
+                if dn <= 8:
+                    lines.append(
+                        f"      CAUTION: only {dn} trades differ from "
+                        "baseline across both windows — too few to be "
+                        "distinguishable from noise.")
     lines.append("")
     lines.append("LAW 12/20: no filter is adopted from a single pass alone — "
-                 "an ADOPT-CANDIDATE gets encoded only by operator decision.")
+                 "an ADOPT-CANDIDATE gets encoded only by operator decision. "
+                 "Read the CAUTION lines before deciding.")
     return "\n".join(lines)
 
 
