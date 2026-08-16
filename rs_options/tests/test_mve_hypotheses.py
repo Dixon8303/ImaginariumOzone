@@ -6,8 +6,9 @@ import pytest
 
 from mve.backtest import run_backtest
 from mve.exit_study import POLICIES, simulate
-from mve.hypotheses import (VARIANTS, above_sma, near_52wk_high,
-                            run_hypotheses, summary)
+from mve.hypotheses import (VARIANTS, above_sma, calm_breakout, mom_12_1,
+                            near_52wk_high, quality_mom, run_hypotheses,
+                            summary)
 from mve.store import DataStore
 from mve.vendors import SyntheticVendor
 
@@ -75,8 +76,35 @@ def test_hypothesis_study_structure(seeded):
     results = run_hypotheses(seeded)
     assert set(results) == set(VARIANTS)
     text = summary(results)
-    assert "CONTROL" in text and "H1a_high_5pct" in text
+    assert "CONTROL" in text and "BASELINE_H2b" in text
+    assert "H4a_mom_pos" in text and "H6a_no_spike_5pct" in text
     assert "LAW 12/20" in text
+
+
+# ------------------------------------------------- H4 quality momentum
+def test_mom_12_1_sign_and_fail_closed():
+    up = bars_from_closes([100 * 1.002 ** i for i in range(300)])
+    assert mom_12_1(up) > 0 and quality_mom(up)
+    down = bars_from_closes([300 * 0.998 ** i for i in range(300)])
+    assert mom_12_1(down) < 0 and not quality_mom(down)
+    assert mom_12_1(bars_from_closes([100.0] * 100)) is None
+    assert not quality_mom(bars_from_closes([100.0] * 100))   # fail-closed
+
+
+def test_quality_mom_threshold():
+    modest = bars_from_closes([100 + 0.02 * i for i in range(300)])
+    assert quality_mom(modest)                    # positive drift
+    assert not quality_mom(modest, 0.50)          # but not +50%
+
+
+# --------------------------------------------------- H6 spike guard
+def test_calm_breakout_blocks_spike_day():
+    calm = bars_from_closes([100.0] * 59 + [102.0])       # +2% day
+    spike = bars_from_closes([100.0] * 59 + [109.0])      # +9% day
+    assert calm_breakout(calm, 0.05)
+    assert not calm_breakout(spike, 0.05)
+    assert not calm_breakout(spike, 0.08)
+    assert not calm_breakout(bars_from_closes([100.0]), 0.05)  # fail-closed
 
 
 # ------------------------------------------------- H3 avwap policy
