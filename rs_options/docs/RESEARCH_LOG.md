@@ -212,3 +212,21 @@ test n=53 +0.239R):
 
 **Queue:** H5 earnings blackout (needs earnings-date source). Doctrine
 now: RS-02 + wide exit (3R/15-bar) + H2b regime + H4b quality.
+
+## 2026-08-16 — Trade journal built (operator's broker history)
+
+`python -m mve.trade_journal` reads the operator's Schwab/thinkorswim
+transactions export (dropped in `data/`, which is now **explicitly
+gitignored** along with `*Transactions*.csv` anywhere — the export
+contains the account number and this repo is public). FIFO round-trip
+matching, direction-agnostic (longs and shorts), option multiplier and
+fees handled via amount-based unit cash. Reports the same statistics
+the engine is held to: win rate, avg win/loss, expectancy (in $ and %
+of position cost — no stop data, so no R), profit factor, max drawdown,
+day-trade share, monthly P&L, and **net contributions separated from
+trading P&L** so account growth is attributed honestly. Aggregate-only
+report to docs/reports/trade_journal.txt via the report bridge.
+
+Purpose: measure the operator's discretionary day-trading record
+(250 → 3,500 claim) with the machine's own yardstick before deciding
+whether any of that behavior deserves encoding.

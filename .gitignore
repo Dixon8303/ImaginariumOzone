@@ -73,3 +73,8 @@ yarn-error.log*
 .vscode/
 .idea/
 *.swp
+
+# RS Options local data — market history and broker exports (account
+# numbers). NEVER commit: this repo is public.
+rs_options/data/
+*Transactions*.csv
