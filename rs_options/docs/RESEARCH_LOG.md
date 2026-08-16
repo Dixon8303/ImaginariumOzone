@@ -326,3 +326,45 @@ equities. Options P&L still is not modeled (historical chains are paid
 data), and live execution remains co-pilot — the operator's word, per
 trade, in Robinhood. The point is a dated, machine-kept track record
 that the operator only has to read.
+
+## 2026-08-16 — Universe expansion PASSES; H5 earnings blackout rejected
+
+**Universe expansion validated (22 tickers).** Re-run on the expanded
+universe after backfilling TSLA/MU/PLTR/SBUX:
+- Backtest: RS-02 177 trades, 58% wr, **+0.341R** (18-ticker run was 140
+  trades / +0.389R — 37 more trades at a slightly lower average, edge
+  intact). RS-01 stays negative (−0.108R): correctly killed.
+- Walk-forward: **3/3 test windows held** — 2024 +0.577R (n=48),
+  2025 +0.307R (n=49), 2026 +0.227R (n=24), max DD −3.0 to −4.3R.
+The four added tickers earned their place on strategy-level evidence,
+which was the pre-registered gate.
+
+**H5 earnings blackout — REJECTED despite an ADOPT-CANDIDATE label.**
+
+| Variant | Train | Test |
+|---|---|---|
+| BASELINE_DOCTRINE | +0.348R (n=61) | +0.280R (n=47) |
+| H5a blackout 3d | +0.359R (n=58) | +0.288R (n=44) |
+| H5b blackout 21d | +0.451R (n=48) | +0.250R (n=34) |
+
+The verdict logic flagged H5a because both windows nudged up. The
+arithmetic says otherwise:
+- The gain is +0.011R train / +0.008R test — an order of magnitude
+  smaller than H4b's +0.085R test margin, and it comes from excluding
+  just **3 trades per window**.
+- Those excluded trades were **profitable** (+0.135R and +0.163R
+  average). Total return FELL in both windows (+21.23R → +20.82R
+  train, +13.16R → +12.67R test). The per-trade average rose only
+  because slightly-below-average WINNERS were removed.
+- No dose-response: the wider 21-day blackout was much better on train
+  and worse on test. H4b earned adoption partly on a monotone
+  threshold response; H5 shows the opposite — the signature of noise.
+
+**Methodology note added to the standard:** expectancy-per-trade alone
+can be gamed by a filter that removes profitable-but-below-average
+trades. Future variants must be checked for total-R direction and for
+how many trades actually differ before an ADOPT-CANDIDATE is believed.
+A verdict label is an input to the decision, not the decision.
+
+Doctrine unchanged: RS-02 + wide exit (3R/15-bar) + H2b regime + H4b
+quality + no volatility ETPs. The §72 hypothesis queue is now empty.
