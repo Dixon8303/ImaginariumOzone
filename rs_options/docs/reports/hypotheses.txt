@@ -1,0 +1,19 @@
+generated: 2026-08-15
+
+HYPOTHESIS STUDY — RS-02 entry filters, round 2 (H4/H6, §72)
+train <= 2024-12-31 | test >= 2025-01-01 | verdicts vs BASELINE_H2b (adopted doctrine)
+
+CONTROL             train: n=110 exp=+0.346R wr=58%   test: n= 57 exp=+0.229R wr=60%   filtered=0
+BASELINE_H2b        train: n= 95 exp=+0.415R wr=62%   test: n= 53 exp=+0.239R wr=60%   filtered=37
+H4a_mom_pos         train: n= 62 exp=+0.482R wr=66%   test: n= 43 exp=+0.248R wr=58%   filtered=110
+H4b_mom_10pct       train: n= 50 exp=+0.516R wr=64%   test: n= 34 exp=+0.324R wr=59%   filtered=148
+H6a_no_spike_5pct   train: n= 76 exp=+0.483R wr=64%   test: n= 47 exp=+0.136R wr=55%   filtered=88
+H6b_no_spike_8pct   train: n= 89 exp=+0.405R wr=61%   test: n= 50 exp=+0.196R wr=56%   filtered=57
+
+Verdicts vs BASELINE_H2b (adopt only if TRAIN improves AND TEST confirms; small n = inconclusive):
+  H4a_mom_pos: ADOPT-CANDIDATE
+  H4b_mom_10pct: ADOPT-CANDIDATE
+  H6a_no_spike_5pct: NOISE (train improved, test did not confirm)
+  H6b_no_spike_8pct: REJECT (train did not improve)
+
+LAW 12/20: no filter is adopted from a single pass alone — an ADOPT-CANDIDATE gets encoded only by operator decision.
