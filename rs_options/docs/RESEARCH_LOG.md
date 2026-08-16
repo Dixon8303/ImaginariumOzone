@@ -406,3 +406,28 @@ mode: unbounded losers, clipped winners.
 Not yet wired into a caller — it is the exit authority the co-pilot
 flow should consult, and wiring it is the next operational step, not a
 research one. 193 tests passing.
+
+## 2026-08-16 — Daily run now reviews held options (co-pilot side)
+
+`position_manager` is wired into the autonomous daily run. The equity
+side was already self-enforcing (Alpaca brackets + time exit); the
+option side — where the operator's real money and real failure mode
+live — had no daily check. Now it does.
+
+`paper/open_options.json` holds the contracts the operator is carrying
+in Robinhood; the daily run applies all four exit rules to each and
+prints a POSITION REVIEW in the report. The file is committed, so it
+can be edited directly on github.com without touching the Mac.
+
+Two design points worth keeping:
+- **Held options are reviewed even on non-trading days.** The freshness
+  gate blocks scanning and orders, but days-to-expiry keeps running
+  over a weekend — a position can cross the DTE floor while the market
+  is shut. The holiday report says plainly that prices are the last
+  available, not today's.
+- **A malformed row raises rather than being skipped.** A position the
+  review silently drops is a position nobody is watching, which is the
+  precise failure the module exists to prevent. Same rule for tickers
+  outside the universe: reported as NOT PRICED, never omitted.
+
+201 tests passing.

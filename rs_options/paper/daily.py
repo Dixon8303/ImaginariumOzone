@@ -10,10 +10,14 @@ Runs after each market close (GitHub Actions cron, or manually with
    UNDERLYING equity: market buy queued for the next open (matching the
    backtester's next-open entry), bracket stop at the invalidation
    price and target at +3R. Time exit after 15 trading days.
-4. Writes docs/reports/paper_trading.txt — the operator-facing report:
+4. Reviews the operator's held Robinhood options (paper/open_options.json)
+   against mve.position_manager's exit rules — the co-pilot side of the
+   same doctrine the equity brackets enforce automatically.
+5. Writes docs/reports/paper_trading.txt — the operator-facing report:
    today's picks with entry/stop/target and the playbook's option
-   guidance (for discretionary Robinhood execution), open positions,
-   closed trades in R-multiples, and the cumulative record.
+   guidance (for discretionary Robinhood execution), the position
+   review, open positions, closed trades in R, and the cumulative
+   record.
 
 Scope (§87): this validates the SETUP SIGNAL with fake money. The
 options layer stays in the co-pilot flow; nothing here touches a live
@@ -30,6 +34,8 @@ import pandas as pd
 from mve.alpaca_data import fetch_bars
 from mve.backtest import MAX_HOLD_BARS, TARGET_R
 from mve.chain_select import DELTA_TARGET, DTE_RANGE, MAX_SPREAD_PCT
+from mve.position_manager import (OpenPosition, evaluate_exit,
+                                  format_exit_report)
 from mve.report import save_report
 from mve.rs_features import compute_features
 from mve.setups import detect_all
@@ -41,6 +47,7 @@ MAX_OPEN = 8                 # concurrent-position cap
 MIN_BARS = 260               # doctrine needs 253+ bars (12-1 momentum)
 HISTORY_DAYS = 420           # calendar days of bars to fetch
 LEDGER_PATH = os.path.join("docs", "reports", "paper_ledger.json")
+OPTIONS_PATH = os.path.join("paper", "open_options.json")
 
 
 # ── ledger (committed to the repo — paper-account data only) ─────────
@@ -103,6 +110,59 @@ def position_size(equity: float, close: float, stop: float) -> int:
 
 
 # ── daily cycle ──────────────────────────────────────────────────────
+def load_open_options(path: str | None = None) -> list:
+    """Operator-maintained Robinhood option positions. Malformed entries
+    are surfaced, never dropped silently — a position the review skips
+    is a position nobody is watching."""
+    path = path or OPTIONS_PATH
+    if not os.path.exists(path):
+        return []
+    with open(path) as f:
+        raw = json.load(f)
+    positions, bad = [], []
+    for row in raw.get("positions", []):
+        try:
+            positions.append(OpenPosition(
+                ticker=row["ticker"], contract=row["contract"],
+                quantity=int(row["quantity"]),
+                entry_price=float(row["entry_price"]),
+                expiry=date.fromisoformat(row["expiry"]),
+                invalidation_price=float(row["invalidation_price"]),
+                entry_date=(date.fromisoformat(row["entry_date"])
+                            if row.get("entry_date") else None),
+                entry_underlying=(float(row["entry_underlying"])
+                                  if row.get("entry_underlying") is not None
+                                  else None)))
+        except (KeyError, ValueError, TypeError) as e:
+            bad.append(f"{row.get('contract', row)}: {e}")
+    if bad:
+        raise ValueError("Unreadable entries in open_options.json — fix or "
+                         "remove them:\n  " + "\n  ".join(bad))
+    return positions
+
+
+def review_open_options(positions: list, all_bars: dict, today: str) -> str:
+    """Apply the doctrine's exit rules to each held option contract."""
+    if not positions:
+        return ("OPTION POSITIONS (Robinhood): none on file.\n"
+                "  Add trades to paper/open_options.json to have them "
+                "reviewed here each day.")
+    as_of = date.fromisoformat(today)
+    verdicts, unpriced = [], []
+    for p in positions:
+        bars = all_bars.get(p.ticker)
+        if bars is None or bars.empty:
+            unpriced.append(p.contract)
+            continue
+        price = float(bars["close"].iloc[-1])
+        verdicts.append((p, evaluate_exit(p, price, as_of)))
+    text = format_exit_report(verdicts)
+    if unpriced:
+        text += ("\n\nNOT PRICED (no bars fetched — outside the universe?): "
+                 + ", ".join(unpriced))
+    return text
+
+
 def data_is_fresh(all_bars: dict, today: str) -> bool:
     """True only when the benchmark's latest bar IS today's session.
     Guards holidays and half-fetched runs: without this the scanner
@@ -115,10 +175,15 @@ def data_is_fresh(all_bars: dict, today: str) -> bool:
 
 def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     if require_fresh and not data_is_fresh(all_bars, today):
+        # No scan, no orders — but days-to-expiry keeps running over a
+        # weekend, so held options are still reviewed against the last
+        # available prices.
+        review = review_open_options(load_open_options(), all_bars, today)
         return (f"PAPER SHADOW TRACK — {today}\n\n"
                 "No session today (market holiday, or bars not yet "
-                "published). No scan, no orders, no changes. The previous "
-                "report stands.")
+                "published). No scan, no orders, no equity changes.\n"
+                "Prices below are the last available, not today's.\n\n"
+                + review)
     acct = broker.account()
     equity = float(acct["equity"])
     positions = broker.positions()
@@ -192,12 +257,14 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             order_id=order.get("id"), setup="RS-02")
 
     save_ledger(ledger)
+    option_review = review_open_options(load_open_options(), all_bars, today)
     return build_report(today, acct, positions, signals, placed, skipped,
-                        closed_today, time_exits, ledger)
+                        closed_today, time_exits, ledger, option_review)
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
-                 closed_today, time_exits, ledger) -> str:
+                 closed_today, time_exits, ledger,
+                 option_review: str = "") -> str:
     lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}", ""]
@@ -248,6 +315,9 @@ def build_report(today, acct, positions, signals, placed, skipped,
     if not positions:
         lines.append("  none")
     lines.append("")
+
+    if option_review:
+        lines += [option_review, ""]
 
     rs = [t["r"] for t in ledger["closed"] if t.get("r") is not None]
     if rs:
