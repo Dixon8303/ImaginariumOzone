@@ -230,3 +230,22 @@ report to docs/reports/trade_journal.txt via the report bridge.
 Purpose: measure the operator's discretionary day-trading record
 (250 → 3,500 claim) with the machine's own yardstick before deciding
 whether any of that behavior deserves encoding.
+
+## 2026-08-16 — Operator's broker history measured (trade journal)
+
+First run of `mve.trade_journal` on the operator's 3-year thinkorswim
+export (aggregates in docs/reports/trade_journal.txt): 1,429 round
+trips, 85% day trades, 58% win rate — but avg win $19.64 vs avg loss
+$33.15 → expectancy −$2.64/trade, profit factor 0.81, total −$3,770
+with $2,386 of that paid in fees. Two hot months (2024-02/03, +$1,921)
+were followed by −$2,790 across 2024-04 and 2024-07. No deposits appear
+in this export, so the remembered 250→3,500 run likely lived in a
+different account (Robinhood) or as peak unrealized equity.
+
+Diagnosis matches the intraday studies exactly: direction-picking is
+fine (58% > coin flip); the losses come from exit asymmetry (winners
+cut at ~0.6x the size of losers) and friction on 1-day holds. These are
+the two failure modes the adopted doctrine already corrects (3R wide
+target, defined invalidation stops, fewer/filtered entries). Personal
+evidence now agrees with market evidence: the daily-timeframe system is
+the path.
