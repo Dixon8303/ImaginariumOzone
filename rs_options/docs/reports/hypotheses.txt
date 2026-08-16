@@ -1,4 +1,4 @@
-generated: 2026-08-15
+generated: 2026-08-16
 
 HYPOTHESIS STUDY — RS-02 entry filters, round 2 (H4/H6, §72)
 train <= 2024-12-31 | test >= 2025-01-01 | verdicts vs BASELINE_H2b (adopted doctrine)
