@@ -505,3 +505,23 @@ Deep history helps precisely because it adds evidence that was never
 part of that selection loop.
 
 216 tests passing.
+
+## 2026-08-16 — Pre-open briefing added
+
+Operator asked for a morning scan. `python -m paper.daily --preopen`
+(cron 12:45 UTC weekdays) reports what the previous close implies:
+candidates with stop/target/1R and the option guidance, which names are
+already held, what is queued to fill at the open, open positions, and
+the held-option review.
+
+**Read-only by construction.** It places no orders and never writes the
+ledger — so it cannot double-trade against the evening run, which
+remains the single trading authority. A manual workflow run defaults to
+`preopen` too, so an accidental click cannot place orders.
+
+Point-in-time note: pre-open, the newest bar IS yesterday's close, and
+that is exactly the information the signal is allowed to use. The
+freshness gate is therefore an AGE check (<= 4 calendar days, covering
+long weekends) rather than the evening run's same-day requirement.
+
+221 tests passing.

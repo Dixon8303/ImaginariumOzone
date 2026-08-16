@@ -1,7 +1,15 @@
-"""Autonomous daily run — scan + Alpaca PAPER shadow trades + report.
+"""Autonomous daily runs — pre-open briefing and post-close trading.
 
-Runs after each market close (GitHub Actions cron, or manually with
-`python -m paper.daily` from rs_options/). What it does:
+Two scheduled runs (GitHub Actions), or manually from rs_options/:
+
+    python -m paper.daily --preopen    # morning briefing, READ-ONLY
+    python -m paper.daily              # post-close trading run
+
+The pre-open run reports what yesterday's close implies and what is
+already queued. It places no orders and never writes the ledger, so it
+cannot double-trade against the evening run.
+
+The post-close trading run:
 
 1. Fetches fresh daily bars for the whole universe (Alpaca IEX, free).
 2. Runs the adopted RS-02 doctrine point-in-time: detector + 200-day
@@ -47,6 +55,8 @@ MAX_POSITION_PCT = 0.05      # 5% notional cap (mirrors HoneyDrip)
 MAX_OPEN = 8                 # concurrent-position cap
 MIN_BARS = 260               # doctrine needs 253+ bars (12-1 momentum)
 HISTORY_DAYS = 420           # calendar days of bars to fetch
+MAX_BAR_AGE_DAYS = 4         # pre-open: yesterday's close is
+                             # correct; a week old is broken
 LEDGER_PATH = os.path.join("docs", "reports", "paper_ledger.json")
 OPTIONS_PATH = os.path.join("paper", "open_options.json")
 
@@ -345,8 +355,82 @@ def build_report(today, acct, positions, signals, placed, skipped,
     return "\n".join(lines)
 
 
+def bars_are_current(all_bars: dict, today: str,
+                     max_age_days: int = MAX_BAR_AGE_DAYS) -> bool:
+    """Pre-open: the newest bar is YESTERDAY's close, which is exactly the
+    point-in-time information the signal is allowed to use. Guard only
+    against genuinely stale data (a long weekend is fine, a week is not)."""
+    bench = all_bars.get(BENCHMARK)
+    if bench is None or bench.empty:
+        return False
+    age = (date.fromisoformat(today)
+           - date.fromisoformat(str(bench["trade_date"].iloc[-1]))).days
+    return 0 <= age <= max_age_days
+
+
+def preopen_report(broker, all_bars: dict, today: str) -> str:
+    """Morning briefing, BEFORE the bell. Read-only by construction: it
+    places no orders and never writes the ledger, so it cannot
+    double-trade against the evening run. It tells the operator what the
+    close-of-yesterday data implies and what is already queued."""
+    if not bars_are_current(all_bars, today):
+        return (f"PRE-OPEN SCAN — {today}\n\n"
+                "Bars are stale or missing — no briefing. The evening run "
+                "will retry with fresh data.")
+
+    bench_date = str(all_bars[BENCHMARK]["trade_date"].iloc[-1])
+    acct = broker.account()
+    positions = broker.positions()
+    ledger = load_ledger()
+    signals = scan(all_bars)
+
+    lines = [f"PRE-OPEN SCAN — {today} (signals from the {bench_date} close)",
+             f"paper equity: ${float(acct['equity']):,.2f}", ""]
+
+    ratio = ratio_on(load_term_structure(), today)
+    if ratio is not None:
+        lines += [f"volatility regime: VIX/VIX3M {ratio:.3f} -> "
+                  f"{regime_label(ratio)}  (context only, gates nothing)", ""]
+
+    lines.append(f"CANDIDATES FOR TODAY ({len(signals)}):")
+    if not signals:
+        lines.append("  none — nothing passed breakout + regime + quality")
+    for s in signals:
+        held = " [already held]" if s["ticker"] in positions else ""
+        lines += [f"  {s['ticker']}  ref close {s['close']:.2f}  "
+                  f"stop {s['stop']:.2f}  target {s['target']:.2f}  "
+                  f"(1R = {s['r_denom']:.2f})  score {s['score']}/10{held}",
+                  f"      {s['rationale']}",
+                  f"      option guidance: CALL, {DTE_RANGE[0]}-{DTE_RANGE[1]} "
+                  f"DTE, delta ~{DELTA_TARGET}, strike near "
+                  f"{s['close']:.0f}, spread <= {MAX_SPREAD_PCT:.0%}"]
+    lines.append("")
+
+    queued = [s for s in ledger["open"].values() if s.get("entry_estimated")]
+    lines.append(f"ORDERS QUEUED FOR THE OPEN ({len(queued)}): "
+                 + (", ".join(sorted(k for k, v in ledger["open"].items()
+                                     if v.get("entry_estimated"))) or "none"))
+
+    lines += ["", f"OPEN POSITIONS ({len(positions)}):"]
+    for sym, p in sorted(positions.items()):
+        rec = ledger["open"].get(sym, {})
+        lines.append(f"  {sym}  qty {p['qty']}  "
+                     f"unrealized ${float(p.get('unrealized_pl', 0)):+,.2f}  "
+                     f"stop {rec.get('stop', '?')} / "
+                     f"target {rec.get('target', '?')}")
+    if not positions:
+        lines.append("  none")
+
+    lines += ["", review_open_options(load_open_options(), all_bars, today),
+              "", "Read-only briefing — no orders placed by this run. "
+              "The evening run trades and keeps the record."]
+    return "\n".join(lines)
+
+
 def main() -> None:
+    import sys
     from .alpaca_paper import PaperBroker
+    preopen = "--preopen" in sys.argv
     broker = PaperBroker()
     today = str(date.today())
     start = str(date.today() - timedelta(days=HISTORY_DAYS))
@@ -356,10 +440,14 @@ def main() -> None:
             all_bars[t] = fetch_bars(t, "1Day", start, today)
         except Exception as e:
             print(f"{t:<6} bars FAILED: {e}")
-    text = run(broker, all_bars, today)
+    if preopen:
+        text = preopen_report(broker, all_bars, today)
+        name = "premarket_scan"
+    else:
+        text = run(broker, all_bars, today)
+        name = "paper_trading"
     print(text)
-    path = save_report("paper_trading", text)
-    print(f"\nReport saved: {path}")
+    print(f"\nReport saved: {save_report(name, text)}")
 
 
 if __name__ == "__main__":
