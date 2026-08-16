@@ -47,8 +47,9 @@ the §72 experiment matrix, not a green light (LAW 19/20).
 ```bash
 python -m mve.walkforward           # §51: does the RS-02 edge hold per period?
 python -m mve.exit_study            # §41-§42: exit policies incl. H3 avwap_trail
-python -m mve.hypotheses            # §72 round 2: H4 quality + H6 spike guard
-                                    # (vs adopted H2b baseline; H1/H2 resolved)
+python -m mve.earnings              # earnings dates (ALPHAVANTAGE_API_KEY)
+python -m mve.hypotheses            # §72 round 3: H5 earnings blackout
+                                    # (vs adopted doctrine; H1/H2/H4/H6 resolved)
 python -m mve.trade_journal         # broker-history stats (Schwab/TOS CSV
                                     # in data/ — stays local, gitignored)
 python -m mve.alpaca_data           # Alpaca daily bars (APCA_* env keys)

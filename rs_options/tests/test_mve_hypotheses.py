@@ -6,9 +6,9 @@ import pytest
 
 from mve.backtest import run_backtest
 from mve.exit_study import POLICIES, simulate
-from mve.hypotheses import (VARIANTS, above_sma, calm_breakout, mom_12_1,
-                            near_52wk_high, quality_mom, run_hypotheses,
-                            summary)
+from mve.hypotheses import (VARIANT_NAMES, above_sma, calm_breakout,
+                            earnings_clear, mom_12_1, near_52wk_high,
+                            quality_mom, run_hypotheses, summary)
 from mve.store import DataStore
 from mve.vendors import SyntheticVendor
 
@@ -73,12 +73,38 @@ def test_entry_filter_blocks_and_counts(seeded):
 
 
 def test_hypothesis_study_structure(seeded):
-    results = run_hypotheses(seeded)
-    assert set(results) == set(VARIANTS)
+    results = run_hypotheses(seeded, earnings={})
+    assert set(results) == set(VARIANT_NAMES)
     text = summary(results)
-    assert "CONTROL" in text and "BASELINE_H2b" in text
-    assert "H4a_mom_pos" in text and "H6a_no_spike_5pct" in text
+    assert "CONTROL" in text and "BASELINE_DOCTRINE" in text
+    assert "H5a_blackout_3d" in text and "H5b_blackout_21d" in text
     assert "LAW 12/20" in text
+
+
+# ------------------------------------------------ H5 earnings blackout
+def _sig_bars(last_date="2026-03-02"):
+    return pd.DataFrame({"trade_date": ["2026-02-27", last_date],
+                         "close": [100.0, 101.0]})
+
+
+def test_earnings_clear_blocks_inside_window():
+    from datetime import date
+    earnings = {"T": [date(2026, 3, 4)]}          # 2 days after the signal
+    assert not earnings_clear(earnings, "T", _sig_bars(), 3)
+    assert not earnings_clear(earnings, "T", _sig_bars(), 21)
+
+
+def test_earnings_clear_passes_outside_window():
+    from datetime import date
+    earnings = {"T": [date(2026, 4, 15)]}         # 44 days out
+    assert earnings_clear(earnings, "T", _sig_bars(), 3)
+    assert earnings_clear(earnings, "T", _sig_bars(), 21)
+    past = {"T": [date(2026, 2, 1)]}              # already reported
+    assert earnings_clear(past, "T", _sig_bars(), 21)
+
+
+def test_earnings_clear_passes_unknown_ticker():
+    assert earnings_clear({}, "QQQ", _sig_bars(), 21)   # ETF / unfetched
 
 
 # ------------------------------------------------- H4 quality momentum
