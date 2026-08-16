@@ -1,15 +1,15 @@
 generated: 2026-08-16
 
-HYPOTHESIS STUDY — RS-02 entry filters, round 3 (H5, §72)
+HYPOTHESIS STUDY — RS-02 entry filters, round 4 (H8, §72)
 train <= 2024-12-31 | test >= 2025-01-01 | verdicts vs BASELINE_DOCTRINE (adopted doctrine)
 
-CONTROL             train: n=136 exp=+0.281R wr=55%   test: n= 76 exp=+0.252R wr=58%   filtered=0
-BASELINE_DOCTRINE   train: n= 61 exp=+0.348R wr=57%   test: n= 47 exp=+0.280R wr=53%   filtered=193
-H5a_blackout_3d     train: n= 58 exp=+0.359R wr=59%   test: n= 44 exp=+0.288R wr=55%   filtered=204
-H5b_blackout_21d    train: n= 48 exp=+0.451R wr=67%   test: n= 34 exp=+0.250R wr=56%   filtered=241
+CONTROL               train: n=136 exp=+0.281R wr=55% totR= +38.22   test: n= 76 exp=+0.252R wr=58% totR= +19.15
+BASELINE_DOCTRINE     train: n= 61 exp=+0.348R wr=57% totR= +21.23   test: n= 47 exp=+0.280R wr=53% totR= +13.16
+H8a_no_backwardation  train: n= 60 exp=+0.338R wr=57% totR= +20.28   test: n= 45 exp=+0.225R wr=51% totR= +10.12
+H8b_contango_095      train: n= 59 exp=+0.326R wr=56% totR= +19.23   test: n= 44 exp=+0.253R wr=52% totR= +11.13
 
 Verdicts vs BASELINE_DOCTRINE (adopt only if TRAIN improves AND TEST confirms; small n = inconclusive):
-  H5a_blackout_3d: ADOPT-CANDIDATE
-  H5b_blackout_21d: NOISE (train improved, test did not confirm)
+  H8a_no_backwardation: REJECT (train did not improve)
+  H8b_contango_095: REJECT (train did not improve)
 
-LAW 12/20: no filter is adopted from a single pass alone — an ADOPT-CANDIDATE gets encoded only by operator decision.
+LAW 12/20: no filter is adopted from a single pass alone — an ADOPT-CANDIDATE gets encoded only by operator decision. Read the CAUTION lines before deciding.
