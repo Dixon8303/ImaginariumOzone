@@ -32,6 +32,8 @@ python -m pytest tests/ -q          # full suite (risk engine + MVE)
 ```bash
 python -m mve.backfill              # ~5y of daily bars, full universe
                                     # (Stooq, Yahoo fallback — no API key)
+python -m mve.backfill --years 20   # deep history: more statistical power,
+                                    # spans 2008 and 2020 regimes
 python -m mve.backtest              # replay RS-01/RS-02 across history
 python -m mve.backtest 2023-01-01   # restrict the date range
 ```

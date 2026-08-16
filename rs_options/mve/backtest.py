@@ -85,6 +85,22 @@ class BacktestResult:
             }
         return out
 
+    def per_ticker(self, setup: str = "RS-02") -> dict:
+        """{ticker: {trades, expectancy_r}} for one setup.
+
+        Aggregate expectancy can be carried by two or three lucky names.
+        Breadth across tickers separates real structure from that — a
+        filter worth adopting should help most names, not just the mean.
+        """
+        out = {}
+        for ticker in sorted({t.ticker for t in self.trades
+                              if t.setup == setup}):
+            rs = [t.r_multiple for t in self.trades
+                  if t.setup == setup and t.ticker == ticker]
+            out[ticker] = {"trades": len(rs),
+                           "expectancy_r": round(sum(rs) / len(rs), 3)}
+        return out
+
     def summary(self) -> str:
         lines = ["BACKTEST — RS setups on the UNDERLYING (options P&L NOT modeled)",
                  f"trades: {len(self.trades)}   signals skipped (no valid R): "

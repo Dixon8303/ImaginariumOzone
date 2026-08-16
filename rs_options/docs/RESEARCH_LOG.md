@@ -466,3 +466,42 @@ now part of the instrument.
 
 210 tests passing. Awaiting the operator's `mve.vix_regime` +
 `mve.hypotheses` run for the H8 verdict.
+
+## 2026-08-16 — Discovery power: deep history + cross-sectional breadth
+
+Built in answer to the operator's question — "what if new inputs reveal
+the real pattern?" The honest risk is not only overfitting; it is being
+UNDERPOWERED, where a real but moderate effect looks like noise and gets
+rejected. Both changes raise what the lab can detect WITHOUT lowering
+the bar.
+
+**1. Deep backfill.** `python -m mve.backfill --years 20`. Fixed a
+latent bug found while adding it: `backfill()` accepted a `years`
+argument but never forwarded it to `fetch_bars`, so the Yahoo fallback
+silently capped every deep pull at 5 years — a deep backfill would have
+looked like it worked while quietly returning the old window. The CLI
+now takes `--years`, and each ticker reports its actual first->last
+date, because a name that IPO'd in 2020 cannot have 20 years and
+pretending otherwise misreads every study downstream.
+
+Why it matters: ~5 years and 177 trades can only resolve fairly large
+effects. Twenty years spans 2008 and 2020 — it both quadruples the
+evidence and lets us ask whether the edge is regime-dependent rather
+than assuming.
+
+**2. Cross-sectional breadth.** `BacktestResult.per_ticker()` plus a
+breadth line under every verdict: how many individual tickers a variant
+improved, among names with >= 5 trades in both arms. An ADOPT-CANDIDATE
+that helps a MINORITY of names now prints a CAUTION — aggregate
+expectancy can be carried by two or three lucky tickers, and that is a
+different (weaker) claim than "this works."
+
+**Known limitation, stated plainly:** the 2025-2026 test window has now
+been used to judge eight hypothesis rounds. Every pass makes it less
+genuinely out-of-sample. It remains the best historical evidence
+available, but the only truly uncontaminated test bed from here is the
+forward paper track — data that arrives after the rules were fixed.
+Deep history helps precisely because it adds evidence that was never
+part of that selection loop.
+
+216 tests passing.

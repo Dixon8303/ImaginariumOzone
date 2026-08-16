@@ -124,8 +124,42 @@ def run_hypotheses(store: DataStore, setup: str = "RS-02",
             "train": train.per_setup().get(setup),
             "test": test.per_setup().get(setup),
             "filtered": train.filtered_signals + test.filtered_signals,
+            "by_ticker": _merge_by_ticker(train.per_ticker(setup),
+                                          test.per_ticker(setup)),
         }
     return out
+
+
+MIN_TICKER_TRADES = 5           # below this a per-ticker read is noise
+
+
+def _merge_by_ticker(train: dict, test: dict) -> dict:
+    """Combine both windows per ticker — breadth is about the whole
+    history, not one window's slice of it."""
+    out = {}
+    for ticker in set(train) | set(test):
+        a, b = train.get(ticker), test.get(ticker)
+        n = (a["trades"] if a else 0) + (b["trades"] if b else 0)
+        total = ((a["trades"] * a["expectancy_r"]) if a else 0.0) + \
+                ((b["trades"] * b["expectancy_r"]) if b else 0.0)
+        out[ticker] = {"trades": n,
+                       "expectancy_r": round(total / n, 3) if n else 0.0}
+    return out
+
+
+def breadth_vs_baseline(variant: dict, baseline: dict) -> tuple:
+    """(improved, compared) ticker counts, over names with enough trades
+    in BOTH arms to be worth comparing."""
+    improved = compared = 0
+    for ticker, base in baseline.items():
+        got = variant.get(ticker)
+        if not got or base["trades"] < MIN_TICKER_TRADES \
+                or got["trades"] < MIN_TICKER_TRADES:
+            continue
+        compared += 1
+        if got["expectancy_r"] > base["expectancy_r"]:
+            improved += 1
+    return improved, compared
 
 
 def total_r(s) -> float:
@@ -186,6 +220,22 @@ def summary(results: dict) -> str:
                         f"      CAUTION: only {dn} trades differ from "
                         "baseline across both windows — too few to be "
                         "distinguishable from noise.")
+
+            # Cross-sectional breadth: does it help most NAMES, or is the
+            # aggregate being carried by a couple of lucky tickers?
+            improved, compared = breadth_vs_baseline(
+                r.get("by_ticker", {}), base.get("by_ticker", {}))
+            if compared:
+                lines.append(f"      breadth: improved {improved}/{compared} "
+                             f"tickers (>= {MIN_TICKER_TRADES} trades each)")
+                if verdict == "ADOPT-CANDIDATE" and improved * 2 < compared:
+                    lines.append(
+                        "      CAUTION: helps a MINORITY of tickers — the "
+                        "aggregate gain is concentrated, not broad.")
+            else:
+                lines.append("      breadth: not comparable "
+                             f"(no ticker has >= {MIN_TICKER_TRADES} trades "
+                             "in both arms)")
     lines.append("")
     lines.append("LAW 12/20: no filter is adopted from a single pass alone — "
                  "an ADOPT-CANDIDATE gets encoded only by operator decision. "

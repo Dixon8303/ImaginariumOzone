@@ -2,7 +2,8 @@
 import pandas as pd
 import pytest
 
-from mve.hypotheses import summary, total_r
+from mve.hypotheses import (MIN_TICKER_TRADES, _merge_by_ticker,
+                            breadth_vs_baseline, summary, total_r)
 from mve.vix_regime import (BACKWARDATION_AT, calm_regime, load_term_structure,
                             ratio_on, regime_label, save_term_structure,
                             summary as vix_summary)
@@ -101,3 +102,61 @@ def test_no_caution_when_a_filter_genuinely_helps():
     # the per-variant caution lines are indented; the footer mentions the
     # word too, so match the line form rather than the bare word
     assert "CAUTION:" not in text
+
+
+# ── cross-sectional breadth (does it help most NAMES?) ───────────────
+def _tk(trades, exp):
+    return {"trades": trades, "expectancy_r": exp}
+
+
+def test_merge_by_ticker_weights_by_trade_count():
+    merged = _merge_by_ticker({"AAPL": _tk(10, 0.5)}, {"AAPL": _tk(10, -0.1)})
+    assert merged["AAPL"]["trades"] == 20
+    assert merged["AAPL"]["expectancy_r"] == pytest.approx(0.20)
+    # a ticker present in only one window still counts
+    only = _merge_by_ticker({"MU": _tk(6, 0.3)}, {})
+    assert only["MU"]["trades"] == 6
+
+
+def test_breadth_counts_improved_tickers():
+    base = {"A": _tk(10, 0.2), "B": _tk(10, 0.2), "C": _tk(10, 0.2)}
+    better = {"A": _tk(10, 0.5), "B": _tk(10, 0.5), "C": _tk(10, 0.1)}
+    assert breadth_vs_baseline(better, base) == (2, 3)
+
+
+def test_breadth_ignores_thin_tickers():
+    """A ticker with a couple of trades tells you nothing either way."""
+    base = {"A": _tk(10, 0.2), "THIN": _tk(MIN_TICKER_TRADES - 1, 0.0)}
+    variant = {"A": _tk(10, 0.5), "THIN": _tk(MIN_TICKER_TRADES - 1, 9.0)}
+    assert breadth_vs_baseline(variant, base) == (1, 1)
+
+
+def test_concentrated_gain_earns_a_caution():
+    """Aggregate up, but carried by one name out of four -> CAUTION."""
+    base_tk = {t: _tk(10, 0.20) for t in "ABCD"}
+    var_tk = dict(base_tk, A=_tk(10, 2.0))       # only A improves
+    results = {
+        "BASELINE_DOCTRINE": {"train": _stats(100, 0.30),
+                              "test": _stats(60, 0.25),
+                              "filtered": 0, "by_ticker": base_tk},
+        "CONCENTRATED": {"train": _stats(95, 0.50), "test": _stats(58, 0.45),
+                         "filtered": 7, "by_ticker": var_tk},
+    }
+    text = summary(results)
+    assert "breadth: improved 1/4 tickers" in text
+    assert "helps a MINORITY of tickers" in text
+
+
+def test_broad_gain_gets_no_breadth_caution():
+    base_tk = {t: _tk(10, 0.20) for t in "ABCD"}
+    var_tk = {t: _tk(10, 0.45) for t in "ABCD"}   # all four improve
+    results = {
+        "BASELINE_DOCTRINE": {"train": _stats(100, 0.30),
+                              "test": _stats(60, 0.25),
+                              "filtered": 0, "by_ticker": base_tk},
+        "BROAD": {"train": _stats(95, 0.50), "test": _stats(58, 0.45),
+                  "filtered": 7, "by_ticker": var_tk},
+    }
+    text = summary(results)
+    assert "breadth: improved 4/4 tickers" in text
+    assert "MINORITY" not in text

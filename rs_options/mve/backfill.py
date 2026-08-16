@@ -8,6 +8,8 @@ Run from rs_options/ on a machine with open internet:
 
     python -m mve.backfill              # full universe, ~5 years
     python -m mve.backfill NVDA SPY     # specific tickers
+    python -m mve.backfill --years 20   # deep history (statistical power)
+    python -m mve.backfill --years 20 NVDA
 """
 from __future__ import annotations
 
@@ -102,10 +104,17 @@ def backfill(tickers: list | None = None, years: int = DEFAULT_YEARS,
     report = {}
     for t in tickers:
         try:
-            bars = fetch_bars(t, str(start), str(end))
+            bars = fetch_bars(t, str(start), str(end), years=years)
             n = store.ingest_bars(bars) if not bars.empty else 0
             report[t] = n
-            print(f"{t:<6} {n:>5} bars" + ("  <-- EMPTY, check symbol" if n == 0 else ""))
+            span = ""
+            if n:
+                have = store.bars(t)
+                if not have.empty:
+                    span = (f"  {have['trade_date'].iloc[0]} -> "
+                            f"{have['trade_date'].iloc[-1]}")
+            print(f"{t:<6} {n:>6} bars{span}"
+                  + ("  <-- EMPTY, check symbol" if n == 0 else ""))
         except Exception as e:                # keep going; report the failure
             report[t] = 0
             print(f"{t:<6} FAILED: {e}")
@@ -113,9 +122,16 @@ def backfill(tickers: list | None = None, years: int = DEFAULT_YEARS,
 
 
 if __name__ == "__main__":
-    requested = sys.argv[1:] or None
-    print(f"Backfilling {len(requested or required_tickers())} tickers into {DATA_ROOT} ...")
-    result = backfill(requested)
+    args = sys.argv[1:]
+    years = DEFAULT_YEARS
+    if "--years" in args:
+        i = args.index("--years")
+        years = int(args[i + 1])
+        del args[i:i + 2]
+    requested = args or None
+    print(f"Backfilling {len(requested or required_tickers())} tickers "
+          f"(~{years}y) into {DATA_ROOT} ...")
+    result = backfill(requested, years=years)
     ok = sum(1 for v in result.values() if v > 0)
     print(f"\nDone: {ok}/{len(result)} tickers with data. "
           f"Next: python -m mve.backtest")
