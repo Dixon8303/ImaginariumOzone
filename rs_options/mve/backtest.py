@@ -225,7 +225,8 @@ if __name__ == "__main__":
         raise SystemExit("No data found. Run:  python -m mve.backfill")
     res = run_backtest(store, start=args[0] if args else None,
                        end=args[1] if len(args) > 1 else None)
-    print(res.summary())
+    from .report import save_and_print
+    save_and_print("backtest", res.summary())
     with open("data/backtest_results.json", "w") as f:
         json.dump({"per_setup": res.per_setup(),
                    "trades": [vars(t) for t in res.trades]}, f, indent=2)

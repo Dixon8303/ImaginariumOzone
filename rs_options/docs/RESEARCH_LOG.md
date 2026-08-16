@@ -126,3 +126,39 @@ CONTROL. The hypothesis module now imports the same `above_sma`
 implementation the scanner runs, so the studied filter and the live
 filter cannot drift apart. Playbook updated. Cost in history: 37
 filtered signals over ~5 years.
+
+## 2026-08-15 — H7 verdicts: ORB and intraday momentum both fail
+
+First run on real minute history: 500 sessions (~2 trading years,
+2024-08 → 2026-08) of SPY and QQQ, ~393k minute bars, 2 bps friction,
+pre-registered 70/30 chronological split.
+
+| Study | Ticker | Train | Test | Verdict |
+|---|---|---|---|---|
+| ORB 15-min | SPY | +0.054R (n=349) | −0.014R (n=150) | **NOISE** |
+| ORB 15-min | QQQ | +0.037R (n=349) | −0.064R (n=150) | **NOISE** |
+| Intraday momentum | SPY | −1.26 bps (n=340) | −2.75 bps (n=150) | **REJECT** |
+| Intraday momentum | QQQ | −0.44 bps (n=343) | −3.30 bps (n=150) | **REJECT** |
+
+Reads:
+- **ORB fired almost every session** (349 of ~350 train days) — the
+  15-min range breaks daily, so the setup has no selectivity; win rates
+  39–43% with the opposite-bound stop produce expectancy ~0 on train
+  and negative out-of-sample. Chop eats the edge.
+- **The Gao/Han/Li/Zhou first-30→last-30 effect is negative even
+  in-sample** on 2024–2026 data. The paper's sample ended years before
+  publication (2018); this is the textbook post-publication decay of a
+  documented anomaly. It is not there to harvest at retail friction.
+- Friction here was a *generous* 2 bps constant; live costs are worse,
+  so the true numbers are below these.
+
+**Consequence: the intraday track is CLOSED for now.** This was the
+data's answer to the operator's 5-min-to-3-hr day-trading question —
+tested honestly, on the two most liquid instruments, and it failed both
+ways. The validated edge remains RS-02 on the daily timeframe with the
+wide exit and the H2b regime filter. The 500-session minute store stays
+on disk for future use (e.g., a minute-precision AVWAP retest of H3, or
+sizing entry slippage assumptions for the daily setups).
+
+**Remaining queue:** H4 quality screen, H5 earnings blackout,
+H6 one-day-spike guard — all on the daily track.

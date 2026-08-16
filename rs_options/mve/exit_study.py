@@ -179,4 +179,5 @@ if __name__ == "__main__":
     store = DataStore(DATA_ROOT)
     if not store.tickers():
         raise SystemExit("No data. Run: python -m mve.backfill")
-    print(summary(run_study(store)))
+    from .report import save_and_print
+    save_and_print("exit_study", summary(run_study(store)))

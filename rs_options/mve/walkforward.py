@@ -62,4 +62,5 @@ if __name__ == "__main__":
     store = DataStore(DATA_ROOT)
     if not store.tickers():
         raise SystemExit("No data. Run: python -m mve.backfill")
-    print(summary(run_walkforward(store)))
+    from .report import save_and_print
+    save_and_print("walkforward", summary(run_walkforward(store)))

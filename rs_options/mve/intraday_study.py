@@ -189,4 +189,5 @@ if __name__ == "__main__":
     if not tickers or not any(store.days(t) for t in tickers):
         raise SystemExit(
             "No minute data. Run: python -m mve.alpaca_data --minute-deep")
-    print(summary(run_studies(store, tickers)))
+    from .report import save_and_print
+    save_and_print("intraday_study", summary(run_studies(store, tickers)))
