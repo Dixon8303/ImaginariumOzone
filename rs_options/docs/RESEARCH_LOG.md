@@ -368,3 +368,41 @@ A verdict label is an input to the decision, not the decision.
 
 Doctrine unchanged: RS-02 + wide exit (3R/15-bar) + H2b regime + H4b
 quality + no volatility ETPs. The §72 hypothesis queue is now empty.
+
+## 2026-08-16 — position_manager recovered, completed, adopted
+
+A local session authored `mve/position_manager.py` + tests; the commit
+was dropped during a rebase and the files existed nowhere on GitHub.
+Recovered from the operator's reflog (branch `recovered-pm`), reviewed,
+and completed.
+
+What it is: a PURE decision function for open long-call positions —
+HOLD or EXIT with accumulated reasons. No sizing, no contract choice,
+no order placement (§67 execution stays human-confirmed). It moves the
+playbook's exit rules from prose (skippable under pressure, which is
+when they matter) into deterministic, testable code.
+
+As recovered it encoded 2 of the playbook's 5 exit rules (DTE floor,
+invalidation). Completed here with the two the exit study actually
+validated:
+- **TARGET** at +TARGET_R on the underlying, and
+- **TIME_EXIT** at MAX_HOLD_BARS trading days,
+both imported from `backtest` rather than re-typed, so a doctrine
+number still lives in exactly one place.
+
+Also added: `not_evaluated` on the verdict. A rule whose inputs are
+missing (older records lack entry_date / entry_underlying) is reported
+as NOT CHECKED rather than silently passing — the same principle as the
+"no silent caps" rule in the backtester.
+
+Provenance correction: the module's docstring cites Robinhood figures
+(116 trades, −$918 of expirations) that are NOT reproducible from this
+repo. Marked as the motivating anecdote, not verified evidence — while
+noting that the independent Schwab/thinkorswim analysis reached the
+same diagnosis on a different account (1,429 round trips, avg win
+$19.64 vs avg loss $33.15). Two accounts, two analyses, one failure
+mode: unbounded losers, clipped winners.
+
+Not yet wired into a caller — it is the exit authority the co-pilot
+flow should consult, and wiring it is the next operational step, not a
+research one. 193 tests passing.
