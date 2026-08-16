@@ -294,3 +294,35 @@ history), then re-run `python3 -m mve.backtest` and
 `python3 -m mve.walkforward` — the strategy-level edge must be
 confirmed on the expanded universe before the new names carry live
 trust. Earnings fetch auto-includes the new stocks (20 ≤ 25/day cap).
+
+## 2026-08-16 — Autonomous PAPER shadow track (§87)
+
+Operator asked for the daily scan to run itself and for paper execution
+on Alpaca. Built `rs_options/paper/` + `.github/workflows/paper_trader.yml`
+(21:35 UTC weekdays — after the NYSE close year-round, runs on GitHub's
+servers so the Mac need not be on):
+
+1. Fetches fresh daily bars for the 22-ticker universe (Alpaca IEX).
+2. Runs the adopted live doctrine via `detect_all` — the same code path
+   the operator's manual scan uses, so paper and live can never diverge.
+3. Paper-trades survivors as the UNDERLYING equity: market buy queued
+   for the next open (matching the backtester's next-open entry),
+   bracket stop at invalidation, target at +3R, time exit at 15
+   trading days. Sizing: 1% equity risk, 5% notional cap, 8 positions.
+4. Commits `docs/reports/paper_trading.txt` — today's signals with
+   entry/stop/target AND the playbook's option guidance for the
+   operator's discretionary Robinhood execution, plus open positions,
+   closed trades in R, and the cumulative record.
+
+Guardrails: `PAPER_URL` is a hard-coded constant (no parameter, no env
+override — there is no live path in this package by construction),
+`RS_PAPER_ARMED=YES` interlock, keys from env only. A freshness gate
+compares the benchmark's last bar to today's date, so a holiday run
+cannot re-signal stale bars. Ledger lives in docs/reports (paper
+account data only, never keys).
+
+Scope honesty: this validates the SETUP SIGNAL with fake money on
+equities. Options P&L still is not modeled (historical chains are paid
+data), and live execution remains co-pilot — the operator's word, per
+trade, in Robinhood. The point is a dated, machine-kept track record
+that the operator only has to read.
