@@ -6,6 +6,7 @@ must be versioned/tested before any production meaning is attached
 """
 from __future__ import annotations
 
+import numpy as np
 import pandas as pd
 
 RETURN_WINDOW = 10          # CALIBRATE — RS measurement window (bars)
@@ -38,10 +39,20 @@ def rolling_beta(stock_close: pd.Series, bench_close: pd.Series,
 def rs_persistence(stock_close: pd.Series, bench_close: pd.Series,
                    step: int = PERSISTENCE_STEP,
                    lookback: int = PERSISTENCE_LOOKBACK) -> float:
-    """Share of trailing `step`-bar windows where RS_market > 0 (§15)."""
+    """Share of trailing `step`-bar windows where RS_market > 0 (§15).
+
+    Both series are tail-aligned before comparison. Indexing them from the
+    head instead compares the stock's newest bars against the benchmark's
+    OLDEST ones whenever the two differ in length — a 250-bar ticker read
+    against a 1255-bar SPY scored itself on SPY's 2021 returns. Callers
+    that can align on trade_date should do so (see compute_features);
+    tail-alignment is the floor, not the ceiling.
+    """
     n = min(len(stock_close), len(bench_close))
     if n < step + 2:
         return 0.0
+    stock_close = stock_close.iloc[-n:]
+    bench_close = bench_close.iloc[-n:]
     wins = 0
     total = 0
     for end in range(n - 1, max(step, n - 1 - lookback), -1):
@@ -55,9 +66,43 @@ def rs_persistence(stock_close: pd.Series, bench_close: pd.Series,
     return wins / total if total else 0.0
 
 
+def align_on_dates(*frames: pd.DataFrame) -> tuple:
+    """Restrict frames to their common trade_date set, oldest first (§49).
+
+    Every cross-series feature (RS, beta, persistence) compares bar i of the
+    stock against bar i of the benchmark, so the two must be indexed by the
+    same calendar. Positional alignment silently breaks whenever the series
+    differ in length — a newly-backfilled ticker with less history than the
+    benchmark, or one with a halt/holiday gap the benchmark does not share.
+    """
+    base = frames[0]["trade_date"].to_numpy()
+    if all(len(f) == len(base) and np.array_equal(f["trade_date"].to_numpy(), base)
+           for f in frames[1:]):
+        return frames          # already on one calendar — the hot path, no copy
+
+    common = set(frames[0]["trade_date"])
+    for frame in frames[1:]:
+        common &= set(frame["trade_date"])
+    return tuple(f[f["trade_date"].isin(common)]
+                 .sort_values("trade_date")
+                 .reset_index(drop=True)
+                 for f in frames)
+
+
 def compute_features(stock: pd.DataFrame, bench: pd.DataFrame,
                      sector: pd.DataFrame | None = None) -> dict:
-    """Feature dict from daily bars (oldest first, canonical store schema)."""
+    """Feature dict from daily bars (oldest first, canonical store schema).
+
+    Cross-series inputs are aligned on trade_date first; `rel_volume` stays
+    on the caller's unaligned stock frame because it is a single-series
+    measure of the stock against its own history.
+    """
+    raw_stock = stock
+    if sector is not None and len(sector):
+        stock, bench, sector = align_on_dates(stock, bench, sector)
+    else:
+        stock, bench = align_on_dates(stock, bench)
+
     sc, bc = stock["close"], bench["close"]
     beta = rolling_beta(sc, bc)
     stock_ret = window_return(sc)
@@ -69,7 +114,7 @@ def compute_features(stock: pd.DataFrame, bench: pd.DataFrame,
         "beta": beta,
         "rs_beta_adjusted": stock_ret - beta * bench_ret,
         "rs_persistence": rs_persistence(sc, bc),
-        "rel_volume": _relative_volume(stock),
+        "rel_volume": _relative_volume(raw_stock),
     }
     if sector is not None and len(sector):
         sector_ret = window_return(sector["close"])
