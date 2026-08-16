@@ -1,0 +1,15 @@
+generated: 2026-08-16
+
+WALK-FORWARD — RS-02 (fixed parameters, §51)
+
+  train 2021-2023: n= 82 exp=+0.115R wr=49% maxDD=-10.212R
+  test  2024-2024: n= 48 exp=+0.577R wr=65% maxDD=-3.494R
+
+  train 2021-2024: n=136 exp=+0.281R wr=55% maxDD=-10.212R
+  test  2025-2025: n= 49 exp=+0.307R wr=61% maxDD=-4.283R
+
+  train 2021-2025: n=187 exp=+0.274R wr=56% maxDD=-10.212R
+  test  2026-2026: n= 24 exp=+0.227R wr=54% maxDD=-3.003R
+
+Verdict: edge held in 3/3 judged test windows (a window needs >=10 trades to count).
+LAW 20: only out-of-sample evidence earns production status.
