@@ -40,6 +40,7 @@ from mve.report import save_report
 from mve.rs_features import compute_features
 from mve.setups import detect_all
 from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
+from mve.vix_regime import load_term_structure, ratio_on, regime_label
 
 RISK_PCT = 0.01              # 1% of paper equity risked per trade
 MAX_POSITION_PCT = 0.05      # 5% notional cap (mirrors HoneyDrip)
@@ -267,7 +268,14 @@ def build_report(today, acct, positions, signals, placed, skipped,
                  option_review: str = "") -> str:
     lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
-             f"cash: ${float(acct['cash']):,.2f}", ""]
+             f"cash: ${float(acct['cash']):,.2f}"]
+    # Volatility regime is CONTEXT ONLY — H8 is untested, so it gates
+    # nothing. It tells the operator what environment the picks are in.
+    ratio = ratio_on(load_term_structure(), today)
+    if ratio is not None:
+        lines.append(f"volatility regime: VIX/VIX3M {ratio:.3f} "
+                     f"-> {regime_label(ratio)}  (context only, gates nothing)")
+    lines.append("")
 
     lines.append(f"TODAY'S SIGNALS ({len(signals)}):")
     if not signals:

@@ -431,3 +431,38 @@ Two design points worth keeping:
   outside the universe: reported as NOT PRICED, never omitted.
 
 201 tests passing.
+
+## 2026-08-16 — H8 built: VIX term structure as a regime filter
+
+Answering "what else can be learned to read market fluctuations," the
+first Tier-1 item: a volatility-regime reading that needs no new data
+vendor and no API key.
+
+`mve/vix_regime.py` fetches VIX and VIX3M daily closes (CBOE's public
+CSV, Yahoo fallback) and computes the ratio. Below 1.0 the curve is in
+CONTANGO — the normal state, more risk priced further out. At or above
+1.0 it is BACKWARDATION: near-term fear exceeds three-month, i.e. the
+market pricing stress now.
+
+Mechanism stated before the test (as always): breakouts bet on
+continuation, and backwardation is precisely when continuation breaks —
+correlations converge and trends whipsaw, the momentum-crash regime in
+MARKET_THEORY §1.4. Two pre-registered thresholds, round 4 of the
+hypothesis lab: ratio < 1.00 (skip backwardation) and < 0.95 (require
+real contango). Fails closed — a date with no reading blocks rather
+than assuming calm.
+
+The regime also prints in the daily paper report as CONTEXT ONLY. It
+gates nothing until H8 is judged and adopted; the report says so on the
+line itself, so a reader cannot mistake context for doctrine.
+
+**The H5 lesson is now automatic.** `hypotheses.summary` prints total-R
+alongside expectancy for every variant, and an ADOPT-CANDIDATE that
+raised the per-trade average while lowering total return now prints a
+CAUTION line saying so — as does one where fewer than 8 trades differ
+from baseline. A regression test replays the exact round-3 H5 numbers
+and asserts both cautions fire. The reasoning that caught H5 by hand is
+now part of the instrument.
+
+210 tests passing. Awaiting the operator's `mve.vix_regime` +
+`mve.hypotheses` run for the H8 verdict.

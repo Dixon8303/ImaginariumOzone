@@ -48,8 +48,9 @@ the §72 experiment matrix, not a green light (LAW 19/20).
 python -m mve.walkforward           # §51: does the RS-02 edge hold per period?
 python -m mve.exit_study            # §41-§42: exit policies incl. H3 avwap_trail
 python -m mve.earnings              # earnings dates (ALPHAVANTAGE_API_KEY)
-python -m mve.hypotheses            # §72 round 3: H5 earnings blackout
-                                    # (vs adopted doctrine; H1/H2/H4/H6 resolved)
+python -m mve.vix_regime            # VIX/VIX3M term structure (free, no key)
+python -m mve.hypotheses            # §72 round 4: H8 volatility regime
+                                    # (vs adopted doctrine; H1-H7 resolved)
 python -m mve.trade_journal         # broker-history stats (Schwab/TOS CSV
                                     # in data/ — stays local, gitignored)
 python -m mve.alpaca_data           # Alpaca daily bars (APCA_* env keys)
@@ -88,3 +89,16 @@ strictly EOD.
 - Graduation triggers (§87): DuckDB→ClickHouse when queries take minutes;
   more setups only after RS-01/RS-02 have verdicts; spreads only after a
   broker margin adapter is validated in Shadow.
+
+## Volatility regime (H8)
+
+```bash
+python -m mve.vix_regime            # fetch VIX/VIX3M, print the regime
+```
+
+Free, no API key (CBOE CSV, Yahoo fallback). The ratio VIX / VIX3M
+below 1.0 is contango (calm); at or above 1.0 is backwardation — the
+market pricing near-term stress, historically where momentum
+continuation breaks. Regime CONTEXT: it appears in the daily paper
+report but gates nothing until `mve.hypotheses` judges H8 and the
+operator adopts it.
