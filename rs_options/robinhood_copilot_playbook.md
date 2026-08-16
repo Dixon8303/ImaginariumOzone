@@ -125,14 +125,21 @@ Do not re-enable RS-01 by editing the tuple ad hoc. It earns its way back
 only when a re-parameterized version shows positive OUT-OF-SAMPLE
 expectancy in the backtester (LAW 20). Research tools still evaluate it.
 
-**RS-02 entry condition (H2b, adopted 2026-08-15):** the stock must be
-above its **own 200-day moving average** at signal time. Adopted after
-the §72 hypothesis study improved both train (+0.415R vs +0.346R) and
-test (+0.239R vs +0.229R) windows. Fail-closed: a ticker with under 200
-sessions of history produces no entries. The scanner enforces this in
-`mve/setups.py :: ENTRY_FILTERS` — no manual check needed, but if a
-breakout candidate is missing from a scan, this is the first reason to
-suspect.
+**RS-02 entry conditions (adopted §72 filters):** at signal time the
+stock must be
+
+1. **above its own 200-day moving average** (H2b, adopted 2026-08-15 —
+   train +0.415R vs +0.346R, test +0.239R vs +0.229R), and
+2. **up at least +10% over the trailing 12 months**, measured to one
+   month ago (H4b, adopted 2026-08-16 — vs the H2b baseline: train
+   +0.516R vs +0.415R, test +0.324R vs +0.239R, with a dose-response
+   pattern across thresholds).
+
+Both fail closed: a ticker with under ~13 months of history produces no
+entries. Expect roughly half as many signals as before H4b — fewer,
+better trades. The scanner enforces both in `mve/setups.py ::
+ENTRY_FILTERS` — no manual check needed, but if a breakout candidate is
+missing from a scan, these are the first reasons to suspect.
 
 ## Volatility context (the "volatility box")
 

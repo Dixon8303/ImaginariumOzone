@@ -93,8 +93,9 @@ def test_mom_12_1_sign_and_fail_closed():
 
 def test_quality_mom_threshold():
     modest = bars_from_closes([100 + 0.02 * i for i in range(300)])
-    assert quality_mom(modest)                    # positive drift
-    assert not quality_mom(modest, 0.50)          # but not +50%
+    assert quality_mom(modest, 0.0)               # positive drift
+    assert not quality_mom(modest)                # ~+5% < adopted 10% default
+    assert not quality_mom(modest, 0.50)          # and not +50%
 
 
 # --------------------------------------------------- H6 spike guard

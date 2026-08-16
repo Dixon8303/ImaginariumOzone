@@ -138,23 +138,37 @@ def test_above_sma_regime_semantics():
 
 
 def test_rs02_live_doctrine_blocks_without_regime():
-    """H2b adopted 2026-08-15: the live path requires the stock above its
-    own 200-day SMA (fail-closed under 200 bars). Research paths that
-    pass `active` explicitly stay unfiltered (clean CONTROL)."""
+    """H2b adopted 2026-08-15, H4b 2026-08-16: the live path requires the
+    stock above its own 200-day SMA AND 12-1 momentum >= +10%, both
+    fail-closed on short history. Research paths that pass `active`
+    explicitly stay unfiltered (clean CONTROL)."""
     closes = [100.0 + 0.3 * i for i in range(39)] + [100.0 + 0.3 * 38 + 5.0]
     stock = bars_from_closes(closes, last_volume=2_000_000)
     bench = bars_from_closes([500.0 + 0.05 * i for i in range(40)])
     f = compute_features(stock, bench)
     assert detect_rs02(stock, f) is not None            # detector fires
-    assert detect_all(stock, f) == []                   # live: no regime yet
+    assert detect_all(stock, f) == []                   # live: history too short
     research = detect_all(stock, f, active=("RS-02",))  # research: unfiltered
     assert research and research[0]["setup_id"] == "RS-02"
 
 
-def test_rs02_live_doctrine_passes_with_regime():
-    closes = [100.0 + 0.3 * i for i in range(219)] + [100.0 + 0.3 * 218 + 8.0]
+def test_rs02_live_doctrine_blocks_weak_momentum():
+    """Above the 200-day SMA but 12-1 momentum ~+5% (< adopted 10%):
+    H4b blocks the live entry; the detector itself still fires."""
+    closes = [100.0 + 0.02 * i for i in range(279)] + [100.0 + 0.02 * 278 + 8.0]
     stock = bars_from_closes(closes, last_volume=2_000_000)
-    bench = bars_from_closes([500.0 + 0.05 * i for i in range(220)])
+    bench = bars_from_closes([500.0] * 280)
     f = compute_features(stock, bench)
-    hits = detect_all(stock, f)                         # live path, regime OK
+    assert detect_rs02(stock, f) is not None
+    from mve.setups import above_sma, quality_mom
+    assert above_sma(stock) and not quality_mom(stock)
+    assert detect_all(stock, f) == []
+
+
+def test_rs02_live_doctrine_passes_with_regime_and_momentum():
+    closes = [100.0 + 0.3 * i for i in range(299)] + [100.0 + 0.3 * 298 + 9.0]
+    stock = bars_from_closes(closes, last_volume=2_000_000)
+    bench = bars_from_closes([500.0 + 0.05 * i for i in range(300)])
+    f = compute_features(stock, bench)
+    hits = detect_all(stock, f)              # regime OK, momentum ~+60%
     assert hits and hits[0]["setup_id"] == "RS-02"

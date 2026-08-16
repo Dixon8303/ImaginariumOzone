@@ -30,15 +30,21 @@ INVALIDATION_LOOKBACK = 5       # swing-low window for the stop (CALIBRATE)
 # pending walk-forward validation.
 ACTIVE_SETUPS = ("RS-02",)
 
-# H2b regime filter — ADOPTED 2026-08-15 by operator decision after the
-# §72 hypothesis study: requiring the stock above its own 200-day SMA
-# improved RS-02 on TRAIN (+0.415R vs +0.346R, n=95) AND TEST (+0.239R
-# vs +0.229R, n=53); every other variant (52wk-high, SPY-regime) was
-# noise. Applies to the LIVE doctrine path only — research tools that
-# pass `active` explicitly get unfiltered signals, so future studies
-# keep a clean CONTROL. Fail-closed: with fewer than REGIME_SMA_LEN bars
-# there is no established regime, so no entry.
+# Adopted RS-02 entry filters (§72 hypothesis studies). Both apply to
+# the LIVE doctrine path only — research tools that pass `active`
+# explicitly get unfiltered signals, so future studies keep a clean
+# CONTROL. Both fail closed: insufficient history means no entry.
+#
+# H2b regime (ADOPTED 2026-08-15): stock above its own 200-day SMA.
+#   Round-1 study: train +0.415R vs +0.346R, test +0.239R vs +0.229R.
+# H4b momentum-quality (ADOPTED 2026-08-16): trailing 12-1 month return
+#   >= +10% (skip the reversal-prone last month, Jegadeesh-Titman).
+#   Round-2 study vs the H2b baseline: train +0.516R vs +0.415R, test
+#   +0.324R vs +0.239R, with a dose-response pattern across thresholds.
 REGIME_SMA_LEN = 200
+MOM_LOOKBACK = 252              # 12-1 momentum window (CALIBRATE)
+MOM_SKIP = 21                   # skip the last month
+QUALITY_MIN_MOM = 0.10          # H4b threshold (CALIBRATE)
 
 
 def above_sma(bars: pd.DataFrame, length: int = REGIME_SMA_LEN) -> bool:
@@ -48,7 +54,25 @@ def above_sma(bars: pd.DataFrame, length: int = REGIME_SMA_LEN) -> bool:
     return float(bars["close"].iloc[-1]) > sma
 
 
-ENTRY_FILTERS = {"RS-02": above_sma}
+def mom_12_1(bars: pd.DataFrame) -> float | None:
+    """Trailing 12-1 month return; None with insufficient history."""
+    if len(bars) < MOM_LOOKBACK + 1:
+        return None
+    c = bars["close"]
+    return float(c.iloc[-MOM_SKIP]) / float(c.iloc[-MOM_LOOKBACK]) - 1.0
+
+
+def quality_mom(bars: pd.DataFrame, min_mom: float = QUALITY_MIN_MOM) -> bool:
+    m = mom_12_1(bars)
+    return m is not None and m > min_mom
+
+
+def rs02_entry_ok(bars: pd.DataFrame) -> bool:
+    """The full adopted RS-02 entry doctrine: H2b regime + H4b quality."""
+    return above_sma(bars) and quality_mom(bars)
+
+
+ENTRY_FILTERS = {"RS-02": rs02_entry_ok}
 
 
 def detect_rs01(stock: pd.DataFrame, features: dict) -> dict | None:
