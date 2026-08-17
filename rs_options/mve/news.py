@@ -37,6 +37,7 @@ from .alpaca_data import _headers
 from .universe import UNIVERSE
 
 NEWS_URL = "https://data.alpaca.markets/v1beta1/news"
+RETRIES = 4                 # transient DNS/network failures under load
 NEWS_DIR = os.path.join("data", "news")
 HISTORY_YEARS = 6
 PAUSE_S = 0.35
@@ -45,6 +46,22 @@ PAUSE_S = 0.35
 RECENT_DAYS = 5             # "how loud is it right now"
 BASELINE_DAYS = 60          # "how loud is it normally"
 MIN_BASELINE_ARTICLES = 5   # below this the ratio is not meaningful
+
+
+def _get_with_retry(url: str, headers: dict, retries: int = RETRIES) -> dict:
+    """A dropped connection mid-universe leaves PARTIAL coverage, which
+    biases any study that fails closed on missing data. Retry rather
+    than let one DNS hiccup silently shrink the sample."""
+    last = None
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return json.loads(resp.read())
+        except Exception as e:
+            last = e
+            time.sleep(PAUSE_S * (2 ** attempt))
+    raise last
 
 
 def parse_news(payload: dict, ticker: str) -> pd.DataFrame:
@@ -67,11 +84,8 @@ def fetch_counts(ticker: str, start: str, end: str) -> pd.DataFrame:
                   "limit": 50, "sort": "asc"}
         if token:
             params["page_token"] = token
-        req = urllib.request.Request(
-            NEWS_URL + "?" + urllib.parse.urlencode(params),
-            headers=_headers())
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            payload = json.loads(resp.read())
+        payload = _get_with_retry(
+            NEWS_URL + "?" + urllib.parse.urlencode(params), _headers())
         frames.append(parse_news(payload, ticker))
         token = payload.get("next_page_token")
         time.sleep(PAUSE_S)

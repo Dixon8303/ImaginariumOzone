@@ -95,10 +95,11 @@ from datetime import date as _date
 
 from .backtest import DATA_ROOT, run_backtest
 from .earnings import load_earnings
-from .fundamentals import is_profitable, load_fundamentals
+from .fundamentals import ETF_TICKERS, is_profitable, load_fundamentals
 from .news import load_news, quiet_attention
 from .setups import above_sma, mom_12_1, quality_mom, rs02_entry_ok
 from .store import DataStore
+from .universe import BENCHMARK, UNIVERSE
 from .vix_regime import calm_regime, load_term_structure
 from .volume_profile import clear_overhead, overhead_supply
 
@@ -135,6 +136,30 @@ def earnings_clear(earnings: dict, ticker: str, bars, days_ahead: int) -> bool:
         return True
     d = _date.fromisoformat(str(bars["trade_date"].iloc[-1]))
     return not any(0 <= (e - d).days <= days_ahead for e in dates)
+
+
+MIN_COVERAGE = 0.95         # below this a data-backed verdict is biased
+
+
+def data_coverage(data: dict, needed) -> tuple:
+    """(covered, required, missing) for a per-ticker dataset.
+
+    Filters that FAIL CLOSED turn missing data into a silent sample
+    restriction: with news for 7 of 22 names, H9 would report a verdict
+    about those 7 names while looking like a verdict about news. This is
+    how a partial fetch becomes a fake finding, so coverage is measured
+    and the affected variants are invalidated rather than scored.
+    """
+    required = sorted(needed)
+    missing = [t for t in required if t not in data or _is_empty(data[t])]
+    return len(required) - len(missing), len(required), missing
+
+
+def _is_empty(frame) -> bool:
+    try:
+        return frame is None or len(frame) == 0
+    except TypeError:
+        return not frame
 
 
 def signal_date(bars) -> str:
@@ -270,6 +295,12 @@ def run_hypotheses(store: DataStore, setup: str = "RS-02",
                                           test.per_ticker(setup)),
         }
 
+    # Coverage is checked BEFORE anything is scored, and recorded on the
+    # affected variants so the summary can invalidate them.
+    stocks = {t for t in UNIVERSE if t != BENCHMARK}
+    news_cov = data_coverage(news, stocks)
+    facts_cov = data_coverage(facts, stocks - ETF_TICKERS)
+
     out = {}
     for name, f in build_variants(news, facts, counts).items():
         train = run_backtest(store, end=TRAIN_END, active=(setup,),
@@ -277,6 +308,14 @@ def run_hypotheses(store: DataStore, setup: str = "RS-02",
         test = run_backtest(store, start=TEST_START, active=(setup,),
                             entry_filter=f)
         out[name] = record(train, test)
+        cov = (news_cov if name.startswith("H9")
+               else facts_cov if name.startswith("H10") else None)
+        if cov and cov[0] < cov[1] * MIN_COVERAGE:
+            out[name]["invalid"] = (
+                f"data covers only {cov[0]}/{cov[1]} tickers — this would "
+                f"be a verdict about those names, not about the filter. "
+                f"Missing: {', '.join(cov[2][:6])}"
+                + ("..." if len(cov[2]) > 6 else ""))
 
     # H15 is a fill-time cancellation: the doctrine filter is unchanged
     # and the gap tolerance is passed to the backtester instead.
@@ -352,6 +391,9 @@ def summary(results: dict) -> str:
                      "AND TEST confirms; small n = inconclusive):")
         for name, r in results.items():
             if name in ("CONTROL", BASELINE):
+                continue
+            if r.get("invalid"):
+                lines.append(f"  {name}: INVALID — {r['invalid']}")
                 continue
             t, s = r["train"], r["test"]
             if not t or not s or t["trades"] < 20 or s["trades"] < 10:
