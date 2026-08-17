@@ -19,7 +19,26 @@ return fell in both windows while the per-trade average rose. No
 dose-response either. See the total-R columns below: they exist
 because of H5.
 
-Round 4 (current): H8 volatility regime — does requiring the VIX term
+Round 4 (2026-08-16, resolved on the operator's run): see the research
+log for the H8 verdict.
+
+Round 5 (current): three new inputs, each with its mechanism stated
+before the data.
+
+H9  news attention (Barber & Odean 2008 + the metaorder story): a
+    breakout arriving in a burst of coverage is more crowded and more
+    likely to fade than one accumulated quietly. SKIP high attention.
+H10 profitability (Novy-Marx 2013): a breakout in an unprofitable name
+    is more story than earnings and more prone to reversal. REQUIRE
+    trailing-four-quarter profit, keyed to SEC FILING dates so nothing
+    is known before it was public.
+H11 overhead supply (volume-by-price): every share bought above today's
+    price is a break-even seller the rally must absorb. REQUIRE clear
+    air above. Worth testing where H1 and H3 failed because those were
+    PRICE levels — this is a VOLUME measurement, genuinely new
+    information rather than a restatement of the 20-day breakout.
+
+Round 4 detail (kept for the record): H8 volatility regime — does requiring the VIX term
 structure to be in contango (VIX / VIX3M below a threshold) improve
 RS-02? Mechanism first: breakouts bet on continuation, and
 backwardation is the market pricing near-term stress, which is when
@@ -49,9 +68,12 @@ from datetime import date as _date
 
 from .backtest import DATA_ROOT, run_backtest
 from .earnings import load_earnings
+from .fundamentals import is_profitable, load_fundamentals
+from .news import load_news, quiet_attention
 from .setups import above_sma, mom_12_1, quality_mom, rs02_entry_ok
 from .store import DataStore
 from .vix_regime import calm_regime, load_term_structure
+from .volume_profile import clear_overhead, overhead_supply
 
 TRAIN_END = "2024-12-31"
 TEST_START = "2025-01-01"
@@ -92,30 +114,44 @@ def signal_date(bars) -> str:
     return str(bars["trade_date"].iloc[-1])
 
 
-def build_variants(vix) -> dict:
+def build_variants(news: dict, facts: dict) -> dict:
+    """Round 5. Each variant is the FULL adopted doctrine plus one new
+    filter, so a verdict is about that filter and nothing else."""
     return {
         "CONTROL":           None,                    # context only
         "BASELINE_DOCTRINE": lambda t, b, s: rs02_entry_ok(b),
-        "H8a_no_backwardation": lambda t, b, s: (
-            rs02_entry_ok(b) and calm_regime(vix, signal_date(b), 1.00)),
-        "H8b_contango_095": lambda t, b, s: (
-            rs02_entry_ok(b) and calm_regime(vix, signal_date(b), 0.95)),
+        "H9a_quiet_news_2x": lambda t, b, s: (
+            rs02_entry_ok(b) and quiet_attention(news, t, signal_date(b), 2.0)),
+        "H9b_quiet_news_3x": lambda t, b, s: (
+            rs02_entry_ok(b) and quiet_attention(news, t, signal_date(b), 3.0)),
+        "H10_profitable": lambda t, b, s: (
+            rs02_entry_ok(b) and is_profitable(facts, t, signal_date(b))),
+        "H11a_overhead_10pct": lambda t, b, s: (
+            rs02_entry_ok(b) and clear_overhead(b, 0.10)),
+        "H11b_overhead_20pct": lambda t, b, s: (
+            rs02_entry_ok(b) and clear_overhead(b, 0.20)),
     }
 
 
 VARIANT_NAMES = ("CONTROL", "BASELINE_DOCTRINE",
-                 "H8a_no_backwardation", "H8b_contango_095")
+                 "H9a_quiet_news_2x", "H9b_quiet_news_3x", "H10_profitable",
+                 "H11a_overhead_10pct", "H11b_overhead_20pct")
 
 
 def run_hypotheses(store: DataStore, setup: str = "RS-02",
-                   vix=None) -> dict:
-    if vix is None:
-        vix = load_term_structure()
-        if vix.empty:
-            raise SystemExit("No VIX term structure on disk. "
-                             "Run: python -m mve.vix_regime")
+                   news: dict | None = None,
+                   facts: dict | None = None) -> dict:
+    if news is None:
+        news = load_news()
+        if not news:
+            raise SystemExit("No news counts on disk. Run: python -m mve.news")
+    if facts is None:
+        facts = load_fundamentals()
+        if not facts:
+            raise SystemExit("No fundamentals on disk. "
+                             "Run: python -m mve.fundamentals")
     out = {}
-    for name, f in build_variants(vix).items():
+    for name, f in build_variants(news, facts).items():
         train = run_backtest(store, end=TRAIN_END, active=(setup,),
                              entry_filter=f)
         test = run_backtest(store, start=TEST_START, active=(setup,),
@@ -169,7 +205,8 @@ def total_r(s) -> float:
 
 
 def summary(results: dict) -> str:
-    lines = ["HYPOTHESIS STUDY — RS-02 entry filters, round 4 (H8, §72)",
+    lines = ["HYPOTHESIS STUDY — RS-02 entry filters, round 5 "
+             "(H9 news / H10 fundamentals / H11 volume, §72)",
              f"train <= {TRAIN_END} | test >= {TEST_START} | "
              f"verdicts vs {BASELINE} (adopted doctrine)", ""]
 

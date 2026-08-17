@@ -73,14 +73,11 @@ def test_entry_filter_blocks_and_counts(seeded):
 
 
 def test_hypothesis_study_structure(seeded):
-    import pandas as _pd
-    calm = _pd.DataFrame({"trade_date": ["2020-01-01"], "vix": [14.0],
-                          "vix3m": [20.0], "ratio": [0.70]})
-    results = run_hypotheses(seeded, vix=calm)
+    results = run_hypotheses(seeded, news={}, facts={})
     assert set(results) == set(VARIANT_NAMES)
     text = summary(results)
     assert "CONTROL" in text and "BASELINE_DOCTRINE" in text
-    assert "H8a_no_backwardation" in text and "H8b_contango_095" in text
+    assert "H9a_quiet_news_2x" in text and "H11a_overhead_10pct" in text
     assert "totR=" in text                 # total-R guard is always shown
     assert "LAW 12/20" in text
 

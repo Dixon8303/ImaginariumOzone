@@ -53,6 +53,7 @@ from mve.rs_features import compute_features
 from mve.setups import detect_all
 from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
+from mve.volume_profile import overhead_supply, point_of_control
 
 from .options_broker import contracts_to_buy, select_contract
 
@@ -108,11 +109,13 @@ def scan(all_bars: dict) -> list:
             close, stop = hit["close"], hit["invalidation_price"]
             if close <= stop:
                 continue
+            overhead = overhead_supply(bars)
             signals.append(dict(
                 ticker=ticker, close=close, stop=stop,
                 target=round(close + TARGET_R * (close - stop), 2),
                 r_denom=round(close - stop, 2),
-                score=hit["opportunity_score"], rationale=hit["rationale"]))
+                score=hit["opportunity_score"], rationale=hit["rationale"],
+                overhead=overhead, poc=point_of_control(bars)))
     return sorted(signals, key=lambda s: -s["score"])
 
 
@@ -418,6 +421,11 @@ def build_report(today, acct, positions, signals, placed, skipped,
                   f"stop {s['stop']:.2f}  target {s['target']:.2f}  "
                   f"(1R = {s['r_denom']:.2f})  score {s['score']}/10",
                   f"      {s['rationale']}",
+                  ("      volume profile: "
+                   + (f"{s['overhead']:.0%} of 60d volume sits ABOVE here"
+                      if s.get("overhead") is not None else "not computable")
+                   + (f", heaviest at {s['poc']:.2f}" if s.get("poc") else "")
+                   + "  (context only, gates nothing)"),
                   f"      option guidance (Robinhood, per playbook): CALL, "
                   f"{DTE_RANGE[0]}-{DTE_RANGE[1]} DTE, delta ~{DELTA_TARGET}, "
                   f"strike near {s['close']:.0f}, spread <= "
@@ -527,6 +535,11 @@ def preopen_report(broker, all_bars: dict, today: str) -> str:
                   f"stop {s['stop']:.2f}  target {s['target']:.2f}  "
                   f"(1R = {s['r_denom']:.2f})  score {s['score']}/10{held}",
                   f"      {s['rationale']}",
+                  ("      volume profile: "
+                   + (f"{s['overhead']:.0%} of 60d volume sits ABOVE here"
+                      if s.get("overhead") is not None else "not computable")
+                   + (f", heaviest at {s['poc']:.2f}" if s.get("poc") else "")
+                   + "  (context only, gates nothing)"),
                   f"      option guidance: CALL, {DTE_RANGE[0]}-{DTE_RANGE[1]} "
                   f"DTE, delta ~{DELTA_TARGET}, strike near "
                   f"{s['close']:.0f}, spread <= {MAX_SPREAD_PCT:.0%}"]
