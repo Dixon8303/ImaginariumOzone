@@ -661,3 +661,30 @@ answer to "more information is usually helpful" is yes — provided the
 bar rises with the number of questions asked. It now does, automatically.
 
 262 tests passing.
+
+## 2026-08-17 — H8 verdict: volatility regime REJECTED (both variants)
+
+| Variant | Train | Test |
+|---|---|---|
+| BASELINE_DOCTRINE | +0.348R (n=61, totR +21.23) | +0.280R (n=47, totR +13.16) |
+| H8a no backwardation | +0.338R (n=60, +20.28) | +0.225R (n=45, +10.12) |
+| H8b contango < 0.95 | +0.326R (n=59, +19.23) | +0.253R (n=44, +11.13) |
+
+Clean rejection: worse than baseline on BOTH windows, at BOTH thresholds,
+in expectancy AND total return. No dose-response — tightening the
+threshold did not help, which is what a real effect would have shown.
+
+The interesting detail is what the filter removed. H8a skipped 1 train
+trade worth +0.95R and 2 test trades worth +3.04R — **+1.52R each**.
+The backwardation days it screened out produced ABOVE-average trades in
+this sample, the opposite of the pre-registered mechanism (breakouts bet
+on continuation; backwardation is when continuation breaks).
+
+Honest reading: n is 1-3 trades, far too few to claim the reverse effect
+is real. The defensible statement is that there is NO evidence for the
+mechanism here, and no basis for flipping it either. Filed as rejected;
+the reverse would be a new hypothesis needing its own pre-registration.
+
+Tally: 11 hypotheses judged, 3 adopted (H2b regime, H4b quality, wide
+exit). H1, H2a, H3, H5, H6, H7, H8 rejected. Rounds 5 and 6 (H9-H17)
+are built and awaiting a run.
