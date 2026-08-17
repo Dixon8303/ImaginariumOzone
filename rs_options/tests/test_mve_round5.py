@@ -327,3 +327,43 @@ def test_summary_reports_expected_false_positives():
     text = summary(results)
     assert "MULTIPLE COMPARISONS: 12 variants tested" in text
     assert "~0.6 ADOPT-CANDIDATEs expected from chance" in text
+
+
+# ══════════════════ partial-data guard (real incident) ═══════════════
+def test_data_coverage_finds_missing_tickers():
+    from mve.hypotheses import data_coverage
+    news = {"AAPL": pd.DataFrame({"articles": [1]}),
+            "NVDA": pd.DataFrame(),           # fetched but empty
+            }
+    covered, required, missing = data_coverage(news, {"AAPL", "NVDA", "TSLA"})
+    assert (covered, required) == (1, 3)
+    assert missing == ["NVDA", "TSLA"]
+
+
+def test_partial_fetch_invalidates_the_verdict():
+    """The 2026-08-17 incident: a dropped connection left news for 7 of
+    22 tickers. H9 must be INVALID, not scored — a fail-closed filter on
+    partial data reports a verdict about the covered names only."""
+    from mve.hypotheses import summary
+    def st(n, e):
+        return {"trades": n, "expectancy_r": e, "win_rate": 0.6}
+    results = {
+        "CONTROL": {"train": st(100, 0.2), "test": st(60, 0.2),
+                    "filtered": 0, "by_ticker": {}},
+        "BASELINE_DOCTRINE": {"train": st(100, 0.3), "test": st(60, 0.25),
+                              "filtered": 0, "by_ticker": {}},
+        "H9a_quiet_news_2x": {
+            "train": st(40, 0.9), "test": st(25, 0.8),   # looks fantastic
+            "filtered": 300, "by_ticker": {},
+            "invalid": "data covers only 7/21 tickers — this would be a "
+                       "verdict about those names, not about the filter."},
+    }
+    text = summary(results)
+    assert "H9a_quiet_news_2x: INVALID" in text
+    assert "7/21 tickers" in text
+    # never scored despite showing +0.9R — check the variant's own line,
+    # since the footer legitimately mentions the term
+    verdict_lines = [ln for ln in text.splitlines()
+                     if "H9a_quiet_news_2x" in ln]
+    assert verdict_lines and not any("ADOPT-CANDIDATE" in ln
+                                     for ln in verdict_lines)

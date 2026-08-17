@@ -41,11 +41,27 @@ UA = {"User-Agent": "ImaginariumOzone RS research (contact via GitHub)",
       "Accept-Encoding": "gzip, deflate"}
 
 
+RETRIES = 4                 # transient DNS/network failures under load
+
+
+def _get_with_retry(url: str, retries: int = RETRIES) -> dict:
+    """Retry transient failures — a drop mid-universe leaves partial
+    coverage, which biases every study that fails closed."""
+    last = None
+    for attempt in range(retries):
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                return json.loads(resp.read())
+        except Exception as e:
+            last = e
+            time.sleep(PAUSE_S * (2 ** attempt))
+    raise last
+
+
 def fetch_cik_map() -> dict:
     """{TICKER: cik int} from the SEC's public mapping file."""
-    req = urllib.request.Request(TICKER_MAP_URL, headers=UA)
-    with urllib.request.urlopen(req, timeout=30) as resp:
-        payload = json.loads(resp.read())
+    payload = _get_with_retry(TICKER_MAP_URL)
     return {row["ticker"].upper(): int(row["cik_str"])
             for row in payload.values()}
 
@@ -82,10 +98,8 @@ def fetch_net_income(ticker: str, cik: int) -> pd.DataFrame:
     last_error = None
     for tag in NET_INCOME_TAGS:
         try:
-            req = urllib.request.Request(
-                FACTS_URL.format(cik=cik, tag=tag), headers=UA)
-            with urllib.request.urlopen(req, timeout=30) as resp:
-                df = parse_concept(json.loads(resp.read()))
+            df = parse_concept(_get_with_retry(
+                FACTS_URL.format(cik=cik, tag=tag)))
             time.sleep(PAUSE_S)
             if not df.empty:
                 return df

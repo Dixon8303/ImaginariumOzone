@@ -688,3 +688,35 @@ the reverse would be a new hypothesis needing its own pre-registration.
 Tally: 11 hypotheses judged, 3 adopted (H2b regime, H4b quality, wide
 exit). H1, H2a, H3, H5, H6, H7, H8 rejected. Rounds 5 and 6 (H9-H17)
 are built and awaiting a run.
+
+## 2026-08-17 — Partial-fetch guard (a near-miss worth recording)
+
+The operator's round-5 fetch dropped mid-universe on a DNS failure and
+saved news for **7 of 22 tickers**, then the SEC fetch failed outright.
+Had `mve.hypotheses` run on that state it would have produced a
+confident-looking H9 verdict — because the filter fails closed, the 15
+uncovered names would simply have been skipped, and the study would have
+measured "these 7 tickers" while appearing to measure news attention.
+
+That is the exact failure mode this project keeps guarding against, and
+it nearly arrived through the back door of a network hiccup rather than
+through a reasoning error.
+
+Two fixes:
+
+1. **Retries with backoff** in `news.py` and `fundamentals.py`. A single
+   transient DNS failure should not silently shrink the sample.
+2. **Coverage validation** in `hypotheses.py`. Before anything is
+   scored, per-ticker datasets are checked against the universe; a
+   variant whose data covers under 95% of required tickers is marked
+   **INVALID** with the missing names listed, and is never given a
+   verdict. A regression test replays the incident with a fabricated
+   +0.9R result and asserts it is invalidated rather than adopted.
+
+The general principle, now enforced rather than remembered: a filter
+that fails closed converts missing data into a hidden sample
+restriction. Fail-closed is right for TRADING (skip what you cannot
+verify) and dangerous for RESEARCH (you silently changed the question).
+Both behaviours are now explicit.
+
+264 tests passing.
