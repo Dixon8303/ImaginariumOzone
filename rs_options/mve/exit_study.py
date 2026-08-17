@@ -36,6 +36,15 @@ POLICIES = {
     "wide": dict(target_r=3.0, max_hold=15, atr_trail=None, breakeven_at=None),
     "atr_trail": dict(target_r=None, max_hold=20, atr_trail=2.0, breakeven_at=None),
     "breakeven": dict(target_r=2.0, max_hold=10, atr_trail=None, breakeven_at=1.0),
+    # H12 — PARTIAL exits. Everything above is all-or-nothing, yet the
+    # operator's own broker history said the disease was exit asymmetry
+    # (avg win $19.64 vs avg loss $33.15). Scaling out converts part of
+    # a 60% win rate into locked gains while leaving a runner for the
+    # tail, and moves the stop to breakeven once half is booked.
+    "partial_15": dict(target_r=3.0, max_hold=15, atr_trail=None,
+                       breakeven_at=None, partial_at=1.5, partial_frac=0.5),
+    "partial_10": dict(target_r=3.0, max_hold=15, atr_trail=None,
+                       breakeven_at=None, partial_at=1.0, partial_frac=0.5),
     # H3 — anchored VWAP from the entry day as a trailing floor (§2.1 of
     # MARKET_THEORY: institutional cost basis of the breakout). DAILY-BAR
     # APPROXIMATION (typical price x volume); minute-precision AVWAP comes
@@ -63,18 +72,33 @@ def simulate(path: pd.DataFrame, entry: float, stop0: float, r_denom: float,
               if policy["target_r"] else None)
     mfe = mae = 0.0
     cum_pv = cum_v = 0.0            # anchored-VWAP accumulators (H3)
+    # H12 partial-exit state: `booked` is R already realised on the part
+    # that was sold, `live` is the fraction still riding.
+    partial_at = policy.get("partial_at")
+    partial_frac = policy.get("partial_frac", 0.0) if partial_at else 0.0
+    partial_level = entry + partial_at * r_denom if partial_at else None
+    booked, live, took_partial = 0.0, 1.0, False
+
+    def close_out(r_rest, reason, i):
+        return dict(r=booked + live * r_rest,
+                    reason=("partial_" + reason if took_partial else reason),
+                    bars=i, mfe=mfe, mae=mae)
+
     for i, (_, bar) in enumerate(path.iterrows(), start=1):
         mfe = max(mfe, (bar["high"] - entry) / r_denom)
         mae = min(mae, (bar["low"] - entry) / r_denom)
         if bar["open"] <= stop:
-            return dict(r=(bar["open"] - entry) / r_denom, reason="gap_stop",
-                        bars=i, mfe=mfe, mae=mae)
+            return close_out((bar["open"] - entry) / r_denom, "gap_stop", i)
         if bar["low"] <= stop:
-            return dict(r=(stop - entry) / r_denom, reason="stop",
-                        bars=i, mfe=mfe, mae=mae)
+            return close_out((stop - entry) / r_denom, "stop", i)
         if target and bar["high"] >= target:
-            return dict(r=policy["target_r"], reason="target",
-                        bars=i, mfe=mfe, mae=mae)
+            return close_out(policy["target_r"], "target", i)
+        # partial fill AFTER the stop checks — same conservative ordering
+        if partial_level and not took_partial and bar["high"] >= partial_level:
+            booked = partial_frac * partial_at
+            live = 1.0 - partial_frac
+            took_partial = True
+            stop = max(stop, entry)          # runner rides at breakeven
         # end-of-bar stop ratchets (never loosen)
         if policy["breakeven_at"] and (bar["high"] - entry) / r_denom >= policy["breakeven_at"]:
             stop = max(stop, entry)
@@ -89,11 +113,9 @@ def simulate(path: pd.DataFrame, entry: float, stop0: float, r_denom: float,
             if cum_v > 0 and i >= policy.get("avwap_grace", 3):
                 stop = max(stop, cum_pv / cum_v)
         if i >= policy["max_hold"]:
-            return dict(r=(float(bar["close"]) - entry) / r_denom, reason="time",
-                        bars=i, mfe=mfe, mae=mae)
+            return close_out((float(bar["close"]) - entry) / r_denom, "time", i)
     last = float(path["close"].iloc[-1])
-    return dict(r=(last - entry) / r_denom, reason="end_of_data",
-                bars=len(path), mfe=mfe, mae=mae)
+    return close_out((last - entry) / r_denom, "end_of_data", len(path))
 
 
 def collect_signals(store: DataStore, setup: str = "RS-02") -> list:

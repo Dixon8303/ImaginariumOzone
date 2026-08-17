@@ -613,3 +613,51 @@ nothing until judged.
 
 252 tests passing. Awaiting the operator's `mve.news`,
 `mve.fundamentals` and `mve.hypotheses` run.
+
+## 2026-08-17 — Round 6 built: H12–H17, plus a multiple-comparisons guard
+
+Operator asked for all six devised hypotheses to be run. Built. Each is
+in a dimension nothing else in the system touches, and each states its
+mechanism before any data was looked at.
+
+- **H12 partial exits** (`exit_study`): book half at +1.5R (or +1.0R),
+  move the runner's stop to breakeven, let it ride to +3R. This is where
+  the operator's OWN broker history said the disease was — avg win
+  $19.64 vs avg loss $33.15 — and yet five rounds went to entry filters
+  and only one to exits. Correcting that imbalance.
+  Conservative ordering preserved: the partial fills only AFTER the
+  gap-stop and stop checks on the same bar, so it can never flatter a
+  losing bar. A trade that never reaches the level behaves identically
+  to `wide` — the scheme cannot help losers, only shape winners.
+- **H13 volatility contraction**: ATR percentile within its own trailing
+  year. Nothing in the system measured stock-level volatility at all.
+  Mechanism: a breakout from a quiet base gives a tight stop and a fresh
+  move — more reward per unit risk.
+- **H14 close strength**: where in the day's range the close landed.
+  Demand persisting into the bell versus sellers meeting it.
+- **H15 gap cost**: an EXECUTION test, not a prediction. Implemented in
+  the backtester as `max_gap_pct`, cancelling the fill when the next
+  open gaps too far above the signal close — what a real desk does.
+  Counted as `gapped_signals`, never silently dropped.
+- **H16 signal clustering**: the first SET-level question asked here.
+  Counts are taken from the BASELINE run so the filter is judged against
+  the same signal set it sees. Both stories (broad strength vs crowded
+  top) are plausible, which is exactly when it is tempting to decide
+  after seeing the answer — so the direction is pre-registered as
+  crowding-is-risk.
+- **H17 sizing by conviction**: not a filter. `BacktestResult.per_score`
+  reports expectancy by opportunity-score bucket. If conviction carries
+  no information, sizing by it cannot help — this measures the
+  precondition rather than assuming it.
+
+**The multiple-comparisons guard.** This round takes the count to ~13
+variants. At a 1-in-20 luck rate that is ~0.65 ADOPT-CANDIDATEs expected
+from chance alone, and the summary now prints exactly that. When the
+number of candidates is within what chance would produce, the report
+says so and calls them things to RE-TEST rather than findings.
+
+This is the honest counterweight to running many tests at once: the
+answer to "more information is usually helpful" is yes — provided the
+bar rises with the number of questions asked. It now does, automatically.
+
+262 tests passing.

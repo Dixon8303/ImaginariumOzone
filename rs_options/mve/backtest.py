@@ -46,6 +46,7 @@ class Position:
     target: float
     r_denom: float
     bars_held: int = 0
+    score: int = 0
 
 
 @dataclass
@@ -59,6 +60,7 @@ class Trade:
     r_multiple: float
     exit_reason: str
     bars_held: int
+    score: int = 0          # opportunity score at signal (H17 sizing study)
 
 
 @dataclass
@@ -66,6 +68,21 @@ class BacktestResult:
     trades: list = field(default_factory=list)
     skipped_signals: int = 0
     filtered_signals: int = 0      # rejected by an entry_filter (no silent caps)
+    gapped_signals: int = 0        # cancelled at the open by max_gap_pct (H15)
+    signal_dates: list = field(default_factory=list)   # for clustering (H16)
+
+    def per_score(self) -> dict:
+        """Expectancy by opportunity-score bucket (H17). If conviction
+        carries information, higher scores should earn more per trade —
+        which is the precondition for sizing by score meaning anything."""
+        buckets = {"<=7": [], "8": [], "9": [], "10": []}
+        for t in self.trades:
+            key = ("10" if t.score >= 10 else "9" if t.score == 9
+                   else "8" if t.score == 8 else "<=7")
+            buckets[key].append(t.r_multiple)
+        return {k: {"trades": len(v),
+                    "expectancy_r": round(sum(v) / len(v), 3) if v else 0.0}
+                for k, v in buckets.items()}
 
     def per_setup(self) -> dict:
         out = {}
@@ -148,7 +165,8 @@ def run_backtest(store: DataStore, universe: list | None = None,
                  benchmark: str = BENCHMARK, sector_map: dict | None = None,
                  start: str | None = None, end: str | None = None,
                  active: tuple = ("RS-01", "RS-02"),
-                 entry_filter=None) -> BacktestResult:
+                 entry_filter=None, max_gap_pct: float | None = None
+                 ) -> BacktestResult:
     # Research evaluates ALL setups, including disabled ones — that is how
     # a killed setup earns its way back (LAW 20). The live scanner honors
     # setups.ACTIVE_SETUPS instead.
@@ -177,15 +195,24 @@ def run_backtest(store: DataStore, universe: list | None = None,
                 still_pending.append(sig)      # holiday for this ticker
                 continue
             entry = float(idx.loc[d, "open"])
+            # H15 gap guard: the order is cancelled if the open gaps too
+            # far above the signal close. This is an EXECUTION cost, not a
+            # prediction — you would be paying up before the trade starts.
+            if (max_gap_pct is not None
+                    and entry > sig["close"] * (1.0 + max_gap_pct)):
+                result.gapped_signals += 1
+                continue
             r_denom = entry - sig["invalidation"]
             if r_denom <= 0 or sig["ticker"] in open_pos:
                 result.skipped_signals += 1
                 continue
-            open_pos[sig["ticker"]] = Position(
+            pos = Position(
                 ticker=sig["ticker"], setup=sig["setup"],
                 signal_date=sig["date"], entry_date=d, entry=entry,
                 stop=sig["invalidation"], target=entry + TARGET_R * r_denom,
                 r_denom=r_denom)
+            pos.score = sig.get("score", 0)
+            open_pos[sig["ticker"]] = pos
         pending = still_pending
 
         # ── manage open positions on today's bar ─────────────────────
@@ -201,7 +228,8 @@ def run_backtest(store: DataStore, universe: list | None = None,
                     ticker=ticker, setup=pos.setup, entry_date=pos.entry_date,
                     exit_date=d, entry=pos.entry, exit=exit_price,
                     r_multiple=round((exit_price - pos.entry) / pos.r_denom, 3),
-                    exit_reason=reason, bars_held=pos.bars_held))
+                    exit_reason=reason, bars_held=pos.bars_held,
+                    score=getattr(pos, "score", 0)))
                 del open_pos[ticker]
 
         # ── detect new signals (point-in-time), enter at NEXT open ───
@@ -226,8 +254,11 @@ def run_backtest(store: DataStore, universe: list | None = None,
                         ticker, bars, bench_slice):
                     result.filtered_signals += 1
                     break
+                result.signal_dates.append(d)
                 pending.append({"ticker": ticker, "setup": hit["setup_id"],
                                 "invalidation": hit["invalidation_price"],
+                                "close": hit["close"],
+                                "score": hit.get("opportunity_score", 0),
                                 "date": d})
                 break                          # one signal per ticker per day
 
