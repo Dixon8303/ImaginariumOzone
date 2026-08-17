@@ -51,8 +51,10 @@ python -m mve.walkforward           # §51: does the RS-02 edge hold per period?
 python -m mve.exit_study            # §41-§42: exit policies incl. H3 avwap_trail
 python -m mve.earnings              # earnings dates (ALPHAVANTAGE_API_KEY)
 python -m mve.vix_regime            # VIX/VIX3M term structure (free, no key)
-python -m mve.hypotheses            # §72 round 4: H8 volatility regime
-                                    # (vs adopted doctrine; H1-H7 resolved)
+python -m mve.news                  # daily article counts (APCA_* env keys)
+python -m mve.fundamentals          # SEC EDGAR filings (free, no key)
+python -m mve.hypotheses            # §72 round 5: H9 news / H10 fundamentals
+                                    # / H11 volume profile (H1-H8 resolved)
 python -m mve.trade_journal         # broker-history stats (Schwab/TOS CSV
                                     # in data/ — stays local, gitignored)
 python -m mve.alpaca_data           # Alpaca daily bars (APCA_* env keys)

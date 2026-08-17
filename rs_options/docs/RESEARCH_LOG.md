@@ -564,3 +564,52 @@ Mechanics worth recording:
 will finally be an answer to the question the backtests could never
 reach — does a correct call on the stock actually make money as a
 contract, after spread and decay?
+
+## 2026-08-16 — Round 5 built: H9 news, H10 fundamentals, H11 volume
+
+Three new inputs, each with its mechanism stated before any data was
+looked at, each tested as the FULL adopted doctrine plus one filter so
+a verdict is about that filter alone.
+
+**H9 — news attention** (`mve/news.py`, Alpaca news API, free with the
+APCA keys already set). Measures ATTENTION: articles in the last 5 days
+versus the ticker's own 60-day baseline rate. Mechanism: Barber & Odean
+(2008) plus the metaorder story both say a breakout arriving in a burst
+of coverage is more crowded and more likely to fade than one accumulated
+quietly, so the filter SKIPS high attention. If the data says the
+opposite that is a finding, not licence to flip the story afterwards.
+
+Deliberately NOT sentiment. Scoring headlines with a keyword list
+produces a number that looks rigorous, is mostly noise, and cannot be
+reproduced across a rewrite. Sentiment can be its own honestly-labelled
+hypothesis later.
+
+**H10 — profitability** (`mve/fundamentals.py`, SEC EDGAR XBRL, free,
+no key). Trailing four quarters of net income. The whole difficulty is
+point-in-time: a quarter ending 03-31 is not public on 03-31, and using
+the period date would leak the future into every backtest. EDGAR carries
+a `filed` date on every fact, so the lookup returns only what a reader
+could have known by that close. Annual figures are excluded so quarters
+cannot be double-counted, and a re-reported period keeps its EARLIEST
+filing. Mechanism: Novy-Marx (2013) profitability factor — a breakout in
+an unprofitable name is more story than earnings.
+
+**H11 — overhead supply** (`mve/volume_profile.py`, no new data source).
+Volume-by-price over the trailing 60 sessions, spreading each bar's
+volume across its own high-low range, then measuring the share that
+traded ABOVE today's close. Every such share is a break-even seller the
+rally must absorb.
+
+Why this is worth testing when H1 (52-week high) and H3 (anchored VWAP)
+both failed: those are PRICE levels, and RS-02's 20-day breakout already
+encodes price structure — they were largely restating the entry rule.
+This is a VOLUME measurement, which is genuinely new information. The
+support/resistance family is 0-for-2 so far; H11 is the honest third
+try, not a fourth angle on the same idea.
+
+All three fail closed. Overhead supply and the point of control also
+print in the daily paper report as CONTEXT ONLY, labelled as gating
+nothing until judged.
+
+252 tests passing. Awaiting the operator's `mve.news`,
+`mve.fundamentals` and `mve.hypotheses` run.
