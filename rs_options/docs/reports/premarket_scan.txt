@@ -1,0 +1,17 @@
+generated: 2026-08-17
+
+PRE-OPEN SCAN — 2026-08-17 (signals from the 2026-08-14 close)
+paper equity: $100,000.00
+
+CANDIDATES FOR TODAY (0):
+  none — nothing passed breakout + regime + quality
+
+ORDERS QUEUED FOR THE OPEN (0): none
+
+OPEN POSITIONS (0):
+  none
+
+OPTION POSITIONS (Robinhood): none on file.
+  Add trades to paper/open_options.json to have them reviewed here each day.
+
+Read-only briefing — no orders placed by this run. The evening run trades and keeps the record.
