@@ -525,3 +525,42 @@ freshness gate is therefore an AGE check (<= 4 calendar days, covering
 long weekends) rather than the evening run's same-day requirement.
 
 221 tests passing.
+
+## 2026-08-16 — Autonomous PAPER options: the measurement gap opens
+
+The paper track now trades OPTIONS by itself, not just equities. This
+is the first time the project measures the instrument it actually
+trades. Every rule adopted so far — wide exit, H2b, H4b — was validated
+on the UNDERLYING, because historical chains are paid data. Forward
+paper fills are free, so the record starts accumulating now.
+
+`paper/options_broker.py`: contract discovery, selection, and orders on
+Alpaca's paper endpoint (inherits the hard-coded URL and the
+RS_PAPER_ARMED interlock). Selection reuses chain_select's constants —
+DTE 21-60, delta 0.40-0.80 targeting 0.60, spread <= 10% — rather than
+re-typing them.
+
+**Greeks honesty:** when the data plan carries delta, selection uses it.
+When it does not, it falls back to a moneyness proxy (strike near
+0.97 x spot) and the report SAYS which basis was used. A silent swap
+between "chosen by delta" and "chosen by a rule of thumb" would make
+the resulting P&L uninterpretable.
+
+Mechanics worth recording:
+- **Exits are the loop, not the broker.** Alpaca has no bracket orders
+  for options, so unlike the equity side nothing is self-enforcing.
+  `run_option_cycle` evaluates every held contract through
+  `position_manager` each run and sells on a verdict. Exits run BEFORE
+  entries so a freed slot can be reused the same day.
+- **Sizing is by max loss.** A long call can go to zero, so the premium
+  is the risk: contracts = floor(1% equity / (mid x 100)), capped at 5.
+  Deliberately more conservative than a delta-based estimate.
+- **Limit at the mid to open**, never market — on an instrument whose
+  spread is the dominant cost, a market order donates the spread.
+- **An options outage degrades to a note.** The equity track is the
+  validated one; a chain-endpoint failure must not take it down.
+
+237 tests passing. What this buys: in ~20-30 closed option trades there
+will finally be an answer to the question the backtests could never
+reach — does a correct call on the stock actually make money as a
+contract, after spread and decay?
