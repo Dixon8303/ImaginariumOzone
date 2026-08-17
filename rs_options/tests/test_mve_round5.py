@@ -159,20 +159,171 @@ def test_is_profitable_and_fail_closed():
 
 
 # ══════════════════════════ study wiring ═════════════════════════════
-def test_round5_variants_are_all_present():
-    from mve.hypotheses import VARIANT_NAMES, build_variants
-    variants = build_variants({}, {})
-    assert set(variants) == set(VARIANT_NAMES)
-    assert "H9a_quiet_news_2x" in variants
-    assert "H10_profitable" in variants
-    assert "H11a_overhead_10pct" in variants
+def test_variants_cover_every_named_hypothesis():
+    """Entry filters and fill-time cancellations together must account
+    for every name in VARIANT_NAMES — no hypothesis silently unrun."""
+    from mve.hypotheses import GAP_VARIANTS, VARIANT_NAMES, build_variants
+    entry = build_variants({}, {}, {})
+    assert set(entry) | set(GAP_VARIANTS) == set(VARIANT_NAMES)
+    assert not set(entry) & set(GAP_VARIANTS)      # no double-counting
+    for name in ("H9a_quiet_news_2x", "H10_profitable", "H11a_overhead_10pct",
+                 "H13a_quiet_base_40", "H14a_close_top30",
+                 "H16a_max2_signals"):
+        assert name in entry
+    assert set(GAP_VARIANTS) == {"H15a_gap_2pct", "H15b_gap_1pct"}
 
 
 def test_round5_filters_fail_closed_with_no_data():
     """No news and no fundamentals on disk -> those filters block every
     signal rather than silently passing them."""
     from mve.hypotheses import build_variants
-    v = build_variants({}, {})
+    v = build_variants({}, {}, {})
     df = bars([(90, 100, 95, 1000)] * 40)
     assert v["H9a_quiet_news_2x"]("T", df, None) is False
     assert v["H10_profitable"]("T", df, None) is False
+
+
+# ══════════════════════ round 6: H12-H17 ═════════════════════════════
+def ohlc(rows):
+    """rows of (open, high, low, close) -> path frame for simulate()."""
+    return pd.DataFrame(rows, columns=["open", "high", "low", "close"])
+
+
+# ── H12 partial exits ────────────────────────────────────────────────
+PATH_BASE = dict(entry=100.0, stop0=95.0, r_denom=5.0, entry_atr=2.0)
+
+
+def test_partial_books_half_then_runs_to_target():
+    from mve.exit_study import POLICIES, simulate
+    # rises through +1.5R (107.5), then reaches +3R (115)
+    rows = [(100, 108, 99, 107), (107, 116, 106, 115)] + [(115, 116, 114, 115)] * 5
+    out = simulate(ohlc(rows), **PATH_BASE, policy=POLICIES["partial_15"])
+    # half booked at 1.5R, half at the 3R target = 2.25R
+    assert out["r"] == pytest.approx(0.5 * 1.5 + 0.5 * 3.0)
+    assert out["reason"].startswith("partial_")
+
+
+def test_partial_runner_stops_at_breakeven_not_the_original_stop():
+    """After booking half, the runner rides at entry — a full round trip
+    keeps the booked gain instead of giving it all back."""
+    from mve.exit_study import POLICIES, simulate
+    rows = [(100, 108, 99, 107), (107, 107, 94, 95)] + [(95, 96, 94, 95)] * 5
+    out = simulate(ohlc(rows), **PATH_BASE, policy=POLICIES["partial_15"])
+    assert out["r"] == pytest.approx(0.5 * 1.5 + 0.5 * 0.0)   # +0.75R
+    assert out["r"] > 0
+
+
+def test_partial_loser_is_unchanged_from_all_or_nothing():
+    """A trade that never reaches the partial level must behave exactly
+    like the wide policy — the scheme cannot help losers."""
+    from mve.exit_study import POLICIES, simulate
+    rows = [(100, 101, 94, 94)] + [(94, 95, 93, 94)] * 5
+    partial = simulate(ohlc(rows), **PATH_BASE, policy=POLICIES["partial_15"])
+    wide = simulate(ohlc(rows), **PATH_BASE, policy=POLICIES["wide"])
+    assert partial["r"] == wide["r"] == pytest.approx(-1.0)
+    assert not partial["reason"].startswith("partial_")
+
+
+# ── H13 volatility contraction ───────────────────────────────────────
+def rising_bars(n, spread):
+    rows = []
+    for i in range(n):
+        c = 100 + 0.1 * i
+        rows.append((c - spread, c + spread, c, 1000))
+    return bars(rows)
+
+
+def test_atr_percentile_low_for_a_quiet_tape():
+    from mve.hypotheses import atr_percentile, quiet_base
+    wide = rising_bars(200, 5.0)
+    quiet = rising_bars(120, 0.2)
+    df = pd.concat([wide, quiet], ignore_index=True)
+    df["trade_date"] = pd.bdate_range("2024-01-02",
+                                      periods=len(df)).date.astype(str)
+    pct = atr_percentile(df)
+    assert pct is not None and pct < 0.4       # currently calm vs its year
+    assert quiet_base(df, 0.40)
+
+
+def test_atr_percentile_fails_closed_on_short_history():
+    from mve.hypotheses import atr_percentile, quiet_base
+    assert atr_percentile(rising_bars(100, 1.0)) is None
+    assert not quiet_base(rising_bars(100, 1.0), 0.40)
+
+
+# ── H14 close strength ───────────────────────────────────────────────
+def test_close_strength_reads_the_bar():
+    from mve.hypotheses import close_strength, strong_close
+    top = bars([(90, 100, 99.5, 1000)])           # closed near the high
+    mid = bars([(90, 100, 95, 1000)])
+    assert close_strength(top) == pytest.approx(0.95)
+    assert close_strength(mid) == pytest.approx(0.5)
+    assert strong_close(top, 0.70) and not strong_close(mid, 0.70)
+    flat = bars([(100, 100, 100, 1000)])          # zero range -> undefined
+    assert close_strength(flat) is None
+    assert not strong_close(flat, 0.70)
+
+
+# ── H16 clustering ───────────────────────────────────────────────────
+def test_uncrowded_day_counts_signals():
+    from mve.hypotheses import daily_signal_counts, uncrowded_day
+    class R:
+        signal_dates = ["2026-08-10"] * 5 + ["2026-08-11"]
+    counts = daily_signal_counts(R())
+    assert counts == {"2026-08-10": 5, "2026-08-11": 1}
+    assert not uncrowded_day(counts, "2026-08-10", 2)     # crowded
+    assert uncrowded_day(counts, "2026-08-11", 2)
+    assert uncrowded_day(counts, "2026-08-12", 2)         # no signals at all
+
+
+# ── H15 gap guard + H17 sizing diagnostic ────────────────────────────
+def test_gap_guard_cancels_the_fill_and_counts_it():
+    from datetime import date as _d
+    from mve.backtest import run_backtest
+    from mve.store import DataStore
+    from mve.vendors import SyntheticVendor
+    import tempfile
+    store = DataStore(tempfile.mkdtemp())
+    v = SyntheticVendor(start=_d(2023, 1, 2), days=400)
+    store.ingest_bars(v.bars("SPY", base=500.0, drift=0.0002, amp=0.02))
+    store.ingest_bars(v.bars("RUNR", base=80.0, drift=0.003, amp=0.012,
+                             phase=1.0))
+    loose = run_backtest(store, universe=["RUNR"], benchmark="SPY",
+                         sector_map={})
+    tight = run_backtest(store, universe=["RUNR"], benchmark="SPY",
+                         sector_map={}, max_gap_pct=0.0)
+    assert tight.gapped_signals > 0            # some opens gapped up
+    assert len(tight.trades) < len(loose.trades)
+    assert loose.gapped_signals == 0           # off by default
+
+
+def test_per_score_buckets_expectancy():
+    from mve.backtest import BacktestResult, Trade
+    res = BacktestResult(trades=[
+        Trade("A", "RS-02", "d", "d", 1, 1, 2.0, "target", 5, score=10),
+        Trade("B", "RS-02", "d", "d", 1, 1, 1.0, "target", 5, score=10),
+        Trade("C", "RS-02", "d", "d", 1, 1, -1.0, "stop", 5, score=8),
+        Trade("D", "RS-02", "d", "d", 1, 1, 0.5, "time", 5, score=6),
+    ])
+    by = res.per_score()
+    assert by["10"] == {"trades": 2, "expectancy_r": 1.5}
+    assert by["8"] == {"trades": 1, "expectancy_r": -1.0}
+    assert by["<=7"] == {"trades": 1, "expectancy_r": 0.5}
+    assert by["9"] == {"trades": 0, "expectancy_r": 0.0}
+
+
+# ── multiple-comparisons footer ──────────────────────────────────────
+def test_summary_reports_expected_false_positives():
+    from mve.hypotheses import summary
+    def st(n, e):
+        return {"trades": n, "expectancy_r": e, "win_rate": 0.6}
+    results = {"CONTROL": {"train": st(100, 0.2), "test": st(60, 0.2),
+                           "filtered": 0, "by_ticker": {}},
+               "BASELINE_DOCTRINE": {"train": st(100, 0.3), "test": st(60, 0.25),
+                                     "filtered": 0, "by_ticker": {}}}
+    for i in range(12):
+        results[f"H{i}_x"] = {"train": st(90, 0.31), "test": st(55, 0.26),
+                              "filtered": 5, "by_ticker": {}}
+    text = summary(results)
+    assert "MULTIPLE COMPARISONS: 12 variants tested" in text
+    assert "~0.6 ADOPT-CANDIDATEs expected from chance" in text

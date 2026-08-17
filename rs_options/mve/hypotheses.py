@@ -52,6 +52,33 @@ term structure on disk: run `python -m mve.vix_regime` first (free,
 no API key). The filter fails closed — a date with no VIX reading
 blocks rather than assuming calm.
 
+Round 6 (current): four more, each in a dimension nothing else touches.
+
+H13 volatility contraction — where does today's ATR sit in its own
+    1-year range? Mechanism (Minervini's VCP, made mechanical): a
+    breakout out of a QUIET base gives a tight stop and a fresh move,
+    so more reward per unit risk. Nothing in the system currently
+    measures stock-level volatility at all.
+H14 close strength — where in the day's range did it close? A breakout
+    closing at the high shows demand persisting into the bell; one
+    closing mid-range shows sellers meeting it.
+H15 gap cost — an EXECUTION test, not a prediction. Entries fill at the
+    next open; if that open gaps far above the signal close you paid up
+    and your R is worse before the trade starts. Implemented in the
+    backtester as an order cancellation, which is what a real desk does.
+H16 signal clustering — the first SET-level question asked here. When
+    many names fire the same day, is that broad strength or a crowded
+    top? Both stories are plausible, which is exactly when it is
+    tempting to decide after seeing the answer, so the direction is
+    pre-registered: crowding is the risk, so the filter SKIPS days with
+    unusually many simultaneous signals.
+
+MULTIPLE COMPARISONS: this study now runs many variants. Roughly one in
+twenty independent tests passes by luck alone, so the summary prints an
+expected false-positive count. Read it before believing any single
+ADOPT-CANDIDATE — the more variants in a round, the more a lone winner
+should be treated as a hypothesis to re-test, not a finding.
+
 Adoption rule (pre-registered, LAW 12/20): beat BASELINE_DOCTRINE on
 TRAIN and CONFIRM on TEST. Fewer trades with equal expectancy is NOT
 an improvement.
@@ -114,9 +141,62 @@ def signal_date(bars) -> str:
     return str(bars["trade_date"].iloc[-1])
 
 
-def build_variants(news: dict, facts: dict) -> dict:
+def atr_percentile(bars: pd.DataFrame, length: int = 14,
+                   window: int = 252) -> float | None:
+    """H13: today's ATR as a percentile of its own trailing year.
+    Low = quiet base. None (fail closed) without enough history."""
+    if len(bars) < window + length:
+        return None
+    h, l, c = bars["high"], bars["low"], bars["close"]
+    tr = pd.concat([h - l, (h - c.shift()).abs(), (l - c.shift()).abs()],
+                   axis=1).max(axis=1)
+    atr_series = tr.rolling(length).mean().dropna()
+    if len(atr_series) < window:
+        return None
+    recent = atr_series.iloc[-window:]
+    return float((recent < atr_series.iloc[-1]).mean())
+
+
+def quiet_base(bars: pd.DataFrame, max_pct: float) -> bool:
+    """H13 filter: ATR percentile below `max_pct`. Fail-closed."""
+    pct = atr_percentile(bars)
+    return pct is not None and pct < max_pct
+
+
+def close_strength(bars: pd.DataFrame) -> float | None:
+    """H14: where the close sits in the day's range, 0 (low) to 1 (high).
+    None for a zero-range bar — undefined, not zero."""
+    bar = bars.iloc[-1]
+    hi, lo, close = float(bar["high"]), float(bar["low"]), float(bar["close"])
+    if hi <= lo:
+        return None
+    return (close - lo) / (hi - lo)
+
+
+def strong_close(bars: pd.DataFrame, min_strength: float) -> bool:
+    """H14 filter: closed in the top of its range. Fail-closed."""
+    strength = close_strength(bars)
+    return strength is not None and strength >= min_strength
+
+
+def uncrowded_day(counts: dict, trade_date: str, max_signals: int) -> bool:
+    """H16 filter: fewer than `max_signals` names fired this day.
+    A date absent from the map had no signals, which trivially passes."""
+    return counts.get(trade_date, 0) <= max_signals
+
+
+def daily_signal_counts(result) -> dict:
+    """{date: how many signals fired} from a completed backtest."""
+    counts: dict = {}
+    for d in getattr(result, "signal_dates", []):
+        counts[d] = counts.get(d, 0) + 1
+    return counts
+
+
+def build_variants(news: dict, facts: dict, counts: dict | None = None) -> dict:
     """Round 5. Each variant is the FULL adopted doctrine plus one new
     filter, so a verdict is about that filter and nothing else."""
+    counts = counts or {}
     return {
         "CONTROL":           None,                    # context only
         "BASELINE_DOCTRINE": lambda t, b, s: rs02_entry_ok(b),
@@ -130,12 +210,32 @@ def build_variants(news: dict, facts: dict) -> dict:
             rs02_entry_ok(b) and clear_overhead(b, 0.10)),
         "H11b_overhead_20pct": lambda t, b, s: (
             rs02_entry_ok(b) and clear_overhead(b, 0.20)),
+        "H13a_quiet_base_40": lambda t, b, s: (
+            rs02_entry_ok(b) and quiet_base(b, 0.40)),
+        "H13b_quiet_base_60": lambda t, b, s: (
+            rs02_entry_ok(b) and quiet_base(b, 0.60)),
+        "H14a_close_top30": lambda t, b, s: (
+            rs02_entry_ok(b) and strong_close(b, 0.70)),
+        "H14b_close_top50": lambda t, b, s: (
+            rs02_entry_ok(b) and strong_close(b, 0.50)),
+        "H16a_max2_signals": lambda t, b, s: (
+            rs02_entry_ok(b) and uncrowded_day(counts, signal_date(b), 2)),
+        "H16b_max4_signals": lambda t, b, s: (
+            rs02_entry_ok(b) and uncrowded_day(counts, signal_date(b), 4)),
     }
 
 
 VARIANT_NAMES = ("CONTROL", "BASELINE_DOCTRINE",
                  "H9a_quiet_news_2x", "H9b_quiet_news_3x", "H10_profitable",
-                 "H11a_overhead_10pct", "H11b_overhead_20pct")
+                 "H11a_overhead_10pct", "H11b_overhead_20pct",
+                 "H13a_quiet_base_40", "H13b_quiet_base_60",
+                 "H14a_close_top30", "H14b_close_top50",
+                 "H16a_max2_signals", "H16b_max4_signals",
+                 "H15a_gap_2pct", "H15b_gap_1pct")
+
+# H15 is a fill-time cancellation, not a signal-time filter — it runs
+# through the backtester's max_gap_pct rather than an entry_filter.
+GAP_VARIANTS = {"H15a_gap_2pct": 0.02, "H15b_gap_1pct": 0.01}
 
 
 def run_hypotheses(store: DataStore, setup: str = "RS-02",
@@ -150,19 +250,43 @@ def run_hypotheses(store: DataStore, setup: str = "RS-02",
         if not facts:
             raise SystemExit("No fundamentals on disk. "
                              "Run: python -m mve.fundamentals")
+    # H16 needs to know how many names fired each day, which is only
+    # knowable after a pass. Counts come from the BASELINE run so the
+    # clustering filter is judged against the same signal set it sees.
+    base_train = run_backtest(store, end=TRAIN_END, active=(setup,),
+                              entry_filter=lambda t, b, s: rs02_entry_ok(b))
+    base_test = run_backtest(store, start=TEST_START, active=(setup,),
+                             entry_filter=lambda t, b, s: rs02_entry_ok(b))
+    counts = daily_signal_counts(base_train)
+    counts.update(daily_signal_counts(base_test))
+
+    def record(train, test):
+        return {
+            "train": train.per_setup().get(setup),
+            "test": test.per_setup().get(setup),
+            "filtered": train.filtered_signals + test.filtered_signals,
+            "gapped": train.gapped_signals + test.gapped_signals,
+            "by_ticker": _merge_by_ticker(train.per_ticker(setup),
+                                          test.per_ticker(setup)),
+        }
+
     out = {}
-    for name, f in build_variants(news, facts).items():
+    for name, f in build_variants(news, facts, counts).items():
         train = run_backtest(store, end=TRAIN_END, active=(setup,),
                              entry_filter=f)
         test = run_backtest(store, start=TEST_START, active=(setup,),
                             entry_filter=f)
-        out[name] = {
-            "train": train.per_setup().get(setup),
-            "test": test.per_setup().get(setup),
-            "filtered": train.filtered_signals + test.filtered_signals,
-            "by_ticker": _merge_by_ticker(train.per_ticker(setup),
-                                          test.per_ticker(setup)),
-        }
+        out[name] = record(train, test)
+
+    # H15 is a fill-time cancellation: the doctrine filter is unchanged
+    # and the gap tolerance is passed to the backtester instead.
+    doctrine = lambda t, b, s: rs02_entry_ok(b)          # noqa: E731
+    for name, gap in GAP_VARIANTS.items():
+        train = run_backtest(store, end=TRAIN_END, active=(setup,),
+                             entry_filter=doctrine, max_gap_pct=gap)
+        test = run_backtest(store, start=TEST_START, active=(setup,),
+                            entry_filter=doctrine, max_gap_pct=gap)
+        out[name] = record(train, test)
     return out
 
 
@@ -273,6 +397,18 @@ def summary(results: dict) -> str:
                 lines.append("      breadth: not comparable "
                              f"(no ticker has >= {MIN_TICKER_TRADES} trades "
                              "in both arms)")
+    tested = max(0, len(results) - 2)      # exclude CONTROL and BASELINE
+    expected_false = tested * 0.05
+    candidates = sum(1 for line in lines if line.strip().startswith(
+        ("H", "  H")) and "ADOPT-CANDIDATE" in line)
+    lines += ["",
+              f"MULTIPLE COMPARISONS: {tested} variants tested this round. "
+              f"At a 1-in-20 luck rate that is ~{expected_false:.1f} "
+              "ADOPT-CANDIDATEs expected from chance alone."]
+    if candidates and candidates <= expected_false + 1:
+        lines.append(f"  The {candidates} candidate(s) here are within what "
+                     "chance would produce — treat any of them as something "
+                     "to RE-TEST on fresh data, not as a finding.")
     lines.append("")
     lines.append("LAW 12/20: no filter is adopted from a single pass alone — "
                  "an ADOPT-CANDIDATE gets encoded only by operator decision. "
