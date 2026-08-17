@@ -1,7 +1,15 @@
-"""Autonomous daily run — scan + Alpaca PAPER shadow trades + report.
+"""Autonomous daily runs — pre-open briefing and post-close trading.
 
-Runs after each market close (GitHub Actions cron, or manually with
-`python -m paper.daily` from rs_options/). What it does:
+Two scheduled runs (GitHub Actions), or manually from rs_options/:
+
+    python -m paper.daily --preopen    # morning briefing, READ-ONLY
+    python -m paper.daily              # post-close trading run
+
+The pre-open run reports what yesterday's close implies and what is
+already queued. It places no orders and never writes the ledger, so it
+cannot double-trade against the evening run.
+
+The post-close trading run:
 
 1. Fetches fresh daily bars for the whole universe (Alpaca IEX, free).
 2. Runs the adopted RS-02 doctrine point-in-time: detector + 200-day
@@ -10,18 +18,22 @@ Runs after each market close (GitHub Actions cron, or manually with
    UNDERLYING equity: market buy queued for the next open (matching the
    backtester's next-open entry), bracket stop at the invalidation
    price and target at +3R. Time exit after 15 trading days.
-4. Reviews the operator's held Robinhood options (paper/open_options.json)
-   against mve.position_manager's exit rules — the co-pilot side of the
-   same doctrine the equity brackets enforce automatically.
-5. Writes docs/reports/paper_trading.txt — the operator-facing report:
+4. PAPER-trades OPTIONS on the same signals, autonomously: selects the
+   contract (delta when greeks are available, moneyness proxy when not),
+   buys limit-at-mid, and sells when position_manager says to. Options
+   carry no bracket orders, so this loop IS the exit mechanism. This is
+   also the only place the project measures option P&L at all.
+5. Reviews the operator's held Robinhood options (paper/open_options.json)
+   against the same exit rules — the co-pilot side of the doctrine.
+6. Writes docs/reports/paper_trading.txt — the operator-facing report:
    today's picks with entry/stop/target and the playbook's option
    guidance (for discretionary Robinhood execution), the position
    review, open positions, closed trades in R, and the cumulative
    record.
 
-Scope (§87): this validates the SETUP SIGNAL with fake money. The
-options layer stays in the co-pilot flow; nothing here touches a live
-account — see alpaca_paper.PaperBroker.
+Scope (§87): fake money throughout. Live execution stays co-pilot —
+the operator's word, per trade, in Robinhood. Nothing here can reach a
+live account: alpaca_paper.PaperBroker hard-codes the paper endpoint.
 """
 from __future__ import annotations
 
@@ -42,11 +54,15 @@ from mve.setups import detect_all
 from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
 
+from .options_broker import contracts_to_buy, select_contract
+
 RISK_PCT = 0.01              # 1% of paper equity risked per trade
 MAX_POSITION_PCT = 0.05      # 5% notional cap (mirrors HoneyDrip)
 MAX_OPEN = 8                 # concurrent-position cap
 MIN_BARS = 260               # doctrine needs 253+ bars (12-1 momentum)
 HISTORY_DAYS = 420           # calendar days of bars to fetch
+MAX_BAR_AGE_DAYS = 4         # pre-open: yesterday's close is
+                             # correct; a week old is broken
 LEDGER_PATH = os.path.join("docs", "reports", "paper_ledger.json")
 OPTIONS_PATH = os.path.join("paper", "open_options.json")
 
@@ -164,6 +180,114 @@ def review_open_options(positions: list, all_bars: dict, today: str) -> str:
     return text
 
 
+def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
+                     ledger: dict) -> tuple:
+    """Autonomous PAPER options: exit held contracts the doctrine says to
+    close, then open new ones for today's signals.
+
+    Options carry no bracket orders on Alpaca, so exits are not
+    self-enforcing the way the equity stops are — this loop IS the exit
+    mechanism, and it runs before entries so a freed slot can be reused.
+    """
+    as_of = date.fromisoformat(today)
+    book = ledger.setdefault("options", {})
+    held = broker.option_positions()
+    closed, opened, notes = [], [], []
+
+    # ── exits first ──────────────────────────────────────────────────
+    for symbol in list(book):
+        rec = book[symbol]
+        if symbol not in held:                      # already gone
+            closed.append((symbol, rec, None, "reconciled"))
+            del book[symbol]
+            continue
+        bars = all_bars.get(rec["ticker"])
+        if bars is None or bars.empty:
+            notes.append(f"{symbol}: no underlying bars — NOT evaluated")
+            continue
+        position = OpenPosition(
+            ticker=rec["ticker"], contract=symbol, quantity=rec["qty"],
+            entry_price=rec["entry_price"],
+            expiry=date.fromisoformat(rec["expiry"]),
+            invalidation_price=rec["invalidation_price"],
+            entry_date=date.fromisoformat(rec["entry_date"]),
+            entry_underlying=rec["entry_underlying"])
+        verdict = evaluate_exit(position, float(bars["close"].iloc[-1]), as_of)
+        if verdict.must_exit:
+            broker.sell_to_close(symbol, rec["qty"])
+            closed.append((symbol, rec, held[symbol], verdict.reasons))
+            del book[symbol]
+
+    # ── entries ──────────────────────────────────────────────────────
+    equity = float(broker.account()["equity"])
+    open_count = len(held) - len(closed)
+    for sig in signals:
+        if open_count >= MAX_OPEN:
+            break
+        if any(r["ticker"] == sig["ticker"] for r in book.values()):
+            continue                                # one contract per name
+        try:
+            contracts = broker.contracts(sig["ticker"], as_of)
+            quotes = broker.quotes(sig["ticker"])
+        except Exception as e:
+            notes.append(f"{sig['ticker']}: chain unavailable ({e})")
+            continue
+        pick = select_contract(contracts, sig["close"], as_of, quotes)
+        if pick is None:
+            notes.append(f"{sig['ticker']}: no contract met DTE/spread/delta")
+            continue
+        qty = contracts_to_buy(pick["mid"], equity, RISK_PCT)
+        if qty < 1:
+            notes.append(f"{sig['ticker']}: premium ${pick['mid'] * 100:,.0f} "
+                         f"exceeds the {RISK_PCT:.0%} risk budget")
+            continue
+        broker.buy_to_open(pick["symbol"], qty, pick["mid"])
+        book[pick["symbol"]] = dict(
+            ticker=sig["ticker"], qty=qty, entry_price=pick["mid"],
+            expiry=pick["expiration_date"], strike=float(pick["strike_price"]),
+            entry_date=today, invalidation_price=sig["stop"],
+            entry_underlying=sig["close"], basis=pick["basis"],
+            delta=pick["delta"], spread_pct=round(pick["spread_pct"], 4))
+        opened.append((pick, qty))
+        open_count += 1
+
+    return opened, closed, notes
+
+
+def format_option_cycle(cycle, ledger: dict) -> str:
+    """Operator-facing summary of the autonomous options track."""
+    opened, closed, notes = cycle
+    book = ledger.get("options", {})
+    lines = ["PAPER OPTIONS (Alpaca, autonomous):"]
+
+    for pick, qty in opened:
+        basis = ("delta %.2f" % pick["delta"] if pick["delta"] is not None
+                 else "moneyness proxy — no greeks in this data plan")
+        lines.append(f"  BOUGHT {qty}x {pick['symbol']}  "
+                     f"@ ${pick['mid']:.2f} (${pick['mid'] * 100 * qty:,.0f})  "
+                     f"{pick['dte']}d  strike {float(pick['strike_price']):.2f}  "
+                     f"[{basis}, spread {pick['spread_pct']:.1%}]")
+    for symbol, rec, position, reasons in closed:
+        pnl = ""
+        if position:
+            pnl = f"  P&L ${float(position.get('unrealized_pl', 0)):+,.2f}"
+        why = (", ".join(reasons) if isinstance(reasons, tuple) else reasons)
+        lines.append(f"  SOLD   {rec['qty']}x {symbol}{pnl}  ({why})")
+    if not opened and not closed:
+        lines.append("  no option trades today")
+
+    if book:
+        lines.append(f"  holding {len(book)}:")
+        for symbol, rec in sorted(book.items()):
+            lines.append(f"    {symbol}  {rec['qty']}x @ "
+                         f"${rec['entry_price']:.2f}  since {rec['entry_date']}"
+                         f"  stop-if-underlying <= "
+                         f"{rec['invalidation_price']:.2f}")
+    for note in notes:
+        lines.append(f"  note: {note}")
+    return "\n".join(lines)
+
+
 def data_is_fresh(all_bars: dict, today: str) -> bool:
     """True only when the benchmark's latest bar IS today's session.
     Guards holidays and half-fetched runs: without this the scanner
@@ -257,15 +381,24 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             stop=sig["stop"], target=sig["target"], qty=qty,
             order_id=order.get("id"), setup="RS-02")
 
+    # ── autonomous PAPER options (the co-pilot side, now hands-off) ──
+    opt = ([], [], ["options disabled: broker has no options support"])
+    if hasattr(broker, "option_positions"):
+        try:
+            opt = run_option_cycle(broker, signals, all_bars, today, ledger)
+        except Exception as e:                  # never lose the equity run
+            opt = ([], [], [f"option cycle FAILED: {e}"])
+
     save_ledger(ledger)
     option_review = review_open_options(load_open_options(), all_bars, today)
     return build_report(today, acct, positions, signals, placed, skipped,
-                        closed_today, time_exits, ledger, option_review)
+                        closed_today, time_exits, ledger, option_review,
+                        option_cycle=opt)
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
                  closed_today, time_exits, ledger,
-                 option_review: str = "") -> str:
+                 option_review: str = "", option_cycle=None) -> str:
     lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}"]
@@ -324,6 +457,9 @@ def build_report(today, acct, positions, signals, placed, skipped,
         lines.append("  none")
     lines.append("")
 
+    if option_cycle:
+        lines += [format_option_cycle(option_cycle, ledger), ""]
+
     if option_review:
         lines += [option_review, ""]
 
@@ -345,9 +481,83 @@ def build_report(today, acct, positions, signals, placed, skipped,
     return "\n".join(lines)
 
 
+def bars_are_current(all_bars: dict, today: str,
+                     max_age_days: int = MAX_BAR_AGE_DAYS) -> bool:
+    """Pre-open: the newest bar is YESTERDAY's close, which is exactly the
+    point-in-time information the signal is allowed to use. Guard only
+    against genuinely stale data (a long weekend is fine, a week is not)."""
+    bench = all_bars.get(BENCHMARK)
+    if bench is None or bench.empty:
+        return False
+    age = (date.fromisoformat(today)
+           - date.fromisoformat(str(bench["trade_date"].iloc[-1]))).days
+    return 0 <= age <= max_age_days
+
+
+def preopen_report(broker, all_bars: dict, today: str) -> str:
+    """Morning briefing, BEFORE the bell. Read-only by construction: it
+    places no orders and never writes the ledger, so it cannot
+    double-trade against the evening run. It tells the operator what the
+    close-of-yesterday data implies and what is already queued."""
+    if not bars_are_current(all_bars, today):
+        return (f"PRE-OPEN SCAN — {today}\n\n"
+                "Bars are stale or missing — no briefing. The evening run "
+                "will retry with fresh data.")
+
+    bench_date = str(all_bars[BENCHMARK]["trade_date"].iloc[-1])
+    acct = broker.account()
+    positions = broker.positions()
+    ledger = load_ledger()
+    signals = scan(all_bars)
+
+    lines = [f"PRE-OPEN SCAN — {today} (signals from the {bench_date} close)",
+             f"paper equity: ${float(acct['equity']):,.2f}", ""]
+
+    ratio = ratio_on(load_term_structure(), today)
+    if ratio is not None:
+        lines += [f"volatility regime: VIX/VIX3M {ratio:.3f} -> "
+                  f"{regime_label(ratio)}  (context only, gates nothing)", ""]
+
+    lines.append(f"CANDIDATES FOR TODAY ({len(signals)}):")
+    if not signals:
+        lines.append("  none — nothing passed breakout + regime + quality")
+    for s in signals:
+        held = " [already held]" if s["ticker"] in positions else ""
+        lines += [f"  {s['ticker']}  ref close {s['close']:.2f}  "
+                  f"stop {s['stop']:.2f}  target {s['target']:.2f}  "
+                  f"(1R = {s['r_denom']:.2f})  score {s['score']}/10{held}",
+                  f"      {s['rationale']}",
+                  f"      option guidance: CALL, {DTE_RANGE[0]}-{DTE_RANGE[1]} "
+                  f"DTE, delta ~{DELTA_TARGET}, strike near "
+                  f"{s['close']:.0f}, spread <= {MAX_SPREAD_PCT:.0%}"]
+    lines.append("")
+
+    queued = [s for s in ledger["open"].values() if s.get("entry_estimated")]
+    lines.append(f"ORDERS QUEUED FOR THE OPEN ({len(queued)}): "
+                 + (", ".join(sorted(k for k, v in ledger["open"].items()
+                                     if v.get("entry_estimated"))) or "none"))
+
+    lines += ["", f"OPEN POSITIONS ({len(positions)}):"]
+    for sym, p in sorted(positions.items()):
+        rec = ledger["open"].get(sym, {})
+        lines.append(f"  {sym}  qty {p['qty']}  "
+                     f"unrealized ${float(p.get('unrealized_pl', 0)):+,.2f}  "
+                     f"stop {rec.get('stop', '?')} / "
+                     f"target {rec.get('target', '?')}")
+    if not positions:
+        lines.append("  none")
+
+    lines += ["", review_open_options(load_open_options(), all_bars, today),
+              "", "Read-only briefing — no orders placed by this run. "
+              "The evening run trades and keeps the record."]
+    return "\n".join(lines)
+
+
 def main() -> None:
-    from .alpaca_paper import PaperBroker
-    broker = PaperBroker()
+    import sys
+    from .options_broker import PaperOptionsBroker
+    preopen = "--preopen" in sys.argv
+    broker = PaperOptionsBroker()
     today = str(date.today())
     start = str(date.today() - timedelta(days=HISTORY_DAYS))
     all_bars = {}
@@ -356,10 +566,14 @@ def main() -> None:
             all_bars[t] = fetch_bars(t, "1Day", start, today)
         except Exception as e:
             print(f"{t:<6} bars FAILED: {e}")
-    text = run(broker, all_bars, today)
+    if preopen:
+        text = preopen_report(broker, all_bars, today)
+        name = "premarket_scan"
+    else:
+        text = run(broker, all_bars, today)
+        name = "paper_trading"
     print(text)
-    path = save_report("paper_trading", text)
-    print(f"\nReport saved: {path}")
+    print(f"\nReport saved: {save_report(name, text)}")
 
 
 if __name__ == "__main__":

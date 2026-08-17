@@ -10,8 +10,19 @@ name: RS Paper Trader
 
 on:
   schedule:
-    - cron: "35 21 * * 1-5"   # 21:35 UTC weekdays — after the NYSE close year-round
+    # 12:45 UTC weekdays — ~8:45am ET in summer, 7:45am in winter. The
+    # pre-open briefing: read-only, places no orders.
+    - cron: "45 12 * * 1-5"
+    # 21:35 UTC weekdays — after the NYSE close year-round. The trading
+    # run: scans, places orders, keeps the record.
+    - cron: "35 21 * * 1-5"
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "Which run to perform"
+        type: choice
+        default: preopen
+        options: [preopen, trade]
 
 permissions:
   contents: write
@@ -36,13 +47,29 @@ jobs:
         # import (this is what broke the first run).
         run: pip install --quiet -r rs_options/mve/requirements.txt
 
-      - name: Daily scan + paper trades + report
+      # The morning cron briefs; the evening cron trades. A manual run
+      # uses the chosen mode, defaulting to the read-only briefing so an
+      # accidental click cannot place orders.
+      - name: Select run mode
+        id: mode
+        run: |
+          if [ "${{ github.event.schedule }}" = "35 21 * * 1-5" ]; then
+            echo "flag=" >> "$GITHUB_OUTPUT"
+          elif [ "${{ github.event.schedule }}" = "45 12 * * 1-5" ]; then
+            echo "flag=--preopen" >> "$GITHUB_OUTPUT"
+          elif [ "${{ inputs.mode }}" = "trade" ]; then
+            echo "flag=" >> "$GITHUB_OUTPUT"
+          else
+            echo "flag=--preopen" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Scan + paper trades + report
         working-directory: rs_options
         env:
           APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
           APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
           RS_PAPER_ARMED: "YES"
-        run: python -m paper.daily
+        run: python -m paper.daily ${{ steps.mode.outputs.flag }}
 
       - name: Commit report and ledger
         run: |

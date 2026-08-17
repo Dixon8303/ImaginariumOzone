@@ -286,3 +286,49 @@ def test_daily_report_includes_option_section():
     broker = FakeBroker()
     text = run(broker, breakout_universe(), TODAY)
     assert "OPTION POSITIONS" in text or "POSITION REVIEW" in text
+
+
+# ── pre-open briefing (read-only by construction) ────────────────────
+from paper.daily import bars_are_current, preopen_report
+
+MONDAY = "2026-08-17"          # the session after the TODAY fixture (Friday)
+
+
+def test_bars_are_current_accepts_yesterday_rejects_stale():
+    bars = breakout_universe()                 # newest bar = Friday
+    assert bars_are_current(bars, MONDAY)      # Friday -> Monday = 3 days
+    assert bars_are_current(bars, TODAY)       # same day is fine too
+    assert not bars_are_current(bars, "2026-09-01")   # weeks stale
+    assert not bars_are_current({}, MONDAY)
+
+
+def test_preopen_places_no_orders_and_writes_no_ledger():
+    """The whole point: it cannot double-trade against the evening run."""
+    broker = FakeBroker()
+    before = load_ledger(daily.LEDGER_PATH)
+    text = preopen_report(broker, breakout_universe(), MONDAY)
+    assert broker.brackets == []               # nothing bought
+    assert broker.closed_syms == []            # nothing sold
+    assert load_ledger(daily.LEDGER_PATH) == before
+    assert "no orders placed by this run" in text
+
+
+def test_preopen_lists_candidates_with_option_guidance():
+    text = preopen_report(FakeBroker(), breakout_universe(), MONDAY)
+    assert "PRE-OPEN SCAN" in text
+    assert "signals from the 2026-08-14 close" in text
+    assert "CANDIDATES FOR TODAY (1)" in text
+    assert "NVDA" in text and "option guidance" in text
+    assert "ORDERS QUEUED FOR THE OPEN" in text
+
+
+def test_preopen_marks_already_held_names():
+    broker = FakeBroker(positions={"NVDA": {"qty": "5", "unrealized_pl": "12"}})
+    text = preopen_report(broker, breakout_universe(), MONDAY)
+    assert "[already held]" in text
+
+
+def test_preopen_refuses_stale_bars():
+    text = preopen_report(FakeBroker(), breakout_universe(), "2026-12-25")
+    assert "stale or missing" in text
+    assert "CANDIDATES" not in text

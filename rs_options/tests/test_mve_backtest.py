@@ -120,3 +120,24 @@ def test_yahoo_json_parse():
     df = parse_yahoo_json(payload, "NVDA")
     assert len(df) == 2 and df["volume"].iloc[1] == 0
     assert parse_yahoo_json({}, "X").empty
+
+
+def test_per_ticker_breakdown():
+    """Aggregate expectancy can be carried by a couple of names — the
+    breadth check needs the per-ticker split to see that."""
+    from mve.backtest import BacktestResult, Trade
+    res = BacktestResult(trades=[
+        Trade("AAPL", "RS-02", "2026-01-02", "2026-01-09", 100, 103, 1.0,
+              "target", 5),
+        Trade("AAPL", "RS-02", "2026-02-02", "2026-02-09", 100, 97, -1.0,
+              "stop", 5),
+        Trade("NVDA", "RS-02", "2026-01-02", "2026-01-09", 100, 106, 2.0,
+              "target", 5),
+        Trade("NVDA", "RS-01", "2026-01-02", "2026-01-09", 100, 90, -3.0,
+              "stop", 5),
+    ])
+    by = res.per_ticker("RS-02")
+    assert set(by) == {"AAPL", "NVDA"}          # RS-01 excluded
+    assert by["AAPL"] == {"trades": 2, "expectancy_r": 0.0}
+    assert by["NVDA"] == {"trades": 1, "expectancy_r": 2.0}
+    assert res.per_ticker("RS-01")["NVDA"]["expectancy_r"] == -3.0

@@ -466,3 +466,101 @@ now part of the instrument.
 
 210 tests passing. Awaiting the operator's `mve.vix_regime` +
 `mve.hypotheses` run for the H8 verdict.
+
+## 2026-08-16 — Discovery power: deep history + cross-sectional breadth
+
+Built in answer to the operator's question — "what if new inputs reveal
+the real pattern?" The honest risk is not only overfitting; it is being
+UNDERPOWERED, where a real but moderate effect looks like noise and gets
+rejected. Both changes raise what the lab can detect WITHOUT lowering
+the bar.
+
+**1. Deep backfill.** `python -m mve.backfill --years 20`. Fixed a
+latent bug found while adding it: `backfill()` accepted a `years`
+argument but never forwarded it to `fetch_bars`, so the Yahoo fallback
+silently capped every deep pull at 5 years — a deep backfill would have
+looked like it worked while quietly returning the old window. The CLI
+now takes `--years`, and each ticker reports its actual first->last
+date, because a name that IPO'd in 2020 cannot have 20 years and
+pretending otherwise misreads every study downstream.
+
+Why it matters: ~5 years and 177 trades can only resolve fairly large
+effects. Twenty years spans 2008 and 2020 — it both quadruples the
+evidence and lets us ask whether the edge is regime-dependent rather
+than assuming.
+
+**2. Cross-sectional breadth.** `BacktestResult.per_ticker()` plus a
+breadth line under every verdict: how many individual tickers a variant
+improved, among names with >= 5 trades in both arms. An ADOPT-CANDIDATE
+that helps a MINORITY of names now prints a CAUTION — aggregate
+expectancy can be carried by two or three lucky tickers, and that is a
+different (weaker) claim than "this works."
+
+**Known limitation, stated plainly:** the 2025-2026 test window has now
+been used to judge eight hypothesis rounds. Every pass makes it less
+genuinely out-of-sample. It remains the best historical evidence
+available, but the only truly uncontaminated test bed from here is the
+forward paper track — data that arrives after the rules were fixed.
+Deep history helps precisely because it adds evidence that was never
+part of that selection loop.
+
+216 tests passing.
+
+## 2026-08-16 — Pre-open briefing added
+
+Operator asked for a morning scan. `python -m paper.daily --preopen`
+(cron 12:45 UTC weekdays) reports what the previous close implies:
+candidates with stop/target/1R and the option guidance, which names are
+already held, what is queued to fill at the open, open positions, and
+the held-option review.
+
+**Read-only by construction.** It places no orders and never writes the
+ledger — so it cannot double-trade against the evening run, which
+remains the single trading authority. A manual workflow run defaults to
+`preopen` too, so an accidental click cannot place orders.
+
+Point-in-time note: pre-open, the newest bar IS yesterday's close, and
+that is exactly the information the signal is allowed to use. The
+freshness gate is therefore an AGE check (<= 4 calendar days, covering
+long weekends) rather than the evening run's same-day requirement.
+
+221 tests passing.
+
+## 2026-08-16 — Autonomous PAPER options: the measurement gap opens
+
+The paper track now trades OPTIONS by itself, not just equities. This
+is the first time the project measures the instrument it actually
+trades. Every rule adopted so far — wide exit, H2b, H4b — was validated
+on the UNDERLYING, because historical chains are paid data. Forward
+paper fills are free, so the record starts accumulating now.
+
+`paper/options_broker.py`: contract discovery, selection, and orders on
+Alpaca's paper endpoint (inherits the hard-coded URL and the
+RS_PAPER_ARMED interlock). Selection reuses chain_select's constants —
+DTE 21-60, delta 0.40-0.80 targeting 0.60, spread <= 10% — rather than
+re-typing them.
+
+**Greeks honesty:** when the data plan carries delta, selection uses it.
+When it does not, it falls back to a moneyness proxy (strike near
+0.97 x spot) and the report SAYS which basis was used. A silent swap
+between "chosen by delta" and "chosen by a rule of thumb" would make
+the resulting P&L uninterpretable.
+
+Mechanics worth recording:
+- **Exits are the loop, not the broker.** Alpaca has no bracket orders
+  for options, so unlike the equity side nothing is self-enforcing.
+  `run_option_cycle` evaluates every held contract through
+  `position_manager` each run and sells on a verdict. Exits run BEFORE
+  entries so a freed slot can be reused the same day.
+- **Sizing is by max loss.** A long call can go to zero, so the premium
+  is the risk: contracts = floor(1% equity / (mid x 100)), capped at 5.
+  Deliberately more conservative than a delta-based estimate.
+- **Limit at the mid to open**, never market — on an instrument whose
+  spread is the dominant cost, a market order donates the spread.
+- **An options outage degrades to a note.** The equity track is the
+  validated one; a chain-endpoint failure must not take it down.
+
+237 tests passing. What this buys: in ~20-30 closed option trades there
+will finally be an answer to the question the backtests could never
+reach — does a correct call on the stock actually make money as a
+contract, after spread and decay?
