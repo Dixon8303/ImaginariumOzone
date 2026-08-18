@@ -35,10 +35,20 @@ NET_INCOME_TAGS = ("NetIncomeLoss", "ProfitLoss")
 PAUSE_S = 0.2               # SEC asks for <= 10 requests/second
 ETF_TICKERS = {"QQQ", "IWM"}   # no filings
 
-# SEC requires a descriptive User-Agent with contact info. This is a
-# research tool; identify it honestly rather than spoofing a browser.
-UA = {"User-Agent": "ImaginariumOzone RS research (contact via GitHub)",
-      "Accept-Encoding": "gzip, deflate"}
+# The SEC's fair-access policy REQUIRES a User-Agent carrying a real
+# contact address, and returns 403 without one. The address is read from
+# SEC_CONTACT_EMAIL rather than hard-coded: an email is the operator's to
+# give, and it does not belong in a public repository.
+def _ua() -> dict:
+    email = os.environ.get("SEC_CONTACT_EMAIL", "").strip()
+    if not email or "@" not in email:
+        raise SystemExit(
+            "SEC_CONTACT_EMAIL is not set. The SEC requires a contact "
+            "address in the request header and returns 403 without one.\n"
+            "Add to ~/.zshrc, then open a new Terminal:\n"
+            '  export SEC_CONTACT_EMAIL="you@example.com"')
+    return {"User-Agent": f"ImaginariumOzone RS research {email}",
+            "Accept-Encoding": "gzip, deflate"}
 
 
 RETRIES = 4                 # transient DNS/network failures under load
@@ -50,7 +60,7 @@ def _get_with_retry(url: str, retries: int = RETRIES) -> dict:
     last = None
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers=UA)
+            req = urllib.request.Request(url, headers=_ua())
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return json.loads(resp.read())
         except Exception as e:

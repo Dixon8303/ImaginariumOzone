@@ -51,8 +51,11 @@ python -m mve.walkforward           # §51: does the RS-02 edge hold per period?
 python -m mve.exit_study            # §41-§42: exit policies incl. H3 avwap_trail
 python -m mve.earnings              # earnings dates (ALPHAVANTAGE_API_KEY)
 python -m mve.vix_regime            # VIX/VIX3M term structure (free, no key)
-python -m mve.news                  # daily article counts (APCA_* env keys)
-python -m mve.fundamentals          # SEC EDGAR filings (free, no key)
+python -m mve.news                  # daily article counts (APCA_* env keys);
+                                    # re-run to fill gaps, --refresh to redo
+python -m mve.fundamentals          # SEC EDGAR filings (needs
+                                    # SEC_CONTACT_EMAIL — the SEC 403s
+                                    # without a contact address)
 python -m mve.hypotheses            # §72 rounds 5-6: H9 news, H10 fundamentals,
                                     # H11 volume, H13 vol-contraction, H14 close
                                     # strength, H15 gap cost, H16 clustering

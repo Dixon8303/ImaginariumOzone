@@ -367,3 +367,27 @@ def test_partial_fetch_invalidates_the_verdict():
                      if "H9a_quiet_news_2x" in ln]
     assert verdict_lines and not any("ADOPT-CANDIDATE" in ln
                                      for ln in verdict_lines)
+
+
+# ══════════════ fetch resilience (2026-08-17 incidents) ══════════════
+def test_sec_requires_a_contact_email(monkeypatch):
+    """The SEC returns 403 without a contact address in the User-Agent.
+    It is read from the environment, never hard-coded — an email is the
+    operator's to give and does not belong in a public repo."""
+    from mve import fundamentals
+    monkeypatch.delenv("SEC_CONTACT_EMAIL", raising=False)
+    with pytest.raises(SystemExit, match="SEC_CONTACT_EMAIL"):
+        fundamentals._ua()
+    monkeypatch.setenv("SEC_CONTACT_EMAIL", "not-an-email")
+    with pytest.raises(SystemExit):
+        fundamentals._ua()
+    monkeypatch.setenv("SEC_CONTACT_EMAIL", "someone@example.com")
+    ua = fundamentals._ua()
+    assert "someone@example.com" in ua["User-Agent"]
+
+
+def test_news_backoff_is_seconds_not_milliseconds():
+    """DNS resolvers need seconds to recover; the first backoff was too
+    fast and let the same dropout repeat."""
+    from mve.news import BACKOFF_S
+    assert BACKOFF_S >= 1.0
