@@ -720,3 +720,30 @@ verify) and dangerous for RESEARCH (you silently changed the question).
 Both behaviours are now explicit.
 
 264 tests passing.
+
+## 2026-08-17 — Two fetch bugs found by running it
+
+**SEC 403 Forbidden.** My error: the SEC's fair-access policy requires a
+User-Agent carrying a real contact address, and mine had none. Fixed by
+reading `SEC_CONTACT_EMAIL` from the environment — deliberately NOT
+hard-coded, because an email address is the operator's to give and does
+not belong in a public repository. Missing or malformed, the tool exits
+with the exact line to add to ~/.zshrc rather than failing at the API.
+
+**News fetch still dropping tickers** (19/22 after retries, a different
+subset than the previous 7/22 — so it is the operator's DNS resolver
+buckling under sustained connections, not the endpoint). Two changes:
+- backoff raised from ~0.35s to 3s doubling. A resolver needs seconds to
+  recover; the first attempt retried far too fast to help.
+- **the fetch now SKIPS tickers already on disk**, so repeated runs
+  CONVERGE on complete coverage instead of re-rolling the same dice on
+  all 22 every time. `--refresh` forces a full re-fetch. The summary
+  names what is still missing and says to run it again.
+
+Worth recording as a pattern: both failures were invisible to the test
+suite because both live at the network boundary, and both were found by
+the operator simply running the thing. The coverage guard added earlier
+today is what makes these merely annoying rather than dangerous — an
+incomplete fetch now blocks a verdict instead of quietly biasing one.
+
+266 tests passing.

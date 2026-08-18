@@ -41,6 +41,7 @@ RETRIES = 4                 # transient DNS/network failures under load
 NEWS_DIR = os.path.join("data", "news")
 HISTORY_YEARS = 6
 PAUSE_S = 0.35
+BACKOFF_S = 3.0             # DNS recovery needs seconds, not milliseconds
 
 # CALIBRATE — attention windows, not validated optima (LAW 12).
 RECENT_DAYS = 5             # "how loud is it right now"
@@ -60,7 +61,7 @@ def _get_with_retry(url: str, headers: dict, retries: int = RETRIES) -> dict:
                 return json.loads(resp.read())
         except Exception as e:
             last = e
-            time.sleep(PAUSE_S * (2 ** attempt))
+            time.sleep(BACKOFF_S * (2 ** attempt))
     raise last
 
 
@@ -153,19 +154,36 @@ def quiet_attention(news: dict, ticker: str, trade_date: str,
 
 
 def main() -> None:
+    import sys
+    refresh = "--refresh" in sys.argv
     end = date.today()
     start = end - timedelta(days=int(HISTORY_YEARS * 365.25))
     tickers = sorted(UNIVERSE)
+    have = load_news()
+    failed = []
     for t in tickers:
+        # Skip what is already on disk so a re-run only chases the gaps.
+        # Flaky networks then CONVERGE across runs instead of re-rolling
+        # the same dice on all 22 tickers every time.
+        if t in have and not refresh:
+            print(f"{t:<6} {len(have[t]):>5} days (on disk, skipped)")
+            continue
         try:
             df = fetch_counts(t, str(start), str(end))
             save_counts(t, df)
             total = int(df["articles"].sum()) if not df.empty else 0
             print(f"{t:<6} {len(df):>5} days, {total:>6} articles")
         except Exception as e:
+            failed.append(t)
             print(f"{t:<6} FAILED: {e}")
-    print(f"\n{len(load_news())}/{len(tickers)} tickers on disk. "
-          "Next: python -m mve.hypotheses")
+    n = len(load_news())
+    print(f"\n{n}/{len(tickers)} tickers on disk.")
+    if failed:
+        print(f"Still missing: {', '.join(failed)}\n"
+              "Run this again — completed tickers are skipped, so each "
+              "run only retries the gaps.")
+    else:
+        print("Next: python -m mve.hypotheses")
 
 
 if __name__ == "__main__":
