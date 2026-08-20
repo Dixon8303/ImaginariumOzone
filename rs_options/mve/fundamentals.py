@@ -20,6 +20,7 @@ more prone to reversal when the story wobbles.
 """
 from __future__ import annotations
 
+import gzip
 import json
 import os
 import time
@@ -54,15 +55,29 @@ def _ua() -> dict:
 RETRIES = 4                 # transient DNS/network failures under load
 
 
+def _decode(resp) -> dict:
+    """SEC honours our Accept-Encoding and returns gzip; urllib does NOT
+    decompress automatically, so the raw bytes start 1f 8b and json
+    chokes. Decompress explicitly rather than dropping compression —
+    these payloads are large and the SEC asks callers to accept gzip."""
+    raw = resp.read()
+    if resp.headers.get("Content-Encoding") == "gzip" or raw[:2] == b"\x1f\x8b":
+        raw = gzip.decompress(raw)
+    return json.loads(raw)
+
+
 def _get_with_retry(url: str, retries: int = RETRIES) -> dict:
     """Retry transient failures — a drop mid-universe leaves partial
-    coverage, which biases every study that fails closed."""
+    coverage, which biases every study that fails closed. A decode error
+    is deterministic, so it is raised immediately instead of retried."""
     last = None
     for attempt in range(retries):
         try:
             req = urllib.request.Request(url, headers=_ua())
             with urllib.request.urlopen(req, timeout=30) as resp:
-                return json.loads(resp.read())
+                return _decode(resp)
+        except (UnicodeDecodeError, json.JSONDecodeError, gzip.BadGzipFile):
+            raise                       # retrying cannot fix a bad payload
         except Exception as e:
             last = e
             time.sleep(PAUSE_S * (2 ** attempt))
