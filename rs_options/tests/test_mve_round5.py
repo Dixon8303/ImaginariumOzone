@@ -391,3 +391,27 @@ def test_news_backoff_is_seconds_not_milliseconds():
     fast and let the same dropout repeat."""
     from mve.news import BACKOFF_S
     assert BACKOFF_S >= 1.0
+
+
+def test_sec_response_is_gunzipped():
+    """We ask for gzip; urllib does not decompress, so raw bytes start
+    1f 8b and json chokes. The 2026-08-18 failure."""
+    import gzip as _gzip
+    import io
+    from mve import fundamentals
+
+    class Resp:
+        def __init__(self, raw, encoding=None):
+            self._raw = raw
+            self.headers = {"Content-Encoding": encoding} if encoding else {}
+
+        def read(self):
+            return self._raw
+
+    payload = b'{"ok": 1}'
+    packed = _gzip.compress(payload)
+    assert packed[:2] == b"\x1f\x8b"
+    assert fundamentals._decode(Resp(packed, "gzip")) == {"ok": 1}
+    # header absent but bytes are gzip anyway -> still handled
+    assert fundamentals._decode(Resp(packed)) == {"ok": 1}
+    assert fundamentals._decode(Resp(payload)) == {"ok": 1}   # plain
