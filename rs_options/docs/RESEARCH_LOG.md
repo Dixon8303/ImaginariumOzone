@@ -866,3 +866,60 @@ took, so filtering is not pure subtraction.
 Not yet run — needs the operator's bars, news, and fundamentals.
 
 277 tests passing.
+
+---
+
+## 2026-08-21 — H15 powered test and H18 combination verdicts
+
+**H15 gap dose-response: the execution-cost story FAILS its powered
+test.** The pre-registered criterion, written before the run: a real
+cost declines steadily across the gap buckets in BOTH windows; jagged
+means the filter's gain was outliers. The pattern is jagged. On train,
+expectancy RISES from flat opens (+0.20R) through 0-1% gaps (+0.62R)
+to 1-2% (+0.65R) before going negative at 2%+; on test it falls, then
+rises, then sits at breakeven for 2%+ (-0.02R over 7 trades). Moderate
+gap-ups are fine — on train they were the BEST entries. Only the 2%+
+tail is negative in both windows, and that is 12 trades worth -1.53R
+combined, with the test half at essentially zero.
+
+The overlap study also exposed where the filter's headline gain came
+from: H15a removed 13 trades worth only -2.53R, yet gained +3.87R on
+test — the rest is SUBSTITUTION, freed one-position-per-ticker slots
+taken by later signals that happened to win. That is luck of the queue,
+not a property of gaps. **Not adopted.** The 2%+ tail stays on the
+watch list for the 20-year backfill, which multiplies its sample.
+
+**H18 pre-registered combo (H11a+H15a): ADOPT-CANDIDATE on paper,
+not adopted.** Train +24.40R vs 21.23, test +18.31R vs 13.16, and the
+interaction line reads +0: the members' removals are disjoint (1 shared
+trade of 19), so the combo is just both small rules side by side — it
+inherits their evidential weakness rather than curing it. Subtracting
+H15a's solo numbers, H11a's increment is +0.21R train / +1.28R test.
+A candidate whose main ingredient just failed its powered test is not
+a candidate.
+
+**The pair sweep found no new information — demonstrably.** 4 of 15
+judged pairs beat baseline in both windows against ~1.1 expected by
+chance, which looks exciting until the pairs are unmasked: H16a removes
+zero trades (it never binds), so "H16a+H15a" IS H15a solo (numbers
+match exactly: +24.19/+17.03) and "H11a+H16a" IS H11a solo. The other
+two winners both contain H15a. Every "winning combination" is the same
+two small effects wearing different hats. This is the cleanest
+demonstration yet of why the sweep is a diagnostic and not a menu.
+
+**The autopsy column is the round's real finding.** What each rejected
+filter REMOVED, valued per trade: H9a news attention removed 26 trades
+worth +0.57R EACH — the news filter was deleting the system's best
+trades. High-attention breakouts outperformed here, the opposite of the
+pre-registered Barber-Odean story. (Flipping the filter to REQUIRE
+attention would be post-hoc story-flipping; if attention-as-positive is
+ever tested it goes in as a new pre-registered hypothesis on fresh
+data.) H14a close strength removed +0.44R/trade — same lesson. H13a
+quiet-base would have removed 89 trades worth +23.85R, most of the
+system's profit. The rejected filters were not merely useless; they
+were aimed at the best trades.
+
+**Net: doctrine unchanged for the third consecutive round.** RS-02 +
+200-day regime + quality momentum survives every challenger. Rounds
+5-6 + H18 tested 16 distinct ideas and adopted none — and the
+overlap/autopsy tables mean each rejection now carries WHY.
