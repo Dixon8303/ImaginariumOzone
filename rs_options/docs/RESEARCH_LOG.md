@@ -826,3 +826,43 @@ exactly as it did. Seven ideas tested, five eliminated cheaply, two
 sent back for a properly powered test.
 
 271 tests passing.
+
+---
+
+## 2026-08-21 — H18 built: the combination study
+
+Operator asked whether the tested strategies work better combined. The
+mechanics constrain the answer before any data is touched: entry
+filters compose by AND, so a combination can only REMOVE trades from
+the doctrine baseline — it cannot add a trade or improve one it keeps.
+Combining two filters that each deleted money deletes more. And the
+combination space is a luck factory: 13 round-5 variants form 2^13 =
+8192 subsets, ~400 of which would beat baseline by chance; the best
+cell of an exhaustive search is essentially guaranteed to be luck.
+
+`mve.combinations` therefore answers three narrow questions instead of
+shopping the space:
+
+1. **WHICH trades does each filter remove, and what were they worth?**
+   Two filters can post identical aggregates while deleting completely
+   different trades.
+2. **Do filters remove the SAME trades?** Pairwise overlap of removed
+   sets. High overlap = a combination is redundant; low overlap = a
+   genuinely new, stricter rule with a smaller sample.
+3. **Does the one pre-registered combo survive?** H11a overhead +
+   H15a gap — the only round-5 members not REJECTED solo. Registered
+   before the run so the list cannot grow after the numbers are seen.
+   The report also prints an interaction line: trades removed by the
+   combo vs. the union of its members' removals — near zero means no
+   interaction, just both rules at once.
+
+A cross-family pair sweep (one pre-registered primary per family, 21
+pairs) is included as a DIAGNOSTIC with the luck arithmetic printed
+above it — it exists to show where luck concentrates, not to shop
+from. Substitution is counted honestly: removing a signal can free the
+one-position-per-ticker slot for a later signal the baseline never
+took, so filtering is not pure subtraction.
+
+Not yet run — needs the operator's bars, news, and fundamentals.
+
+277 tests passing.
