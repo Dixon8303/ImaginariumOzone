@@ -59,6 +59,9 @@ python -m mve.fundamentals          # SEC EDGAR filings (needs
 python -m mve.hypotheses            # §72 rounds 5-6: H9 news, H10 fundamentals,
                                     # H11 volume, H13 vol-contraction, H14 close
                                     # strength, H15 gap cost, H16 clustering
+python -m mve.confluence            # H19: grade setups by agreement — the §32
+                                    # score rubric and equal-weight factor
+                                    # votes vs outcome (sizing, never gating)
 python -m mve.combinations          # H18: do the tested filters interact?
                                     # overlap of removed trades, pre-registered
                                     # combos, cautionary pair sweep

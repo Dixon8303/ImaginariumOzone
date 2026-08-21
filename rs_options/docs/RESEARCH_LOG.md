@@ -923,3 +923,49 @@ were aimed at the best trades.
 200-day regime + quality momentum survives every challenger. Rounds
 5-6 + H18 tested 16 distinct ideas and adopted none — and the
 overlap/autopsy tables mean each rejection now carries WHY.
+
+---
+
+## 2026-08-21 — H19 built: confluence as SCORING, not gating
+
+Operator asked about confluence — combining strategies the way traders
+stack indicators. The distinction that matters: H18 tested the STRICT
+form (require agreement or skip the trade), which failed because the
+filters mostly delete good trades. The trader's meaning is the SOFT
+form: count what lines up and act with more conviction when more does.
+That design cannot repeat the H5 failure — a score never removes a
+trade, so total return is untouched; the worst a useless score can do
+is nothing.
+
+The overfitting risk moves instead into the WEIGHTS. A fitted
+confluence score (2 points for this, half a point for that) has as
+many free parameters as weights and will happily memorise the past. So
+`mve.confluence` fits nothing:
+
+- **Part A** finally reports the §32 opportunity score — the 0-10
+  conviction rubric written into the spec before any backtest existed,
+  computed on every signal since the MVE was built, and never once
+  examined against outcomes. This is H17's machinery getting its
+  first real run.
+- **Part B** counts equal-weight votes from the round-5 factor
+  primaries, each voting its pre-registered direction — no weights, no
+  post-hoc flips (the news factor still votes "quiet is good" even
+  though the autopsy suggests the opposite; flipping it after seeing
+  the data would be story-flipping).
+
+Verdict instrument: dose-response, same as the H15 gap study.
+Expectancy must RISE with the score in BOTH windows. Flat = votes are
+noise. Falling = the factors collectively anti-predict — which the
+H18 autopsy predicts, and confirming THAT from a second angle would
+itself be useful: it would close the book on this factor family and
+say future rounds need genuinely different information (deeper
+history, intraday structure, breadth/market-internals), not more
+recombination of the same seven ideas.
+
+If either slope survives test, the payoff is sizing by score — more
+risk on high-conviction signals, every trade still taken — which is
+also the only honest use of confluence: it changes how much, never
+whether.
+
+`Trade` now carries `signal_date` so signal-time votes join cleanly to
+outcomes. 281 tests passing.

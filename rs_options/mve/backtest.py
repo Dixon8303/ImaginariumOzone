@@ -63,6 +63,7 @@ class Trade:
     bars_held: int
     score: int = 0          # opportunity score at signal (H17 sizing study)
     gap_pct: float = 0.0    # how far the fill opened above the signal close
+    signal_date: str = ""   # joins signal-time measurements (H19 confluence)
 
 
 @dataclass
@@ -233,7 +234,8 @@ def run_backtest(store: DataStore, universe: list | None = None,
                     r_multiple=round((exit_price - pos.entry) / pos.r_denom, 3),
                     exit_reason=reason, bars_held=pos.bars_held,
                     score=getattr(pos, "score", 0),
-                    gap_pct=getattr(pos, "gap_pct", 0.0)))
+                    gap_pct=getattr(pos, "gap_pct", 0.0),
+                    signal_date=pos.signal_date))
                 del open_pos[ticker]
 
         # ── detect new signals (point-in-time), enter at NEXT open ───
