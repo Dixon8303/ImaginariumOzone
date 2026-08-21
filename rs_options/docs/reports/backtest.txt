@@ -1,12 +1,12 @@
-generated: 2026-08-16
+generated: 2026-08-21
 
 BACKTEST — RS setups on the UNDERLYING (options P&L NOT modeled)
-trades: 438   signals skipped (no valid R): 5
+trades: 1724   signals skipped (no valid R): 26
 
-RS-01: 261 trades | win rate 41% | avg win +1.304R / avg loss -1.104R
-       expectancy -0.108R per trade (NEGATIVE expectancy) | max DD -50.288R | avg hold 8.9 bars
+RS-01: 922 trades | win rate 43% | avg win +1.485R / avg loss -6911.716R
+       expectancy -3934.991R per trade (NEGATIVE expectancy) | max DD -3628124.406R | avg hold 8.9 bars
 
-RS-02: 177 trades | win rate 58% | avg win +1.117R / avg loss -0.74R
-       expectancy +0.341R per trade (POSITIVE expectancy) | max DD -6.296R | avg hold 12.6 bars
+RS-02: 802 trades | win rate 51% | avg win +0.999R / avg loss -0.772R
+       expectancy +0.133R per trade (POSITIVE expectancy) | max DD -25.617R | avg hold 12.3 bars
 
 Reminder: LAW 19 — winning trades do not prove an edge. This is one in-sample pass; walk-forward comes next.
