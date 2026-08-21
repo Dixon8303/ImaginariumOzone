@@ -160,3 +160,32 @@ def test_save_report_writes_committable_file(tmp_path, monkeypatch, capsys):
     save_and_print("demo_study", "SUMMARY BODY")
     out = capsys.readouterr().out
     assert "SUMMARY BODY" in out and "git add docs/reports" in out
+
+
+def test_yearly_splits_expand_with_the_data(seeded):
+    from mve.walkforward import MIN_TRAIN_YEARS, yearly_splits
+    splits = yearly_splits(seeded)
+    # SyntheticVendor seeds ~2 years from 2023 -> too short for a
+    # 3-year train floor -> falls back to the default splits.
+    from mve.walkforward import DEFAULT_SPLITS
+    assert splits == DEFAULT_SPLITS or all(
+        int(t0[:4]) + MIN_TRAIN_YEARS <= int(s0[:4])
+        for t0, _, s0, _ in splits)
+
+
+def test_yearly_splits_cover_deep_history(tmp_path):
+    from datetime import date as _d
+    from mve.walkforward import yearly_splits
+    store = DataStore(str(tmp_path))
+    v = SyntheticVendor(start=_d(2006, 1, 3), days=5200)   # ~20 years
+    store.ingest_bars(v.bars("SPY", base=100.0, drift=0.0002, amp=0.02))
+    splits = yearly_splits(store)
+    assert len(splits) >= 15                 # one test window per year
+    first_train, _, first_test, _ = splits[0]
+    assert first_train.startswith("2006")
+    assert first_test.startswith("2009")     # 3-year train floor
+    # every window tests exactly one year against all years before it
+    for train_start, train_end, test_start, test_end in splits:
+        assert train_start == "2006-01-01"
+        assert int(test_start[:4]) == int(train_end[:4]) + 1
+        assert test_start[:4] == test_end[:4]
