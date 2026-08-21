@@ -47,6 +47,7 @@ class Position:
     r_denom: float
     bars_held: int = 0
     score: int = 0
+    gap_pct: float = 0.0    # open vs signal close (H15 dose-response)
 
 
 @dataclass
@@ -61,6 +62,7 @@ class Trade:
     exit_reason: str
     bars_held: int
     score: int = 0          # opportunity score at signal (H17 sizing study)
+    gap_pct: float = 0.0    # how far the fill opened above the signal close
 
 
 @dataclass
@@ -212,6 +214,7 @@ def run_backtest(store: DataStore, universe: list | None = None,
                 stop=sig["invalidation"], target=entry + TARGET_R * r_denom,
                 r_denom=r_denom)
             pos.score = sig.get("score", 0)
+            pos.gap_pct = (entry / sig["close"] - 1.0) if sig["close"] else 0.0
             open_pos[sig["ticker"]] = pos
         pending = still_pending
 
@@ -229,7 +232,8 @@ def run_backtest(store: DataStore, universe: list | None = None,
                     exit_date=d, entry=pos.entry, exit=exit_price,
                     r_multiple=round((exit_price - pos.entry) / pos.r_denom, 3),
                     exit_reason=reason, bars_held=pos.bars_held,
-                    score=getattr(pos, "score", 0)))
+                    score=getattr(pos, "score", 0),
+                    gap_pct=getattr(pos, "gap_pct", 0.0)))
                 del open_pos[ticker]
 
         # ── detect new signals (point-in-time), enter at NEXT open ───

@@ -326,7 +326,43 @@ def run_hypotheses(store: DataStore, setup: str = "RS-02",
         test = run_backtest(store, start=TEST_START, active=(setup,),
                             entry_filter=doctrine, max_gap_pct=gap)
         out[name] = record(train, test)
+
+    # H15 diagnostic. Tested AS A FILTER, the gap rule only ever touches
+    # a handful of trades, so its verdict rests on a sample too small to
+    # separate from luck. The underlying claim — "paying up at the open
+    # costs you" — is continuous, and every trade carries a gap. Measure
+    # it across ALL of them: a real execution effect shows a monotone
+    # decline across buckets, while six unlucky fills do not.
+    out["_gap_dose"] = {
+        "train": gap_buckets(run_backtest(store, end=TRAIN_END,
+                                          active=(setup,),
+                                          entry_filter=doctrine)),
+        "test": gap_buckets(run_backtest(store, start=TEST_START,
+                                         active=(setup,),
+                                         entry_filter=doctrine)),
+    }
     return out
+
+
+GAP_BUCKETS = ((-1.0, 0.0, "gap DOWN / flat"),
+               (0.0, 0.01, "up 0-1%"),
+               (0.01, 0.02, "up 1-2%"),
+               (0.02, 99.0, "up 2%+"))
+
+
+def gap_buckets(result, setup: str = "RS-02") -> list:
+    """Expectancy by entry-gap size across every trade, not just the few
+    a threshold would remove."""
+    rows = []
+    trades = [t for t in result.trades if t.setup == setup]
+    for lo, hi, label in GAP_BUCKETS:
+        sel = [t for t in trades if lo <= t.gap_pct < hi]
+        n = len(sel)
+        tot = sum(t.r_multiple for t in sel)
+        rows.append({"label": label, "trades": n,
+                     "expectancy_r": round(tot / n, 3) if n else 0.0,
+                     "total_r": round(tot, 2)})
+    return rows
 
 
 MIN_TICKER_TRADES = 5           # below this a per-ticker read is noise
@@ -379,7 +415,8 @@ def summary(results: dict) -> str:
         return (f"n={s['trades']:>3} exp={s['expectancy_r']:+.3f}R "
                 f"wr={s['win_rate']:.0%} totR={total_r(s):+7.2f}")
 
-    for name, r in results.items():
+    variants = {k: v for k, v in results.items() if not k.startswith("_")}
+    for name, r in variants.items():
         lines.append(f"{name:<21} train: {fmt(r['train'])}   "
                      f"test: {fmt(r['test'])}")
     lines.append("")
@@ -389,7 +426,7 @@ def summary(results: dict) -> str:
     if bt and bs:
         lines.append(f"Verdicts vs {BASELINE} (adopt only if TRAIN improves "
                      "AND TEST confirms; small n = inconclusive):")
-        for name, r in results.items():
+        for name, r in variants.items():
             if name in ("CONTROL", BASELINE):
                 continue
             if r.get("invalid"):
@@ -399,6 +436,22 @@ def summary(results: dict) -> str:
             if not t or not s or t["trades"] < 20 or s["trades"] < 10:
                 lines.append(f"  {name}: INCONCLUSIVE (insufficient trades)")
                 continue
+            # A filter that removed NOTHING was never exercised by this
+            # sample. Calling that "REJECT" reads as tested-and-failed,
+            # which is the exact silent failure this report exists to
+            # prevent — the condition it guards against simply never
+            # occurred, so the hypothesis is untested, not refuted.
+            if (t["trades"] == bt["trades"]
+                    and s["trades"] == bs["trades"]
+                    and abs(total_r(t) - total_r(bt)) < 1e-9
+                    and abs(total_r(s) - total_r(bs)) < 1e-9):
+                lines.append(
+                    f"  {name}: NO EFFECT — the filter never bound "
+                    "(identical to baseline). The condition it screens "
+                    "for does not occur in this sample; UNTESTED, not "
+                    "refuted.")
+                continue
+
             train_up = t["expectancy_r"] > bt["expectancy_r"]
             test_up = s["expectancy_r"] > bs["expectancy_r"]
             verdict = ("ADOPT-CANDIDATE" if train_up and test_up
@@ -439,7 +492,24 @@ def summary(results: dict) -> str:
                 lines.append("      breadth: not comparable "
                              f"(no ticker has >= {MIN_TICKER_TRADES} trades "
                              "in both arms)")
-    tested = max(0, len(results) - 2)      # exclude CONTROL and BASELINE
+    dose = results.get("_gap_dose")
+    if dose:
+        lines += ["",
+                  "H15 DOSE-RESPONSE — expectancy by entry gap, ALL trades "
+                  "(the filter above only touches a handful; this is the "
+                  "same claim measured at full power):"]
+        for window in ("train", "test"):
+            lines.append(f"  {window}:")
+            for row in dose[window]:
+                lines.append(
+                    f"    {row['label']:<16} n={row['trades']:>3} "
+                    f"exp={row['expectancy_r']:+.3f}R "
+                    f"totR={row['total_r']:+7.2f}")
+        lines.append("  A real execution cost declines steadily across the "
+                     "buckets in BOTH windows. A jagged or reversing "
+                     "pattern means the filter's gain was a few outliers.")
+
+    tested = max(0, len(variants) - 2)      # exclude CONTROL and BASELINE
     expected_false = tested * 0.05
     candidates = sum(1 for line in lines if line.strip().startswith(
         ("H", "  H")) and "ADOPT-CANDIDATE" in line)

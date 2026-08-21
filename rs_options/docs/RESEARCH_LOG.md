@@ -747,3 +747,122 @@ today is what makes these merely annoying rather than dangerous — an
 incomplete fetch now blocks a verdict instead of quietly biasing one.
 
 266 tests passing.
+
+---
+
+## 2026-08-21 — Round 5 verdicts: H9, H10, H11, H13, H14, H15, H16
+
+Thirteen variants across seven hypothesis families, judged against
+BASELINE_DOCTRINE (train n=61 exp=+0.348R totR=+21.23; test n=47
+exp=+0.280R totR=+13.16). **Nothing is adopted.**
+
+**Rejected outright — the mechanism did not survive contact with data:**
+
+- **H9 news attention** (both thresholds). REJECT: train fell in both
+  variants, and total return collapsed (+21.23R → +11.49R on train).
+  Screening out breakouts arriving in a burst of coverage deletes a lot
+  of good trades. The pre-registered story — Barber & Odean attention,
+  crowded entries fade — was stated before the test and is now simply
+  wrong for this setup. Recorded as a finding, not re-narrated.
+- **H14 close strength** (both thresholds). REJECT. Closing at the top
+  of the day's range does not predict follow-through; both variants cut
+  total return. A widely repeated piece of chart folklore that does not
+  hold here.
+- **H10 trailing profitability.** NOISE — train improved sharply
+  (+0.546R) and test did not confirm (+0.257R vs baseline +0.280R).
+  Test total return FELL by 2.37R, so the filter deleted profitable
+  trades out of sample. Coverage passed, so this is a real verdict on
+  the filter and not an artifact of missing SEC data. Textbook
+  train-only improvement.
+
+**Untested, not refuted — the sample could not exercise them:**
+
+- **H16 signal clustering.** Both variants returned numbers bit-identical
+  to baseline: no day in five years ever produced more than two signals,
+  so the cap never bound. The report called this REJECT, which reads as
+  tested-and-failed. Fixed — the summary now prints NO EFFECT / UNTESTED
+  when a variant's trade count and total R match baseline exactly.
+  Incidentally this answers the worry that motivated H16: clustering is
+  not a problem in this universe.
+- **H13 volatility contraction.** n=13 and n=20 on train. Train
+  expectancy looked strong (+0.73R, +0.67R) and that is exactly why it
+  must not be read — twenty trades cannot distinguish a real effect from
+  a run of luck. Needs the deep backfill before it can be judged.
+
+**The one candidate worth a second look, and why it is still not adopted:**
+
+- **H15 gap-at-open cancellation.** H15a (2%) improved train AND test,
+  and unlike the H5 failure mode the TOTAL return rose in both windows
+  (+21.23→+24.19, +13.16→+17.03). Six cancelled fills were worth
+  −6.83R combined, roughly −1.14R each: near-maximum losers. The
+  mechanism is also the right kind — an execution cost, not a market
+  prediction. You signal on the close and fill at the next open; if the
+  open has run 2% away from you, the stop distance is already blown out
+  before the trade starts.
+
+  Against it: **six trades**, and **no dose-response**. The tighter 1%
+  variant removes more trades and gains less, meaning the extra two it
+  cuts were worth about +1.43R each. A real cost should get worse
+  monotonically as the gap widens. That it does not is the strongest
+  argument that these six fills are outliers.
+
+  Rather than re-run the same underpowered test, the study now measures
+  the claim at full power: every trade carries its entry gap, and the
+  report buckets expectancy by gap size across ALL trades in both
+  windows. If paying up at the open genuinely costs money, expectancy
+  declines steadily across the buckets in train and test alike. If it
+  is six unlucky fills, the pattern will be jagged. That is a real test;
+  the filter version was not.
+
+**Multiple comparisons.** 13 variants, ~0.7 ADOPT-CANDIDATEs expected
+from chance. Four appeared — but H11a/H11b and H15a/H15b are two
+hypotheses at two thresholds, not four independent tests, and H11's
+candidates rest on 4 and 2 differing trades respectively (H11b improved
+0 of 10 tickers). Treating those as findings would be indefensible.
+
+**Net result of round 5: no change to live doctrine.** RS-02 with the
+200-day regime filter and the H4b quality-momentum threshold stands
+exactly as it did. Seven ideas tested, five eliminated cheaply, two
+sent back for a properly powered test.
+
+271 tests passing.
+
+---
+
+## 2026-08-21 — H18 built: the combination study
+
+Operator asked whether the tested strategies work better combined. The
+mechanics constrain the answer before any data is touched: entry
+filters compose by AND, so a combination can only REMOVE trades from
+the doctrine baseline — it cannot add a trade or improve one it keeps.
+Combining two filters that each deleted money deletes more. And the
+combination space is a luck factory: 13 round-5 variants form 2^13 =
+8192 subsets, ~400 of which would beat baseline by chance; the best
+cell of an exhaustive search is essentially guaranteed to be luck.
+
+`mve.combinations` therefore answers three narrow questions instead of
+shopping the space:
+
+1. **WHICH trades does each filter remove, and what were they worth?**
+   Two filters can post identical aggregates while deleting completely
+   different trades.
+2. **Do filters remove the SAME trades?** Pairwise overlap of removed
+   sets. High overlap = a combination is redundant; low overlap = a
+   genuinely new, stricter rule with a smaller sample.
+3. **Does the one pre-registered combo survive?** H11a overhead +
+   H15a gap — the only round-5 members not REJECTED solo. Registered
+   before the run so the list cannot grow after the numbers are seen.
+   The report also prints an interaction line: trades removed by the
+   combo vs. the union of its members' removals — near zero means no
+   interaction, just both rules at once.
+
+A cross-family pair sweep (one pre-registered primary per family, 21
+pairs) is included as a DIAGNOSTIC with the luck arithmetic printed
+above it — it exists to show where luck concentrates, not to shop
+from. Substitution is counted honestly: removing a signal can free the
+one-position-per-ticker slot for a later signal the baseline never
+took, so filtering is not pure subtraction.
+
+Not yet run — needs the operator's bars, news, and fundamentals.
+
+277 tests passing.

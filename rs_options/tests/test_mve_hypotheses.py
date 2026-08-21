@@ -7,8 +7,9 @@ import pytest
 from mve.backtest import run_backtest
 from mve.exit_study import POLICIES, simulate
 from mve.hypotheses import (VARIANT_NAMES, above_sma, calm_breakout,
-                            earnings_clear, mom_12_1, near_52wk_high,
-                            quality_mom, run_hypotheses, summary)
+                            earnings_clear, gap_buckets, mom_12_1,
+                            near_52wk_high, quality_mom, run_hypotheses,
+                            summary)
 from mve.store import DataStore
 from mve.vendors import SyntheticVendor
 
@@ -74,7 +75,8 @@ def test_entry_filter_blocks_and_counts(seeded):
 
 def test_hypothesis_study_structure(seeded):
     results = run_hypotheses(seeded, news={}, facts={})
-    assert set(results) == set(VARIANT_NAMES)
+    # Keys starting with "_" are diagnostics, not scored variants.
+    assert {k for k in results if not k.startswith("_")} == set(VARIANT_NAMES)
     text = summary(results)
     assert "CONTROL" in text and "BASELINE_DOCTRINE" in text
     assert "H9a_quiet_news_2x" in text and "H11a_overhead_10pct" in text
@@ -174,3 +176,66 @@ def test_avwap_handles_missing_volume_column():
                         columns=["open", "high", "low", "close"])
     out = simulate(rows, **BASE, policy=POLICIES["avwap_trail"])
     assert out["reason"] in ("stop", "gap_stop", "time")   # no crash
+
+
+# --------------------------------------- round-5 reporting corrections
+
+def _arm(trades, expectancy, by_ticker=None):
+    return {"train": {"trades": trades, "expectancy_r": expectancy,
+                      "win_rate": 0.55},
+            "test": {"trades": trades, "expectancy_r": expectancy,
+                     "win_rate": 0.55},
+            "by_ticker": by_ticker or {}}
+
+
+def test_filter_that_never_bound_reads_as_untested_not_rejected():
+    # H16 produced numbers bit-identical to baseline: no day in the
+    # sample ever had enough signals for the clustering cap to apply.
+    # Reporting that as REJECT would claim the idea was tested.
+    results = {
+        "CONTROL": _arm(80, 0.30),
+        "BASELINE_DOCTRINE": _arm(61, 0.348),
+        "H16a_max2_signals": _arm(61, 0.348),
+    }
+    line = [ln for ln in summary(results).splitlines()
+            if "H16a_max2_signals:" in ln][0]
+    assert "NO EFFECT" in line and "UNTESTED" in line
+    assert "REJECT" not in line
+
+
+def test_a_filter_that_did_bind_is_still_judged_normally():
+    results = {
+        "CONTROL": _arm(80, 0.30),
+        "BASELINE_DOCTRINE": _arm(61, 0.348),
+        "H14a_close_top30": _arm(51, 0.299),
+    }
+    line = [ln for ln in summary(results).splitlines()
+            if "H14a_close_top30:" in ln][0]
+    assert "REJECT" in line and "NO EFFECT" not in line
+
+
+class _T:
+    """Minimal stand-in for a Trade row."""
+    def __init__(self, gap_pct, r_multiple, setup="RS-02"):
+        self.gap_pct, self.r_multiple, self.setup = gap_pct, r_multiple, setup
+
+
+class _R:
+    def __init__(self, trades):
+        self.trades = trades
+
+
+def test_gap_buckets_sort_every_trade_by_fill_gap():
+    rows = gap_buckets(_R([_T(-0.01, 1.0), _T(0.005, 2.0), _T(0.015, -1.0),
+                           _T(0.03, -1.0), _T(0.05, -1.0)]))
+    labels = [r["label"] for r in rows]
+    assert labels == ["gap DOWN / flat", "up 0-1%", "up 1-2%", "up 2%+"]
+    assert [r["trades"] for r in rows] == [1, 1, 1, 2]
+    assert rows[3]["total_r"] == -2.0          # both 2%+ fills, summed
+    assert rows[1]["expectancy_r"] == 2.0
+
+
+def test_gap_buckets_ignore_other_setups_and_empty_buckets():
+    rows = gap_buckets(_R([_T(0.03, 5.0, setup="RS-01")]))
+    assert all(r["trades"] == 0 for r in rows)
+    assert all(r["expectancy_r"] == 0.0 for r in rows)   # no divide by zero
