@@ -41,10 +41,8 @@ Verdicts vs BASELINE_DOCTRINE (adopt only if TRAIN improves AND TEST confirms; s
       breadth: improved 1/6 tickers (>= 5 trades each)
   H14b_close_top50: REJECT (train did not improve)
       breadth: improved 2/8 tickers (>= 5 trades each)
-  H16a_max2_signals: REJECT (train did not improve)
-      breadth: improved 0/11 tickers (>= 5 trades each)
-  H16b_max4_signals: REJECT (train did not improve)
-      breadth: improved 0/11 tickers (>= 5 trades each)
+  H16a_max2_signals: NO EFFECT — the filter never bound (identical to baseline). The condition it screens for does not occur in this sample; UNTESTED, not refuted.
+  H16b_max4_signals: NO EFFECT — the filter never bound (identical to baseline). The condition it screens for does not occur in this sample; UNTESTED, not refuted.
   H15a_gap_2pct: ADOPT-CANDIDATE
       CAUTION: only 6 trades differ from baseline across both windows — too few to be distinguishable from noise.
       breadth: improved 5/11 tickers (>= 5 trades each)
@@ -53,6 +51,19 @@ Verdicts vs BASELINE_DOCTRINE (adopt only if TRAIN improves AND TEST confirms; s
       CAUTION: only 8 trades differ from baseline across both windows — too few to be distinguishable from noise.
       breadth: improved 3/11 tickers (>= 5 trades each)
       CAUTION: helps a MINORITY of tickers — the aggregate gain is concentrated, not broad.
+
+H15 DOSE-RESPONSE — expectancy by entry gap, ALL trades (the filter above only touches a handful; this is the same claim measured at full power):
+  train:
+    gap DOWN / flat  n= 29 exp=+0.197R totR=  +5.72
+    up 0-1%          n= 23 exp=+0.620R totR= +14.26
+    up 1-2%          n=  4 exp=+0.654R totR=  +2.61
+    up 2%+           n=  5 exp=-0.274R totR=  -1.37
+  test:
+    gap DOWN / flat  n= 19 exp=+0.484R totR=  +9.21
+    up 0-1%          n= 19 exp=+0.185R totR=  +3.52
+    up 1-2%          n=  2 exp=+0.287R totR=  +0.57
+    up 2%+           n=  7 exp=-0.023R totR=  -0.16
+  A real execution cost declines steadily across the buckets in BOTH windows. A jagged or reversing pattern means the filter's gain was a few outliers.
 
 MULTIPLE COMPARISONS: 13 variants tested this round. At a 1-in-20 luck rate that is ~0.7 ADOPT-CANDIDATEs expected from chance alone.
 

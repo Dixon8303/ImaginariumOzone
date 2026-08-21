@@ -1,0 +1,73 @@
+generated: 2026-08-20
+
+COMBINATION STUDY — do the tested filters interact? (H18, §72)
+train <= 2024-12-31 | test >= 2025-01-01 | all rows vs BASELINE_DOCTRINE
+
+Filters compose by AND: a combination only REMOVES trades from
+the baseline. It cannot add a trade or improve one it keeps —
+so a combination earns its keep only by removing NET-NEGATIVE
+trades that neither member removed alone.
+
+BASELINE_DOCTRINE        train: n= 61 exp=+0.348R totR= +21.23   test: n= 47 exp=+0.280R totR= +13.16
+
+WHAT EACH FILTER REMOVES (vs baseline, both windows pooled):
+  a filter is redundant in combination exactly to the extent
+  it removes the same trades as its partner.
+  H9a_quiet_news_2x      removed  26 trades worth  +14.72R (+0.57R each), substituted in 10
+  H10_profitable         removed  19 trades worth   -2.08R (-0.11R each)
+  H11a_overhead_10pct    removed   7 trades worth   -2.00R (-0.29R each), substituted in 3
+  H13a_quiet_base_40     removed  89 trades worth  +23.85R (+0.27R each)
+  H14a_close_top30       removed  34 trades worth  +14.86R (+0.44R each), substituted in 11
+  H16a_max2_signals      removed   0 trades worth   +0.00R (+0.00R each)
+  H15a_gap_2pct          removed  13 trades worth   -2.53R (-0.19R each), substituted in 7
+
+PAIRWISE OVERLAP of removed trades (shared / union):
+  ~0% = the filters police different trades; combining is
+  a genuinely new, stricter rule with a smaller sample.
+  ~100% = the second filter is redundant.
+  H9a_quiet_news_2x      x H10_profitable           2/43  (5%)
+  H9a_quiet_news_2x      x H11a_overhead_10pct      1/32  (3%)
+  H9a_quiet_news_2x      x H13a_quiet_base_40      25/90  (28%)
+  H9a_quiet_news_2x      x H14a_close_top30        16/44  (36%)
+  H9a_quiet_news_2x      x H16a_max2_signals        0/26  (0%)
+  H9a_quiet_news_2x      x H15a_gap_2pct            2/37  (5%)
+  H10_profitable         x H11a_overhead_10pct      1/25  (4%)
+  H10_profitable         x H13a_quiet_base_40      15/93  (16%)
+  H10_profitable         x H14a_close_top30         3/50  (6%)
+  H10_profitable         x H16a_max2_signals        0/19  (0%)
+  H10_profitable         x H15a_gap_2pct            4/28  (14%)
+  H11a_overhead_10pct    x H13a_quiet_base_40       6/90  (7%)
+  H11a_overhead_10pct    x H14a_close_top30         1/40  (2%)
+  H11a_overhead_10pct    x H16a_max2_signals        0/7   (0%)
+  H11a_overhead_10pct    x H15a_gap_2pct            1/19  (5%)
+  H13a_quiet_base_40     x H14a_close_top30        32/91  (35%)
+  H13a_quiet_base_40     x H16a_max2_signals        0/89  (0%)
+  H13a_quiet_base_40     x H15a_gap_2pct           12/90  (13%)
+  H14a_close_top30       x H16a_max2_signals        0/34  (0%)
+  H14a_close_top30       x H15a_gap_2pct            1/46  (2%)
+  H16a_max2_signals      x H15a_gap_2pct            0/13  (0%)
+
+PRE-REGISTERED COMBINATIONS (the only members not REJECTED solo in round 5):
+  H11a_overhead_10pct+H15a_gap_2pct
+    train: n= 57 exp=+0.428R totR= +24.40   test: n= 42 exp=+0.436R totR= +18.31
+    verdict: ADOPT-CANDIDATE
+    interaction: removed 19 trades; its members removed 19 between them (+0 from interaction). Near zero = no interaction, just both rules at once.
+
+PAIR SWEEP — DIAGNOSTIC ONLY. 21 cross-family pairs tested, 6 below minimum trade counts. At a 1-in-20 luck rate ~1.1 pairs beat baseline by chance;
+the best cell of a sweep is where luck concentrates. Nothing below is adoptable from this table.
+  top pairs by TEST total return:
+  H11a_overhead_10pct + H15a_gap_2pct
+    train: n= 57 exp=+0.428R totR= +24.40   test: n= 42 exp=+0.436R totR= +18.31
+  H16a_max2_signals + H15a_gap_2pct
+    train: n= 58 exp=+0.417R totR= +24.19   test: n= 44 exp=+0.387R totR= +17.03
+  H11a_overhead_10pct + H16a_max2_signals
+    train: n= 59 exp=+0.380R totR= +22.42   test: n= 45 exp=+0.321R totR= +14.45
+  H9a_quiet_news_2x + H15a_gap_2pct
+    train: n= 51 exp=+0.293R totR= +14.94   test: n= 34 exp=+0.402R totR= +13.67
+  H10_profitable + H15a_gap_2pct
+    train: n= 47 exp=+0.545R totR= +25.62   test: n= 40 exp=+0.333R totR= +13.32
+  H10_profitable + H11a_overhead_10pct
+    train: n= 46 exp=+0.562R totR= +25.85   test: n= 40 exp=+0.302R totR= +12.08
+  pairs beating baseline totR in BOTH windows: 4/15 judged (chance predicts ~1.1)
+
+LAW 12/20: a combination is a new hypothesis, not a merger of old verdicts. Only the pre-registered set above carries verdicts, and none is adopted without operator decision.
