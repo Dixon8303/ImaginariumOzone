@@ -1,0 +1,55 @@
+generated: 2026-08-21
+
+CONFLUENCE STUDY — grade setups, do not gate them (H19, §72)
+train <= 2024-12-31 | test >= 2025-01-01 | doctrine trades only
+
+Scores never remove a trade, so nothing here can repeat H5's
+average-up-total-down failure. The question is narrower: does
+MORE agreement predict a BETTER trade? Only a rise that holds
+in BOTH windows counts — and it earns sizing by score, never
+gating.
+
+PART A — the §32 opportunity score (0-10 rubric, pre-registered
+in the spec; computed on every signal since the MVE was built,
+reported here for the first time):
+  train:
+    score <=7  n= 28 exp=-0.089R
+    score 8    n= 54 exp=-0.133R
+    score 9    n=211 exp=+0.143R
+    score 10   n=186 exp=+0.226R
+  test:
+    score <=7  n=  1 exp=-0.097R
+    score 8    n=  4 exp=-0.335R
+    score 9    n= 19 exp=-0.200R
+    score 10   n= 24 exp=+0.723R
+
+PART B — equal-weight factor votes (round-5 primaries, each in
+its pre-registered direction; no weights, no flips; unmeasurable
+factors vote 0; +1 fill-time vote when the open gapped <= 2%):
+  voters: quiet_news, profitable, clear_overhead, quiet_base, strong_close, small_gap
+  train:
+    0 votes  n=  1 exp=+0.942R totR=  +0.94
+    1 votes  n=  6 exp=+0.135R totR=  +0.81
+    2 votes  n= 37 exp=-0.108R totR=  -4.00
+    3 votes  n=169 exp=+0.076R totR= +12.82
+    4 votes  n=170 exp=+0.053R totR=  +8.99
+    5 votes  n= 81 exp=+0.369R totR= +29.91
+    6 votes  n= 15 exp=+0.859R totR= +12.88
+  test:
+    2 votes  n=  2 exp=-0.768R totR=  -1.54
+    3 votes  n=  9 exp=+0.271R totR=  +2.44
+    4 votes  n= 20 exp=+0.413R totR=  +8.26
+    5 votes  n= 14 exp=+0.164R totR=  +2.29
+    6 votes  n=  3 exp=+0.219R totR=  +0.66
+
+READING IT: rising in both windows = confluence carries real
+information -> candidate for sizing by score (more risk on
+high-vote signals, all trades still taken). Flat = the votes
+are noise; the doctrine gate already extracted the signal.
+Falling = the factors collectively anti-predict, confirming
+the H18 autopsy from a second angle. Thin buckets (n < 10)
+prove nothing in any direction.
+
+LAW 12/20: a monotone slope on train alone is how overfitting
+looks. Sizing by score gets adopted only if the slope survives
+the test window, and only by operator decision.
