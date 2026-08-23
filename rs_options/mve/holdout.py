@@ -37,7 +37,7 @@ from __future__ import annotations
 
 from .backtest import DATA_ROOT, run_backtest
 from .hypotheses import GAP_BUCKETS, gap_buckets, total_r
-from .setups import rs02_entry_ok
+from .setups import MAX_ENTRY_GAP, rs02_entry_ok
 from .store import DataStore
 
 SETUP = "RS-02"
@@ -48,7 +48,7 @@ SETUP = "RS-02"
 # years are untouched.
 HOLDOUT_END = "2020-12-31"
 
-GAP_LIMIT = 0.02        # H15a, exactly as tested — not re-tuned here
+GAP_LIMIT = MAX_ENTRY_GAP   # the live constant — never re-tuned here
 
 
 def run_holdout(store: DataStore) -> dict:

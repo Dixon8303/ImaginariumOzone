@@ -97,7 +97,8 @@ from .backtest import DATA_ROOT, run_backtest
 from .earnings import load_earnings
 from .fundamentals import ETF_TICKERS, is_profitable, load_fundamentals
 from .news import load_news, quiet_attention
-from .setups import above_sma, mom_12_1, quality_mom, rs02_entry_ok
+from .setups import (MAX_ENTRY_GAP, above_sma, mom_12_1, quality_mom,
+                     rs02_entry_ok)
 from .store import DataStore
 from .universe import BENCHMARK, UNIVERSE
 from .vix_regime import calm_regime, load_term_structure
@@ -260,7 +261,9 @@ VARIANT_NAMES = ("CONTROL", "BASELINE_DOCTRINE",
 
 # H15 is a fill-time cancellation, not a signal-time filter — it runs
 # through the backtester's max_gap_pct rather than an entry_filter.
-GAP_VARIANTS = {"H15a_gap_2pct": 0.02, "H15b_gap_1pct": 0.01}
+# H15a imports the live constant so an adopted rule and the study that
+# judges it can never drift apart. H15b stays a fixed comparison arm.
+GAP_VARIANTS = {"H15a_gap_2pct": MAX_ENTRY_GAP, "H15b_gap_1pct": 0.01}
 
 
 def run_hypotheses(store: DataStore, setup: str = "RS-02",

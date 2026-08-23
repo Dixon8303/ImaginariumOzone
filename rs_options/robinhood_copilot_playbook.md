@@ -142,6 +142,38 @@ better trades. The scanner enforces both in `mve/setups.py ::
 ENTRY_FILTERS` — no manual check needed, but if a breakout candidate is
 missing from a scan, these are the first reasons to suspect.
 
+**RS-02 fill condition — the 2% gap cap (H15a, adopted 2026-08-23).**
+The two filters above run at signal time. This one runs the next
+morning, at the fill:
+
+> **Do not pay more than 2% above the signal close.** If the stock opens
+> higher than that, abandon the trade. Do not chase it.
+
+The paper trader enforces this automatically by placing the entry as a
+**limit order at close × 1.02** instead of a market order, and reports
+every cancellation under `H15a GAP CANCELLATIONS`. In Robinhood you
+enforce it by hand: the scan report prints the exact limit price beside
+each pick — if the pre-market or opening price is above it, skip that
+name for the day.
+
+Why this one and not the twenty other ideas that were tested: it is the
+only rule found that removes LOSING trades. Every other filter tried
+removed profitable ones. It is also not a market prediction — it is an
+execution rule. Your stop sits at a fixed swing low, so an entry 3%
+higher makes 1R wider before the trade has started, and you are risking
+more to make the same move.
+
+Evidence (H20 holdout on 2006–2020, data that never touched the window
+where the 2% number was chosen): expectancy +0.117R vs +0.096R and total
++42.94R vs +36.10R over 9 cancelled fills. The 2%+ bucket lost money in
+every window ever measured.
+
+Honest caveat, so you are not surprised later: the effect is a **cliff**
+at 2%, not a smooth slope — gapping up 1% was fine, even good. That is a
+slightly different pattern than predicted before the test, so
+`docs/PREREGISTERED.md` (FWD-2) tracks whether it keeps working going
+forward. Roughly one order in fifty gets cancelled by it.
+
 ## Volatility context (the "volatility box")
 
 Each scan computes an ATM-IV reading per ticker from the day's chain and
