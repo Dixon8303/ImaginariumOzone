@@ -62,10 +62,19 @@
   --radius:0; --radius-control:2px;
   --shadow-modal:0 24px 64px -12px rgb(0 0 0 / .6);
 
+  /* ---- BRAND — E.A.T. Media blue, kept outside the constitution's closed
+     palette by explicit request. --link is darker than --accent: passes
+     WCAG AA (4.5:1) for normal-size text/links. --accent itself is only
+     3.1-3.3:1 on light backgrounds — fine for large UI (focus rings,
+     borders) but not for body text at this weight/size. */
+  --brand-accent: #0292eb;
+  --brand-link: #0275bc;
+  --brand-accent-dark: #3db1ff;
+
   /* ---- EAT semantic layer (light, default) ----
      Body text: --ink (AAA 17.38:1) / secondary prose: --ink-secondary (AAA 9.55:1)
      Caption/label-scale only: --muted (AA+ 6.88:1)
-     Links, focus ring, nav-active, eyebrows: --accent/--link/--focus → amber-700 (AAA 7.50:1) */
+     Links, focus ring, nav-active, eyebrows: --accent/--link/--focus → brand blue */
   --ink: var(--vault-950);
   --ink-secondary: var(--print-700);
   --paper: var(--print-50);
@@ -73,10 +82,10 @@
   --surface-inset: var(--print-200);
   --line: var(--print-200);
   --muted: var(--print-600);
-  --accent: var(--amber-700);
+  --accent: var(--brand-accent);
   --accent-ink: var(--print-50);
-  --focus: var(--amber-700);
-  --link: var(--amber-700);
+  --focus: var(--brand-accent);
+  --link: var(--brand-link);
   --btn-fill: var(--vault-950);
   --btn-fill-ink: var(--print-50);
   --btn-fill-hover: var(--vault-800);
@@ -89,10 +98,10 @@
   --surface-inset: var(--vault-800);
   --line: var(--vault-700);
   --muted: var(--print-300);
-  --accent: var(--amber-200);
+  --accent: var(--brand-accent-dark);
   --accent-ink: var(--vault-950);
-  --focus: var(--amber-400);
-  --link: var(--amber-200);
+  --focus: var(--brand-accent-dark);
+  --link: var(--brand-accent-dark);
   --btn-fill: var(--print-50);
   --btn-fill-ink: var(--vault-950);
   --btn-fill-hover: var(--print-100);
@@ -106,10 +115,10 @@
     --surface-inset: var(--vault-800);
     --line: var(--vault-700);
     --muted: var(--print-300);
-    --accent: var(--amber-200);
+    --accent: var(--brand-accent-dark);
     --accent-ink: var(--vault-950);
-    --focus: var(--amber-400);
-    --link: var(--amber-200);
+    --focus: var(--brand-accent-dark);
+    --link: var(--brand-accent-dark);
     --btn-fill: var(--print-50);
     --btn-fill-ink: var(--vault-950);
     --btn-fill-hover: var(--print-100);
@@ -294,7 +303,7 @@ nav.primary a:hover, nav.primary a.current { color: var(--link); }
   z-index: 1;
   padding: var(--s8) 0;
 }
-.hero .eyebrow { color: var(--amber-200); }
+.hero .eyebrow { color: var(--brand-accent-dark); }
 .hero h1 {
   font-size: var(--t-h1);
   margin: 0 0 var(--s4);
