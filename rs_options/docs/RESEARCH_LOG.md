@@ -969,3 +969,46 @@ whether.
 
 `Trade` now carries `signal_date` so signal-time votes join cleanly to
 outcomes. 281 tests passing.
+
+---
+
+## 2026-08-21 — Deep backfill first contact: corrupt bars, and a
+## walk-forward that ignored the new history
+
+The operator's 20-year run printed an RS-01 "average loss" of
+-6,911R and a max drawdown of -3.6 MILLION R. Those are not market
+results — free deep history (Stooq/Yahoo) carries corrupt bars
+(unadjusted splits, near-zero prices), and one such bar puts the stop
+a fraction of a cent from entry, exploding the R-math. RS-02's
+numbers looked plausible, but the same bars could sit inside them
+undetected. Nothing from that run is judged.
+
+Two defenses added to the backtester, both loud:
+
+- **Thin-stop floor** (`MIN_R_DENOM_FRAC = 0.5%`): a stop within 0.5%
+  of entry is not a real swing low; the signal is skipped and counted
+  in a `thin_stop_signals` line in the report.
+- **Quarantine** (`SUSPECT_R = 50`): a closed trade beyond |50R| is a
+  corrupt print, excluded from every aggregate, and listed BY NAME in
+  the report (ticker + date) so the offending history can be
+  inspected. Ten times the 3R target is unreachable by any real trade
+  in this system; only bad data crosses it.
+
+Both run inside `run_backtest`, so every study (hypotheses,
+combinations, confluence, walkforward) inherits the protection.
+
+Separately: the walk-forward's windows were HARDCODED to 2021+ — the
+operator downloaded 20 years and the study silently walked five. The
+splits now derive from the benchmark's actual span: every year from
+(first + 3) through the last is tested against all years before it.
+Twenty years of data now means ~18 test windows instead of 3.
+
+Also recorded from the operator's paste, pending the re-run for
+confirmation: RS-02 full-sample expectancy over ~20 years printed
++0.133R (802 trades) versus +0.341R on the 5-year window — the edge
+is thinner across regimes than recent history suggested. If that
+holds after the corrupt bars are quarantined, it is the most
+important number the deep backfill has produced: the recent window
+flattered the edge.
+
+286 tests passing.

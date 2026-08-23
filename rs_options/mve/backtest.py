@@ -32,6 +32,14 @@ from .universe import BENCHMARK, SECTOR_ETF, UNIVERSE
 TARGET_R = 3.0          # CALIBRATE — study-selected
 MAX_HOLD_BARS = 15      # CALIBRATE — study-selected
 MIN_HISTORY = 60        # bars required before a ticker is eligible
+
+# Free 20-year history contains corrupt bars (unadjusted splits,
+# near-zero prices). One such bar puts the stop a fraction of a cent
+# from entry and the R-math explodes — the 2026-08-21 deep-backfill run
+# printed an RS-01 "average loss" of -6,911R from exactly this. Two
+# defenses, both LOUD (counted and reported, never silently absorbed):
+MIN_R_DENOM_FRAC = 0.005   # stop must sit >=0.5% below entry to be real
+SUSPECT_R = 50.0           # |R| beyond this is data corruption, not a trade
 DATA_ROOT = "data/parquet"
 
 
@@ -73,6 +81,8 @@ class BacktestResult:
     filtered_signals: int = 0      # rejected by an entry_filter (no silent caps)
     gapped_signals: int = 0        # cancelled at the open by max_gap_pct (H15)
     signal_dates: list = field(default_factory=list)   # for clustering (H16)
+    thin_stop_signals: int = 0     # r_denom below the sanity floor (bad data)
+    suspect_trades: list = field(default_factory=list)  # |R| beyond SUSPECT_R
 
     def per_score(self) -> dict:
         """Expectancy by opportunity-score bucket (H17). If conviction
@@ -135,6 +145,17 @@ class BacktestResult:
                       f"avg hold {s['avg_hold_bars']} bars", ""]
         if not self.trades:
             lines.append("No trades triggered — setups never fired on this history.")
+        if self.thin_stop_signals or self.suspect_trades:
+            lines.append("DATA QUALITY — excluded from every number above:")
+            if self.thin_stop_signals:
+                lines.append(f"  {self.thin_stop_signals} signals skipped: stop "
+                             f"within {MIN_R_DENOM_FRAC:.1%} of entry (a real "
+                             "swing low is never that close — bad bar).")
+            for t in self.suspect_trades:
+                lines.append(f"  QUARANTINED {t.ticker} {t.entry_date}: "
+                             f"{t.r_multiple:+.0f}R is a corrupt price print, "
+                             "not a trade. Inspect this ticker's history.")
+            lines.append("")
         lines.append("Reminder: LAW 19 — winning trades do not prove an edge. "
                      "This is one in-sample pass; walk-forward comes next.")
         return "\n".join(lines)
@@ -209,6 +230,9 @@ def run_backtest(store: DataStore, universe: list | None = None,
             if r_denom <= 0 or sig["ticker"] in open_pos:
                 result.skipped_signals += 1
                 continue
+            if r_denom < entry * MIN_R_DENOM_FRAC:
+                result.thin_stop_signals += 1
+                continue
             pos = Position(
                 ticker=sig["ticker"], setup=sig["setup"],
                 signal_date=sig["date"], entry_date=d, entry=entry,
@@ -228,14 +252,21 @@ def run_backtest(store: DataStore, universe: list | None = None,
             exit_price, reason = manage_position(pos, bar)
             pos.bars_held += 1
             if exit_price is not None:
-                result.trades.append(Trade(
+                trade = Trade(
                     ticker=ticker, setup=pos.setup, entry_date=pos.entry_date,
                     exit_date=d, entry=pos.entry, exit=exit_price,
                     r_multiple=round((exit_price - pos.entry) / pos.r_denom, 3),
                     exit_reason=reason, bars_held=pos.bars_held,
                     score=getattr(pos, "score", 0),
                     gap_pct=getattr(pos, "gap_pct", 0.0),
-                    signal_date=pos.signal_date))
+                    signal_date=pos.signal_date)
+                # An |R| this size is a corrupt bar, not a market outcome.
+                # Quarantine rather than let one bad print poison every
+                # aggregate downstream — but keep it visible in summary().
+                if abs(trade.r_multiple) > SUSPECT_R:
+                    result.suspect_trades.append(trade)
+                else:
+                    result.trades.append(trade)
                 del open_pos[ticker]
 
         # ── detect new signals (point-in-time), enter at NEXT open ───

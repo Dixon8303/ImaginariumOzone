@@ -141,3 +141,42 @@ def test_per_ticker_breakdown():
     assert by["AAPL"] == {"trades": 2, "expectancy_r": 0.0}
     assert by["NVDA"] == {"trades": 1, "expectancy_r": 2.0}
     assert res.per_ticker("RS-01")["NVDA"]["expectancy_r"] == -3.0
+
+
+# ------------------------------------- corrupt-data guards (2026-08-21)
+# The 20-year backfill produced an RS-01 "average loss" of -6,911R from
+# corrupt bars (unadjusted splits, near-zero prices). These guards keep
+# one bad print from poisoning every aggregate — loudly, never silently.
+
+def test_thin_stop_is_skipped_and_counted(tmp_path):
+    from mve.backtest import MIN_R_DENOM_FRAC, BacktestResult
+    assert 0 < MIN_R_DENOM_FRAC < 0.02      # sanity floor, not a filter
+    r = BacktestResult()
+    assert r.thin_stop_signals == 0 and r.suspect_trades == []
+
+
+def test_suspect_r_quarantines_but_reports():
+    from mve.backtest import SUSPECT_R, BacktestResult, Trade
+    res = BacktestResult()
+    good = Trade(ticker="OK", setup="RS-02", entry_date="d1", exit_date="d2",
+                 entry=100.0, exit=103.0, r_multiple=3.0, exit_reason="target",
+                 bars_held=2)
+    bad = Trade(ticker="BAD", setup="RS-02", entry_date="d1", exit_date="d2",
+                entry=100.0, exit=1.0, r_multiple=-6911.0, exit_reason="gap_stop",
+                bars_held=1)
+    res.trades.append(good)
+    res.suspect_trades.append(bad)
+    stats = res.per_setup()["RS-02"]
+    assert stats["trades"] == 1              # the corrupt print is excluded
+    assert stats["expectancy_r"] == 3.0
+    text = res.summary()
+    assert "QUARANTINED BAD" in text         # ...but never hidden
+    assert "-6911R" in text
+    assert abs(bad.r_multiple) > SUSPECT_R
+
+
+def test_suspect_threshold_is_beyond_any_real_trade():
+    # TARGET_R is 3 and gap-through losses run a few R — a 50R bound
+    # can only be crossed by corrupt data.
+    from mve.backtest import SUSPECT_R, TARGET_R
+    assert SUSPECT_R >= 10 * TARGET_R
