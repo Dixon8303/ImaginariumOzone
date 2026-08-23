@@ -215,14 +215,7 @@ header.top .wrap {
   flex-wrap: wrap;
 }
 .logo { display: flex; align-items: center; gap: var(--s2); text-decoration: none; }
-.logo img { height: 44px; width: auto; }
-/* The logo asset is a single black mark on transparent — invisible against
-   the header's dark-theme background (paper flips to near-black). Invert it
-   to read as light there instead of maintaining a second asset. */
-:root[data-theme="dark"] .logo img { filter: invert(1) brightness(1.6); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .logo img { filter: invert(1) brightness(1.6); }
-}
+.logo img { height: 44px; width: 44px; }
 nav.primary { display: flex; gap: var(--s5); flex-wrap: wrap; }
 nav.primary a {
   color: var(--muted);
@@ -274,13 +267,27 @@ nav.primary a:hover, nav.primary a.current { color: var(--link); }
   overflow: hidden;
   background: var(--vault-950);
   color: var(--print-50);
-  /* Brand mark motif: a rounded "bite" out of the top-right corner, echoing
-     the E.A.T. Media logo's own bitten-filmstrip mark. Progressive
-     enhancement — unsupported browsers just render a plain square corner. */
-  -webkit-mask-image: radial-gradient(circle 64px at 100% 0%, transparent 99%, #fff 100%);
-          mask-image: radial-gradient(circle 64px at 100% 0%, transparent 99%, #fff 100%);
+}
+/* Brand mark motif: the E.A.T. Media logo's own bite, traced from the real
+   artwork (not approximated) — a small patch colored like the page behind
+   the hero, shaped by that exact silhouette and set in the top-right corner.
+   Progressive enhancement — unsupported browsers just show a plain corner. */
+.hero::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 96px;
+  height: 89px;
+  background: var(--paper);
+  -webkit-mask-image: url(img/bite-mask.png);
+          mask-image: url(img/bite-mask.png);
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
+  z-index: 2;
+  pointer-events: none;
 }
 .hero-video-wrap {
   position: absolute;
@@ -403,14 +410,27 @@ section:last-of-type { border-bottom: none; }
 /* pricing */
 .price-cards { display: grid; gap: var(--s4); grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .price-card {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--s5);
-  -webkit-mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
-          mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
+}
+.price-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 22px;
+  background: var(--paper);
+  -webkit-mask-image: url(img/bite-mask.png);
+          mask-image: url(img/bite-mask.png);
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
+  pointer-events: none;
 }
 .price-card .tier-name { font-weight: 700; font-family: var(--font-ui); margin: 0 0 var(--s2); }
 .price-card .tier-price {
@@ -459,15 +479,28 @@ section:last-of-type { border-bottom: none; }
 .ratecard-banner strong { color: var(--ink); }
 
 .package-card {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--s5) var(--s6);
   margin-bottom: var(--s4);
-  -webkit-mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
-          mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
+}
+.package-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 22px;
+  background: var(--paper);
+  -webkit-mask-image: url(img/bite-mask.png);
+          mask-image: url(img/bite-mask.png);
+  -webkit-mask-size: 100% 100%;
+          mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
           mask-repeat: no-repeat;
+  pointer-events: none;
 }
 .package-card h3 { font-family: var(--font-ui); font-weight: 700; font-size: var(--t-lead); letter-spacing: 0; margin: 0 0 var(--s2); }
 .package-card .pkg-includes { font-family: var(--font-body); color: var(--ink-secondary); font-size: var(--t-body); margin: 0 0 var(--s5); }
