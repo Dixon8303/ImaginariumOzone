@@ -1,27 +1,27 @@
-generated: 2026-08-21
+generated: 2026-08-22
 
 HYPOTHESIS STUDY — RS-02 entry filters, round 5 (H9 news / H10 fundamentals / H11 volume, §72)
 train <= 2024-12-31 | test >= 2025-01-01 | verdicts vs BASELINE_DOCTRINE (adopted doctrine)
 
-CONTROL               train: n=870 exp=+0.122R wr=51% totR=+106.14   test: n= 78 exp=+0.225R wr=56% totR= +17.55
-BASELINE_DOCTRINE     train: n=479 exp=+0.130R wr=51% totR= +62.27   test: n= 48 exp=+0.252R wr=50% totR= +12.10
+CONTROL               train: n=869 exp=+0.124R wr=51% totR=+107.76   test: n= 78 exp=+0.225R wr=56% totR= +17.55
+BASELINE_DOCTRINE     train: n=478 exp=+0.133R wr=51% totR= +63.57   test: n= 48 exp=+0.252R wr=50% totR= +12.10
 H9a_quiet_news_2x     train: n= 92 exp=+0.247R wr=51% totR= +22.72   test: n= 36 exp=+0.284R wr=53% totR= +10.22
 H9b_quiet_news_3x     train: n= 95 exp=+0.254R wr=52% totR= +24.13   test: n= 40 exp=+0.182R wr=50% totR=  +7.28
-H10_profitable        train: n=323 exp=+0.137R wr=53% totR= +44.25   test: n= 43 exp=+0.227R wr=49% totR=  +9.76
-H11a_overhead_10pct   train: n=456 exp=+0.143R wr=51% totR= +65.21   test: n= 46 exp=+0.291R wr=52% totR= +13.39
-H11b_overhead_20pct   train: n=464 exp=+0.142R wr=51% totR= +65.89   test: n= 47 exp=+0.273R wr=51% totR= +12.83
+H10_profitable        train: n=322 exp=+0.141R wr=53% totR= +45.40   test: n= 43 exp=+0.227R wr=49% totR=  +9.76
+H11a_overhead_10pct   train: n=455 exp=+0.147R wr=51% totR= +66.88   test: n= 46 exp=+0.291R wr=52% totR= +13.39
+H11b_overhead_20pct   train: n=463 exp=+0.145R wr=51% totR= +67.13   test: n= 47 exp=+0.273R wr=51% totR= +12.83
 H13a_quiet_base_40    train: n=127 exp=+0.359R wr=56% totR= +45.59   test: n=  6 exp=+0.167R wr=67% totR=  +1.00
-H13b_quiet_base_60    train: n=216 exp=+0.172R wr=51% totR= +37.15   test: n= 13 exp=+0.236R wr=54% totR=  +3.07
-H14a_close_top30      train: n=386 exp=+0.169R wr=52% totR= +65.23   test: n= 35 exp=+0.141R wr=49% totR=  +4.93
-H14b_close_top50      train: n=434 exp=+0.146R wr=52% totR= +63.36   test: n= 42 exp=+0.234R wr=50% totR=  +9.83
+H13b_quiet_base_60    train: n=215 exp=+0.180R wr=51% totR= +38.70   test: n= 13 exp=+0.236R wr=54% totR=  +3.07
+H14a_close_top30      train: n=385 exp=+0.173R wr=52% totR= +66.60   test: n= 35 exp=+0.141R wr=49% totR=  +4.93
+H14b_close_top50      train: n=433 exp=+0.150R wr=52% totR= +64.95   test: n= 42 exp=+0.234R wr=50% totR=  +9.83
 H16a_max2_signals     train: n=461 exp=+0.136R wr=52% totR= +62.70   test: n= 45 exp=+0.229R wr=51% totR= +10.30
-H16b_max4_signals     train: n=479 exp=+0.130R wr=51% totR= +62.27   test: n= 48 exp=+0.252R wr=50% totR= +12.10
-H15a_gap_2pct         train: n=468 exp=+0.153R wr=52% totR= +71.60   test: n= 45 exp=+0.355R wr=53% totR= +15.97
-H15b_gap_1pct         train: n=444 exp=+0.157R wr=52% totR= +69.71   test: n= 45 exp=+0.332R wr=53% totR= +14.94
+H16b_max4_signals     train: n=478 exp=+0.133R wr=51% totR= +63.57   test: n= 48 exp=+0.252R wr=50% totR= +12.10
+H15a_gap_2pct         train: n=467 exp=+0.156R wr=52% totR= +72.85   test: n= 45 exp=+0.355R wr=53% totR= +15.97
+H15b_gap_1pct         train: n=443 exp=+0.160R wr=52% totR= +70.88   test: n= 45 exp=+0.332R wr=53% totR= +14.94
 
 Verdicts vs BASELINE_DOCTRINE (adopt only if TRAIN improves AND TEST confirms; small n = inconclusive):
   H9a_quiet_news_2x: ADOPT-CANDIDATE
-      CAUTION: removed 399 trades worth +41.42R of TOTAL return (+0.104R each) — the average rose while the total fell.
+      CAUTION: removed 398 trades worth +42.72R of TOTAL return (+0.107R each) — the average rose while the total fell.
       breadth: improved 8/12 tickers (>= 5 trades each)
   H9b_quiet_news_3x: NOISE (train improved, test did not confirm)
       breadth: improved 8/14 tickers (>= 5 trades each)
@@ -34,13 +34,13 @@ Verdicts vs BASELINE_DOCTRINE (adopt only if TRAIN improves AND TEST confirms; s
       CAUTION: helps a MINORITY of tickers — the aggregate gain is concentrated, not broad.
   H13a_quiet_base_40: INCONCLUSIVE (insufficient trades)
   H13b_quiet_base_60: NOISE (train improved, test did not confirm)
-      breadth: improved 10/19 tickers (>= 5 trades each)
+      breadth: improved 11/19 tickers (>= 5 trades each)
   H14a_close_top30: NOISE (train improved, test did not confirm)
       breadth: improved 12/22 tickers (>= 5 trades each)
   H14b_close_top50: NOISE (train improved, test did not confirm)
       breadth: improved 9/22 tickers (>= 5 trades each)
   H16a_max2_signals: NOISE (train improved, test did not confirm)
-      breadth: improved 8/22 tickers (>= 5 trades each)
+      breadth: improved 7/22 tickers (>= 5 trades each)
   H16b_max4_signals: NO EFFECT — the filter never bound (identical to baseline). The condition it screens for does not occur in this sample; UNTESTED, not refuted.
   H15a_gap_2pct: ADOPT-CANDIDATE
       breadth: improved 9/22 tickers (>= 5 trades each)
@@ -50,7 +50,7 @@ Verdicts vs BASELINE_DOCTRINE (adopt only if TRAIN improves AND TEST confirms; s
 
 H15 DOSE-RESPONSE — expectancy by entry gap, ALL trades (the filter above only touches a handful; this is the same claim measured at full power):
   train:
-    gap DOWN / flat  n=200 exp=+0.115R totR= +22.94
+    gap DOWN / flat  n=199 exp=+0.122R totR= +24.36
     up 0-1%          n=213 exp=+0.169R totR= +36.08
     up 1-2%          n= 41 exp=+0.232R totR=  +9.53
     up 2%+           n= 25 exp=-0.248R totR=  -6.19

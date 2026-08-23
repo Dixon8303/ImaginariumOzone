@@ -1,15 +1,60 @@
-generated: 2026-08-21
+generated: 2026-08-22
 
 WALK-FORWARD — RS-02 (fixed parameters, §51)
 
-  train 2021-2023: n=125 exp=+0.131R wr=48% maxDD=-8.511R
+  train 2006-2008: n= 63 exp=-0.085R wr=40% maxDD=-8.91R
+  test  2009-2009: n= 49 exp=+0.265R wr=61% maxDD=-5.985R
+
+  train 2006-2009: n=112 exp=+0.068R wr=49% maxDD=-14.157R
+  test  2010-2010: n= 45 exp=+0.283R wr=67% maxDD=-6.956R
+
+  train 2006-2010: n=158 exp=+0.132R wr=54% maxDD=-14.157R
+  test  2011-2011: n= 37 exp=-0.300R wr=35% maxDD=-17.851R
+
+  train 2006-2011: n=195 exp=+0.050R wr=51% maxDD=-17.851R
+  test  2012-2012: n= 53 exp=+0.300R wr=58% maxDD=-3.336R
+
+  train 2006-2012: n=248 exp=+0.103R wr=52% maxDD=-17.851R
+  test  2013-2013: n= 59 exp=+0.318R wr=61% maxDD=-3.15R
+
+  train 2006-2013: n=309 exp=+0.161R wr=55% maxDD=-17.851R
+  test  2014-2014: n= 41 exp=-0.462R wr=32% maxDD=-19.869R
+
+  train 2006-2014: n=357 exp=+0.091R wr=52% maxDD=-20.483R
+  test  2015-2015: n= 51 exp=+0.249R wr=49% maxDD=-8.168R
+
+  train 2006-2015: n=409 exp=+0.109R wr=52% maxDD=-22.358R
+  test  2016-2016: n= 60 exp=+0.052R wr=50% maxDD=-8.026R
+
+  train 2006-2016: n=470 exp=+0.099R wr=51% maxDD=-22.358R
+  test  2017-2017: n= 62 exp=+0.232R wr=55% maxDD=-3.29R
+
+  train 2006-2017: n=536 exp=+0.118R wr=52% maxDD=-22.358R
+  test  2018-2018: n= 39 exp=-0.112R wr=44% maxDD=-10.463R
+
+  train 2006-2018: n=578 exp=+0.105R wr=51% maxDD=-22.358R
+  test  2019-2019: n= 49 exp=+0.084R wr=49% maxDD=-5.721R
+
+  train 2006-2019: n=627 exp=+0.103R wr=51% maxDD=-22.358R
+  test  2020-2020: n= 52 exp=+0.001R wr=44% maxDD=-10.851R
+
+  train 2006-2020: n=685 exp=+0.097R wr=50% maxDD=-22.358R
+  test  2021-2021: n= 52 exp=+0.156R wr=46% maxDD=-8.511R
+
+  train 2006-2021: n=742 exp=+0.097R wr=50% maxDD=-22.358R
+  test  2022-2022: n= 17 exp=-0.381R wr=29% maxDD=-6.474R
+
+  train 2006-2022: n=759 exp=+0.087R wr=49% maxDD=-22.358R
+  test  2023-2023: n= 56 exp=+0.264R wr=55% maxDD=-6.302R
+
+  train 2006-2023: n=815 exp=+0.099R wr=50% maxDD=-22.358R
   test  2024-2024: n= 48 exp=+0.547R wr=65% maxDD=-3.273R
 
-  train 2021-2024: n=179 exp=+0.245R wr=53% maxDD=-8.511R
+  train 2006-2024: n=869 exp=+0.124R wr=51% maxDD=-22.358R
   test  2025-2025: n= 51 exp=+0.277R wr=59% maxDD=-4.283R
 
-  train 2021-2025: n=232 exp=+0.241R wr=54% maxDD=-8.511R
+  train 2006-2025: n=922 exp=+0.130R wr=51% maxDD=-22.358R
   test  2026-2026: n= 25 exp=+0.154R wr=52% maxDD=-3.086R
 
-Verdict: edge held in 3/3 judged test windows (a window needs >=10 trades to count).
+Verdict: edge held in 14/18 judged test windows (a window needs >=10 trades to count).
 LAW 20: only out-of-sample evidence earns production status.

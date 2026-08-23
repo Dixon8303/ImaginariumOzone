@@ -1,4 +1,4 @@
-generated: 2026-08-21
+generated: 2026-08-22
 
 CONFLUENCE STUDY — grade setups, do not gate them (H19, §72)
 train <= 2024-12-31 | test >= 2025-01-01 | doctrine trades only
@@ -13,7 +13,7 @@ PART A — the §32 opportunity score (0-10 rubric, pre-registered
 in the spec; computed on every signal since the MVE was built,
 reported here for the first time):
   train:
-    score <=7  n= 28 exp=-0.089R
+    score <=7  n= 27 exp=-0.040R
     score 8    n= 54 exp=-0.133R
     score 9    n=211 exp=+0.143R
     score 10   n=186 exp=+0.226R
@@ -32,7 +32,7 @@ factors vote 0; +1 fill-time vote when the open gapped <= 2%):
     1 votes  n=  6 exp=+0.135R totR=  +0.81
     2 votes  n= 37 exp=-0.108R totR=  -4.00
     3 votes  n=169 exp=+0.076R totR= +12.82
-    4 votes  n=170 exp=+0.053R totR=  +8.99
+    4 votes  n=169 exp=+0.062R totR= +10.41
     5 votes  n= 81 exp=+0.369R totR= +29.91
     6 votes  n= 15 exp=+0.859R totR= +12.88
   test:
