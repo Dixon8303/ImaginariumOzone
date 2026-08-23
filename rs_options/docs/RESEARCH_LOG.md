@@ -1012,3 +1012,89 @@ important number the deep backfill has produced: the recent window
 flattered the edge.
 
 286 tests passing.
+
+---
+
+## 2026-08-23 — The guarded 20-year run: what two decades actually say
+
+The data guards worked. RS-01's -6,911R "average loss" is gone: 20
+signals were skipped for stops sitting within 0.5% of entry, no trade
+needed quarantining, and RS-01 prints +0.061R instead of -3,935R. The
+corruption was entirely thin-stop bars, caught before entry.
+
+**The headline number: RS-02 across 20 years is +0.136R per trade
+(800 trades, 51% win rate), against +0.341R on 2021-2026 (177 trades,
+58%).** The recent window was flattering the edge by roughly 2.5x. The
+edge is real and it is thinner than we thought — that is exactly what
+the deep backfill was run to find out, and it is the single most
+valuable number the project has produced.
+
+**Walk-forward, now 18 windows instead of 3: the edge held in 14/18.**
+Losing years: 2011 (-0.300R), 2014 (-0.462R), 2018 (-0.112R), 2022
+(-0.381R); 2020 was flat (+0.001R). Two structural observations. First,
+train expectancy is remarkably stationary — every expanding window from
+2006-2010 onward sits between +0.05R and +0.16R, so the estimate is not
+drifting. Second, 2022 produced only 17 signals against a ~50 typical
+year: the 200-day regime filter did its job and kept the system out of
+the bear market rather than losing in it.
+
+**Round 5 re-judged at 8x TRAIN — and the autopsy became unambiguous.**
+The combination study's removal column now reads, per filter, the value
+of what it deletes:
+
+    H9a  news        removed 406 trades worth +43.56R
+    H13a quiet base  removed 403 trades worth +26.44R
+    H10  profitable  removed 163 trades worth +20.58R
+    H14a close       removed 164 trades worth +19.99R
+    H16a clustering  removed  32 trades worth  +5.11R
+    H11a overhead    removed  42 trades worth  +2.34R
+    H15a gap 2%      removed  34 trades worth  -8.35R
+
+Every filter except H15a deletes PROFITABLE trades. H15a alone deletes
+losers, at -0.25R each. Six ideas were not merely useless; they were
+aimed at the system's best trades. One is aimed at its worst.
+
+H9a is the clearest illustration of why an ADOPT-CANDIDATE label means
+nothing on its own: it earned the label while deleting 398 of 478
+trades worth +42.72R of total return. The automatic CAUTION caught it.
+
+**A methodological problem the backfill created, and the response.**
+TRAIN went 61 -> 478 trades. TEST went 47 -> 48, because TEST_START is
+a calendar date and only ~20 months live after it. So every "test
+confirms" verdict in the round-5 report still rests on ~48 trades — and
+that same 48-trade window has now been consulted across rounds 3, 4, 5,
+6, H18 and H19. Repeatedly consulting one small window is how a test
+set stops being one.
+
+Meanwhile 2006-2020 arrived with the backfill, went straight into
+TRAIN, and has never judged anything. That is the project's only virgin
+sample, roughly 600 trades. `mve.holdout` (H20) spends it on exactly
+two pre-specified candidates and nothing else — a sweep there would
+burn the clean sample on the same multiple-comparisons problem it
+exists to escape:
+
+1. **The §32 opportunity score.** In the guarded run it rose
+   monotonically in BOTH windows across every bucket with >=10 trades:
+   train score 9 +0.143R -> score 10 +0.226R; test score 9 -0.200R ->
+   score 10 +0.723R. The rubric was written into the spec before any
+   market data existed, so it is not fitted. This is the strongest
+   result the program has produced, and it is a SIZING candidate — it
+   changes how much, never whether.
+2. **H15a, the 2% gap cancellation.** At full power the dose-response
+   is negative in the top bucket in both windows (train n=25 -0.248R;
+   test n=7 -0.023R) and the filter improves expectancy AND total in
+   both. But the registered shape was a STEADY decline and what appears
+   is a CLIFF at 2% with moderate gaps fine or better. A threshold
+   effect is a different claim from the one registered; the holdout
+   report says so explicitly rather than quietly accepting it.
+
+**H19 Part B failed and the contrast is informative.** Equal-weight
+factor votes rose on train and did not confirm on test (test peaks at 4
+votes then falls). The system's own pre-registered conviction rubric
+carries information; the six bolted-on factors, counted together, do
+not. Consistent with the autopsy.
+
+**Doctrine still unchanged.** Nothing is adopted. Two candidates now
+face the only untouched data the project has.
+
+291 tests passing.
