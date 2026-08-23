@@ -189,7 +189,8 @@ def run_backtest(store: DataStore, universe: list | None = None,
                  benchmark: str = BENCHMARK, sector_map: dict | None = None,
                  start: str | None = None, end: str | None = None,
                  active: tuple = ("RS-01", "RS-02"),
-                 entry_filter=None, max_gap_pct: float | None = None
+                 entry_filter=None, max_gap_pct: float | None = None,
+                 cost_bps: float = 0.0
                  ) -> BacktestResult:
     # Research evaluates ALL setups, including disabled ones — that is how
     # a killed setup earns its way back (LAW 20). The live scanner honors
@@ -219,6 +220,14 @@ def run_backtest(store: DataStore, universe: list | None = None,
                 still_pending.append(sig)      # holiday for this ticker
                 continue
             entry = float(idx.loc[d, "open"])
+            # Transaction costs, charged where they actually land: you
+            # pay UP at entry and receive LESS at exit. Defaults to 0 so
+            # every previously recorded verdict stays comparable; the
+            # cost study passes a real figure. Note the entry cost also
+            # WIDENS r_denom, which is the honest effect — a worse fill
+            # means more risk for the same stop.
+            if cost_bps:
+                entry *= (1.0 + cost_bps / 10_000.0)
             # H15 gap guard: the order is cancelled if the open gaps too
             # far above the signal close. This is an EXECUTION cost, not a
             # prediction — you would be paying up before the trade starts.
@@ -252,6 +261,8 @@ def run_backtest(store: DataStore, universe: list | None = None,
             exit_price, reason = manage_position(pos, bar)
             pos.bars_held += 1
             if exit_price is not None:
+                if cost_bps:
+                    exit_price *= (1.0 - cost_bps / 10_000.0)
                 trade = Trade(
                     ticker=ticker, setup=pos.setup, entry_date=pos.entry_date,
                     exit_date=d, entry=pos.entry, exit=exit_price,
