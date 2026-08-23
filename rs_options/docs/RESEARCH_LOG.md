@@ -1422,3 +1422,73 @@ and would still need its own adoption decision.
 
 Status: OPEN, registered, not implemented. Implementation is the next
 commit and is deliberately separate.
+## 2026-08-23 — H21 results: the edge survives costs, but thinly
+
+First run of the robustness suite. Three numbers the project never had,
+and one correction to a figure already quoted.
+
+**COST SENSITIVITY (doctrine + H15a, 2006-2020):**
+
+    gross  +0.117R   totR +42.94
+    2bp    +0.106R   totR +39.01
+    5bp    +0.095R   totR +34.96
+    10bp   +0.080R   totR +29.36
+    20bp   +0.047R   totR +17.25
+    50bp   -0.067R   totR -24.25
+    BREAK-EVEN ~32 bps round-trip
+
+The strategy has an execution budget of about 32 bps. Liquid large caps
+filled in the opening auction commission-free should cost a few bps, so
+there is room — but a third of the edge is gone by 10 bps, and that is
+the concrete reason H15a (a pure execution rule) mattered more than any
+predictive filter tested across twenty-one hypotheses.
+
+**CORRECTION to the forecast.** Every figure quoted to the operator
+before today was GROSS, including "+2.9%/year". At a realistic 5 bps the
+expectancy is **+0.095R**, so ~24.5 trades a year is **+2.33R**, or
+about **+2.3%/year at 1% risk**. The report now prints the net headline
+beside the gross one, because quoting only gross is how a thin edge
+looks comfortable.
+
+**SHARPE: 0.52 gross, ~0.42 net at 5 bps.** Worth stating plainly: the
+outside dossier proposed a minimum screen of 0.5 out-of-sample. Gross,
+this system passes by a hair. **Net of realistic costs, it does not.**
+That is not a reason to abandon it — the strategy was measured on the
+hardest 15 years, is positive across four crashes, and 0.42 is a real
+number rather than a fitted one — but it is the honest headline and it
+should not be softened.
+
+**BOOTSTRAP (2,000 resamples of the same 367 trades):**
+
+    total R      5th +6.42   median +43.00   95th +77.85
+    max drawdown 5th -24.39  median -12.84
+    paths ending at or below zero: 2.9%
+
+The strongest result in the report: only 2.9% of reorderings lose money.
+The positive expectancy is not an artifact of the sequence. The drawdown
+half is the sobering part — a median of -12.8R and a 5th percentile of
+-24.4R means a 25%-of-account drawdown at 1% risk is an ordinary
+outcome, not a disaster scenario. And per the caveat printed with it,
+independent resampling destroys serial correlation, so the true
+distribution is worse than that.
+
+**Two defects the first run exposed, both fixed.**
+
+1. **Costs were charged BEFORE the H15a gap check.** The gap rule tests
+   what the MARKET did — live it is a limit at close x 1.02, and whether
+   that limit is breached is a fact about the open, not about your
+   slippage. Charging first cancelled fills that would really have
+   filled just under the cap. The symptom was visible in the first
+   report and I nearly explained it away: trade counts wobbled with cost
+   (367 / 368 / 368 / 367 / 367 / 362) when they should be constant
+   until the cost is large enough to matter. Now charged after the
+   check, with a regression test asserting the count does not move.
+2. **The bootstrap printed a distribution with no observed value beside
+   it.** A percentile table is unreadable without the number it is meant
+   to contextualise — "median -12.8R" only means something next to what
+   actually happened. Both are now printed together.
+
+Nothing here is a filter and nothing is adopted; costs and path risk
+change what the SAME edge is worth, they do not create or destroy one.
+
+315 tests passing.
