@@ -216,6 +216,13 @@ header.top .wrap {
 }
 .logo { display: flex; align-items: center; gap: var(--s2); text-decoration: none; }
 .logo img { height: 44px; width: auto; }
+/* The logo asset is a single black mark on transparent — invisible against
+   the header's dark-theme background (paper flips to near-black). Invert it
+   to read as light there instead of maintaining a second asset. */
+:root[data-theme="dark"] .logo img { filter: invert(1) brightness(1.6); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo img { filter: invert(1) brightness(1.6); }
+}
 nav.primary { display: flex; gap: var(--s5); flex-wrap: wrap; }
 nav.primary a {
   color: var(--muted);
