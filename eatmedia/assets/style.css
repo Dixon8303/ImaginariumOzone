@@ -422,7 +422,7 @@ section:last-of-type { border-bottom: none; }
   position: absolute;
   top: 0;
   right: 0;
-  width: 20%;
+  width: min(20%, 60px);
   aspect-ratio: 509 / 471;
   height: auto;
   background: var(--paper);
@@ -434,7 +434,7 @@ section:last-of-type { border-bottom: none; }
           mask-repeat: no-repeat;
   pointer-events: none;
 }
-.price-card .tier-name { font-weight: 700; font-family: var(--font-ui); margin: 0 0 var(--s2); }
+.price-card .tier-name { font-weight: 700; font-family: var(--font-ui); margin: 0 0 var(--s2); padding-right: 68px; }
 .price-card .tier-price {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -493,9 +493,9 @@ section:last-of-type { border-bottom: none; }
   position: absolute;
   top: 0;
   right: 0;
-  height: 28%;
+  width: min(16%, 56px);
   aspect-ratio: 509 / 471;
-  width: auto;
+  height: auto;
   background: var(--paper);
   -webkit-mask-image: url(img/bite-mask.png?v=2);
           mask-image: url(img/bite-mask.png?v=2);
@@ -505,8 +505,8 @@ section:last-of-type { border-bottom: none; }
           mask-repeat: no-repeat;
   pointer-events: none;
 }
-.package-card h3 { font-family: var(--font-ui); font-weight: 700; font-size: var(--t-lead); letter-spacing: 0; margin: 0 0 var(--s2); }
-.package-card .pkg-includes { font-family: var(--font-body); color: var(--ink-secondary); font-size: var(--t-body); margin: 0 0 var(--s5); }
+.package-card h3 { font-family: var(--font-ui); font-weight: 700; font-size: var(--t-lead); letter-spacing: 0; margin: 0 0 var(--s2); padding-right: 92px; }
+.package-card .pkg-includes { font-family: var(--font-body); color: var(--ink-secondary); font-size: var(--t-body); margin: 0 0 var(--s5); padding-right: 60px; }
 .package-card .pkg-prices { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s3); }
 @media (max-width: 480px) {
   .package-card .pkg-prices { grid-template-columns: 1fr; }
