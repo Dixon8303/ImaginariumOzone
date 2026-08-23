@@ -129,3 +129,31 @@ def test_missing_data_is_reported_not_skipped():
 def test_trading_days_ignores_weekends():
     assert trading_days_between(date(2026, 8, 3), date(2026, 8, 14)) == 9
     assert trading_days_between(date(2026, 8, 14), date(2026, 8, 3)) == 0
+
+
+# ---------------------------------- FWD-1 plumbing (docs/PREREGISTERED.md)
+
+def test_open_position_carries_score_without_acting_on_it():
+    """The §32 score FAILED its holdout test and is not doctrine. It is
+    recorded so forward paper results accumulate the score->outcome
+    pairing — the only clean test left. Nothing may read it to decide."""
+    from datetime import date as _d
+    from mve.position_manager import OpenPosition
+    p = OpenPosition(ticker="T", contract="T260101C00100000", quantity=1,
+                     entry_price=2.0, expiry=_d(2026, 1, 1),
+                     invalidation_price=95.0, score=8)
+    assert p.score == 8
+    # optional, like the other late-added fields — older records load
+    bare = OpenPosition(ticker="T", contract="C", quantity=1,
+                        entry_price=2.0, expiry=_d(2026, 1, 1),
+                        invalidation_price=95.0)
+    assert bare.score is None
+
+
+def test_score_never_reaches_the_exit_decision():
+    """Guard against the score quietly becoming doctrine: no exit rule
+    may consult it while FWD-1 is OPEN."""
+    import inspect
+    from mve import position_manager
+    src = inspect.getsource(position_manager.evaluate_exit)
+    assert ".score" not in src

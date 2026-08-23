@@ -1098,3 +1098,93 @@ not. Consistent with the autopsy.
 face the only untouched data the project has.
 
 291 tests passing.
+
+---
+
+## 2026-08-23 — H20 holdout: one candidate fails, one confirms
+
+The virgin 2006-2020 sample is spent. Baseline doctrine over those 15
+years: **n=376, +0.096R per trade, 50% win rate, +36.10R total.** That
+is the hardest stretch the system has faced (2008, 2011, 2014, 2018,
+2020) and it is positive. It is also thinner than the +0.136R
+full-sample figure, which is itself thinner than the +0.341R that the
+2021-2026 window advertised. Each widening of the sample has lowered
+the estimate. That is the shape of an honest measurement converging,
+not of an edge disappearing — but the direction is one way.
+
+### CANDIDATE 1 — §32 opportunity score: FAILED
+
+    score <=7  n= 24  +0.028R
+    score 8    n= 47  -0.152R
+    score 9    n=156  +0.115R
+    score 10   n=149  +0.165R
+
+The pre-registered criterion was a rise across every populated bucket.
+It does not rise: `<=7` sits above `8`. **The score is not adopted, and
+the failure is not being relitigated.**
+
+Two honest observations that follow, neither of which rescues it:
+
+- The dramatic test-window number that made this look like the
+  program's strongest result — score 10 at +0.723R — was a 24-trade
+  fluke. On 149 virgin trades score 10 earns +0.165R against a +0.096R
+  baseline. Real, and modest. The lesson is about the 48-trade test
+  window, not about the score.
+- Gating to high scores would be the H5 failure again: keeping only
+  score-10 trades takes total return from +36.10R to +24.6R while
+  cutting trade count 60%. Any future use is SIZING or nothing.
+
+The one pattern that repeated in all three samples is score 8 being
+negative (-0.133R train, -0.335R test, -0.152R virgin). That is an
+observation noticed after the fact, on overlapping samples, with no
+clean historical data left to test it — so it is **registered forward**
+as FWD-1 in `docs/PREREGISTERED.md` with its threshold, direction,
+success criterion and minimum sample (n>=40) fixed in advance. Nothing
+acts on it until then. `OpenPosition.score` now records the pairing so
+forward paper results accumulate; a test asserts no exit rule reads it.
+
+### CANDIDATE 2 — H15a 2% gap cancellation: CONFIRMS
+
+    baseline   n=376  +0.096R  totR +36.10
+    filtered   n=367  +0.117R  totR +42.94
+    delta      expectancy +0.021R, total +6.84R over 9 cancelled fills
+
+Both expectancy and total improved, so this is not the H5 failure. The
+nine cancelled fills were worth roughly -0.76R each. Critically, the
+2006-2020 window is **disjoint** from the 2021-2026 window where the 2%
+threshold was chosen, so this is genuine out-of-sample confirmation of
+the threshold and not a re-reading of the data that produced it. The
+2%+ bucket is negative in every window measured (-0.248R, -0.023R,
+-0.209R).
+
+The caveat travels with it: the registered shape was a STEADY decline
+and what appears is a CLIFF — moderate gaps are fine or better, only
+2%+ is negative. A threshold effect is a different claim. H15a is
+recommended on direction, disjoint-sample confirmation, and mechanism
+(an execution cost, not a market prediction), NOT on shape.
+
+**Recommendation to the operator: adopt H15a.** It is the first thing
+in this project I would change. It cancels roughly 2% of orders, the
+failure mode is skipping a trade rather than taking a bad one, and it
+is the only rule tested that removes losers instead of winners. Per
+LAW 12/20 the encoding is the operator's decision, not mine. FWD-2
+registers the forward check that it keeps earning its place.
+
+### What the numbers mean in practice
+
+376 trades over 15 years is ~25 signals a year. At +0.096R each, the
+underlying signal produces roughly **+2.4R per year**. Risking 1% of
+account per trade, that is about +2.4% a year before options are
+involved; long calls lever it up and also add spread and theta costs
+that this backtest does not model. Against the operator's stated target
+of 1.5-2x per dollar, the measured edge is far smaller — and it is
+real, which is more than most of what was tested can say.
+
+### Status of the sample
+
+Every clean historical window is now spent: 2021-2026 chose the
+thresholds, 2025-2026 was consulted six times, 2006-2020 judged H20.
+`docs/PREREGISTERED.md` exists because forward data is the only honest
+test remaining, and claims must be frozen before it arrives.
+
+293 tests passing.

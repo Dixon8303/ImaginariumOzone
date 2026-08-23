@@ -152,7 +152,9 @@ def load_open_options(path: str | None = None) -> list:
                             if row.get("entry_date") else None),
                 entry_underlying=(float(row["entry_underlying"])
                                   if row.get("entry_underlying") is not None
-                                  else None)))
+                                  else None),
+                score=(int(row["score"]) if row.get("score") is not None
+                       else None)))
         except (KeyError, ValueError, TypeError) as e:
             bad.append(f"{row.get('contract', row)}: {e}")
     if bad:
