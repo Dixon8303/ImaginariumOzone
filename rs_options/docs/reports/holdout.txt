@@ -1,0 +1,47 @@
+generated: 2026-08-22
+
+VIRGIN-DATA HOLDOUT — two candidates, untouched years (H20, §72)
+holdout window: start of history .. 2020-12-31
+
+Why this exists: the deep backfill grew TRAIN 8x and left TEST at
+~48 trades, and that same window has been consulted across six
+rounds. These years arrived with the backfill, went straight into
+TRAIN, and have never judged anything. Two pre-specified
+candidates are tested here. Nothing else — a sweep would spend
+the clean sample on the same problem it exists to escape.
+
+BASELINE_DOCTRINE  n= 376 exp=+0.096R wr=50% totR=  +36.10
+  (data guards: 1 thin-stop signals skipped, 0 trades quarantined)
+
+CANDIDATE 1 — the §32 opportunity score.
+  Pre-registered in the spec before any market data existed,
+  so these years are out-of-sample in the strictest sense.
+  It must RISE with the score to be worth sizing by.
+    score <=7  n=  24 exp=+0.028R
+    score 8    n=  47 exp=-0.152R
+    score 9    n= 156 exp=+0.115R
+    score 10   n= 149 exp=+0.165R
+    verdict: DOES NOT RISE across the 4 buckets with >=10 trades (+0.028R -> +0.165R)
+
+CANDIDATE 2 — H15a, cancel fills gapping > 2%.
+  Its threshold was chosen while looking at 2021-2026, so
+  these years are out-of-sample for it.
+    filtered   n= 367 exp=+0.117R wr=52% totR=  +42.94
+    vs baseline: expectancy +0.021R, total +6.84R over 9 cancelled fills
+    verdict: CONFIRMS (needs BOTH expectancy and total to improve — a rule that lifts the average by deleting winners is the H5 failure)
+
+  gap dose-response on virgin data:
+    gap DOWN / flat  n= 151 exp=+0.095R totR=  +14.34
+    up 0-1%          n= 175 exp=+0.123R totR=  +21.52
+    up 1-2%          n=  29 exp=+0.156R totR=   +4.51
+    up 2%+           n=  21 exp=-0.209R totR=   -4.39
+    The pre-registered shape was a STEADY decline. A cliff at the top bucket only is a threshold effect, which is a different claim — say so rather than accepting it as the one that was registered.
+
+READING IT: these years include 2008 and 2020 and are harder
+than the ones the doctrine was built on. Surviving here is
+strong evidence. Failing here MIGHT mean regime-specific
+rather than false — failure is evidence, not proof.
+
+LAW 12/20: this is the project's only untouched sample. Once
+it has been consulted it is no longer virgin, so it is spent
+on these two candidates and not re-used for shopping.
