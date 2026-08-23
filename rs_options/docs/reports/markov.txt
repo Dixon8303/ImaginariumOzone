@@ -1,0 +1,43 @@
+generated: 2026-08-23
+
+MARKOV REGIME MATRIX — measured against its null (H23, §72)
+states by trailing 20-day return, +/-5% (the dossier's definition, kept verbatim)
+
+WHY THE NULL IS THE WHOLE POINT: consecutive states share 19 of
+their 20 bars, so the label is autocorrelated BEFORE any market
+behaviour is involved. A pure random walk scores ~86% stickiness
+under this definition. Only persistence ABOVE the shuffled null
+could carry information.
+
+  ticker    stickiness  null mean  null p95   excess  verdict
+  SPY           89.8%      88.8%     89.7%    +1.1%  ABOVE NULL
+  AAL           83.9%      83.1%     84.3%    +0.8%  indistinguishable
+  AAPL          85.1%      84.5%     85.5%    +0.5%  indistinguishable
+  ABNB          83.2%      82.4%     84.8%    +0.8%  indistinguishable
+  AFRM          84.4%      82.2%     85.3%    +2.1%  indistinguishable
+  AMD           82.4%      82.5%     83.9%    -0.1%  indistinguishable
+  AMZN          84.2%      84.0%     85.1%    +0.2%  indistinguishable
+  APTV          84.3%      82.8%     85.7%    +1.4%  indistinguishable
+
+  1/8 tickers show stickiness above the 95th percentile of their own shuffled null.
+  At a 5% false-positive rate, ~0.4 would clear it by chance.
+
+SAMPLE SIZE, corrected: 5,012 bars looks like 5,012 observations but is about 250 non-overlapping windows. Any precision quoted on the raw bar count is roughly 4.5x too confident.
+
+TRANSITION MATRIX + SIGNAL — first ticker shown:
+  from / to          Bull   Sideways       Bear
+  Bull              72.4%      27.4%       0.2%
+  Sideways           4.0%      93.6%       2.4%
+  Bear               0.0%      21.2%      78.8%
+  signal P(Bull)-P(Bear) by current state: Bull +0.72, Sideways +0.02, Bear -0.79
+  stationary mix: Bull 11.4%, Sideways 79.5%, Bear 9.1% — where multi-step forecasts converge and directional edge is zero, as the dossier notes.
+
+WHAT THIS DOES NOT DO: it does not trade. Whether the signal
+improves RS-02 is a separate question, and one not worth
+pre-registering unless the excess above is non-trivial —
+a filter built on a matrix that only measures its own
+window would be noise with extra steps.
+
+LAW 12/20: nothing here is adopted. The short leg the
+dossier prescribes is prohibited regardless (§87, long
+premium only), so only the long side could ever apply.
