@@ -259,3 +259,79 @@ def test_option_failure_never_kills_the_equity_run():
         Broken(), [SIGNAL], {}, str(AS_OF), {"open": {}, "closed": []})
     assert opened == []
     assert any("chain unavailable" in n for n in notes)
+
+
+# ------------------------------- option cost recorder (no capital needed)
+
+def test_min_equity_shows_the_notional_cap_binds_first():
+    """A small account places no orders because the 5% cap binds long
+    before the 1% risk rule does. Stating which limit binds is the
+    difference between 'broken' and 'working as designed'."""
+    from paper.option_costs import min_equity_for_share
+    # $200 stock, $8 stop: risk rule needs $800, cap needs $4,000.
+    assert min_equity_for_share(200.0, 8.0) == pytest.approx(4000.0)
+    # a wide stop can flip which limit binds
+    assert min_equity_for_share(20.0, 5.0) == pytest.approx(500.0)
+
+
+def test_min_equity_for_contract_uses_the_position_cap():
+    from paper.option_costs import min_equity_for_contract
+    # $2.50 mid -> $250 a contract -> $5,000 to hold it inside 5%
+    assert min_equity_for_contract(2.50) == pytest.approx(5000.0)
+
+
+class _QuoteBroker:
+    """Market data only — no orders, no buying power, no permissions."""
+    def __init__(self, bid=2.40, ask=2.60):
+        self._bid, self._ask = bid, ask
+
+    def contracts(self, underlying, as_of, limit=200):
+        return [{"symbol": "AAA260918C00100000", "strike_price": "100",
+                 "expiration_date": "2026-09-18", "type": "call"}]
+
+    def quotes(self, underlying):
+        return {"AAA260918C00100000": {"bid": self._bid, "ask": self._ask,
+                                       "ap": self._ask, "delta": 0.60}}
+
+
+def test_quote_doctrine_contract_prices_the_real_trade():
+    from paper.option_costs import quote_doctrine_contract
+    row = quote_doctrine_contract(_QuoteBroker(), "AAA", 100.0, "2026-08-23")
+    assert row is not None
+    assert row["cost_per_contract"] == pytest.approx(250.0)   # $2.50 mid
+    assert row["min_equity_for_contract"] == pytest.approx(5000.0)
+    assert row["spread_pct"] == pytest.approx(0.08, abs=0.001)
+
+
+def test_missing_quotes_record_nothing_rather_than_zero():
+    """A missing quote is not a zero cost — the row must be absent, not
+    cheap, or the affordability report would lie downward."""
+    from paper.option_costs import collect, quote_doctrine_contract
+
+    class Dead:
+        def contracts(self, *a, **k):
+            raise RuntimeError("no options subscription")
+
+        def quotes(self, *a, **k):
+            raise RuntimeError("no options subscription")
+
+    assert quote_doctrine_contract(Dead(), "AAA", 100.0, "2026-08-23") is None
+    assert collect(Dead(), [{"ticker": "AAA", "close": 100.0}],
+                   "2026-08-23") == []
+
+
+def test_format_costs_states_the_account_size_needed():
+    from paper.option_costs import collect, format_costs
+    rows = collect(_QuoteBroker(), [{"ticker": "AAA", "close": 100.0,
+                                     "stop": 96.0, "r_denom": 4.0}],
+                   "2026-08-23")
+    text = format_costs(rows, equity=29.0)
+    assert "$250.00 per contract" in text
+    assert "you can buy 0 of 1" in text
+    assert "$5,000" in text                  # the honest requirement
+    assert "risk rules working, not a bug" in text
+
+
+def test_format_costs_with_no_rows_does_not_imply_free():
+    from paper.option_costs import format_costs
+    assert "not a zero cost" in format_costs([], equity=29.0)
