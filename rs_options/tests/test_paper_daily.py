@@ -85,6 +85,7 @@ class FakeBroker:
         self._positions = positions or {}
         self._equity = equity
         self.brackets, self.closed_syms, self.cancelled = [], [], []
+        self.limits = []
 
     def account(self):
         return {"equity": str(self._equity), "cash": str(self._equity)}
@@ -100,8 +101,10 @@ class FakeBroker:
     def order(self, order_id):
         return {"id": order_id, "filled_avg_price": "101.00"}
 
-    def submit_bracket(self, symbol, qty, stop_price, target_price):
+    def submit_bracket(self, symbol, qty, stop_price, target_price,
+                       limit_price=None):
         self.brackets.append((symbol, qty, stop_price, target_price))
+        self.limits.append(limit_price)
         return {"id": f"ord-{symbol}"}
 
     def cancel_symbol_orders(self, symbol):
@@ -332,3 +335,72 @@ def test_preopen_refuses_stale_bars():
     text = preopen_report(FakeBroker(), breakout_universe(), "2026-12-25")
     assert "stale or missing" in text
     assert "CANDIDATES" not in text
+
+
+# ----------------------------------- H15a fill-gap cancellation (ADOPTED)
+
+def test_entry_orders_carry_the_doctrine_cap():
+    """Live orders must go in as limits at the H15a ceiling. A market
+    order would fill at any gap, which is the behaviour the rule was
+    adopted to stop."""
+    from mve.setups import MAX_ENTRY_GAP
+    broker = FakeBroker()
+    daily.run(broker, breakout_universe(), TODAY)
+    assert broker.limits and all(lp is not None for lp in broker.limits)
+    for (sym, _q, _s, _t), lp in zip(broker.brackets, broker.limits):
+        rec = daily.load_ledger()["open"][sym]
+        assert lp == pytest.approx(rec["signal_close"] * (1 + MAX_ENTRY_GAP))
+        assert rec["entry_cap"] == pytest.approx(lp)
+
+
+def test_unfilled_entry_is_cancelled_not_booked_as_a_trade():
+    """The cancellation actually happening. An unfilled order has no
+    position, so without dedicated handling it would fall through to the
+    closure branch and be recorded as a trade that exited at an unknown
+    price — inventing a round trip that never occurred."""
+    class Unfilled(FakeBroker):
+        def order(self, order_id):
+            return {"id": order_id, "status": "canceled"}
+
+    broker = Unfilled()
+    daily.save_ledger({"open": {"GAPD": dict(
+        entry_date="2026-08-10", entry=100.0, entry_estimated=True,
+        entry_cap=102.0, signal_close=100.0, stop=95.0, target=115.0,
+        qty=10, order_id="ord-GAPD", setup="RS-02")}, "closed": []})
+    report = daily.run(broker, breakout_universe(), TODAY)
+
+    ledger = daily.load_ledger()
+    assert "GAPD" not in ledger["open"]                 # order is gone
+    assert not any(c["ticker"] == "GAPD" for c in ledger["closed"])
+    assert "GAPD" in broker.cancelled                   # broker told too
+    assert "H15a GAP CANCELLATIONS" in report           # never silent
+    assert "cancelled GAPD" in report
+
+
+def test_working_order_is_left_alone():
+    """An order still live at the broker must not be cancelled just
+    because it has not filled yet."""
+    class Working(FakeBroker):
+        def order(self, order_id):
+            return {"id": order_id, "status": "new"}
+
+    broker = Working()
+    daily.save_ledger({"open": {"WORK": dict(
+        entry_date="2026-08-10", entry=100.0, entry_estimated=True,
+        entry_cap=102.0, signal_close=100.0, stop=95.0, target=115.0,
+        qty=10, order_id="ord-WORK", setup="RS-02")}, "closed": []})
+    daily.run(broker, breakout_universe(), TODAY)
+    assert "WORK" in daily.load_ledger()["open"]
+    assert "WORK" not in broker.cancelled
+
+
+def test_tonights_order_is_not_cancelled_before_the_open():
+    """An order queued by this same run has not seen an open yet."""
+    class NoFill(FakeBroker):
+        def order(self, order_id):
+            return {"id": order_id, "status": "canceled"}
+
+    broker = NoFill()
+    daily.run(broker, breakout_universe(), TODAY)
+    ledger = daily.load_ledger()
+    assert ledger["open"], "tonight's entries must survive the same run"

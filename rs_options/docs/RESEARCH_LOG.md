@@ -1188,3 +1188,57 @@ thresholds, 2025-2026 was consulted six times, 2006-2020 judged H20.
 test remaining, and claims must be frozen before it arrives.
 
 293 tests passing.
+
+---
+
+## 2026-08-23 — H15a ADOPTED into live doctrine (operator decision)
+
+The operator authorized encoding the 2% fill-gap cancellation. It is the
+first rule adopted since H4b (2026-08-16), and the twenty-first
+hypothesis tested since.
+
+**Where the number lives.** `setups.MAX_ENTRY_GAP = 0.02`, with the
+evidence and the shape caveat in the comment beside it.
+`hypotheses.GAP_VARIANTS["H15a_gap_2pct"]` and `holdout.GAP_LIMIT` now
+IMPORT that constant rather than repeating `0.02`, so an adopted rule
+and the studies that judge it cannot drift apart. H15b keeps its own
+literal — it is a comparison arm, not doctrine.
+
+**How a backtested cancellation becomes a broker order.** The live path
+submitted a MARKET buy queued for the next open, which fills at any gap
+— exactly the behaviour the rule exists to stop. It now submits a LIMIT
+at `close x 1.02`. That is the same rule expressed to a broker: it fills
+at the open when the open is at or below the cap, and does not fill when
+the open gapped through. The `entry_cap` and `signal_close` are written
+to the ledger so a fill can always be audited against the rule that
+allowed it.
+
+**Two bugs the change exposed, both found by writing the tests.**
+
+1. The closure reconciliation swept up ANY ledger symbol absent from
+   broker positions. An order that never filled has no position, so it
+   would have been popped and recorded as a closed trade with an unknown
+   exit — inventing a round trip that never happened and quietly
+   polluting the paper record with phantom trades. Closure now requires
+   a confirmed fill (`entry_estimated` False).
+2. Nothing distinguished "cancelled" from "still working". A new step
+   checks order status before acting: terminal-but-unfilled gets
+   cancelled at the broker and removed; `new`/`accepted`/`held`/
+   `partially_filled` is left alone; an order queued by the same run is
+   skipped because it has not seen an open yet.
+
+**Never silent.** Every cancellation prints under `H15a GAP
+CANCELLATIONS` with the cap and the signal close, and the pre-open
+briefing prints the limit beside each queued order. A cancellation
+nobody is told about is a trade nobody knows was skipped.
+
+**Not encoded:** the §32 opportunity score (failed its holdout) and
+every other tested filter. `OpenPosition.score` records the score and a
+test asserts no exit rule reads it while FWD-1 is OPEN.
+
+Operator-facing doctrine updated in `robinhood_copilot_playbook.md` —
+including the manual version of the rule for Robinhood, where there is
+no limit order placed automatically: the scan prints the cap, and a
+pre-market price above it means skip the name.
+
+297 tests passing.

@@ -61,16 +61,29 @@ class PaperBroker:
 
     # ── actions ──────────────────────────────────────────────────────
     def submit_bracket(self, symbol: str, qty: int, stop_price: float,
-                       target_price: float) -> dict:
-        """Market buy (queues for next open after hours — matching the
-        backtester's next-open entry) with attached stop and target."""
-        return self._req("POST", "/v2/orders", body={
+                       target_price: float,
+                       limit_price: float | None = None) -> dict:
+        """Buy queued for the next open (matching the backtester's
+        next-open entry) with attached stop and target.
+
+        `limit_price` is how the adopted H15a fill-gap cancellation is
+        expressed to a broker: a limit at the doctrine's ceiling fills at
+        the open when the open is at or below it, and simply does not
+        fill when the open gapped through — which is the cancellation.
+        Omitted only by callers that deliberately want an uncapped
+        market order; live doctrine always passes it."""
+        body = {
             "symbol": symbol, "qty": str(qty), "side": "buy",
-            "type": "market", "time_in_force": "day",
-            "order_class": "bracket",
+            "time_in_force": "day", "order_class": "bracket",
             "take_profit": {"limit_price": f"{target_price:.2f}"},
             "stop_loss": {"stop_price": f"{stop_price:.2f}"},
-        })
+        }
+        if limit_price is None:
+            body["type"] = "market"
+        else:
+            body["type"] = "limit"
+            body["limit_price"] = f"{limit_price:.2f}"
+        return self._req("POST", "/v2/orders", body=body)
 
     def cancel_symbol_orders(self, symbol: str) -> int:
         n = 0

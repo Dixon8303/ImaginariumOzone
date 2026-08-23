@@ -50,7 +50,7 @@ from mve.position_manager import (OpenPosition, evaluate_exit,
                                   format_exit_report)
 from mve.report import save_report
 from mve.rs_features import compute_features
-from mve.setups import detect_all
+from mve.setups import MAX_ENTRY_GAP, detect_all, entry_limit_price
 from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
 from mve.volume_profile import overhead_supply, point_of_control
@@ -330,9 +330,37 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             except Exception:
                 pass
 
+    # 1b. entries that never filled — the H15a cancellation actually
+    # happening. An unfilled order has NO position, so without this it
+    # would fall into the closure branch below and be recorded as a
+    # trade that exited at an unknown price. It is not a trade at all.
+    gap_cancelled = []
+    for sym, rec in list(ledger["open"].items()):
+        if sym in positions or not rec.get("entry_estimated"):
+            continue
+        if rec["entry_date"] == today or not rec.get("order_id"):
+            continue                      # queued tonight, not yet open
+        try:
+            o = broker.order(rec["order_id"])
+        except Exception:
+            continue                      # unknown state: leave it alone
+        if o.get("filled_avg_price"):
+            continue                      # handled in step 1
+        if str(o.get("status", "")).lower() in (
+                "new", "accepted", "pending_new", "held", "partially_filled"):
+            continue                      # still working
+        broker.cancel_symbol_orders(sym)
+        ledger["open"].pop(sym)
+        gap_cancelled.append((sym, rec.get("entry_cap"),
+                              rec.get("signal_close")))
+
     # 2. reconcile closures (bracket legs fired since last run)
+    # `entry_estimated` still True means no fill was ever confirmed, so
+    # the symbol is a working order, not a position that closed. Booking
+    # one here would invent a round trip that never happened.
     closed_today = []
-    for sym in [s for s in list(ledger["open"]) if s not in positions]:
+    for sym in [s for s, r in list(ledger["open"].items())
+                if s not in positions and not r.get("entry_estimated")]:
         rec = ledger["open"].pop(sym)
         exit_px = None
         try:
@@ -379,10 +407,17 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
         if qty < 1:
             skipped.append((sym, "size < 1 share at 1% risk"))
             continue
-        order = broker.submit_bracket(sym, qty, sig["stop"], sig["target"])
+        # H15a (ADOPTED): cap what doctrine will pay at the open. A
+        # limit here IS the backtested cancellation — it fills at the
+        # open when the open is at or below the cap, and does not fill
+        # when the open gapped through.
+        cap = entry_limit_price(sig["close"])
+        order = broker.submit_bracket(sym, qty, sig["stop"], sig["target"],
+                                      limit_price=cap)
         placed.append((sig, qty))
         ledger["open"][sym] = dict(
             entry_date=today, entry=sig["close"], entry_estimated=True,
+            entry_cap=cap, signal_close=sig["close"],
             stop=sig["stop"], target=sig["target"], qty=qty,
             order_id=order.get("id"), setup="RS-02")
 
@@ -398,12 +433,13 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     option_review = review_open_options(load_open_options(), all_bars, today)
     return build_report(today, acct, positions, signals, placed, skipped,
                         closed_today, time_exits, ledger, option_review,
-                        option_cycle=opt)
+                        option_cycle=opt, gap_cancelled=gap_cancelled)
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
                  closed_today, time_exits, ledger,
-                 option_review: str = "", option_cycle=None) -> str:
+                 option_review: str = "", option_cycle=None,
+                 gap_cancelled=None) -> str:
     lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}"]
@@ -437,12 +473,25 @@ def build_report(today, acct, positions, signals, placed, skipped,
     lines.append(f"PAPER ORDERS PLACED ({len(placed)}):")
     for sig, qty in placed:
         lines.append(f"  BUY {qty} {sig['ticker']} @ next open, "
+                     f"limit {entry_limit_price(sig['close']):.2f} "
+                     f"(H15a cap, {MAX_ENTRY_GAP:.0%} over the "
+                     f"{sig['close']:.2f} close), "
                      f"bracket stop {sig['stop']:.2f} / "
                      f"target {sig['target']:.2f}")
     if not placed:
         lines.append("  none")
     for sym, why in skipped:
         lines.append(f"  skipped {sym}: {why}")
+    # A cancellation nobody is told about is a trade nobody knows was
+    # skipped — the adopted rule reports every time it fires.
+    if gap_cancelled:
+        lines.append(f"H15a GAP CANCELLATIONS ({len(gap_cancelled)}) — the "
+                     "open ran past the doctrine's cap, so the order was "
+                     "abandoned rather than chased:")
+        for sym, cap, close in gap_cancelled:
+            detail = (f" (cap {cap:.2f} vs {close:.2f} close)"
+                      if cap and close else "")
+            lines.append(f"  cancelled {sym}{detail}")
     if time_exits:
         lines.append(f"TIME EXITS SUBMITTED: {', '.join(time_exits)}")
     lines.append("")
@@ -551,6 +600,12 @@ def preopen_report(broker, all_bars: dict, today: str) -> str:
     lines.append(f"ORDERS QUEUED FOR THE OPEN ({len(queued)}): "
                  + (", ".join(sorted(k for k, v in ledger["open"].items()
                                      if v.get("entry_estimated"))) or "none"))
+    for sym, rec in sorted(ledger["open"].items()):
+        if rec.get("entry_estimated") and rec.get("entry_cap"):
+            lines.append(f"  {sym} limit {rec['entry_cap']:.2f} — H15a cap "
+                         f"({MAX_ENTRY_GAP:.0%} over the signal close). "
+                         "If the open gaps past it the order does not fill "
+                         "and is cancelled.")
 
     lines += ["", f"OPEN POSITIONS ({len(positions)}):"]
     for sym, p in sorted(positions.items()):

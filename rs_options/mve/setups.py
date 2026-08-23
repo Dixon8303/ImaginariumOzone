@@ -46,6 +46,47 @@ MOM_LOOKBACK = 252              # 12-1 momentum window (CALIBRATE)
 MOM_SKIP = 21                   # skip the last month
 QUALITY_MIN_MOM = 0.10          # H4b threshold (CALIBRATE)
 
+# H15a FILL-GAP CANCELLATION (ADOPTED 2026-08-23, operator decision).
+#
+# Signals fire on the close and fill at the NEXT open. If that open has
+# already run more than MAX_ENTRY_GAP above the signal close, the order
+# is abandoned rather than chased. This is an EXECUTION rule, not a
+# prediction: the stop sits at a fixed swing low, so a gapped-up entry
+# widens 1R before the trade even starts.
+#
+# Evidence (H20 holdout, 2006-2020 — disjoint from the 2021-2026 window
+# that chose the threshold, so a genuine out-of-sample confirmation):
+#   baseline n=376 +0.096R totR +36.10 | filtered n=367 +0.117R totR +42.94
+#   Expectancy AND total both improved, so this is not the H5 failure of
+#   raising an average by deleting winners. The 2%+ bucket was negative
+#   in every window measured: -0.248R, -0.023R, -0.209R.
+#
+# Honest caveat: the pre-registered shape was a STEADY decline across
+# gap sizes; the observed shape is a CLIFF at 2%, with moderate gaps
+# fine or better. A threshold effect is a different claim from the one
+# registered. Adopted on direction, disjoint-sample confirmation and
+# mechanism — NOT on shape. docs/PREREGISTERED.md FWD-2 checks forward
+# whether it keeps earning its place.
+#
+# This is the SINGLE SOURCE for the number: research variants and the
+# holdout import it so live doctrine and studies cannot drift apart.
+MAX_ENTRY_GAP = 0.02
+
+
+def entry_limit_price(signal_close: float) -> float:
+    """Highest price doctrine will pay at the open for a signal that
+    closed at `signal_close`. Live orders go in as limits at this price,
+    which is how the backtested cancellation is expressed to a broker."""
+    return signal_close * (1.0 + MAX_ENTRY_GAP)
+
+
+def fill_gap_ok(open_price: float, signal_close: float) -> bool:
+    """False when the open gapped beyond doctrine's tolerance. Fails
+    closed on a nonsensical close — an unknown gap is not a small one."""
+    if not signal_close or signal_close <= 0:
+        return False
+    return open_price <= entry_limit_price(signal_close)
+
 
 def above_sma(bars: pd.DataFrame, length: int = REGIME_SMA_LEN) -> bool:
     if len(bars) < length:
