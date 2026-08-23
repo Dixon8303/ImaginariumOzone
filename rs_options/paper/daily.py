@@ -55,6 +55,9 @@ from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
 from mve.volume_profile import overhead_supply, point_of_control
 
+from .option_costs import collect as collect_option_costs
+from .option_costs import format_costs
+from .option_costs import record as record_option_costs
 from .options_broker import contracts_to_buy, select_contract
 
 RISK_PCT = 0.01              # 1% of paper equity risked per trade
@@ -429,17 +432,29 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
         except Exception as e:                  # never lose the equity run
             opt = ([], [], [f"option cycle FAILED: {e}"])
 
+    # Cost recorder: prices the contract doctrine WOULD buy, using market
+    # data only. No order, no buying power, no account permissions — so
+    # it runs even when the options cycle above cannot. This is the only
+    # measurement the project has of what the overlay actually costs.
+    try:
+        cost_rows = collect_option_costs(broker, signals, today)
+        record_option_costs(cost_rows)
+    except Exception:
+        cost_rows = []              # never break the trading run
+
     save_ledger(ledger)
     option_review = review_open_options(load_open_options(), all_bars, today)
     return build_report(today, acct, positions, signals, placed, skipped,
                         closed_today, time_exits, ledger, option_review,
-                        option_cycle=opt, gap_cancelled=gap_cancelled)
+                        option_cycle=opt, gap_cancelled=gap_cancelled,
+                        cost_rows=cost_rows, equity=equity)
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
                  closed_today, time_exits, ledger,
                  option_review: str = "", option_cycle=None,
-                 gap_cancelled=None) -> str:
+                 gap_cancelled=None, cost_rows=None,
+                 equity: float | None = None) -> str:
     lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}"]
@@ -469,6 +484,9 @@ def build_report(today, acct, positions, signals, placed, skipped,
                   f"strike near {s['close']:.0f}, spread <= "
                   f"{MAX_SPREAD_PCT:.0%}; exit on stop/target/15 sessions"]
     lines.append("")
+
+    if cost_rows is not None:
+        lines += [format_costs(cost_rows, equity), ""]
 
     lines.append(f"PAPER ORDERS PLACED ({len(placed)}):")
     for sig, qty in placed:

@@ -1242,3 +1242,67 @@ no limit order placed automatically: the scan prints the cap, and a
 pre-market price above it means skip the name.
 
 297 tests passing.
+
+---
+
+## 2026-08-23 — The $29 question, answered with numbers
+
+Operator asked whether the account can trade at $29, possibly via cheap
+options or penny stocks, and framed it as "use the $29 as trading data."
+Three findings, then a build.
+
+**1. The engine already refuses, and it is right to.** `position_size`
+returns 0 shares at $29 — and at $2,000, and at $3,000. The binding
+limit is not the 1% risk rule but the 5% NOTIONAL CAP: one share of a
+$198 stock is 100% of a $29 account and 10% of a $2,000 one. Minimum
+equity to buy a single share, by price:
+
+    $25 stock -> $500      $200 stock -> $4,000
+    $50 stock -> $1,000    $500 stock -> $10,000
+    $100 stock -> $2,000   $900 stock -> $18,000
+
+The engine placing zero orders at $29 is the risk rules working, not a
+bug. Worth stating plainly because "it never trades" reads like a
+failure.
+
+**2. Cheap options are not a smaller version of this strategy.** A
+contract affordable at $29 (<= $0.29 premium) is deep out of the money
+or near expiry: delta roughly 0.05-0.15 against the doctrine's required
+0.40-0.80, and a bid/ask commonly 15-30% wide against the doctrine's
+10% cap. Both are chain-selection rules the engine already enforces, so
+such a contract is not merely a scaled-down trade — it is a trade the
+system is built to reject. Nothing measured in this project applies to
+it.
+
+**3. Penny stocks are outside every measurement made here.** The
++0.117R was measured on 22 large-cap liquid names. Microcap spreads of
+2-10% would consume an edge of that size several times over before any
+of it reached the account, and the corrupt-bar guards added on
+2026-08-21 exist precisely because thin, reverse-split-prone histories
+break the R-math. Testing them is a different research program, not a
+smaller version of this one.
+
+**What $0 CAN buy: `paper/option_costs.py`.** The forecast has a hole —
+this project has never measured option P&L, because the backtest models
+the underlying and historical chains are paid data. The cost recorder
+closes it with no capital and no account permissions: at each signal it
+selects the contract doctrine WOULD buy, records the real
+bid/ask/mid/delta/DTE from the snapshot feed, and reports the dollar
+cost plus the equity required to hold it inside the 5% cap. It runs
+even when the options CYCLE cannot (that needs options enabled on the
+broker account; this needs only market data), and it fails soft — a
+missing quote records nothing rather than a zero, so the affordability
+report can never lie downward.
+
+What accumulates is the honest answer to "how much account do I need",
+priced from the real market rather than estimated, plus the real spread
+drag the backtest never charged. When the account can afford a contract
+we will already know whether the overlay is viable.
+
+**The uncomfortable arithmetic, recorded because it should not need
+rediscovering.** At the measured +2.9%/year, $29 becomes $29.84 in a
+year. The binding constraint on this account is not strategy quality —
+it is capital. No filter, threshold, or instrument choice changes that,
+and the honest lever is contributions.
+
+303 tests passing.
