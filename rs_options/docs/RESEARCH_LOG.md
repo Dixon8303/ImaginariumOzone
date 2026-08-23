@@ -1492,3 +1492,93 @@ Nothing here is a filter and nothing is adopted; costs and path risk
 change what the SAME edge is worth, they do not create or destroy one.
 
 315 tests passing.
+
+---
+
+## 2026-08-23 — Second dossier assessed: one real test, two hard noes
+
+Operator supplied a three-part dossier (Markov regime framework;
+trading psychology; premium-selling strategies). Assessed part by part.
+
+### Part 1 — Markov regimes. Testable, and the dossier's own evidence
+### does not survive a control it never ran.
+
+The construction is classical and legitimate: label each day Bull /
+Sideways / Bear by trailing 20-day return (+/-5%), tally a 3x3
+transition matrix, signal on P(Bull) - P(Bear). Its stationary-
+distribution point is honest — multi-step forecasts converge and
+directional alpha decays, and the dossier says so itself.
+
+**But it reads its diagonal as a finding.** Consecutive states share 19
+of their 20 bars, so the label is autocorrelated BEFORE any market
+behaviour enters. Checked directly: a pure IID random walk — no
+regimes, nothing to detect — scores **86% stickiness** under exactly
+this definition. The "high persistence" the dossier celebrates is
+mostly the window overlapping itself.
+
+`mve.markov` therefore implements the method WITH the control it needs:
+`shuffled_null` shuffles daily returns (destroying all serial structure
+while preserving the return distribution), rebuilds the windows, and
+re-labels. Only stickiness above that null could carry information. On
+synthetic random walks the module correctly reports "indistinguishable"
+for 2 of 3 and one false positive — about what a 5% threshold should
+produce, which is the diagnostic behaving.
+
+Second correction: **effective sample size.** ~4,000 bars is not 4,000
+observations but ~200 non-overlapping windows. Precision quoted on the
+raw bar count is ~4.5x too confident.
+
+The module deliberately does NOT trade the signal. Whether it improves
+RS-02 is a separate question, and one not worth pre-registering unless
+the excess above null is non-trivial — a filter built on a matrix that
+measures its own window would be noise with extra steps. The short leg
+the dossier prescribes is prohibited regardless (§87).
+
+HMM (its proposed fix for the arbitrary +/-5%) stays rejected for the
+reason recorded on 2026-08-23 for the previous dossier: fitted
+parameters against a +0.117R edge.
+
+### Part 2 — Psychology. Nothing to implement; it describes what is
+### already built, and what the operator's own history cost.
+
+"Activity is not profitability", "wait for the pitch", "capital
+preservation as ammo". No code follows from this, but it is not empty:
+the operator's broker history is **1,429 round trips, 85% day trades,
+$2,386 in fees, -$3,770 net** — that is precisely the failure mode
+described. The doctrine already answers it structurally, producing ~25
+signals a year rather than ~475, and 17 in 2022 when the regime filter
+held it out of a bear market. H21 quantified the same argument: at a
+32bp break-even, activity IS the tax.
+
+The dossier's "patience gate" is `ENTRY_FILTERS` plus the H15a fill
+cap. Already present; nothing to add.
+
+### Part 3 — Premium selling. Prohibited, and unaffordable by ~100x.
+
+Short puts, jade lizards, short call spreads, short strangles, broken
+wing butterflies. This is real, well-documented professional
+methodology (tastytrade's mechanics — 45 DTE, 16-20 delta, IVR>=30,
+50% profit-taking — are published and sound). It is also excluded here
+on three independent grounds, any one of which is sufficient:
+
+1. **Doctrine prohibits it.** §87 KEEP list is long premium, long calls
+   only; premium selling is barred until short-structure margin
+   adapters are validated in Shadow. That is the operator's own
+   standing rule, not a new objection.
+2. **Capital.** A single short put at ~20% BPR on a $100 underlying
+   needs ~$2,000 of buying power; a strangle needs more. The account
+   has $29. This is not a marginal fit.
+3. **Risk shape.** These are high-POP, high-severity structures: they
+   win often and lose large. "POP > 80%" is true and is not
+   expectancy — a strategy winning 80% and losing 5x on the rest is
+   break-even before costs. The Jade Lizard's "zero upside risk" is
+   accurate as stated and understates the case: the short put leg
+   carries substantial DOWNSIDE risk, which the framing omits. An
+   account that cannot absorb one assignment has no business holding
+   undefined-risk short structures.
+
+Recorded rather than dismissed, because the mechanics are worth
+revisiting if the account is ever funded past the margin thresholds
+AND the §67 release gate is cleared — in that order.
+
+328 tests passing.
