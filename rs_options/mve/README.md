@@ -59,6 +59,8 @@ python -m mve.fundamentals          # SEC EDGAR filings (needs
 python -m mve.hypotheses            # §72 rounds 5-6: H9 news, H10 fundamentals,
                                     # H11 volume, H13 vol-contraction, H14 close
                                     # strength, H15 gap cost, H16 clustering
+python -m mve.robustness            # H21: transaction costs, break-even,
+                                    # Sharpe, bootstrap path-risk
 python -m mve.holdout               # H20: the two surviving candidates, tested
                                     # on 2006-2020 — years no verdict has used
 python -m mve.confluence            # H19: grade setups by agreement — the §32

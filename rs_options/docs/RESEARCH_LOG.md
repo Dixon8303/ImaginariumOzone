@@ -1306,3 +1306,64 @@ it is capital. No filter, threshold, or instrument choice changes that,
 and the honest lever is contributions.
 
 303 tests passing.
+
+---
+
+## 2026-08-23 — Outside dossier assessed; two real gaps closed (H21)
+
+Operator supplied a quantitative-backtesting dossier claiming 9,000+
+backtests over 30 assets and 15 years. Assessed by separating METHODS
+(verifiable by running them here) from FINDINGS (unverifiable without
+its data). Methods adopted where they filled a gap; findings not
+adopted.
+
+**Its two best points were gaps we genuinely had.**
+
+1. **Transaction costs were never charged.** Every number this project
+   ever produced is GROSS — no spread, no slippage, no commission. At
+   +0.117R per trade that is not cosmetic: 0.01R of cost is 8.5% of the
+   edge. `run_backtest` now takes `cost_bps`, charged where it lands —
+   paid up at entry (which correctly WIDENS 1R, since a worse fill means
+   more risk to the same stop) and received down at exit. It defaults
+   to 0.0 so every recorded verdict stays comparable; the study passes
+   real figures and reports the BREAK-EVEN cost, which is the
+   strategy's execution budget.
+2. **The equity curve is a single path.** A -25.6R max drawdown is what
+   happened once, in the order it happened. `bootstrap` resamples the
+   realised trades 2,000 times and reports the distribution of total R
+   and drawdown. Stated with the number, because a bootstrap read as a
+   worst case is worse than none: resampling destroys serial
+   correlation, so if losses cluster — and in trend systems they do —
+   the true distribution is WORSE. It is a FLOOR on risk, not a cap.
+
+Also added **Sharpe** (annualised from the R series; scale-invariant in
+risk-per-trade, so it equals the account-return Sharpe). Ours computes
+to ~0.65 on the holdout — above the dossier's 0.5 screen.
+
+**Its findings are not adopted, and one has a serious internal problem.**
+
+The dossier reports 9,000 backtests yielding 524 survivors and applies
+NO multiple-comparisons correction. At a 5% per-test false-positive rate
+9,000 tests produce ~450 survivors from noise alone. Its 524 is barely
+distinguishable from that — the exact error this project's summary
+footer was built to print. Its headline claim that mean reversion is
+"the dominant edge at 64% of survivors" cannot be separated from the
+possibility that more mean-reversion variants were tested.
+
+Its claim that trend/momentum is fragile on autopilot and needs "strict
+market regime gating" does not contradict our result — it DESCRIBES it.
+RS-02 is regime-gated by the 200-day SMA, and that gate is why 2022
+produced 17 signals instead of 50.
+
+**Rejected for now, with reasons:** Hidden Markov regime models (Layer
+4) add many fitted parameters to a system whose measured edge is
++0.117R; our 1-parameter regime filter already survived out-of-sample
+testing, and an HMM is an overfitting machine at this sample size.
+Mean-reversion as a base signal is a different strategy family, not a
+refinement of this one — testable later as a pre-registered hypothesis,
+not adoptable from a dossier. Cross-sectional momentum (rank the
+universe, long strongest) is genuinely interesting and academically
+supported; its short leg is prohibited (§87 long premium only) but the
+long-only ranking version is a legitimate future hypothesis.
+
+313 tests passing.
