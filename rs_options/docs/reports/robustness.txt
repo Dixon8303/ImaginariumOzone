@@ -1,0 +1,36 @@
+generated: 2026-08-23
+
+ROBUSTNESS SUITE — costs and path-dependence (H21, §72)
+window: start of history .. 2020-12-31 | doctrine + H15a
+
+COST SENSITIVITY — every number this project produced before now
+was GROSS. Costs are charged where they land: you pay up at entry
+(which also widens 1R) and receive less at exit.
+      cost   trades   expectancy    total R
+       0bp      367      +0.117R    +42.94
+       2bp      368      +0.106R    +39.01
+       5bp      368      +0.095R    +34.96
+      10bp      367      +0.080R    +29.36
+      20bp      367      +0.047R    +17.25
+      50bp      362      -0.067R    -24.25
+
+  BREAK-EVEN: the edge reaches zero at ~32 bps round-trip.
+  That is the execution budget. Liquid large caps trade commission-free at a few bps, so the doctrine has room — but it is not unlimited, and it is why H15a (which is purely an execution rule) mattered more than any predictive filter tested.
+
+SHARPE — expectancy says nothing about the ride.
+  annualised 0.52 at 24.5 trades/year (gross of costs)
+  For scale: 0.5 is a common minimum screen, 1.0 is good, and anything above 2 on a retail daily-bar system should be assumed wrong until proven.
+
+BOOTSTRAP — 2,000 resampled orderings of the SAME trades.
+The recorded equity curve is one path. This is the distribution it was drawn from.
+  total R      5th +6.42   median +43.00   95th +77.85
+  max drawdown 5th -24.39   median -12.84
+  paths ending at or below zero: 2.9%
+
+  READ THIS CORRECTLY: resampling independently destroys
+  serial correlation. If losses cluster in reality — and
+  in trend-following they do — the true drawdown
+  distribution is WORSE than the figures above. Treat the
+  bootstrap drawdown as a FLOOR on the risk, never a cap.
+
+LAW 12/20: costs and path-risk change what the SAME edge is worth; they do not create or destroy one. Nothing here is a filter and nothing here is adopted.
