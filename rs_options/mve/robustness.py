@@ -49,6 +49,11 @@ ITERATIONS = 2000
 # bps is realistic, and the higher rungs exist to find the break-even.
 COST_LADDER_BPS = (0.0, 2.0, 5.0, 10.0, 20.0, 50.0)
 
+# Liquid large caps, commission-free, filled in the opening auction.
+# Used for the NET headline figures — gross is the anchor, not the
+# answer, and quoting only gross is how a thin edge looks comfortable.
+REALISTIC_BPS = 5.0
+
 
 def sharpe(rs: list, trades_per_year: float) -> float | None:
     """Annualised Sharpe of an R series. None when undefined."""
@@ -84,6 +89,12 @@ def bootstrap(rs: list, iterations: int = ITERATIONS,
 
     return {
         "iterations": iterations,
+        # The distribution is unreadable without the value it is meant
+        # to contextualise. Printing them together is what turns "the
+        # median path drew -12.8R" into "the path we actually got sat
+        # at the Nth percentile of luck".
+        "observed_total": round(sum(rs), 2),
+        "observed_dd": round(_max_drawdown(rs), 2),
         "total_p05": round(pct(totals, 0.05), 2),
         "total_p50": round(pct(totals, 0.50), 2),
         "total_p95": round(pct(totals, 0.95), 2),
@@ -134,10 +145,14 @@ def run_robustness(store: DataStore) -> dict:
     gross = rows[0]
     years = 15.0                     # holdout spans ~2006-2020
     per_year = gross["trades"] / years if years else 0.0
+    net = next((r for r in rows if r["cost_bps"] == REALISTIC_BPS), gross)
     return {"costs": rows,
             "break_even_bps": break_even_bps(rows),
             "trades_per_year": round(per_year, 1),
             "sharpe_gross": sharpe(gross["rs"], per_year),
+            "sharpe_net": sharpe(net["rs"], per_year),
+            "net_bps": net["cost_bps"],
+            "net_expectancy": net["expectancy_r"],
             "bootstrap": bootstrap(gross["rs"])}
 
 
@@ -169,14 +184,20 @@ def summary(r: dict) -> str:
         lines.append("  BREAK-EVEN: not reached on this ladder — extend it "
                      "before concluding the edge is cost-proof.")
 
-    s = r.get("sharpe_gross")
+    s, sn = r.get("sharpe_gross"), r.get("sharpe_net")
     lines += ["",
               "SHARPE — expectancy says nothing about the ride."]
     if s is None:
         lines.append("  not computable on this sample")
     else:
         lines.append(f"  annualised {s:.2f} at {r['trades_per_year']} "
-                     "trades/year (gross of costs)")
+                     "trades/year (GROSS)")
+        if sn is not None:
+            lines.append(f"  annualised {sn:.2f} NET at "
+                         f"{r['net_bps']:.0f}bp — expectancy "
+                         f"{r['net_expectancy']:+.3f}R. This is the "
+                         "honest headline; gross is the anchor, not the "
+                         "answer.")
         lines.append("  For scale: 0.5 is a common minimum screen, 1.0 is "
                      "good, and anything above 2 on a retail daily-bar "
                      "system should be assumed wrong until proven.")
@@ -190,9 +211,11 @@ def summary(r: dict) -> str:
                   "distribution it was drawn from.",
                   f"  total R      5th {b['total_p05']:+.2f}   "
                   f"median {b['total_p50']:+.2f}   "
-                  f"95th {b['total_p95']:+.2f}",
+                  f"95th {b['total_p95']:+.2f}"
+                  f"   [observed {b['observed_total']:+.2f}]",
                   f"  max drawdown 5th {b['dd_p05']:+.2f}   "
-                  f"median {b['dd_p50']:+.2f}",
+                  f"median {b['dd_p50']:+.2f}"
+                  f"                  [observed {b['observed_dd']:+.2f}]",
                   f"  paths ending at or below zero: {b['losing_paths']:.1%}",
                   "",
                   "  READ THIS CORRECTLY: resampling independently destroys",

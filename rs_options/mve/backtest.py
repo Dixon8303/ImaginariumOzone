@@ -220,14 +220,6 @@ def run_backtest(store: DataStore, universe: list | None = None,
                 still_pending.append(sig)      # holiday for this ticker
                 continue
             entry = float(idx.loc[d, "open"])
-            # Transaction costs, charged where they actually land: you
-            # pay UP at entry and receive LESS at exit. Defaults to 0 so
-            # every previously recorded verdict stays comparable; the
-            # cost study passes a real figure. Note the entry cost also
-            # WIDENS r_denom, which is the honest effect — a worse fill
-            # means more risk for the same stop.
-            if cost_bps:
-                entry *= (1.0 + cost_bps / 10_000.0)
             # H15 gap guard: the order is cancelled if the open gaps too
             # far above the signal close. This is an EXECUTION cost, not a
             # prediction — you would be paying up before the trade starts.
@@ -235,6 +227,15 @@ def run_backtest(store: DataStore, universe: list | None = None,
                     and entry > sig["close"] * (1.0 + max_gap_pct)):
                 result.gapped_signals += 1
                 continue
+            # Costs are charged AFTER the gap check, not before. The
+            # H15a rule tests what the MARKET did — live it is a limit
+            # at close x 1.02, and whether that limit is breached is a
+            # fact about the open, not about your slippage. Charging
+            # first cancelled fills that would really have filled just
+            # under the cap. You pay UP at entry, which also widens
+            # r_denom: a worse fill is more risk to the same stop.
+            if cost_bps:
+                entry *= (1.0 + cost_bps / 10_000.0)
             r_denom = entry - sig["invalidation"]
             if r_denom <= 0 or sig["ticker"] in open_pos:
                 result.skipped_signals += 1

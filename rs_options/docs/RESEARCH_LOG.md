@@ -1367,3 +1367,218 @@ supported; its short leg is prohibited (§87 long premium only) but the
 long-only ranking version is a legitimate future hypothesis.
 
 313 tests passing.
+
+---
+
+## 2026-08-23 — H-22 pre-registered (cross-sectional momentum, long only)
+
+Operator approved pre-registering the one idea worth taking from the
+outside dossier. Registered in `docs/PREREGISTERED.md` **before any
+implementation exists** — the study is deliberately not written yet, so
+git history shows the parameters were fixed before the first result.
+
+`PREREGISTERED.md` now holds two kinds of entry: **FWD-*** awaiting data
+that does not exist, and **H-*** runnable on history the moment they are
+written. The second kind lives there because every historical window has
+now been glimpsed; writing the parameters down first is what keeps a
+test on glimpsed data honest.
+
+**Why this one and not the dossier's other claims.** Cross-sectional
+momentum is the only proposal in it that is (a) a mechanism rather than
+a survivorship statistic, (b) replicated out-of-sample across decades
+and asset classes by people who published their method, and (c)
+genuinely different from RS-02 rather than another filter on it — it is
+relative rather than absolute, calendar-driven rather than
+event-driven, and continuously invested rather than episodic.
+
+**No parameter is fitted.** Ranking reuses the adopted `mom_12_1`,
+eligibility reuses the adopted 200-day SMA, rebalance timing and
+top-quintile sizing come from the literature. The study therefore
+introduces no new free parameter, which is what makes it testable on
+windows whose aggregate RS-02 results are already known.
+
+**Three commitments recorded in advance, each of which makes a
+comfortable result harder rather than easier:**
+
+- The benchmark is **SPY buy-and-hold with costs**, not RS-02. A
+  long-only, near-always-invested strategy that cannot beat the index
+  does not justify its complexity, however good a bull decade looks.
+- Costs are charged. Monthly rebalancing turns over far more than
+  RS-02's ~25 trades a year, so gross figures would flatter this more
+  than anything tested so far.
+- A **handicap is recorded up front**: the published effect is
+  strongest in the long-short spread and the short leg is prohibited
+  (§87). A long-only version keeps market beta and drops half the
+  factor, so H-22 may fail even if the factor is real — that outcome
+  reads "not capturable long-only in 21 names", not "the factor is
+  false". Recording this now prevents a failure being spun later into
+  either a rejection of the literature or an excuse.
+
+**And what confirmation would not license:** it is a portfolio strategy
+needing 3-5 simultaneous positions rebalanced monthly, incompatible
+with the current account and awkward with long-premium options. It
+would earn the right to be measured alongside RS-02, not to replace it,
+and would still need its own adoption decision.
+
+Status: OPEN, registered, not implemented. Implementation is the next
+commit and is deliberately separate.
+## 2026-08-23 — H21 results: the edge survives costs, but thinly
+
+First run of the robustness suite. Three numbers the project never had,
+and one correction to a figure already quoted.
+
+**COST SENSITIVITY (doctrine + H15a, 2006-2020):**
+
+    gross  +0.117R   totR +42.94
+    2bp    +0.106R   totR +39.01
+    5bp    +0.095R   totR +34.96
+    10bp   +0.080R   totR +29.36
+    20bp   +0.047R   totR +17.25
+    50bp   -0.067R   totR -24.25
+    BREAK-EVEN ~32 bps round-trip
+
+The strategy has an execution budget of about 32 bps. Liquid large caps
+filled in the opening auction commission-free should cost a few bps, so
+there is room — but a third of the edge is gone by 10 bps, and that is
+the concrete reason H15a (a pure execution rule) mattered more than any
+predictive filter tested across twenty-one hypotheses.
+
+**CORRECTION to the forecast.** Every figure quoted to the operator
+before today was GROSS, including "+2.9%/year". At a realistic 5 bps the
+expectancy is **+0.095R**, so ~24.5 trades a year is **+2.33R**, or
+about **+2.3%/year at 1% risk**. The report now prints the net headline
+beside the gross one, because quoting only gross is how a thin edge
+looks comfortable.
+
+**SHARPE: 0.52 gross, ~0.42 net at 5 bps.** Worth stating plainly: the
+outside dossier proposed a minimum screen of 0.5 out-of-sample. Gross,
+this system passes by a hair. **Net of realistic costs, it does not.**
+That is not a reason to abandon it — the strategy was measured on the
+hardest 15 years, is positive across four crashes, and 0.42 is a real
+number rather than a fitted one — but it is the honest headline and it
+should not be softened.
+
+**BOOTSTRAP (2,000 resamples of the same 367 trades):**
+
+    total R      5th +6.42   median +43.00   95th +77.85
+    max drawdown 5th -24.39  median -12.84
+    paths ending at or below zero: 2.9%
+
+The strongest result in the report: only 2.9% of reorderings lose money.
+The positive expectancy is not an artifact of the sequence. The drawdown
+half is the sobering part — a median of -12.8R and a 5th percentile of
+-24.4R means a 25%-of-account drawdown at 1% risk is an ordinary
+outcome, not a disaster scenario. And per the caveat printed with it,
+independent resampling destroys serial correlation, so the true
+distribution is worse than that.
+
+**Two defects the first run exposed, both fixed.**
+
+1. **Costs were charged BEFORE the H15a gap check.** The gap rule tests
+   what the MARKET did — live it is a limit at close x 1.02, and whether
+   that limit is breached is a fact about the open, not about your
+   slippage. Charging first cancelled fills that would really have
+   filled just under the cap. The symptom was visible in the first
+   report and I nearly explained it away: trade counts wobbled with cost
+   (367 / 368 / 368 / 367 / 367 / 362) when they should be constant
+   until the cost is large enough to matter. Now charged after the
+   check, with a regression test asserting the count does not move.
+2. **The bootstrap printed a distribution with no observed value beside
+   it.** A percentile table is unreadable without the number it is meant
+   to contextualise — "median -12.8R" only means something next to what
+   actually happened. Both are now printed together.
+
+Nothing here is a filter and nothing is adopted; costs and path risk
+change what the SAME edge is worth, they do not create or destroy one.
+
+315 tests passing.
+
+---
+
+## 2026-08-23 — Second dossier assessed: one real test, two hard noes
+
+Operator supplied a three-part dossier (Markov regime framework;
+trading psychology; premium-selling strategies). Assessed part by part.
+
+### Part 1 — Markov regimes. Testable, and the dossier's own evidence
+### does not survive a control it never ran.
+
+The construction is classical and legitimate: label each day Bull /
+Sideways / Bear by trailing 20-day return (+/-5%), tally a 3x3
+transition matrix, signal on P(Bull) - P(Bear). Its stationary-
+distribution point is honest — multi-step forecasts converge and
+directional alpha decays, and the dossier says so itself.
+
+**But it reads its diagonal as a finding.** Consecutive states share 19
+of their 20 bars, so the label is autocorrelated BEFORE any market
+behaviour enters. Checked directly: a pure IID random walk — no
+regimes, nothing to detect — scores **86% stickiness** under exactly
+this definition. The "high persistence" the dossier celebrates is
+mostly the window overlapping itself.
+
+`mve.markov` therefore implements the method WITH the control it needs:
+`shuffled_null` shuffles daily returns (destroying all serial structure
+while preserving the return distribution), rebuilds the windows, and
+re-labels. Only stickiness above that null could carry information. On
+synthetic random walks the module correctly reports "indistinguishable"
+for 2 of 3 and one false positive — about what a 5% threshold should
+produce, which is the diagnostic behaving.
+
+Second correction: **effective sample size.** ~4,000 bars is not 4,000
+observations but ~200 non-overlapping windows. Precision quoted on the
+raw bar count is ~4.5x too confident.
+
+The module deliberately does NOT trade the signal. Whether it improves
+RS-02 is a separate question, and one not worth pre-registering unless
+the excess above null is non-trivial — a filter built on a matrix that
+measures its own window would be noise with extra steps. The short leg
+the dossier prescribes is prohibited regardless (§87).
+
+HMM (its proposed fix for the arbitrary +/-5%) stays rejected for the
+reason recorded on 2026-08-23 for the previous dossier: fitted
+parameters against a +0.117R edge.
+
+### Part 2 — Psychology. Nothing to implement; it describes what is
+### already built, and what the operator's own history cost.
+
+"Activity is not profitability", "wait for the pitch", "capital
+preservation as ammo". No code follows from this, but it is not empty:
+the operator's broker history is **1,429 round trips, 85% day trades,
+$2,386 in fees, -$3,770 net** — that is precisely the failure mode
+described. The doctrine already answers it structurally, producing ~25
+signals a year rather than ~475, and 17 in 2022 when the regime filter
+held it out of a bear market. H21 quantified the same argument: at a
+32bp break-even, activity IS the tax.
+
+The dossier's "patience gate" is `ENTRY_FILTERS` plus the H15a fill
+cap. Already present; nothing to add.
+
+### Part 3 — Premium selling. Prohibited, and unaffordable by ~100x.
+
+Short puts, jade lizards, short call spreads, short strangles, broken
+wing butterflies. This is real, well-documented professional
+methodology (tastytrade's mechanics — 45 DTE, 16-20 delta, IVR>=30,
+50% profit-taking — are published and sound). It is also excluded here
+on three independent grounds, any one of which is sufficient:
+
+1. **Doctrine prohibits it.** §87 KEEP list is long premium, long calls
+   only; premium selling is barred until short-structure margin
+   adapters are validated in Shadow. That is the operator's own
+   standing rule, not a new objection.
+2. **Capital.** A single short put at ~20% BPR on a $100 underlying
+   needs ~$2,000 of buying power; a strangle needs more. The account
+   has $29. This is not a marginal fit.
+3. **Risk shape.** These are high-POP, high-severity structures: they
+   win often and lose large. "POP > 80%" is true and is not
+   expectancy — a strategy winning 80% and losing 5x on the rest is
+   break-even before costs. The Jade Lizard's "zero upside risk" is
+   accurate as stated and understates the case: the short put leg
+   carries substantial DOWNSIDE risk, which the framing omits. An
+   account that cannot absorb one assignment has no business holding
+   undefined-risk short structures.
+
+Recorded rather than dismissed, because the mechanics are worth
+revisiting if the account is ever funded past the margin thresholds
+AND the §67 release gate is cleared — in that order.
+
+328 tests passing.

@@ -111,15 +111,21 @@ def test_summary_carries_the_bootstrap_caveat():
                     "total_r": 10.0, "rs": [0.1] * 100}],
          "break_even_bps": 15.0, "trades_per_year": 25.0,
          "sharpe_gross": 0.65,
+         "sharpe_net": 0.42, "net_bps": 5.0, "net_expectancy": 0.095,
          "bootstrap": {"iterations": 2000, "total_p05": -5.0,
                        "total_p50": 10.0, "total_p95": 25.0,
                        "losing_paths": 0.12, "dd_p05": -30.0,
-                       "dd_p50": -12.0}}
+                       "dd_p50": -12.0, "observed_total": 8.0,
+                       "observed_dd": -14.0}}
     text = summary(r)
     assert "FLOOR on the risk, never a cap" in text
     assert "serial correlation" in text
     assert "BREAK-EVEN" in text and "15 bps" in text
     assert "nothing here is adopted" in text
+    # a distribution without the observed value is unreadable
+    assert "observed +8.00" in text and "observed -14.00" in text
+    # net must be reported, not just the flattering gross figure
+    assert "0.42 NET" in text and "gross is the anchor" in text
 
 
 def test_run_robustness_end_to_end(seeded):
@@ -128,3 +134,27 @@ def test_run_robustness_end_to_end(seeded):
                         "sharpe_gross", "bootstrap"}
     assert out["costs"][0]["cost_bps"] == 0.0        # gross is the anchor
     assert isinstance(summary(out), str)
+
+
+def test_bootstrap_reports_the_observed_path_alongside_the_distribution():
+    rs = [1.0, -0.5, 0.8, -1.0, 1.2, -0.4, 0.6, -0.9, 1.1, -0.3] * 4
+    b = bootstrap(rs, iterations=200, seed=3)
+    assert b["observed_total"] == pytest.approx(sum(rs), abs=0.01)
+    assert b["observed_dd"] <= 0
+    # the observed path should sit inside the distribution it came from
+    assert b["total_p05"] <= b["observed_total"] <= b["total_p95"]
+
+
+def test_cost_is_charged_after_the_gap_check_not_before(seeded):
+    """The H15a rule tests what the MARKET did. Charging slippage first
+    would cancel fills that really would have filled just under the cap,
+    which showed up as trade counts wobbling with the cost level."""
+    from mve.setups import MAX_ENTRY_GAP
+    counts = []
+    for bps in (0.0, 2.0, 5.0, 10.0):
+        res = run_backtest(seeded, universe=["RUNR"], benchmark="SPY",
+                           sector_map={}, max_gap_pct=MAX_ENTRY_GAP,
+                           cost_bps=bps)
+        counts.append(len([t for t in res.trades if t.setup == "RS-02"]))
+    assert len(set(counts)) == 1, (
+        f"cost changed which signals were taken: {counts}")

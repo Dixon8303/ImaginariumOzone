@@ -1,4 +1,4 @@
-# Pre-registered forward hypotheses
+# Pre-registered hypotheses
 
 Claims written down **before** the data that will judge them exists.
 
@@ -8,6 +8,13 @@ across six rounds. 2006–2020 was spent on the H20 holdout. Nothing
 historical is virgin any more, so the only honest test left is
 **forward** — results from paper trading and live sessions that have
 not happened yet.
+
+Entries come in two kinds. **FWD-*** await data that does not exist
+yet. **H-*** can run on history the moment they are written — they live
+here because writing the parameters down BEFORE the first run is what
+makes a test on already-glimpsed data honest. For those, the commit
+that registers the entry must land BEFORE the commit that implements
+the study; git history is the timestamp.
 
 A hypothesis recorded here is frozen. The threshold, the direction, the
 success criterion, and the minimum sample are all fixed now, in
@@ -103,6 +110,95 @@ cannot be judged.
 **Status:** OPEN — awaiting forward data. Adoption of the cancellation
 rule itself is the operator's decision and does not depend on this
 entry; this entry checks whether the rule keeps earning its place.
+
+---
+
+## H-22 — Cross-sectional momentum, long only
+
+**Registered:** 2026-08-23, before any implementation exists. The study
+is deliberately NOT written yet.
+
+**Mechanism, stated first.** Jegadeesh & Titman (1993): rank assets
+against EACH OTHER and the leaders keep leading over 3-12 month
+horizons. It is among the most replicated anomalies in finance —
+out-of-sample across forty years, dozens of markets and several asset
+classes.
+
+This is a genuinely different claim from RS-02, not a variant of it:
+
+| | RS-02 (adopted) | H-22 |
+|---|---|---|
+| basis | absolute — is THIS stock breaking out? | relative — which names are strongest? |
+| trigger | event-driven (a breakout happens) | calendar-driven (monthly rebalance) |
+| exposure | episodic, often flat | continuously invested while names qualify |
+| exit | stop / target / 15-day cap | the next rebalance |
+| bet | this breakout continues | relative strength persists across a universe |
+
+**Every parameter is fixed here, and none is fitted to this data.**
+Each comes from published literature or from already-adopted doctrine,
+which is what makes the test meaningful despite the windows having been
+glimpsed:
+
+- **Universe:** the 21 non-benchmark tickers already in
+  `mve/universe.py`. No additions, no substitutions.
+- **Ranking metric:** 12-1 momentum via the existing `mom_12_1`
+  (`MOM_LOOKBACK` 252, `MOM_SKIP` 21). Reused deliberately so the study
+  introduces no new free parameter.
+- **Rebalance:** first trading day of each month, ranked on the prior
+  close, filled at that day's open — the same point-in-time discipline
+  as every other study here.
+- **Holdings:** two arms, top 3 and top 5, equal weight. Both are
+  counted against multiple comparisons.
+- **Eligibility:** a name must sit above its own 200-day SMA
+  (`above_sma`, adopted doctrine). Fewer qualifiers means a smaller
+  book; zero means fully in cash.
+- **Exit:** at the next rebalance. **No stop loss** — this is the point
+  of difference, not an oversight, and it is why R-multiples do not
+  apply.
+- **Costs:** charged, never gross. Monthly rebalancing of 3-5 names
+  turns over far more than RS-02's ~25 trades a year, so a gross result
+  would flatter this strategy more than anything tested so far.
+
+**Measurement.** Portfolio-level CAGR, Sharpe, max drawdown, and
+turnover. NOT R-multiples: with no stop there is no R, and quoting one
+would invite a false comparison against RS-02's +0.117R.
+
+**Benchmark: SPY buy-and-hold over the identical window, costs
+included.** This is the honest bar. A long-only, near-always-invested
+strategy that cannot beat the index does not justify its complexity,
+however good its absolute return looks in a bull decade.
+
+**Windows.** TRAIN <= 2020-12-31, TEST >= 2021-01-01 — stated with the
+caveat that since nothing is fitted, the split is a consistency check
+rather than a true holdout. Disagreement between the windows is itself
+the finding.
+
+**Success criteria, fixed now.**
+
+- **CONFIRMED** if, in BOTH windows, Sharpe exceeds SPY buy-and-hold
+  Sharpe AND max drawdown is no worse than SPY's, over at least 60
+  rebalances total.
+- **FAILED** if either window's Sharpe falls below SPY's.
+- **INCONCLUSIVE** below 60 rebalances, regardless of how the numbers
+  look.
+
+**A handicap recorded in advance, so a failure is read correctly.** The
+published effect is strongest in the LONG-SHORT spread; the short leg
+is prohibited here (§87, long premium only). A long-only version keeps
+the market beta and drops half the factor, so it is a weaker test than
+the literature's. H-22 may fail even if cross-sectional momentum is
+real — that outcome means "not capturable long-only in 21 names", not
+"the factor is false".
+
+**What confirmation would NOT license.** It is a portfolio strategy
+needing 3-5 simultaneous positions rebalanced monthly — incompatible
+with the current account, and awkward with long-premium options (buying
+calls on five names every month, at the costs `paper/option_costs.py`
+is now measuring). It does not modify RS-02 and would not replace it;
+it would earn the right to be measured alongside it, and a separate
+adoption decision.
+
+**Status:** OPEN — registered, not implemented.
 
 ---
 
