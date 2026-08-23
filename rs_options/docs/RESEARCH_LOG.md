@@ -1582,3 +1582,69 @@ revisiting if the account is ever funded past the margin thresholds
 AND the §67 release gate is cleared — in that order.
 
 328 tests passing.
+
+---
+
+## 2026-08-23 — H23 verdict: the Markov regime matrix is measuring itself
+
+First run against real history. The prediction recorded before the run
+("mostly no") holds, and the data makes the case sharper than expected.
+
+**Result: 1 of 8 tickers clears its own shuffled null; chance predicts
+0.4.** And the one that clears — SPY at 89.8% against a null 95th
+percentile of 89.7% — clears by a tenth of a percentage point.
+
+    ticker  stickiness  null mean  null p95   excess
+    SPY          89.8%      88.8%     89.7%    +1.1%   ABOVE NULL
+    AAL          83.9%      83.1%     84.3%    +0.8%   indistinguishable
+    AAPL         85.1%      84.5%     85.5%    +0.5%   indistinguishable
+    ABNB         83.2%      82.4%     84.8%    +0.8%   indistinguishable
+    AFRM         84.4%      82.2%     85.3%    +2.1%   indistinguishable
+    AMD          82.4%      82.5%     83.9%    -0.1%   indistinguishable
+    AMZN         84.2%      84.0%     85.1%    +0.2%   indistinguishable
+    APTV         84.3%      82.8%     85.7%    +1.4%   indistinguishable
+
+Roughly **99% of the "regime stickiness" the dossier reads as a finding
+is the 20-day window overlapping itself.** The market contributes one to
+two percentage points, and in seven of eight names that is not separable
+from the ticker's own shuffled returns. Note AMD is NEGATIVE: less
+sticky than its own shuffle.
+
+**The sharper finding, which the report now states itself.** Look at
+SPY's off-diagonal extremes: Bull->Bear 0.2%, Bear->Bull 0.0%. Those are
+not market facts. To flip a 20-day state to its opposite in ONE day, the
+single new bar must move the trailing window by 10 percentage points —
+essentially never. So those cells are near zero by ARITHMETIC, which
+makes the dossier's signal P(Bull) - P(Bear) determined by the label
+already held:
+
+    in Bull      +0.724 - 0.002 = +0.72
+    in Sideways  +0.040 - 0.024 = +0.02
+    in Bear       0.000 - 0.788 = -0.79
+
+**The signal reports which state you are already in. That is not a
+forecast.** Trading it reduces exactly to "go long when the 20-day
+return is >= +5%" — a plain momentum filter, reachable with one line and
+no Markov machinery, and testable directly. `signal_is_echo` now detects
+this condition and the report says so, so no future reader has to
+re-derive it.
+
+Also worth recording: the stationary mix is Bull 11.4% / Sideways 79.5%
+/ Bear 9.1%. Under the dossier's own +/-5% thresholds SPY is "Sideways"
+four days in five, so the classification spends most of its time saying
+nothing.
+
+**Verdict: REJECTED as specified.** Not adopted, not pre-registered for
+a trading test, and no further work planned. A valid version would need
+non-overlapping windows — which for 20 years of data leaves ~250
+independent observations spread over a 3x3 matrix, about 28 per cell.
+That is too thin to support a trading rule, which is the honest reason
+to stop rather than to keep refining.
+
+What the exercise was worth: it cost one module and produced a reusable
+control. `shuffled_null` is now available for any future claim about
+persistence or regime structure, and the overlapping-window trap it
+catches is common enough in retail quant material to be worth owning a
+test for.
+
+330 tests passing.
