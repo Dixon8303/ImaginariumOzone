@@ -274,6 +274,13 @@ nav.primary a:hover, nav.primary a.current { color: var(--link); }
   overflow: hidden;
   background: var(--vault-950);
   color: var(--print-50);
+  /* Brand mark motif: a rounded "bite" out of the top-right corner, echoing
+     the E.A.T. Media logo's own bitten-filmstrip mark. Progressive
+     enhancement — unsupported browsers just render a plain square corner. */
+  -webkit-mask-image: radial-gradient(circle 64px at 100% 0%, transparent 99%, #fff 100%);
+          mask-image: radial-gradient(circle 64px at 100% 0%, transparent 99%, #fff 100%);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
 }
 .hero-video-wrap {
   position: absolute;
@@ -400,6 +407,10 @@ section:last-of-type { border-bottom: none; }
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--s5);
+  -webkit-mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
+          mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
 }
 .price-card .tier-name { font-weight: 700; font-family: var(--font-ui); margin: 0 0 var(--s2); }
 .price-card .tier-price {
@@ -453,6 +464,10 @@ section:last-of-type { border-bottom: none; }
   border-radius: var(--radius);
   padding: var(--s5) var(--s6);
   margin-bottom: var(--s4);
+  -webkit-mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
+          mask-image: radial-gradient(circle 16px at 100% 0%, transparent 99%, #fff 100%);
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
 }
 .package-card h3 { font-family: var(--font-ui); font-weight: 700; font-size: var(--t-lead); letter-spacing: 0; margin: 0 0 var(--s2); }
 .package-card .pkg-includes { font-family: var(--font-body); color: var(--ink-secondary); font-size: var(--t-body); margin: 0 0 var(--s5); }
