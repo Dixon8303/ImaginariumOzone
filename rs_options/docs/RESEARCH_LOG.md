@@ -1367,3 +1367,58 @@ supported; its short leg is prohibited (§87 long premium only) but the
 long-only ranking version is a legitimate future hypothesis.
 
 313 tests passing.
+
+---
+
+## 2026-08-23 — H-22 pre-registered (cross-sectional momentum, long only)
+
+Operator approved pre-registering the one idea worth taking from the
+outside dossier. Registered in `docs/PREREGISTERED.md` **before any
+implementation exists** — the study is deliberately not written yet, so
+git history shows the parameters were fixed before the first result.
+
+`PREREGISTERED.md` now holds two kinds of entry: **FWD-*** awaiting data
+that does not exist, and **H-*** runnable on history the moment they are
+written. The second kind lives there because every historical window has
+now been glimpsed; writing the parameters down first is what keeps a
+test on glimpsed data honest.
+
+**Why this one and not the dossier's other claims.** Cross-sectional
+momentum is the only proposal in it that is (a) a mechanism rather than
+a survivorship statistic, (b) replicated out-of-sample across decades
+and asset classes by people who published their method, and (c)
+genuinely different from RS-02 rather than another filter on it — it is
+relative rather than absolute, calendar-driven rather than
+event-driven, and continuously invested rather than episodic.
+
+**No parameter is fitted.** Ranking reuses the adopted `mom_12_1`,
+eligibility reuses the adopted 200-day SMA, rebalance timing and
+top-quintile sizing come from the literature. The study therefore
+introduces no new free parameter, which is what makes it testable on
+windows whose aggregate RS-02 results are already known.
+
+**Three commitments recorded in advance, each of which makes a
+comfortable result harder rather than easier:**
+
+- The benchmark is **SPY buy-and-hold with costs**, not RS-02. A
+  long-only, near-always-invested strategy that cannot beat the index
+  does not justify its complexity, however good a bull decade looks.
+- Costs are charged. Monthly rebalancing turns over far more than
+  RS-02's ~25 trades a year, so gross figures would flatter this more
+  than anything tested so far.
+- A **handicap is recorded up front**: the published effect is
+  strongest in the long-short spread and the short leg is prohibited
+  (§87). A long-only version keeps market beta and drops half the
+  factor, so H-22 may fail even if the factor is real — that outcome
+  reads "not capturable long-only in 21 names", not "the factor is
+  false". Recording this now prevents a failure being spun later into
+  either a rejection of the literature or an excuse.
+
+**And what confirmation would not license:** it is a portfolio strategy
+needing 3-5 simultaneous positions rebalanced monthly, incompatible
+with the current account and awkward with long-premium options. It
+would earn the right to be measured alongside RS-02, not to replace it,
+and would still need its own adoption decision.
+
+Status: OPEN, registered, not implemented. Implementation is the next
+commit and is deliberately separate.
