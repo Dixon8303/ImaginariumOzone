@@ -71,6 +71,12 @@ class OpenPosition:
     invalidation_price: float   # underlying level that voids the setup
     entry_date: date | None = None        # for the time exit
     entry_underlying: float | None = None  # for the +3R target
+    # §32 opportunity score at signal. Recorded but NEVER acted on: the
+    # score failed its pre-registered holdout test (H20) and is not
+    # doctrine. It is captured so forward paper results accumulate the
+    # score->outcome pairing, which is the only clean test left now that
+    # the 2006-2020 sample is spent. See docs/PREREGISTERED.md.
+    score: int | None = None
 
     @property
     def target_price(self) -> float | None:
