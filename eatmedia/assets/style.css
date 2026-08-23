@@ -280,8 +280,8 @@ nav.primary a:hover, nav.primary a.current { color: var(--link); }
   width: 96px;
   height: 89px;
   background: var(--paper);
-  -webkit-mask-image: url(img/bite-mask.png);
-          mask-image: url(img/bite-mask.png);
+  -webkit-mask-image: url(img/bite-mask.png?v=2);
+          mask-image: url(img/bite-mask.png?v=2);
   -webkit-mask-size: 100% 100%;
           mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -424,8 +424,8 @@ section:last-of-type { border-bottom: none; }
   width: 24px;
   height: 22px;
   background: var(--paper);
-  -webkit-mask-image: url(img/bite-mask.png);
-          mask-image: url(img/bite-mask.png);
+  -webkit-mask-image: url(img/bite-mask.png?v=2);
+          mask-image: url(img/bite-mask.png?v=2);
   -webkit-mask-size: 100% 100%;
           mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
@@ -494,8 +494,8 @@ section:last-of-type { border-bottom: none; }
   width: 24px;
   height: 22px;
   background: var(--paper);
-  -webkit-mask-image: url(img/bite-mask.png);
-          mask-image: url(img/bite-mask.png);
+  -webkit-mask-image: url(img/bite-mask.png?v=2);
+          mask-image: url(img/bite-mask.png?v=2);
   -webkit-mask-size: 100% 100%;
           mask-size: 100% 100%;
   -webkit-mask-repeat: no-repeat;
