@@ -113,6 +113,23 @@ recent data). For every open options position from `data/executions.jsonl`:
 | Volatility ETPs (VXX, UVXY, and kin) | **NO long premium, ever** — these products decay structurally (contango roll), so long calls fight a built-in downward drift on top of theta. Mechanism-based rule, adopted 2026-08-16 after broker-history forensics (18 VXX trades, 67% win rate, −$857). |
 | Order type | Limit at mid, day only |
 
+**The one deliberate exception: micro-account override (paper only).**
+At paper equity under $500 — the size where 1%/5% sizing returns zero
+shares for nearly the whole universe — set `RS_MICRO_ACCOUNT_OVERRIDE=YES`
+to let the evening run buy exactly one affordable share instead of
+skipping the trade. This is NOT doctrine: none of the backtests,
+holdouts, or robustness figures in this program were measured under
+it, every trade it places is tagged `micro_override` in the ledger and
+printed in the report with the fraction of the account it commits, and
+it never touches options (a single doctrine-compliant contract needs
+roughly 100x a $500 account regardless of this setting). It exists
+because at this account size the honest choice is "one full share,
+sized by cash on hand" or "no trade" — see `paper/micro_sizing.py` for
+the reasoning and `docs/RESEARCH_LOG.md` (2026-08-24) for why it was
+built rather than just tuning `MAX_POSITION_PCT`. Turn it off, or grow
+the account past $500, and the run reverts to validated sizing with no
+other change needed.
+
 ## Active setups (§60 Level 2 — setup kill)
 
 The live scan honors `mve/setups.py :: ACTIVE_SETUPS`. Current doctrine:

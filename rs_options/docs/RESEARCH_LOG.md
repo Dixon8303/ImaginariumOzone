@@ -1807,3 +1807,52 @@ hypothesis (H-22), which failed cleanly rather than ambiguously. That
 is what the pre-registration discipline is for: a clean failure is
 worth exactly as much as it costs to obtain, which here was one
 afternoon and zero changes to live doctrine.
+
+---
+
+## 2026-08-24 — Micro-account override, built after an explicit choice
+
+Operator asked me to "adjust the parameters to fit the current amount"
+($29). Worked the arithmetic before writing any code: at 1% risk / 5%
+notional, affording even one share of the cheapest plausible name in
+this universe needs roughly $500 of equity — a fixed floor set by the
+5% cap dividing into a real stock price, not something a threshold
+tweak can close. Closing that gap the way asked (raise
+`MAX_POSITION_PCT` until $29 clears it) means raising it to roughly
+50%+, which is not "smaller doctrine trades" — the doctrine returns
+zero regardless of ticker at this equity — it is disabling the position
+cap almost entirely. That would silently make every measured result in
+this project (the +0.117R edge, the 32bp cost break-even, 0.42 net
+Sharpe) describe a strategy nobody is actually running.
+
+Explained the arithmetic and asked rather than assumed, since this is a
+risk-policy choice, not an implementation detail. Operator chose: build
+an explicit, clearly-labeled override rather than silently loosen
+doctrine or leave the account inactive.
+
+**`paper/micro_sizing.py`.** Separate module, not a parameter change to
+`position_size()`. Fails closed on `RS_MICRO_ACCOUNT_OVERRIDE` (must be
+the literal string "YES" — same pattern as `RS_PAPER_ARMED` and
+`HONEYDRIP_ARMED`), engages only below a $500 equity threshold, sizes
+to exactly one affordable share with NO risk-based math (RISK_PCT and
+MAX_POSITION_PCT are not relaxed — they are skipped, because at this
+equity they are exactly what returns zero every time), and disengages
+automatically once equity crosses the threshold with no second flag to
+remember. Every micro trade is tagged `micro_override: True` in the
+ledger and prints its fraction of account equity in the report, so a
+future study reading the paper ledger cannot mistake it for a doctrine
+trade. Capped at one open micro position at a time — stacking several
+adds concentration without diversification, since each one alone is
+already most of the account. Never touches options: `options_broker.py`
+and `option_costs.py` do not import it, and could not use it usefully
+if they did — a single doctrine-compliant contract needs roughly 100x a
+$500 account regardless of equity-sizing rules.
+
+This is explicitly NOT a research result. Nothing about single-share,
+uncapped-fraction sizing has been backtested, walk-forwarded, or
+holdout-tested — it is operational plumbing for a paper account too
+small for the validated rules to produce a trade, built and labeled as
+exactly that.
+
+326 tests passing (11 for micro_sizing, 4 integration in
+test_paper_daily.py).
