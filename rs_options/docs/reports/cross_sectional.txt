@@ -1,4 +1,4 @@
-generated: 2026-08-23
+generated: 2026-08-24
 
 CROSS-SECTIONAL MOMENTUM, LONG ONLY (H-22, §72)
 train <= 2020-12-31 | test >= 2021-01-01 | costs 5bp | monthly rebalance
@@ -20,6 +20,21 @@ TOP5 (equal weight):
   train  n=172mo  CAGR +28.72%  Sharpe  1.03  maxDD -54.46%  turnover   37%
   test   n= 67mo  CAGR +31.10%  Sharpe  0.96  maxDD -43.00%  turnover   53%
   VERDICT: FAILED — train drawdown -54.5% is worse than SPY's -52.9%
+
+CONTROL — SAME MACHINERY, RANKING REMOVED (hold EVERY
+eligible name, equal weight). The universe is 22 tickers
+chosen in 2026 and includes several of the era's largest
+winners, so ranking inside it looks good whether or not
+ranking adds anything. This row is the only way to tell
+'momentum selection works' from 'these 22 stocks went up':
+  train  n=172mo  CAGR +22.51%  Sharpe  1.01  maxDD -50.45%  turnover   24%
+  test   n= 67mo  CAGR +26.75%  Sharpe  1.18  maxDD -32.60%  turnover   27%
+  If the arms above do not clearly beat THIS, the ranking is
+  decoration and the universe is the result.
+
+ELIGIBLE NAMES PER REBALANCE — 'top N of the universe' means nothing if only N qualified:
+  train  mean 12.2  range 0-21  months fully in cash: 13
+  test   mean 14.5  range 1-21  months fully in cash: 0
 
 READING A FAILURE CORRECTLY (recorded before the run): the
 published effect is strongest in the LONG-SHORT spread, and the
