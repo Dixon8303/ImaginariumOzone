@@ -55,6 +55,8 @@ from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
 from mve.volume_profile import overhead_supply, point_of_control
 
+from .growth_tracker import format_growth, growth_summary, load_equity_history
+from .growth_tracker import record_equity
 from .micro_sizing import (count_open_micro_positions, micro_mode_banner,
                            micro_override_active, micro_position_size,
                            micro_trade_warning)
@@ -325,6 +327,12 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     positions = broker.positions()
     ledger = load_ledger()
 
+    # Growth tracking: one snapshot per session, reporting only. This
+    # does not feed position sizing anywhere — sizing reads equity fresh
+    # from the broker each run regardless (see paper/growth_tracker.py).
+    record_equity(today, equity)
+    growth = growth_summary(load_equity_history())
+
     # 1. refine estimated entries with actual fills
     for sym, rec in ledger["open"].items():
         if rec.get("entry_estimated") and rec.get("order_id"):
@@ -469,7 +477,7 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
                         closed_today, time_exits, ledger, option_review,
                         option_cycle=opt, gap_cancelled=gap_cancelled,
                         cost_rows=cost_rows, equity=equity,
-                        micro_warnings=micro_warnings)
+                        micro_warnings=micro_warnings, growth=growth)
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
@@ -477,10 +485,12 @@ def build_report(today, acct, positions, signals, placed, skipped,
                  option_review: str = "", option_cycle=None,
                  gap_cancelled=None, cost_rows=None,
                  equity: float | None = None,
-                 micro_warnings=None) -> str:
+                 micro_warnings=None, growth=None) -> str:
     lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}"]
+    if growth:
+        lines += ["", format_growth(growth)]
     if micro_warnings:
         lines += ["", *micro_warnings]
     # Volatility regime is CONTEXT ONLY — H8 is untested, so it gates

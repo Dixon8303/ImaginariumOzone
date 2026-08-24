@@ -1856,3 +1856,48 @@ exactly that.
 
 326 tests passing (11 for micro_sizing, 4 integration in
 test_paper_daily.py).
+
+---
+
+## 2026-08-24 — Growth tracking added; "recovery" scoped down, not built as asked
+
+Operator asked to turn the micro override into "a growth/recovery
+module that takes small accounts to larger balances in small (hopefully)
+daily increments." Two problems with the request as phrased, addressed
+before writing anything.
+
+**"Daily" does not describe this system.** RS-02 fires ~25 times a year
+across the whole universe — about once every 10 trading days. A module
+promising daily increments would be making a claim the system cannot
+keep; most sessions will show no change, correctly.
+
+**"Recovery" is ambiguous between two opposite designs.** Progress
+tracking (harmless, useful) and resizing up after a loss to make it
+back faster (martingale/revenge sizing — one of the most reliable ways
+to destroy a small account, and small accounts have the least room to
+survive the losing streak that eventually ends it). Asked rather than
+assumed. Operator chose: never increase size after a loss; growth comes
+only from wins and contributions, reported clearly.
+
+**`paper/growth_tracker.py`.** Records one equity snapshot per trading
+session (deduped by date, so a preopen-then-evening pair or a retried
+run does not inflate the log) and reports cumulative growth, days flat
+vs days moved, peak/trough, and distance to the $500 threshold where
+the micro override steps aside for doctrine sizing. Structurally
+prevented from influencing sizing, not just documented as not doing so:
+it imports nothing from `position_size`, `micro_position_size`,
+`RISK_PCT`, or `MAX_POSITION_PCT`, and a test parses the module's AST to
+assert none of those names are ever imported — so a future edit that
+tried to wire growth into sizing would fail a test before it could ship.
+`preopen_report` deliberately does not call it, staying exactly as
+read-only as its docstring already claimed.
+
+What "growth" means here needed no new logic to enable: `position_size`
+and `micro_position_size` already read equity fresh from the broker
+every run, so a winning trade already enlarges the next trade
+automatically and a flat account already does not enlarge anything.
+There was no compounding mechanism missing — only visibility into
+whether compounding was happening.
+
+380 tests passing (13 for growth_tracker, 5 integration in
+test_paper_daily.py).
