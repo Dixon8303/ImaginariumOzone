@@ -1,0 +1,38 @@
+generated: 2026-08-23
+
+CROSS-SECTIONAL MOMENTUM, LONG ONLY (H-22, §72)
+train <= 2020-12-31 | test >= 2021-01-01 | costs 5bp | monthly rebalance
+
+Implements docs/PREREGISTERED.md :: H-22 as frozen. No parameter
+was chosen here; ranking reuses the adopted mom_12_1 and
+eligibility the adopted 200-day SMA.
+
+BENCHMARK — SPY buy-and-hold, same grid, costs included:
+  train  n=172mo  CAGR  +7.46%  Sharpe  0.52  maxDD -52.87%  turnover    0%
+  test   n= 67mo  CAGR +13.17%  Sharpe  0.91  maxDD -24.19%  turnover    0%
+
+TOP3 (equal weight):
+  train  n=172mo  CAGR +31.68%  Sharpe  1.00  maxDD -55.01%  turnover   48%
+  test   n= 67mo  CAGR +45.64%  Sharpe  1.06  maxDD -42.73%  turnover   50%
+  VERDICT: FAILED — train drawdown -55.0% is worse than SPY's -52.9%
+
+TOP5 (equal weight):
+  train  n=172mo  CAGR +28.72%  Sharpe  1.03  maxDD -54.46%  turnover   37%
+  test   n= 67mo  CAGR +31.10%  Sharpe  0.96  maxDD -43.00%  turnover   53%
+  VERDICT: FAILED — train drawdown -54.5% is worse than SPY's -52.9%
+
+READING A FAILURE CORRECTLY (recorded before the run): the
+published effect is strongest in the LONG-SHORT spread, and the
+short leg is prohibited (§87). A long-only version keeps market
+beta and drops half the factor, so failure here means 'not
+capturable long-only in 21 names', NOT 'the factor is false'.
+
+COST NOTE: names carried across a rebalance pay nothing; only
+entries and exits are charged. Equal-weight drift is not
+re-charged, so these figures are slightly OPTIMISTIC on cost —
+read them next to the turnover column.
+
+EVEN IF CONFIRMED: this is a portfolio strategy needing 3-5
+simultaneous positions rebalanced monthly. It does not modify
+RS-02, would not replace it, and needs its own adoption
+decision. LAW 12/20 — nothing here is adopted.
