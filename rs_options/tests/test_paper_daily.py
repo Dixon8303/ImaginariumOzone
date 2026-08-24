@@ -404,3 +404,58 @@ def test_tonights_order_is_not_cancelled_before_the_open():
     daily.run(broker, breakout_universe(), TODAY)
     ledger = daily.load_ledger()
     assert ledger["open"], "tonight's entries must survive the same run"
+
+
+# ----------------------------------- micro-account override integration
+
+def cheap_breakout_universe(end=TODAY):
+    """Same shape as breakout_universe but priced under $29, so a
+    micro-account test can actually afford the signal it finds."""
+    rising = [10.0 + 0.03 * i for i in range(299)] + [10.0 + 0.03 * 298 + 0.9]
+    bars = {t: make_bars([50.0 + 0.005 * i for i in range(300)], end=end)
+            for t in daily.required_tickers()}
+    bars["NVDA"] = make_bars(rising, last_volume=2_000_000, end=end)
+    return bars
+
+
+def test_run_ignores_micro_override_when_not_armed(monkeypatch):
+    """Default behaviour, tiny equity, override unset: doctrine sizing
+    applies (0 shares) and no micro trade is placed."""
+    monkeypatch.delenv("RS_MICRO_ACCOUNT_OVERRIDE", raising=False)
+    broker = FakeBroker(equity=29.0)
+    report = daily.run(broker, breakout_universe(), TODAY)
+    assert broker.brackets == []
+    assert "MICRO OVERRIDE" not in report
+
+
+def test_run_places_one_share_when_micro_override_armed(monkeypatch):
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+    broker = FakeBroker(equity=29.0)
+    report = daily.run(broker, cheap_breakout_universe(), TODAY)
+    assert broker.brackets and broker.brackets[0][1] == 1   # qty == 1
+    ledger = daily.load_ledger()
+    assert ledger["open"]["NVDA"]["micro_override"] is True
+    assert "MICRO OVERRIDE ACTIVE" in report
+    assert "MICRO OVERRIDE: NVDA" in report
+
+
+def test_micro_override_caps_at_one_concurrent_position(monkeypatch):
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+    daily.save_ledger({"open": {"OLD": dict(
+        entry_date="2026-08-10", entry=10.0, entry_estimated=False,
+        stop=9.0, target=13.0, qty=1, order_id="x", setup="RS-02",
+        micro_override=True)}, "closed": []})
+    broker = FakeBroker(equity=29.0,
+                        positions={"OLD": {"qty": "1", "unrealized_pl": "0"}})
+    daily.run(broker, cheap_breakout_universe(), TODAY)
+    assert broker.brackets == []                # second micro trade blocked
+
+
+def test_micro_override_steps_aside_once_equity_recovers(monkeypatch):
+    """Crossing the threshold restores doctrine sizing automatically,
+    with no separate flag to unset."""
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+    broker = FakeBroker(equity=100_000.0)
+    report = daily.run(broker, breakout_universe(), TODAY)
+    assert "MICRO OVERRIDE" not in report
+    assert broker.brackets and broker.brackets[0][1] > 1    # doctrine sizing

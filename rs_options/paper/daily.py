@@ -55,6 +55,9 @@ from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
 from mve.volume_profile import overhead_supply, point_of_control
 
+from .micro_sizing import (count_open_micro_positions, micro_mode_banner,
+                           micro_override_active, micro_position_size,
+                           micro_trade_warning)
 from .option_costs import collect as collect_option_costs
 from .option_costs import format_costs
 from .option_costs import record as record_option_costs
@@ -397,6 +400,8 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
 
     # 4. new entries
     signals = scan(all_bars)
+    micro = micro_override_active(equity)
+    micro_warnings = [micro_mode_banner(equity)] if micro else []
     placed, skipped = [], []
     for sig in signals:
         sym = sig["ticker"]
@@ -406,10 +411,25 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
         if len(positions) + len(placed) >= MAX_OPEN:
             skipped.append((sym, "position cap"))
             continue
-        qty = position_size(equity, sig["close"], sig["stop"])
-        if qty < 1:
-            skipped.append((sym, "size < 1 share at 1% risk"))
-            continue
+        if micro:
+            # Operator-authorized override for accounts too small for
+            # doctrine sizing to ever return a share — see
+            # paper/micro_sizing.py. Never applied to options.
+            if count_open_micro_positions(ledger) >= 1:
+                skipped.append((sym, "micro override: a micro position "
+                                "is already open"))
+                continue
+            qty = micro_position_size(equity, sig["close"])
+            if qty < 1:
+                skipped.append((sym, "micro override: cannot afford "
+                                "even 1 share"))
+                continue
+            micro_warnings += micro_trade_warning(sym, equity, sig["close"])
+        else:
+            qty = position_size(equity, sig["close"], sig["stop"])
+            if qty < 1:
+                skipped.append((sym, "size < 1 share at 1% risk"))
+                continue
         # H15a (ADOPTED): cap what doctrine will pay at the open. A
         # limit here IS the backtested cancellation — it fills at the
         # open when the open is at or below the cap, and does not fill
@@ -422,7 +442,8 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             entry_date=today, entry=sig["close"], entry_estimated=True,
             entry_cap=cap, signal_close=sig["close"],
             stop=sig["stop"], target=sig["target"], qty=qty,
-            order_id=order.get("id"), setup="RS-02")
+            order_id=order.get("id"), setup="RS-02",
+            micro_override=micro)
 
     # ── autonomous PAPER options (the co-pilot side, now hands-off) ──
     opt = ([], [], ["options disabled: broker has no options support"])
@@ -447,17 +468,21 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     return build_report(today, acct, positions, signals, placed, skipped,
                         closed_today, time_exits, ledger, option_review,
                         option_cycle=opt, gap_cancelled=gap_cancelled,
-                        cost_rows=cost_rows, equity=equity)
+                        cost_rows=cost_rows, equity=equity,
+                        micro_warnings=micro_warnings)
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
                  closed_today, time_exits, ledger,
                  option_review: str = "", option_cycle=None,
                  gap_cancelled=None, cost_rows=None,
-                 equity: float | None = None) -> str:
+                 equity: float | None = None,
+                 micro_warnings=None) -> str:
     lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}"]
+    if micro_warnings:
+        lines += ["", *micro_warnings]
     # Volatility regime is CONTEXT ONLY — H8 is untested, so it gates
     # nothing. It tells the operator what environment the picks are in.
     ratio = ratio_on(load_term_structure(), today)
