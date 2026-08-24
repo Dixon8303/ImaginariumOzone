@@ -59,6 +59,8 @@ python -m mve.fundamentals          # SEC EDGAR filings (needs
 python -m mve.hypotheses            # §72 rounds 5-6: H9 news, H10 fundamentals,
                                     # H11 volume, H13 vol-contraction, H14 close
                                     # strength, H15 gap cost, H16 clustering
+python -m mve.cross_sectional       # H-22: cross-sectional momentum, long
+                                    # only, vs SPY buy-and-hold with costs
 python -m mve.markov                # H23: regime transition matrix vs the
                                     # shuffled null that makes it readable
 python -m mve.robustness            # H21: transaction costs, break-even,

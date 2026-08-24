@@ -198,7 +198,17 @@ is now measuring). It does not modify RS-02 and would not replace it;
 it would earn the right to be measured alongside it, and a separate
 adoption decision.
 
-**Status:** OPEN — registered, not implemented.
+**Implementation note (2026-08-23, added after the fact — the claim
+above is NOT edited).** The entry says "the 21 non-benchmark tickers".
+`UNIVERSE` actually holds 22, none of them the benchmark; the 21 was a
+miscount here, not a different universe. The binding intent — the
+existing universe, no additions or substitutions — is what
+`mve.cross_sectional` uses. Recorded rather than silently reconciled,
+because editing a registration to match the code is how
+pre-registration stops meaning anything.
+
+**Status:** OPEN — implemented in `mve.cross_sectional`, awaiting a run
+against real bars.
 
 ---
 

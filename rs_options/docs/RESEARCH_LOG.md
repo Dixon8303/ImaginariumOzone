@@ -1648,3 +1648,55 @@ catches is common enough in retail quant material to be worth owning a
 test for.
 
 330 tests passing.
+
+---
+
+## 2026-08-23 — H-22 implemented (registration first, code second)
+
+Operator gave the go-ahead. `mve.cross_sectional` implements
+`docs/PREREGISTERED.md :: H-22` exactly as frozen, in a commit that
+lands AFTER the registration commit — git history carries the ordering,
+which is the only thing that makes a test on already-glimpsed windows
+worth running.
+
+Mechanics, all copied from the registration rather than chosen here:
+monthly rebalance on the first trading day, ranked on data STRICTLY
+before that day and filled at its open; top-3 and top-5 arms, equal
+weight; eligibility by the adopted 200-day SMA; ranking by the adopted
+`mom_12_1`; no stop, exit at the next rebalance; costs charged at 5bp.
+Measurement is portfolio-level (CAGR, Sharpe, max drawdown, turnover)
+against SPY buy-and-hold on the identical grid — never R-multiples,
+since with no stop there is no R and quoting one would invite a false
+comparison against RS-02's +0.117R.
+
+**A bug the tests caught on first run, worth recording because of its
+shape.** `UNIVERSE` does NOT contain the benchmark. Loading only
+`UNIVERSE` therefore left no SPY frame, and since SPY defines the
+monthly grid, every window returned an empty dict — the study produced
+NOTHING while raising no error. A silent nothing is the worst failure
+mode available to a research tool: it looks like "no result" rather
+than "broken", and on real data it would have been reported as an
+inconclusive study rather than a defect. Now loaded via `_load`, which
+adds the benchmark explicitly and raises loudly if it is absent, with a
+test asserting the benchmark is present.
+
+**A discrepancy in my own registration, recorded rather than tidied
+away.** The entry says "the 21 non-benchmark tickers already in
+`mve/universe.py`". There are 22. The number was a miscount when I
+wrote the registration; the universe itself is unchanged and the
+binding intent ("no additions, no substitutions") is what the code
+uses. The registration text is left exactly as written and the
+correction is appended beneath it — editing a frozen claim to match the
+code afterwards would destroy the only property that makes the file
+worth keeping.
+
+Verdict logic implements the registered criteria literally: CONFIRMED
+needs BOTH windows to beat SPY on Sharpe AND to hold drawdown no worse,
+over at least 60 rebalances; below 60 the answer is INCONCLUSIVE
+regardless of how the numbers look. The handicap recorded in advance —
+that the published effect is strongest in the long-short spread and the
+short leg is prohibited — is printed with every result, so a failure
+reads as "not capturable long-only in 21 names" rather than "the factor
+is false".
+
+Not yet run against real bars. 343 tests passing.
