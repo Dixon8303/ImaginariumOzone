@@ -210,6 +210,46 @@ pre-registration stops meaning anything.
 **Status:** OPEN — implemented in `mve.cross_sectional`, awaiting a run
 against real bars.
 
+**Verdict (2026-08-24).** FAILED, both arms, by the registered
+criterion — train drawdown (TOP3 -55.0%, TOP5 -54.5%) worse than SPY's
+-52.9%. Sharpe beat SPY in both windows for both arms; the criterion
+required BOTH clauses and the drawdown clause was the one that bound.
+
+The control added post-hoc (`universe_buy_hold`: hold every eligible
+name, no ranking) makes the failure more informative than a bare FAILED
+would suggest. Against the control, in EVERY window, on BOTH
+risk-adjusted measures:
+
+    TOP3 train: Sharpe 1.00 vs control 1.01 (-0.01)   DD -55.0% vs -50.5% (worse by 4.6pp)
+    TOP3 test:  Sharpe 1.06 vs control 1.18 (-0.12)   DD -42.7% vs -32.6% (worse by 10.1pp)
+    TOP5 train: Sharpe 1.03 vs control 1.01 (+0.02)   DD -54.5% vs -50.5% (worse by 4.0pp)
+    TOP5 test:  Sharpe 0.96 vs control 1.18 (-0.22)   DD -43.0% vs -32.6% (worse by 10.4pp)
+
+Concentrating to 3-5 names raised nominal CAGR (TOP3 test +45.6% vs
+control's +26.8%) but did NOT raise Sharpe — it fell in 3 of 4 windows,
+most sharply on test, the window that matters most for judging whether
+this generalizes. The extra CAGR is concentration risk, not selection
+skill: fewer names means more variance, which mechanically lifts CAGR
+under compounding without improving return per unit of risk. The
+handicap recorded above (long-only drops the literature's short leg)
+remains true, but does not rescue this: even the handicapped long-only
+version underperforms its own no-selection control on every
+risk-adjusted measure, which a genuine long-only momentum edge would
+not do.
+
+Read together with the eligibility row (mean 12-15 names qualify per
+month; the filter is a real cut, not "top 3 of 3") this is a clean
+result, not an underpowered one: cross-sectional momentum ranking, on
+top of the adopted trend filter, adds concentration and subtracts
+risk-adjusted return, in this universe, on both measures, in both
+windows.
+
+**FAILED. Not adopted. No further work planned** — a null result this
+clean does not call for retuning TOP_N or the rebalance frequency; that
+would be searching for the one configuration where concentration
+happens to pay, which is exactly the multiple-comparisons trap this
+project's guards exist to catch.
+
 ---
 
 ## How to close an entry

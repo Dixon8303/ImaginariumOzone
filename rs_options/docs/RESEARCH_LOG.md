@@ -1757,3 +1757,53 @@ result the program has produced.
 
 Not adopted. Awaiting the control's numbers before the failure is
 interpreted further.
+
+---
+
+## 2026-08-24 — H-22 closed: FAILED, and the control shows why
+
+The control run landed. Against `universe_buy_hold` (same machinery,
+ranking removed, hold every eligible name):
+
+    TOP3 train: Sharpe 1.00 vs control 1.01   DD -55.0% vs -50.5% (worse)
+    TOP3 test:  Sharpe 1.06 vs control 1.18   DD -42.7% vs -32.6% (worse)
+    TOP5 train: Sharpe 1.03 vs control 1.01   DD -54.5% vs -50.5% (worse)
+    TOP5 test:  Sharpe 0.96 vs control 1.18   DD -43.0% vs -32.6% (worse)
+
+Every window, both arms, both risk-adjusted measures: the ranked
+portfolio is no better than — usually worse than — holding everything
+that passed the trend filter with no ranking at all. Test Sharpe fell
+by 0.12-0.22 versus the control while nominal CAGR rose (TOP3 test
++45.6% vs control's +26.8%). That is concentration, not selection:
+fewer names raises variance, which mechanically lifts CAGR under
+compounding without improving return per unit of risk. The eligibility
+row rules out the trivial explanation — a mean of 12-15 names qualified
+per month, so picking 3 was a real cut, not "top 3 of 3."
+
+This makes the registered FAILED verdict (train drawdown -55.0% vs
+SPY's -52.9%) land differently than it looked before the control. It
+was not a strategy that narrowly missed on one clause of two — the
+control shows the ranking itself was never adding value on the axis
+that matters. The handicap recorded before the run (long-only drops the
+literature's short leg) is real and stands, but does not rescue this
+result: even granting every benefit of that doubt, the long-only
+version underperforms its own no-selection control on every
+risk-adjusted measure in every window, which a genuine edge should not
+do.
+
+**Closed. FAILED. Not adopted. No further tuning planned** — retuning
+TOP_N or rebalance frequency in search of a configuration where
+concentration happens to pay would be the multiple-comparisons trap
+this project exists to avoid, on a result clean enough not to need it.
+
+`docs/PREREGISTERED.md :: H-22` updated per its own closing rule: the
+original registration text is untouched, the verdict is appended
+beneath it, dated.
+
+Net for the round: the outside dossier contributed two real
+infrastructure gains — the transaction-cost model and the Sharpe/
+bootstrap suite (H21) — and one genuinely new, properly falsifiable
+hypothesis (H-22), which failed cleanly rather than ambiguously. That
+is what the pre-registration discipline is for: a clean failure is
+worth exactly as much as it costs to obtain, which here was one
+afternoon and zero changes to live doctrine.
