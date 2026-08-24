@@ -1700,3 +1700,60 @@ reads as "not capturable long-only in 21 names" rather than "the factor
 is false".
 
 Not yet run against real bars. 343 tests passing.
+
+---
+
+## 2026-08-24 — H-22 verdict: FAILED on drawdown, and the CAGR is suspect
+
+First run against real bars.
+
+    SPY   train  CAGR  +7.46%  Sharpe 0.52  maxDD -52.87%
+    TOP3  train  CAGR +31.68%  Sharpe 1.00  maxDD -55.01%  turnover 48%
+    TOP5  train  CAGR +28.72%  Sharpe 1.03  maxDD -54.46%  turnover 37%
+    SPY   test   CAGR +13.17%  Sharpe 0.91  maxDD -24.19%
+    TOP3  test   CAGR +45.64%  Sharpe 1.06  maxDD -42.73%  turnover 50%
+    TOP5  test   CAGR +31.10%  Sharpe 0.96  maxDD -43.00%  turnover 53%
+
+**Verdict: FAILED, both arms.** It beat SPY on Sharpe in BOTH windows
+(1.00 vs 0.52 train, 1.06 vs 0.91 test) and roughly quadrupled the
+CAGR, but train drawdown came in at -55.0% against SPY's -52.9%. The
+registered criterion required Sharpe up AND drawdown no worse. It
+failed by 2.1 percentage points on the second clause. The criterion was
+frozen before the run and is not being relitigated — that is the whole
+value of having frozen it, and this is the first time the drawdown
+clause has been the binding one.
+
+**The +31.68% CAGR is the part that should worry rather than excite.**
+A simple monthly momentum rule does not produce that over 14 years. The
+first hypothesis for an extraordinary backtest is that the test is
+broken, not that free money was found.
+
+The likely mechanism is the universe. It is 22 tickers CHOSEN IN 2026 —
+AAPL, AMZN, NVDA, TSLA, META, NFLX, MSFT, AMD, MU, GOOGL plus a handful
+of laggards. Ranking by momentum inside a basket that already contains
+the era's largest winners will look spectacular whether or not the
+ranking does any work. Checked whether this is a listing-date artifact:
+it mostly is not — only PLTR is recent, so the bias is not "names that
+did not exist" but "names we now know turned out well".
+
+**So the control was built: the same machinery with RANKING REMOVED** —
+hold every eligible name, equal weight, same grid, same costs. If the
+arms do not clearly beat that, the ranking is decoration and the
+universe is the result. Also added an eligibility count per rebalance,
+because "top 3 of the universe" means nothing if only 3 names ever
+qualified.
+
+Discipline note on adding a check after seeing results: defensible here
+ONLY because this one can make the result look worse or expose it as an
+artifact, and cannot rescue it. A post-hoc addition capable of rescuing
+a failed result would be p-hacking. Direction matters.
+
+**A risk finding independent of the verdict:** a three-name book
+carried SPY-sized drawdown (-55% vs -52.9%). Concentration bought
+index-level crash risk with none of the diversification. The frozen
+criterion included drawdown for exactly this reason, and it earned its
+place — on Sharpe and CAGR alone this would have looked like the best
+result the program has produced.
+
+Not adopted. Awaiting the control's numbers before the failure is
+interpreted further.

@@ -150,3 +150,44 @@ def test_summary_carries_the_handicap_and_the_cost_caveat(seeded):
     assert "slightly OPTIMISTIC on cost" in text
     assert "nothing here is adopted" in text
     assert "would not replace it" in text
+
+
+# ------------------------------- the no-selection control (added post-hoc)
+
+def test_control_removes_ranking_but_keeps_the_machinery(seeded):
+    """The universe is 22 tickers chosen in 2026 containing several of
+    the era's biggest winners. Ranking inside it looks good whether or
+    not ranking adds anything, so the control holds EVERY eligible name
+    — identical mechanics, selection removed."""
+    from mve.cross_sectional import universe_buy_hold
+    frames = _frames(seeded)
+    ctrl = universe_buy_hold(frames, None, None)
+    arm = run_arm(frames, 3, None, None)
+    assert ctrl["periods"] == arm["periods"]        # same grid
+    assert set(ctrl) >= {"cagr", "sharpe", "max_drawdown", "turnover"}
+
+
+def test_control_holds_at_least_as_many_names_so_turnover_is_lower(seeded):
+    """Holding everything eligible cannot churn more than picking 3 of
+    them — if it did, the control is not a control."""
+    from mve.cross_sectional import universe_buy_hold
+    frames = _frames(seeded)
+    ctrl = universe_buy_hold(frames, None, None)
+    arm = run_arm(frames, 3, None, None)
+    assert ctrl["turnover"] <= arm["turnover"] + 1e-9
+
+
+def test_eligible_counts_expose_a_non_selecting_arm(seeded):
+    """'Top 3 of the universe' is meaningless if only 3 ever qualified."""
+    from mve.cross_sectional import eligible_counts
+    e = eligible_counts(_frames(seeded), None, None)
+    assert set(e) == {"mean", "min", "max", "empty_months"}
+    assert e["min"] <= e["mean"] <= e["max"]
+    assert e["empty_months"] >= 0
+
+
+def test_report_shows_the_control_and_the_eligibility_row(seeded):
+    text = summary(run_h22(seeded))
+    assert "RANKING REMOVED" in text
+    assert "the ranking is" in text and "decoration" in text
+    assert "ELIGIBLE NAMES PER REBALANCE" in text
