@@ -153,6 +153,79 @@ def run_arm(frames: dict, top_n: int, start: str | None, end: str | None,
     return _stats(monthly, turnovers, len(rebals) - 1)
 
 
+def eligible_counts(frames: dict, start: str | None,
+                    end: str | None) -> dict:
+    """How many names pass the filter at each rebalance. If the mean is
+    near the arm size, "top 3 of the universe" is not selecting
+    anything — it is holding whatever qualified."""
+    bench = frames.get(BENCHMARK)
+    dates = [d for d in bench["trade_date"]
+             if (start is None or d >= start) and (end is None or d <= end)]
+    counts = []
+    for asof in rebalance_dates(dates):
+        n = 0
+        for ticker, bars in frames.items():
+            if ticker == BENCHMARK:
+                continue
+            prior = bars[bars["trade_date"] < asof]
+            if len(prior) >= MOM_LOOKBACK + 1 and above_sma(prior):
+                n += 1
+        counts.append(n)
+    if not counts:
+        return {}
+    return {"mean": sum(counts) / len(counts),
+            "min": min(counts), "max": max(counts),
+            "empty_months": sum(1 for n in counts if n == 0)}
+
+
+def universe_buy_hold(frames: dict, start: str | None, end: str | None,
+                      cost_bps: float = COST_BPS) -> dict:
+    """THE CONTROL THAT MATTERS, added after the run as a DIAGNOSTIC.
+
+    Hold EVERY eligible name, equal weight, on the same monthly grid —
+    the identical machinery with the RANKING REMOVED. The universe is 22
+    tickers chosen in 2026, and it contains several of the largest
+    winners of the period. Ranking within a basket of known winners will
+    look spectacular whether or not ranking adds anything, so the only
+    way to separate "momentum selection works" from "these 22 stocks
+    went up" is to run the version that selects nothing.
+
+    Added post-hoc, which is only defensible because it can make the
+    result look WORSE or reveal it as artifact — never rescue it. A
+    post-hoc check that could rescue a failed result would be
+    p-hacking; this one cannot.
+    """
+    bench = frames.get(BENCHMARK)
+    if bench is None:
+        return {}
+    dates = [d for d in bench["trade_date"]
+             if (start is None or d >= start) and (end is None or d <= end)]
+    rebals = rebalance_dates(dates)
+    if len(rebals) < 2:
+        return {}
+    c = cost_bps / 10_000.0
+    held, monthly, turnovers = [], [], []
+    for i in range(len(rebals) - 1):
+        asof, nxt = rebals[i], rebals[i + 1]
+        target = [t for t in frames
+                  if t != BENCHMARK
+                  and len(frames[t][frames[t]["trade_date"] < asof])
+                  >= MOM_LOOKBACK + 1
+                  and above_sma(frames[t][frames[t]["trade_date"] < asof])]
+        rets = []
+        for t in target:
+            o0, o1 = _open_on(frames[t], asof), _open_on(frames[t], nxt)
+            if o0 and o1:
+                rets.append(o1 / o0 - 1.0)
+        gross = (sum(rets) / len(target)) if target and rets else 0.0
+        changed = len(set(target) ^ set(held))
+        turnover = changed / max(len(target), len(held), 1)
+        monthly.append(gross - turnover * 2.0 * c)
+        turnovers.append(turnover)
+        held = target
+    return _stats(monthly, turnovers, len(rebals) - 1)
+
+
 def buy_hold(frames: dict, start: str | None, end: str | None,
              cost_bps: float = COST_BPS) -> dict:
     """SPY buy-and-hold on the same monthly grid, costs included. The
@@ -209,9 +282,12 @@ def _stats(monthly: list, turnovers: list, periods: int) -> dict:
 def run_h22(store: DataStore) -> dict:
     frames = _load(store)
     windows = {"train": (None, TRAIN_END), "test": (TEST_START, None)}
-    out = {"arms": {}, "benchmark": {}}
+    out = {"arms": {}, "benchmark": {}, "no_selection": {},
+           "eligible": {}}
     for label, (s, e) in windows.items():
         out["benchmark"][label] = buy_hold(frames, s, e)
+        out["no_selection"][label] = universe_buy_hold(frames, s, e)
+        out["eligible"][label] = eligible_counts(frames, s, e)
         for n in TOP_N_ARMS:
             out["arms"].setdefault(f"top{n}", {})[label] = run_arm(
                 frames, n, s, e)
@@ -273,6 +349,33 @@ def summary(results: dict) -> str:
                   f"  train  {_fmt(arm.get('train'))}",
                   f"  test   {_fmt(arm.get('test'))}",
                   f"  VERDICT: {v} — {why}"]
+
+    ns = results.get("no_selection") or {}
+    if ns:
+        lines += [
+            "",
+            "CONTROL — SAME MACHINERY, RANKING REMOVED (hold EVERY",
+            "eligible name, equal weight). The universe is 22 tickers",
+            "chosen in 2026 and includes several of the era's largest",
+            "winners, so ranking inside it looks good whether or not",
+            "ranking adds anything. This row is the only way to tell",
+            "'momentum selection works' from 'these 22 stocks went up':",
+            f"  train  {_fmt(ns.get('train'))}",
+            f"  test   {_fmt(ns.get('test'))}",
+            "  If the arms above do not clearly beat THIS, the ranking is",
+            "  decoration and the universe is the result.",
+        ]
+    el = results.get("eligible") or {}
+    if el.get("train") or el.get("test"):
+        lines.append("")
+        lines.append("ELIGIBLE NAMES PER REBALANCE — 'top N of the "
+                     "universe' means nothing if only N qualified:")
+        for label in ("train", "test"):
+            e = el.get(label) or {}
+            if e:
+                lines.append(f"  {label:<6} mean {e['mean']:.1f}  "
+                             f"range {e['min']}-{e['max']}  "
+                             f"months fully in cash: {e['empty_months']}")
 
     lines += [
         "",
