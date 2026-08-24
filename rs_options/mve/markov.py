@@ -134,6 +134,23 @@ def signal_strength(matrix: dict, state: int) -> float:
     return row.get(1, 0.0) - row.get(-1, 0.0)
 
 
+ECHO_MAX = 0.05           # opposite-state transition below this is arithmetic
+
+
+def signal_is_echo(matrix: dict, limit: float = ECHO_MAX) -> bool:
+    """True when the signal cannot be a forecast, only a restatement.
+
+    To flip Bull (>= +5% over 20 days) to Bear (<= -5%) in ONE day, the
+    single new bar must move the trailing window by 10 percentage
+    points. That essentially never happens, so P(Bull->Bear) and
+    P(Bear->Bull) are near zero by ARITHMETIC rather than by market
+    behaviour. When both are, P(Bull) - P(Bear) is determined by the
+    current label: strongly positive in Bull, strongly negative in Bear.
+    It reports the state you are already in, which you already know."""
+    return (matrix.get(1, {}).get(-1, 1.0) < limit
+            and matrix.get(-1, {}).get(1, 1.0) < limit)
+
+
 def analyse(closes: list, ticker: str) -> dict:
     states = label_states(closes)
     if len(states) < LOOKBACK * 3:
@@ -152,6 +169,7 @@ def analyse(closes: list, ticker: str) -> dict:
         "beats_null": (real > null["p95"]) if null else None,
         "stationary": stationary(matrix),
         "signal": {s: signal_strength(matrix, s) for s in STATES},
+        "signal_echo": signal_is_echo(matrix),
     }
 
 
@@ -208,6 +226,19 @@ def summary(results: list) -> str:
         lines.append("  signal P(Bull)-P(Bear) by current state: " +
                      ", ".join(f"{LABELS[s]} {r0['signal'][s]:+.2f}"
                                for s in STATES))
+        if r0.get("signal_echo"):
+            lines += [
+                "  SIGNAL IS AN ECHO, NOT A FORECAST: P(Bull->Bear) and",
+                "  P(Bear->Bull) are both under "
+                f"{ECHO_MAX:.0%} — near zero by ARITHMETIC, since flipping",
+                "  a 20-day state to its opposite in one day needs the new",
+                "  bar to move the window 10 percentage points. So the",
+                "  signal is fixed by the label you already hold: strongly",
+                "  positive in Bull, strongly negative in Bear. Trading it",
+                "  reduces to 'go long when the 20-day return is >= +5%' —",
+                "  a plain momentum filter, reachable without any of this",
+                "  machinery, and testable directly.",
+            ]
         st = r0["stationary"]
         lines.append("  stationary mix: " +
                      ", ".join(f"{LABELS[s]} {st[s]:.1%}" for s in STATES)

@@ -105,3 +105,27 @@ def test_summary_leads_with_the_null_and_refuses_to_trade_it():
 
 def test_summary_survives_an_unanalysable_ticker():
     assert isinstance(summary([{}, None]), str)
+
+
+def test_echo_detected_when_opposite_transitions_are_arithmetically_zero():
+    """The sharper finding: with 20-day states, Bull->Bear in one day
+    needs a 10pp window move, so those cells are ~0 by arithmetic. The
+    signal then just restates the current label."""
+    from mve.markov import signal_is_echo
+    structural = {1: {1: 0.72, 0: 0.27, -1: 0.002},
+                  0: {1: 0.04, 0: 0.94, -1: 0.02},
+                  -1: {1: 0.000, 0: 0.21, -1: 0.79}}
+    assert signal_is_echo(structural)
+    # a matrix where states DO cross carries real transition information
+    crossing = {1: {1: 0.5, 0: 0.2, -1: 0.3},
+                0: {1: 0.3, 0: 0.4, -1: 0.3},
+                -1: {1: 0.3, 0: 0.2, -1: 0.5}}
+    assert not signal_is_echo(crossing)
+
+
+def test_report_names_the_echo_and_what_it_reduces_to():
+    r = analyse(walk(n=2500, seed=9), "TEST")
+    text = summary([r])
+    if r.get("signal_echo"):
+        assert "SIGNAL IS AN ECHO, NOT A FORECAST" in text
+        assert "plain momentum filter" in text
