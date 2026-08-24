@@ -1,5 +1,25 @@
-generated: 2026-08-16
+generated: 2026-08-24
 
-PAPER SHADOW TRACK — 2026-08-16
+PAPER SHADOW TRACK — RS-02 doctrine, as of 2026-08-24
+paper equity: $100,000.00   cash: $100,000.00
 
-No session today (market holiday, or bars not yet published). No scan, no orders, no changes. The previous report stands.
+TODAY'S SIGNALS (0):
+  none — no ticker passed breakout + regime + quality
+
+OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
+
+PAPER ORDERS PLACED (0):
+  none
+
+OPEN POSITIONS (0):
+  none
+
+PAPER OPTIONS (Alpaca, autonomous):
+  no option trades today
+
+OPTION POSITIONS (Robinhood): none on file.
+  Add trades to paper/open_options.json to have them reviewed here each day.
+
+CUMULATIVE RECORD: no closed trades yet
+
+Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.
