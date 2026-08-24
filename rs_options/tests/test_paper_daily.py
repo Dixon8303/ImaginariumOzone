@@ -120,6 +120,9 @@ class FakeBroker:
 def ledger_in_tmp(tmp_path, monkeypatch):
     monkeypatch.setattr(daily, "LEDGER_PATH",
                         str(tmp_path / "paper_ledger.json"))
+    from paper import growth_tracker
+    monkeypatch.setattr(growth_tracker, "GROWTH_LOG_PATH",
+                        str(tmp_path / "paper_growth.jsonl"))
 
 
 def test_run_places_bracket_and_records_ledger():
@@ -459,3 +462,46 @@ def test_micro_override_steps_aside_once_equity_recovers(monkeypatch):
     report = daily.run(broker, breakout_universe(), TODAY)
     assert "MICRO OVERRIDE" not in report
     assert broker.brackets and broker.brackets[0][1] > 1    # doctrine sizing
+
+
+# --------------------------------------------------- growth tracking
+
+def test_run_records_one_equity_snapshot_per_session():
+    from paper.growth_tracker import load_equity_history
+    broker = FakeBroker(equity=29.0)
+    daily.run(broker, breakout_universe(), TODAY)
+    history = load_equity_history()
+    assert len(history) == 1
+    assert history[0] == {"date": TODAY, "equity": 29.0}
+
+
+def test_rerunning_the_same_session_does_not_duplicate_the_snapshot():
+    from paper.growth_tracker import load_equity_history
+    broker = FakeBroker(equity=29.0)
+    daily.run(broker, breakout_universe(), TODAY)
+    daily.run(broker, breakout_universe(), TODAY)      # same day, re-run
+    assert len(load_equity_history()) == 1
+
+
+def test_report_shows_growth_once_two_sessions_exist():
+    from paper.growth_tracker import record_equity
+    record_equity("2026-08-13", 29.0)      # a prior session
+    broker = FakeBroker(equity=31.0)
+    report = daily.run(broker, breakout_universe(), TODAY)
+    assert "ACCOUNT GROWTH" in report
+    assert "29.00" in report and "31.00" in report
+
+
+def test_report_omits_growth_section_on_the_first_ever_session():
+    broker = FakeBroker(equity=29.0)
+    report = daily.run(broker, breakout_universe(), TODAY)
+    assert "ACCOUNT GROWTH" not in report
+
+
+def test_stale_session_does_not_record_a_snapshot():
+    """No trade, no scan on a stale/holiday run — equity should not be
+    recorded either, so the growth curve reflects real sessions only."""
+    from paper.growth_tracker import load_equity_history
+    broker = FakeBroker(equity=29.0)
+    daily.run(broker, breakout_universe(), "2099-01-01")   # stale date
+    assert load_equity_history() == []

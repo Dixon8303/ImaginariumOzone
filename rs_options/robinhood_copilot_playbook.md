@@ -130,6 +130,25 @@ built rather than just tuning `MAX_POSITION_PCT`. Turn it off, or grow
 the account past $500, and the run reverts to validated sizing with no
 other change needed.
 
+**Tracking growth, without ever resizing for it.** Every evening run
+records the account's equity for that session (`paper/growth_tracker.py`)
+and the report shows the running total, the range since inception, and
+distance to the $500 doctrine threshold. This is reporting only — it
+never feeds back into position sizing, so a winning streak cannot cause
+the next trade to size up beyond what the doctrine (or the micro
+override) already computes from current equity, and a losing streak
+never triggers a "make it back" resize. Check it any time without
+waiting for the evening run:
+
+```bash
+python3 -m paper.growth_tracker
+```
+
+Expect long flat stretches: the doctrine fires roughly 25 times a year
+across the whole universe, about once every 10 trading days, so most
+sessions show no change at all. That is the system working as
+designed, not a stall.
+
 ## Active setups (§60 Level 2 — setup kill)
 
 The live scan honors `mve/setups.py :: ACTIVE_SETUPS`. Current doctrine:

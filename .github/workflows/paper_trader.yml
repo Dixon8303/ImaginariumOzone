@@ -72,10 +72,15 @@ jobs:
         run: python -m paper.daily ${{ steps.mode.outputs.flag }}
 
       - name: Commit report and ledger
+        # The scan step above writes report/ledger files into the working
+        # tree, so `git pull --rebase` must run AFTER they are committed —
+        # rebase refuses to run over unstaged changes (this order caused
+        # every scheduled run to fail from 2026-08-17 onward: the pull ran
+        # first and always found the fresh report as an unstaged change).
         run: |
           git config user.name "rs-paper-bot"
           git config user.email "noreply@github.com"
-          git pull --rebase origin main
           git add rs_options/docs/reports
           git diff --cached --quiet || git commit -m "paper trading report"
+          git pull --rebase origin main
           git push
