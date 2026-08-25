@@ -90,6 +90,16 @@
   .badge.status-halted{color:var(--halted);border-color:var(--halted)}
   .badge.status-failed{color:var(--failed);border-color:var(--failed)}
   .badge.status-published,.badge.status-uploaded{color:var(--done);border-color:var(--done)}
+  .badge.yt{color:var(--amber);border-color:var(--amber-soft)}
+
+  /* Published cards double as a link to YouTube Studio's analytics tab —
+     the affordance has to read as clickable without a real <a>, since the
+     card is built from mixed content (stage bar, gate chips) that isn't
+     itself a link target. */
+  .card.clickable{cursor:pointer;transition:border-color .15s,background .15s}
+  .card.clickable:hover,.card.clickable:focus-visible{
+    border-color:var(--amber-soft);background:var(--bg-warm)}
+  .card.clickable:focus-visible{outline:1px solid var(--amber);outline-offset:2px}
 
   .card-meta{display:flex;gap:26px;align-items:center;margin-top:16px;flex-wrap:wrap}
   .dial{position:relative;width:64px;height:64px;flex:none}
@@ -458,12 +468,22 @@ function renderEpisodes(data){
     const fromId = /^ep[\s_-]*(\d+)/i.exec(ep.id || '');
     const num = fromId ? fromId[1]
               : (ep.number != null ? ep.number : (eps.length - i));
-    return `<div class="card">
+    // Published + has a video: the card opens YouTube Studio's analytics tab,
+    // not the public watch page — that's the only place scheduled date, watch
+    // time, views and likes all live together. Draft/running/review episodes
+    // have no video yet, so they stay non-interactive.
+    const isPublished = ['uploaded','published'].includes(ep.status) && ep.video_id;
+    const cardAttrs = isPublished
+      ? `class="card clickable" data-video="${esc(ep.video_id)}" tabindex="0" role="link"
+         aria-label="Open ${esc(ep.topic)} in YouTube Studio analytics"`
+      : `class="card"`;
+    return `<div ${cardAttrs}>
       <div class="epnum" aria-hidden="true">${String(num).padStart(2,'0')}<small>EP</small></div>
       <div class="card-body">
       <div class="card-top">
         <p class="topic">${esc(ep.topic)}</p>
         <div class="badges">
+          ${isPublished?'<span class="badge yt">↗ YouTube Studio</span>':''}
           <span class="badge">${ep.mode||''}</span>
           <span class="badge status-${ep.status}">${status}</span>
         </div>
@@ -483,6 +503,34 @@ function renderEpisodes(data){
       </div>
     </div>`;
   }).join('');
+
+  bindEpisodeCardLinks(el);
+}
+
+/** #episodes persists across refresh() calls (only its innerHTML is replaced),
+ *  so delegate from the container instead of rebinding a listener per card
+ *  on every poll. openYouTubeStudio() intentionally reads data-video off
+ *  .closest('.clickable') so a click anywhere in the card — including the
+ *  stage bar or gate chips, which have no click behavior of their own —
+ *  still navigates. */
+function openYouTubeStudio(videoId){
+  window.open(`https://studio.youtube.com/video/${encodeURIComponent(videoId)}/analytics/tvf_essentials`,
+    '_blank', 'noopener');
+}
+function bindEpisodeCardLinks(container){
+  if (container.dataset.linksBound) return;
+  container.dataset.linksBound = '1';
+  container.addEventListener('click', e => {
+    const card = e.target.closest('.card.clickable');
+    if (card) openYouTubeStudio(card.dataset.video);
+  });
+  container.addEventListener('keydown', e => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const card = e.target.closest('.card.clickable');
+    if (!card) return;
+    e.preventDefault();
+    openYouTubeStudio(card.dataset.video);
+  });
 }
 
 // ── Release calendar ────────────────────────────────────────────────────────
