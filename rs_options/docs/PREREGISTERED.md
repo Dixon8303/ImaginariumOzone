@@ -113,6 +113,77 @@ entry; this entry checks whether the rule keeps earning its place.
 
 ---
 
+## FWD-3 — Fundamental quality and long-call outcomes
+
+**Registered:** 2026-08-26, after the operator asked for options entries
+that combine momentum, trend, and fundamentals with "institutional
+sensibility."
+
+**Claim.** Among autonomous paper long-call entries (`run_option_cycle`),
+positions opened on an underlying that is **trailing-profitable**
+(`mve.fundamentals.trailing_net_income` positive over the last four
+quarters known as of entry, point-in-time safe on the SEC `filed` date)
+realize a higher option-level R multiple (realized P&L / premium paid)
+than positions opened on an underlying that is not profitable, or whose
+profitability is unknown.
+
+**Where it came from, and why it is not H10 again.** H10 (2026-08-23
+combination study, `RESEARCH_LOG.md`) tested a similar-sounding idea —
+gating RS-02 STOCK entries on the same trailing-profitability check —
+and it FAILED clearly: it removed 163 profitable stock trades worth
++20.58R, one of the two worst filters in that round. **That result
+stands and is not being relitigated (LAW 20).** But it measured the
+underlying's bounded, stop-defined R. A long call has a different
+payoff: it can lose its entire premium to time decay or an underwhelming
+move even when the stock's own stop never triggers, and an unconvincing
+("story", not earnings) breakout can see its IV contract on top of that
+— a failure mode invisible to stock-only R math. Whether the
+underlying's fundamental quality discriminates between OPTION outcomes
+specifically is a different mechanism on different data, not a rerun of
+a closed hypothesis.
+
+**No parameter is fitted.** The profitability test reuses
+`is_profitable`/`trailing_net_income` exactly as H10 coded them — no new
+threshold tuned to make this presentable.
+
+**No historical test is possible.** Historical option chains are paid
+data this project does not have (`paper/option_costs.py`, 2026-08-23).
+This can only accumulate forward, one real paper fill at a time — the
+same reason FWD-1 and FWD-2 exist.
+
+**Recording mechanism, live today.** Every autonomous paper option entry
+tags its ledger record with `fundamental_net_income` — the raw trailing
+four-quarter sum, or `null` when unknown (`paper/daily.py ::
+run_option_cycle`). Nothing reads this tag to gate, size, or rank
+anything; it exists only so the pairing accumulates, exactly like
+`OpenPosition.score` under FWD-1.
+
+**Success criterion, fixed now.** Judged only once at least **15 CLOSED
+autonomous option trades** exist in EACH of the profitable and
+not-profitable/unknown buckets (lower than FWD-1's 40, because option
+entries are rarer than stock signals — they must also clear DTE/delta/
+spread/open-interest eligibility on top of the RS-02 signal itself):
+
+- **CONFIRMED** if the profitable bucket's mean option R (realized P&L /
+  premium paid) is positive AND at least 0.25R above the
+  not-profitable/unknown bucket.
+- **FAILED** if the two buckets are within 0.10R of each other, or the
+  not-profitable bucket is higher.
+- **INCONCLUSIVE** below 15 trades in either bucket, regardless of how
+  the numbers look.
+
+**What may NOT be done with it.** Nothing gates or sizes on this tag
+until CONFIRMED. If confirmed, the only permitted use is **sizing**
+(e.g. trimming `contracts_to_buy` on unprofitable-underlying entries),
+never an outright entry gate — H10's own failure mode was gating, and
+the stock-side lesson (H-22, H5: concentrating on "better" setups can
+cut total edge even while raising the average) is exactly the trap a
+hard gate would repeat here.
+
+**Status:** OPEN — recording began 2026-08-26, awaiting forward fills.
+
+---
+
 ## H-22 — Cross-sectional momentum, long only
 
 **Registered:** 2026-08-23, before any implementation exists. The study

@@ -1901,3 +1901,86 @@ whether compounding was happening.
 
 380 tests passing (13 for growth_tracker, 5 integration in
 test_paper_daily.py).
+
+## 2026-08-26 — Options track: two hygiene fixes, one gap analysis, one registration
+
+Operator asked what the autonomous options track was missing to make
+decisions combining momentum, trend, and fundamentals "with
+institutional sensibility and clean effective trading psychology."
+Reading `paper/options_broker.py`, `paper/daily.py::run_option_cycle`,
+and `mve/position_manager.py` end to end surfaced two real bugs before
+any new mechanism was worth designing — fixing drift from the project's
+own stated rules first, rather than building a fundamentals layer on
+top of a selection path that already didn't match its own doctrine.
+
+**Bug 1 — exits were market orders.** `§38` and the entry side
+(`buy_to_open`) both say "limit at mid, day only." `sell_to_close` said
+otherwise: a bare market order, on the one instrument class in this
+project whose spread is the dominant cost. `evaluate_exit` fires on a
+stop break or a target hit — exactly the moments a bad fill matters
+most. Fixed by fetching a fresh quote at exit time and submitting the
+same limit-at-mid the entry side already uses; a missing or crossed
+quote now defers the exit to the next run instead of falling back to a
+market order, since a deferred exit is recoverable and a bad market
+fill is not.
+
+**Bug 2 — the live path had drifted from its own research selection.**
+`mve/chain_select.py` (the backtest-side contract picker) has enforced
+`MIN_OPEN_INTEREST = 100` since the chain-selection spec was written.
+`paper/options_broker.py::select_contract` — the path that actually
+places paper orders — never checked it: DTE, spread, and delta were
+filtered, open interest was not. A contract can quote a tight spread
+and still be nearly unfillable in size if almost nobody holds it. Fixed
+by importing the same constant rather than re-deriving a number, fail-
+closed (missing or unparseable OI rejects the contract, matching how
+an unquotable spread is already treated) — so paper execution and
+research selection can no longer silently disagree about what counts
+as a tradable contract.
+
+**Gap analysis, not yet built.** Two further gaps came up in the same
+read and were deliberately NOT patched into this "hygiene" pass,
+because doing so quietly would smuggle a new mechanism in under a bug-
+fix label:
+
+- **No earnings-date gate.** A long call carries binary IV-crush risk
+  around earnings that the momentum/breakout signal has no visibility
+  into. Building this needs a forward earnings-calendar data source
+  this project does not yet have wired up (unlike the point-in-time-safe
+  SEC financials `mve/fundamentals.py` already uses) — real design work,
+  not a fast fix.
+- **No portfolio-level options exposure check.** `MAX_OPEN = 8` caps
+  position count; nothing aggregates premium-at-risk or cluster
+  concentration across open option positions the way the playbook's
+  hard-limits table describes for the equity side. Also deferred rather
+  than rushed.
+
+Both remain open questions for future work, named here so they are not
+forgotten rather than silently dropped.
+
+**FWD-3 registered, not decided.** The operator's ask also named
+fundamentals explicitly. H10 already tested "gate RS-02 stock entries on
+trailing profitability" and it FAILED — removed 163 profitable stock
+trades worth +20.58R (2026-08-23, round 5). That is closed and is not
+being reopened (LAW 20). But it measured the underlying's bounded,
+stop-defined R; a long call can lose its whole premium to decay or an
+unconvincing move even when the stock's stop never trips, a failure
+mode the stock-only measurement cannot see. Whether the same
+profitability check discriminates between OPTION outcomes is therefore
+a genuinely different, currently-untested question — registered as
+**FWD-3** in `docs/PREREGISTERED.md` *before* writing the one line of
+code that acts on it, same discipline as H-22's pre-registration.
+
+The implementation is recording only: `run_option_cycle` now tags every
+opened contract with `fundamental_net_income` (raw trailing four-quarter
+net income from `mve.fundamentals.trailing_net_income`, or `null` when
+unknown), sourced from whatever is cached locally by
+`python -m mve.fundamentals` — nothing here fetches from SEC EDGAR on a
+trading run. Nothing reads the tag back into sizing, gating, or ranking;
+a test asserts the exact order placed is identical regardless of the
+tag's value, and another confirms it reads `null` rather than a
+silently-false profitability when no fundamentals cache exists — an
+unknown must not be miscounted as a "no" in the bucket that eventually
+judges this.
+
+385 tests passing (3 new for the FWD-3 tag, 2 new for the OI floor / exit
+fixes).

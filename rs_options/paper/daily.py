@@ -46,6 +46,7 @@ import pandas as pd
 from mve.alpaca_data import fetch_bars
 from mve.backtest import MAX_HOLD_BARS, TARGET_R
 from mve.chain_select import DELTA_TARGET, DTE_RANGE, MAX_SPREAD_PCT
+from mve.fundamentals import load_fundamentals, trailing_net_income
 from mve.position_manager import (OpenPosition, evaluate_exit,
                                   format_exit_report)
 from mve.report import save_report
@@ -63,7 +64,7 @@ from .micro_sizing import (count_open_micro_positions, micro_mode_banner,
 from .option_costs import collect as collect_option_costs
 from .option_costs import format_costs
 from .option_costs import record as record_option_costs
-from .options_broker import contracts_to_buy, select_contract
+from .options_broker import contracts_to_buy, mid_price, select_contract
 
 RISK_PCT = 0.01              # 1% of paper equity risked per trade
 MAX_POSITION_PCT = 0.05      # 5% notional cap (mirrors HoneyDrip)
@@ -194,13 +195,19 @@ def review_open_options(positions: list, all_bars: dict, today: str) -> str:
 
 
 def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
-                     ledger: dict) -> tuple:
+                     ledger: dict, fundamentals: dict | None = None) -> tuple:
     """Autonomous PAPER options: exit held contracts the doctrine says to
     close, then open new ones for today's signals.
 
     Options carry no bracket orders on Alpaca, so exits are not
     self-enforcing the way the equity stops are — this loop IS the exit
     mechanism, and it runs before entries so a freed slot can be reused.
+
+    `fundamentals` (from `mve.fundamentals.load_fundamentals`) is used
+    ONLY to tag each entry with the underlying's trailing net income —
+    FWD-3 (docs/PREREGISTERED.md), recording only. It never gates or
+    sizes a trade; omitting it (or an empty cache) tags every entry
+    `None` and changes nothing else.
     """
     as_of = date.fromisoformat(today)
     book = ledger.setdefault("options", {})
@@ -227,7 +234,23 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
             entry_underlying=rec["entry_underlying"])
         verdict = evaluate_exit(position, float(bars["close"].iloc[-1]), as_of)
         if verdict.must_exit:
-            broker.sell_to_close(symbol, rec["qty"])
+            # Exit sells the same way entries buy — limit at the mid, day
+            # only (§38) — so a fresh quote is required here too. A stale
+            # or missing quote means the sell is deferred to the next
+            # run rather than falling back to a market order, the exact
+            # thing this rule exists to prevent.
+            try:
+                mid = mid_price((broker.quotes(rec["ticker"]) or {})
+                                .get(symbol, {}))
+            except Exception as e:
+                notes.append(f"{symbol}: EXIT due ({', '.join(verdict.reasons)}) "
+                             f"but quote fetch failed ({e}) — retrying next run")
+                continue
+            if mid is None:
+                notes.append(f"{symbol}: EXIT due ({', '.join(verdict.reasons)}) "
+                             "but no tradable quote — retrying next run")
+                continue
+            broker.sell_to_close(symbol, rec["qty"], mid)
             closed.append((symbol, rec, held[symbol], verdict.reasons))
             del book[symbol]
 
@@ -255,12 +278,17 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
                          f"exceeds the {RISK_PCT:.0%} risk budget")
             continue
         broker.buy_to_open(pick["symbol"], qty, pick["mid"])
+        net_income = (trailing_net_income(fundamentals, sig["ticker"], today)
+                     if fundamentals else None)
         book[pick["symbol"]] = dict(
             ticker=sig["ticker"], qty=qty, entry_price=pick["mid"],
             expiry=pick["expiration_date"], strike=float(pick["strike_price"]),
             entry_date=today, invalidation_price=sig["stop"],
             entry_underlying=sig["close"], basis=pick["basis"],
-            delta=pick["delta"], spread_pct=round(pick["spread_pct"], 4))
+            delta=pick["delta"], spread_pct=round(pick["spread_pct"], 4),
+            # FWD-3, RECORDED ONLY (docs/PREREGISTERED.md) — never reads
+            # back into gating or sizing above.
+            fundamental_net_income=net_income)
         opened.append((pick, qty))
         open_count += 1
 
@@ -279,7 +307,13 @@ def format_option_cycle(cycle, ledger: dict) -> str:
         lines.append(f"  BOUGHT {qty}x {pick['symbol']}  "
                      f"@ ${pick['mid']:.2f} (${pick['mid'] * 100 * qty:,.0f})  "
                      f"{pick['dte']}d  strike {float(pick['strike_price']):.2f}  "
-                     f"[{basis}, spread {pick['spread_pct']:.1%}]")
+                     f"[{basis}, spread {pick['spread_pct']:.1%}, "
+                     f"OI {pick['open_interest']}]")
+        ni = book.get(pick["symbol"], {}).get("fundamental_net_income")
+        tag = (f"${ni:,.0f} trailing net income" if ni is not None
+              else "fundamentals unknown (run python -m mve.fundamentals)")
+        lines.append(f"    FWD-3 tag: {tag} — recorded only, does not "
+                     "gate or size this trade")
     for symbol, rec, position, reasons in closed:
         pnl = ""
         if position:
@@ -457,7 +491,8 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     opt = ([], [], ["options disabled: broker has no options support"])
     if hasattr(broker, "option_positions"):
         try:
-            opt = run_option_cycle(broker, signals, all_bars, today, ledger)
+            opt = run_option_cycle(broker, signals, all_bars, today, ledger,
+                                   fundamentals=load_fundamentals())
         except Exception as e:                  # never lose the equity run
             opt = ([], [], [f"option cycle FAILED: {e}"])
 
