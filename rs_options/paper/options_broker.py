@@ -24,7 +24,8 @@ import urllib.parse
 import urllib.request
 from datetime import date
 
-from mve.chain_select import DELTA_RANGE, DELTA_TARGET, DTE_RANGE, MAX_SPREAD_PCT
+from mve.chain_select import (DELTA_RANGE, DELTA_TARGET, DTE_RANGE,
+                              MAX_SPREAD_PCT, MIN_OPEN_INTEREST)
 
 from .alpaca_paper import PAPER_URL, PaperBroker
 
@@ -68,17 +69,31 @@ def spread_pct(quote: dict) -> float | None:
     return (ask - bid) / mid
 
 
+def mid_price(quote: dict) -> float | None:
+    """Bid/ask midpoint, or None when unquotable (missing, zero, or
+    crossed) — mirrors `spread_pct`'s guard so exit fills never price
+    off a quote that selection itself would have rejected."""
+    bid, ask = quote.get("bid"), quote.get("ask")
+    if bid is None or ask is None:
+        return None
+    bid, ask = float(bid), float(ask)
+    if bid <= 0 or ask <= 0 or ask < bid:
+        return None
+    return (bid + ask) / 2.0
+
+
 def select_contract(contracts: list, spot: float, as_of: date,
                     quotes: dict | None = None) -> dict | None:
     """Pick one long call from a contract list.
 
-    Filters: call, DTE in range, quotable, spread within cap, and delta
-    in range when greeks are available. Ranks by closeness to the delta
-    target, or to the moneyness proxy when delta is absent.
+    Filters: call, DTE in range, open interest above the doctrine floor,
+    quotable, spread within cap, and delta in range when greeks are
+    available. Ranks by closeness to the delta target, or to the
+    moneyness proxy when delta is absent.
 
     Returns the contract dict with `basis` ('delta' or 'moneyness'),
-    `mid`, and `delta` (when known) attached — the caller reports which
-    basis was used.
+    `mid`, `delta` (when known), and `open_interest` attached — the
+    caller reports which basis was used.
     """
     quotes = quotes or {}
     scored = []
@@ -87,6 +102,17 @@ def select_contract(contracts: list, spot: float, as_of: date,
             continue
         dte = dte_of(c, as_of)
         if not DTE_RANGE[0] <= dte <= DTE_RANGE[1]:
+            continue
+        # Fail closed, same as the research-side select_call: an unknown
+        # or thin open-interest contract is not tradable in size and must
+        # not be guessed at. The live path had been skipping this floor
+        # entirely, drifting from the backtested selection it claims to
+        # mirror.
+        try:
+            oi = int(c["open_interest"]) if c.get("open_interest") is not None else None
+        except (TypeError, ValueError):
+            oi = None
+        if oi is None or oi < MIN_OPEN_INTEREST:
             continue
         q = quotes.get(c["symbol"])
         if not q:
@@ -105,7 +131,7 @@ def select_contract(contracts: list, spot: float, as_of: date,
             strike = float(c["strike_price"])
             basis, rank = "moneyness", abs(strike - spot * MONEYNESS_TARGET)
         scored.append((rank, dict(c, basis=basis, mid=mid, delta=delta,
-                                  dte=dte, spread_pct=sp)))
+                                  dte=dte, spread_pct=sp, open_interest=oi)))
     if not scored:
         return None
     return min(scored, key=lambda x: x[0])[1]
@@ -172,8 +198,13 @@ class PaperOptionsBroker(PaperBroker):
             "time_in_force": "day",
         })
 
-    def sell_to_close(self, symbol: str, qty: int) -> dict:
+    def sell_to_close(self, symbol: str, qty: int, limit_price: float) -> dict:
+        """Limit at the mid, day only (§38) — the same rule buy_to_open
+        already follows. A market sell on an instrument whose spread IS
+        the cost defeats the point of the exit, especially on a doctrine
+        exit that is already cutting a loss or locking a target."""
         return self._req("POST", "/v2/orders", body={
             "symbol": symbol, "qty": str(qty), "side": "sell",
-            "type": "market", "time_in_force": "day",
+            "type": "limit", "limit_price": f"{limit_price:.2f}",
+            "time_in_force": "day",
         })

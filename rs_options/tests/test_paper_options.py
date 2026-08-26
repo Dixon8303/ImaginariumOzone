@@ -3,7 +3,8 @@ from datetime import date
 
 import pytest
 
-from mve.chain_select import DELTA_RANGE, DTE_RANGE, MAX_SPREAD_PCT
+from mve.chain_select import (DELTA_RANGE, DTE_RANGE, MAX_SPREAD_PCT,
+                              MIN_OPEN_INTEREST)
 from paper import daily
 from paper.options_broker import (MONEYNESS_TARGET, PaperOptionsBroker,
                                   contracts_to_buy, dte_of, parse_occ_symbol,
@@ -13,13 +14,14 @@ AS_OF = date(2026, 8, 14)
 SPOT = 200.0
 
 
-def contract(strike, days_out=35, right="call", symbol=None):
+def contract(strike, days_out=35, right="call", symbol=None,
+            open_interest=500):
     expiry = date.fromordinal(AS_OF.toordinal() + days_out)
     sym = symbol or (f"NVDA{expiry.strftime('%y%m%d')}"
                      f"{'C' if right == 'call' else 'P'}"
                      f"{int(strike * 1000):08d}")
     return {"symbol": sym, "type": right, "strike_price": str(strike),
-            "expiration_date": str(expiry)}
+            "expiration_date": str(expiry), "open_interest": str(open_interest)}
 
 
 def quote(bid, ask, delta=None):
@@ -80,6 +82,26 @@ def test_rejects_wide_spreads():
     ok = {c["symbol"]: quote(9.5, 10.0, delta=0.60)}
     assert select_contract([c], SPOT, AS_OF, ok) is not None
     assert MAX_SPREAD_PCT == 0.10
+
+
+def test_rejects_thin_open_interest():
+    """The live path had been skipping the same OI floor the research
+    selection (mve.chain_select.select_call) already enforces — a
+    contract with a tight quoted spread can still be nearly unfillable
+    in size if hardly anyone holds it."""
+    thin = contract(200, open_interest=MIN_OPEN_INTEREST - 1)
+    q = {thin["symbol"]: quote(9.5, 10.0, delta=0.60)}
+    assert select_contract([thin], SPOT, AS_OF, q) is None
+
+    ok = contract(200, open_interest=MIN_OPEN_INTEREST)
+    q_ok = {ok["symbol"]: quote(9.5, 10.0, delta=0.60)}
+    picked = select_contract([ok], SPOT, AS_OF, q_ok)
+    assert picked is not None and picked["open_interest"] == MIN_OPEN_INTEREST
+
+    unknown = contract(200)
+    del unknown["open_interest"]
+    q_unknown = {unknown["symbol"]: quote(9.5, 10.0, delta=0.60)}
+    assert select_contract([unknown], SPOT, AS_OF, q_unknown) is None
 
 
 def test_rejects_out_of_range_dte_and_delta():
@@ -149,8 +171,8 @@ class FakeOptionsBroker:
         self.bought.append((symbol, qty, limit_price))
         return {"id": "o1"}
 
-    def sell_to_close(self, symbol, qty):
-        self.sold.append((symbol, qty))
+    def sell_to_close(self, symbol, qty, limit_price):
+        self.sold.append((symbol, qty, limit_price))
         return {"id": "o2"}
 
 
@@ -186,9 +208,34 @@ def test_cycle_exits_on_doctrine_and_frees_the_name():
                                   "close": [185.0]})}   # below invalidation
     opened, closed, notes = daily.run_option_cycle(
         broker, [], bars, str(AS_OF), ledger)
-    assert broker.sold == [(symbol, 2)]
+    assert broker.sold == [(symbol, 2, 2.5)]      # limit at the mid, not market
     assert symbol not in ledger["options"]
     assert any("INVALIDATION" in r for r in closed[0][3])
+
+
+def test_cycle_defers_exit_when_no_tradable_quote():
+    """A doctrine exit must not fall back to a market order when the
+    quote is missing or crossed — it retries next run instead."""
+    import pandas as pd
+    symbol = contract(194)["symbol"]
+    ledger = {"open": {}, "closed": [], "options": {symbol: dict(
+        ticker="NVDA", qty=2, entry_price=2.5, expiry="2026-09-18",
+        strike=194.0, entry_date="2026-08-10", invalidation_price=190.0,
+        entry_underlying=200.0, basis="delta", delta=0.6, spread_pct=0.02)}}
+
+    class NoQuote(FakeOptionsBroker):
+        def quotes(self, underlying):
+            return {}
+
+    broker = NoQuote(positions={symbol: {"unrealized_pl": "-120"}})
+    bars = {"NVDA": pd.DataFrame({"trade_date": ["2026-08-14"],
+                                  "close": [185.0]})}   # below invalidation
+    opened, closed, notes = daily.run_option_cycle(
+        broker, [], bars, str(AS_OF), ledger)
+    assert broker.sold == []
+    assert closed == []
+    assert symbol in ledger["options"]            # still open, retry next run
+    assert any("no tradable quote" in n for n in notes)
 
 
 def test_cycle_reconciles_a_position_that_vanished():
@@ -232,6 +279,56 @@ def test_cycle_notes_unaffordable_premium():
                                               str(AS_OF), ledger)
     assert opened == [] and broker.bought == []
     assert any("risk budget" in n for n in notes)
+
+
+# ── FWD-3: fundamental tag is recorded, never acted on ────────────────
+def test_cycle_tags_entry_with_trailing_net_income_when_known():
+    import pandas as pd
+    facts = {"NVDA": pd.DataFrame([
+        {"filed": "2026-01-01", "period_end": "2025-12-31", "value": 100.0},
+        {"filed": "2025-10-01", "period_end": "2025-09-30", "value": 90.0},
+        {"filed": "2025-07-01", "period_end": "2025-06-30", "value": 80.0},
+        {"filed": "2025-04-01", "period_end": "2025-03-31", "value": 70.0},
+    ])}
+    broker = FakeOptionsBroker()
+    ledger = {"open": {}, "closed": []}
+    daily.run_option_cycle(broker, [SIGNAL], {}, str(AS_OF), ledger,
+                           fundamentals=facts)
+    symbol = broker.bought[0][0]
+    assert ledger["options"][symbol]["fundamental_net_income"] == \
+        pytest.approx(340.0)
+
+
+def test_cycle_tags_entry_none_when_fundamentals_unavailable():
+    """No cache on disk yet (or the ticker/quarter count unknown) must
+    tag None, never coerce to a filter-relevant boolean or skip the
+    trade — this is a recording-only tag (FWD-3)."""
+    broker = FakeOptionsBroker()
+    ledger = {"open": {}, "closed": []}
+    daily.run_option_cycle(broker, [SIGNAL], {}, str(AS_OF), ledger)
+    symbol = broker.bought[0][0]
+    assert ledger["options"][symbol]["fundamental_net_income"] is None
+
+
+def test_cycle_fundamental_tag_never_changes_what_gets_bought():
+    """The whole point of FWD-3: the tag must never gate or size a
+    trade. Same signal, same broker, opposite profitability -> identical
+    order."""
+    import pandas as pd
+    unprofitable = {"NVDA": pd.DataFrame([
+        {"filed": "2026-01-01", "period_end": "2025-12-31", "value": -100.0},
+        {"filed": "2025-10-01", "period_end": "2025-09-30", "value": -90.0},
+        {"filed": "2025-07-01", "period_end": "2025-06-30", "value": -80.0},
+        {"filed": "2025-04-01", "period_end": "2025-03-31", "value": -70.0},
+    ])}
+    broker_a = FakeOptionsBroker()
+    daily.run_option_cycle(broker_a, [SIGNAL], {}, str(AS_OF),
+                           {"open": {}, "closed": []}, fundamentals=None)
+    broker_b = FakeOptionsBroker()
+    daily.run_option_cycle(broker_b, [SIGNAL], {}, str(AS_OF),
+                           {"open": {}, "closed": []},
+                           fundamentals=unprofitable)
+    assert broker_a.bought == broker_b.bought
 
 
 def test_cycle_notes_when_no_contract_qualifies():
@@ -287,7 +384,8 @@ class _QuoteBroker:
 
     def contracts(self, underlying, as_of, limit=200):
         return [{"symbol": "AAA260918C00100000", "strike_price": "100",
-                 "expiration_date": "2026-09-18", "type": "call"}]
+                 "expiration_date": "2026-09-18", "type": "call",
+                 "open_interest": "500"}]
 
     def quotes(self, underlying):
         return {"AAA260918C00100000": {"bid": self._bid, "ask": self._ask,
