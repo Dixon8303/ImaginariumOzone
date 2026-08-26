@@ -1,6 +1,6 @@
-generated: 2026-08-25
+generated: 2026-08-26
 
-PRE-OPEN SCAN — 2026-08-25 (signals from the 2026-08-25 close)
+PRE-OPEN SCAN — 2026-08-26 (signals from the 2026-08-26 close)
 paper equity: $100,000.00
 
 CANDIDATES FOR TODAY (0):
