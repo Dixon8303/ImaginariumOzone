@@ -46,7 +46,8 @@ import pandas as pd
 from mve.alpaca_data import fetch_bars
 from mve.backtest import MAX_HOLD_BARS, TARGET_R
 from mve.chain_select import DELTA_TARGET, DTE_RANGE, MAX_SPREAD_PCT
-from mve.fundamentals import load_fundamentals, trailing_net_income
+from mve.fundamentals import (load_fundamentals, next_expected_filing_window,
+                              overlaps_earnings_window, trailing_net_income)
 from mve.position_manager import (OpenPosition, evaluate_exit,
                                   format_exit_report)
 from mve.report import save_report
@@ -69,6 +70,11 @@ from .options_broker import contracts_to_buy, mid_price, select_contract
 RISK_PCT = 0.01              # 1% of paper equity risked per trade
 MAX_POSITION_PCT = 0.05      # 5% notional cap (mirrors HoneyDrip)
 MAX_OPEN = 8                 # concurrent-position cap
+# Same percentages the playbook's hard-limits table already states for
+# equity notional, applied to options PREMIUM at risk (robinhood_copilot_
+# playbook.md). CALIBRATE, not independently validated for this instrument.
+MAX_OPTIONS_UNDERLYING_PCT = 0.05
+MAX_OPTIONS_CLUSTER_PCT = 0.10
 MIN_BARS = 260               # doctrine needs 253+ bars (12-1 momentum)
 HISTORY_DAYS = 420           # calendar days of bars to fetch
 MAX_BAR_AGE_DAYS = 4         # pre-open: yesterday's close is
@@ -194,6 +200,21 @@ def review_open_options(positions: list, all_bars: dict, today: str) -> str:
     return text
 
 
+def cluster_premium_at_risk(book: dict, cluster: str) -> float:
+    """Sum of premium at risk (entry price x qty x 100) across open
+    option positions whose underlying is in `cluster`."""
+    return sum(rec["entry_price"] * rec["qty"] * 100.0
+              for rec in book.values() if UNIVERSE.get(rec["ticker"]) == cluster)
+
+
+def exceeds_underlying_cap(premium: float, equity: float) -> bool:
+    return premium > equity * MAX_OPTIONS_UNDERLYING_PCT
+
+
+def exceeds_cluster_cap(cluster_exposure: float, equity: float) -> bool:
+    return cluster_exposure > equity * MAX_OPTIONS_CLUSTER_PCT
+
+
 def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
                      ledger: dict, fundamentals: dict | None = None) -> tuple:
     """Autonomous PAPER options: exit held contracts the doctrine says to
@@ -272,11 +293,53 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
         if pick is None:
             notes.append(f"{sig['ticker']}: no contract met DTE/spread/delta")
             continue
+        # Earnings blackout (mechanism, not backtested — no historical
+        # options data exists to measure it against, see RESEARCH_LOG.md).
+        # An unknown cadence (fundamentals unset, or a ticker with under
+        # two known filings — ETFs always land here) never gates; it can
+        # only skip a trade it has real, if approximate, evidence for.
+        if fundamentals:
+            window = next_expected_filing_window(fundamentals, sig["ticker"],
+                                                 today)
+            expiry = date.fromisoformat(pick["expiration_date"])
+            if overlaps_earnings_window(as_of, expiry, window):
+                notes.append(
+                    f"{sig['ticker']}: skipped — estimated earnings window "
+                    f"{window[0]}..{window[1]} falls within the "
+                    f"{pick['dte']}d hold (mechanism-based skip, see "
+                    "docs/RESEARCH_LOG.md)")
+                continue
         qty = contracts_to_buy(pick["mid"], equity, RISK_PCT)
         if qty < 1:
             notes.append(f"{sig['ticker']}: premium ${pick['mid'] * 100:,.0f} "
                          f"exceeds the {RISK_PCT:.0%} risk budget")
             continue
+        # Portfolio-level options exposure — the same per-underlying and
+        # per-cluster percentages the playbook's hard-limits table already
+        # states for the equity side, applied here to premium at risk
+        # rather than notional (playbook: "Max per underlying 5% of
+        # equity", "Max per cluster ... 10% of equity"). At today's
+        # RISK_PCT/MAX_OPEN these are non-binding defense-in-depth — a
+        # single 1%-risk position can't reach 5%, and even 8 positions
+        # (MAX_OPEN) in one cluster tops out at 8% of the 10% cap — but
+        # they exist so a future change to either constant can't silently
+        # reopen the concentration MAX_OPEN alone cannot see.
+        premium = pick["mid"] * 100.0 * qty
+        if exceeds_underlying_cap(premium, equity):
+            notes.append(
+                f"{sig['ticker']}: skipped — premium ${premium:,.0f} exceeds "
+                f"the {MAX_OPTIONS_UNDERLYING_PCT:.0%}-of-equity "
+                "per-underlying options cap")
+            continue
+        cluster = UNIVERSE.get(sig["ticker"])
+        if cluster is not None:
+            cluster_exposure = premium + cluster_premium_at_risk(book, cluster)
+            if exceeds_cluster_cap(cluster_exposure, equity):
+                notes.append(
+                    f"{sig['ticker']}: skipped — {cluster} cluster options "
+                    f"exposure would reach ${cluster_exposure:,.0f}, over "
+                    f"the {MAX_OPTIONS_CLUSTER_PCT:.0%}-of-equity cluster cap")
+                continue
         broker.buy_to_open(pick["symbol"], qty, pick["mid"])
         net_income = (trailing_net_income(fundamentals, sig["ticker"], today)
                      if fundamentals else None)

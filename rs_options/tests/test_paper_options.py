@@ -331,6 +331,115 @@ def test_cycle_fundamental_tag_never_changes_what_gets_bought():
     assert broker_a.bought == broker_b.bought
 
 
+# ── earnings blackout (mechanism, not backtested — see RESEARCH_LOG.md)
+def test_cycle_skips_entry_inside_estimated_earnings_window():
+    """Two filings whose cadence projects the next one to land inside
+    this contract's DTE window (AS_OF..2026-09-18) must skip the entry."""
+    import pandas as pd
+    facts = {"NVDA": pd.DataFrame([
+        {"filed": "2026-01-05", "period_end": "2025-12-31", "value": 10.0},
+        {"filed": "2026-05-01", "period_end": "2026-03-31", "value": 10.0},
+    ])}   # gap 116d -> next expected 2026-08-25, inside AS_OF..09-18
+    broker = FakeOptionsBroker()
+    ledger = {"open": {}, "closed": []}
+    opened, _, notes = daily.run_option_cycle(
+        broker, [SIGNAL], {}, str(AS_OF), ledger, fundamentals=facts)
+    assert opened == [] and broker.bought == []
+    assert any("estimated earnings window" in n for n in notes)
+
+
+def test_cycle_trades_through_when_cadence_is_unknown():
+    """A single known filing (or none) can't project a cadence — the
+    estimate must fail toward NOT gating, never toward blocking on a
+    guess."""
+    import pandas as pd
+    facts = {"NVDA": pd.DataFrame([
+        {"filed": "2026-05-01", "period_end": "2026-03-31", "value": 10.0}])}
+    broker = FakeOptionsBroker()
+    ledger = {"open": {}, "closed": []}
+    opened, _, notes = daily.run_option_cycle(
+        broker, [SIGNAL], {}, str(AS_OF), ledger, fundamentals=facts)
+    assert len(opened) == 1 and broker.bought
+
+
+def test_cycle_trades_through_when_the_projected_window_misses_the_hold():
+    """Cadence known, but the projected date falls well outside this
+    contract's DTE window -> no skip."""
+    import pandas as pd
+    facts = {"NVDA": pd.DataFrame([
+        {"filed": "2025-01-01", "period_end": "2024-12-31", "value": 10.0},
+        {"filed": "2025-02-01", "period_end": "2025-01-31", "value": 10.0},
+    ])}   # gap 31d, last filed 2025-02-01 -> next expected 2025-03-04,
+          # nowhere near AS_OF (2026-08-14)
+    broker = FakeOptionsBroker()
+    ledger = {"open": {}, "closed": []}
+    opened, _, notes = daily.run_option_cycle(
+        broker, [SIGNAL], {}, str(AS_OF), ledger, fundamentals=facts)
+    assert len(opened) == 1 and broker.bought
+
+
+# ── portfolio-level options exposure (per-underlying, per-cluster) ────
+def test_underlying_cap_helper():
+    from paper.daily import (MAX_OPTIONS_UNDERLYING_PCT,
+                             exceeds_underlying_cap)
+    equity = 100_000.0
+    at_cap = equity * MAX_OPTIONS_UNDERLYING_PCT
+    assert exceeds_underlying_cap(at_cap + 0.01, equity) is True
+    assert exceeds_underlying_cap(at_cap, equity) is False
+    assert exceeds_underlying_cap(at_cap - 1, equity) is False
+
+
+def test_cluster_cap_helper_and_premium_sum():
+    from paper.daily import (MAX_OPTIONS_CLUSTER_PCT, cluster_premium_at_risk,
+                             exceeds_cluster_cap)
+    book = {
+        "NVDA_C": dict(ticker="NVDA", entry_price=2.5, qty=4),   # $1,000
+        "AMD_C": dict(ticker="AMD", entry_price=1.0, qty=3),     # $300
+        "KO_C": dict(ticker="KO", entry_price=5.0, qty=2),       # $1,000 consumer
+    }
+    # NVDA and AMD are both "semis" in mve.universe.UNIVERSE
+    assert cluster_premium_at_risk(book, "semis") == pytest.approx(1300.0)
+    assert cluster_premium_at_risk(book, "consumer") == pytest.approx(1000.0)
+    assert cluster_premium_at_risk(book, "media") == 0.0
+
+    equity = 100_000.0
+    cap = equity * MAX_OPTIONS_CLUSTER_PCT
+    assert exceeds_cluster_cap(cap + 0.01, equity) is True
+    assert exceeds_cluster_cap(cap, equity) is False
+
+
+def test_cycle_skips_entry_that_would_breach_the_cluster_cap():
+    """End-to-end: a pre-existing same-cluster position already sitting
+    at the cluster cap must block a new same-cluster entry, even though
+    the new position's own premium is well inside the per-trade budget."""
+    from paper.daily import MAX_OPTIONS_CLUSTER_PCT
+
+    class SemisBroker(FakeOptionsBroker):
+        def contracts(self, underlying, as_of, limit=200):
+            return [contract(194, symbol=f"{underlying}260918C00194000")]
+
+        def quotes(self, underlying):
+            return {f"{underlying}260918C00194000": quote(2.4, 2.6, delta=0.60)}
+
+    equity = 100_000.0
+    existing_premium = equity * MAX_OPTIONS_CLUSTER_PCT  # already at the cap
+    ledger = {"open": {}, "closed": [], "options": {
+        "NVDA260918C00194000": dict(
+            ticker="NVDA", qty=int(existing_premium // 250), entry_price=2.5,
+            expiry="2026-09-18", strike=194.0, entry_date="2026-08-10",
+            invalidation_price=190.0, entry_underlying=200.0, basis="delta",
+            delta=0.6, spread_pct=0.02)}}
+    broker = SemisBroker(
+        positions={"NVDA260918C00194000": {"unrealized_pl": "0"}},
+        equity=equity)
+    amd_signal = dict(ticker="AMD", close=SPOT, stop=190.0, target=230.0,
+                      r_denom=10.0, score=9, rationale="test")
+    opened, _, notes = daily.run_option_cycle(
+        broker, [amd_signal], {}, str(AS_OF), ledger)
+    assert opened == []
+    assert any("cluster options exposure" in n for n in notes)
+
+
 def test_cycle_notes_when_no_contract_qualifies():
     class NoChain(FakeOptionsBroker):
         def contracts(self, underlying, as_of, limit=200):

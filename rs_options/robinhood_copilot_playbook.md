@@ -149,6 +149,28 @@ across the whole universe, about once every 10 trading days, so most
 sessions show no change at all. That is the system working as
 designed, not a stall.
 
+**Earnings blackout for autonomous options (mechanism, not backtested
+— 2026-08-27).** A long call carries binary IV-crush risk around an
+earnings release that the breakout signal has no view on — same shape
+as the VXX/UVXY ban above. No forward earnings-calendar feed exists in
+this project, so `mve/fundamentals.py` estimates a blackout window from
+each ticker's own SEC filing cadence instead of a real calendar; a
+ticker with fewer than two known filings (every ETF) is never gated —
+an unknown estimate must skip nothing, not guess something. Because
+there is no ground-truth calendar to check the proxy against, this
+cannot be judged the way FWD-3 will be; it is adopted on mechanism
+alone and named as needing a real feed before it can be tightened,
+loosened, or measured. See `docs/RESEARCH_LOG.md` (2026-08-27).
+
+**Portfolio-level options exposure (2026-08-27).** The per-underlying
+and per-cluster percentages in the hard-limits table above now apply to
+options premium at risk, not just equity notional — reusing the same
+5%/10% numbers rather than inventing new ones. At today's 1% risk-per-
+trade and 8-position cap neither currently binds (worst case is 8% in
+one cluster, under the 10% cap); both exist so a future change to
+either constant can't silently reopen a concentration the equity side
+already promises not to allow.
+
 ## Active setups (§60 Level 2 — setup kill)
 
 The live scan honors `mve/setups.py :: ACTIVE_SETUPS`. Current doctrine:
