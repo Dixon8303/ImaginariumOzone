@@ -148,6 +148,27 @@
     #7f1d1d 3px,#7f1d1d 6px);border-color:var(--failed)}
   .chip.halted{background:var(--halted);border-color:var(--halted)}
 
+  /* ── Archive accordion ── */
+  .archive{border:1px solid var(--line);background:var(--bg-deep)}
+  .archive summary{
+    display:flex;align-items:baseline;gap:14px;padding:18px 22px;cursor:pointer;
+    list-style:none;user-select:none}
+  .archive summary::-webkit-details-marker{display:none}
+  /* Chevron drawn as a rotating glyph rather than relying on the native
+     marker, so it matches the amber/mono language instead of the browser's
+     default triangle. */
+  .archive summary::before{
+    content:'›';display:inline-block;font-family:'IBM Plex Mono',monospace;
+    font-size:16px;color:var(--amber-soft);transition:transform .15s;
+    transform:rotate(90deg)}
+  .archive[open] summary::before{transform:rotate(270deg)}
+  .archive-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:26px;
+    letter-spacing:.06em;color:var(--ink-2)}
+  .archive-count{font-size:12px;margin-bottom:0}
+  .archive-sub{padding:0 22px;margin-top:-6px}
+  .archive #archiveEpisodes{padding:6px 22px 20px}
+  .archive[open] #archiveEpisodes .card:first-child{margin-top:14px}
+
   .empty{border:1px dashed var(--line);padding:44px 30px;text-align:center;
     color:var(--muted);font-style:italic}
   .empty .mono{font-family:'IBM Plex Mono',monospace;font-style:normal;font-size:12px;
@@ -256,6 +277,16 @@
     .card{gap:14px;padding:20px 18px}
     .epnum{font-size:44px}
     .epnum small{font-size:8px;letter-spacing:.2em}
+    /* .badges has flex:none in its base rule (it must not shrink when there's
+       room, e.g. next to a short topic) — but a flex item with flex-shrink:0
+       overflows instead of wrapping once its own content (three badges,
+       "↗ YOUTUBE STUDIO" being the wide one) exceeds the card width. Forcing
+       it to its own full-width row here is what lets its existing
+       flex-wrap:wrap actually engage. */
+    .badges{width:100%}
+    .archive summary{padding:16px 18px;gap:10px;flex-wrap:wrap}
+    .archive-sub{padding:0 18px}
+    .archive #archiveEpisodes{padding:4px 18px 18px}
   }
 </style>
 </head>
@@ -288,6 +319,17 @@
       <span><i class="chip halted"></i>❚❚ Halted at gate</span>
       <span><i class="chip failed"></i>Failed (striped)</span>
     </div>
+  </section>
+
+  <section id="archiveWrap" hidden>
+    <details class="archive">
+      <summary>
+        <span class="archive-title">ARCHIVE</span>
+        <span class="sub archive-count" id="archiveCount"></span>
+      </summary>
+      <p class="sub archive-sub">Published episodes older than the 5 most recent — same cards, same YouTube Studio links</p>
+      <div id="archiveEpisodes"></div>
+    </details>
   </section>
 
   <section id="calSection" hidden>
@@ -429,61 +471,45 @@ function scoreDial(score){
     <div class="dial-lbl">Topic /100</div></div>`;
 }
 
-function renderEpisodes(data){
-  const el = document.getElementById('episodes');
-  const eps = (data && data.episodes) || [];
-  document.getElementById('legend').hidden = eps.length === 0;
-  document.getElementById('mProd').textContent =
-    eps.filter(e=>['running','halted','draft'].includes(e.status)).length;
-  document.getElementById('mReview').textContent =
-    eps.filter(e=>['review','approved'].includes(e.status)).length;
-  document.getElementById('mDone').textContent =
-    eps.filter(e=>['uploaded','published'].includes(e.status)).length;
+// Same "published" test used for the header counter, the archive split,
+// and (combined with a video_id check) the YouTube Studio link — one
+// definition so the three can never quietly disagree with each other.
+const PUBLISHED_STATUSES = ['uploaded','published'];
+const isPublishedStatus = ep => PUBLISHED_STATUSES.includes(ep.status);
 
-  if(!eps.length){
-    el.innerHTML = `<div class="empty">Nothing on the floor yet.
-      <span class="mono">Run the app on the studio Mac with GITHUB_SYNC_TOKEN set — episodes appear here automatically.</span></div>`;
-    return;
-  }
-  el.innerHTML = eps.map((ep, i) => {
-    const stageMap = Object.fromEntries((ep.stages||[]).map(s=>[s.name,s.status]));
-    const segs = STAGES.map(([key,label,tier]) => {
-      const st = stageMap[key] || 'pending';
-      const stLbl = st==='done'?'Complete':st==='running'?'Running now':
-        st==='halted'?'Halted':st==='failed'?'Failed':'Not reached';
-      return `<div class="seg ${st}" tabindex="0">
-        <span class="tip"><b>${label}</b> · ${TIER_NAMES[tier]} · ${stLbl}</span></div>`;
-    }).join('');
-    const gates = ['G0.25','G0.5','G1','G2','G3','G4','G5'].map(g => {
-      const gd = (ep.gates||{})[g];
-      const cls = !gd ? '' : gd.result==='PASS' ? 'pass' : 'fail';
-      const scoreTxt = gd && gd.score != null ? ` ${gd.score}${gd.max_score?'/'+gd.max_score:''}` : '';
-      const verdict = !gd ? '' : gd.result==='PASS' ? ' ✓' : ' ✕';
-      return `<span class="gate ${cls}">${g}${verdict}${scoreTxt}</span>`;
-    }).join('');
-    const status = STATUS_LABELS[ep.status] || ep.status;
-    // Episode number, best source first: the id carries the real one
-    // ("EP22" -> 22) in the artifact-driven payload; `number` is what the
-    // FastAPI sync emits; position is the last resort.
-    const fromId = /^ep[\s_-]*(\d+)/i.exec(ep.id || '');
-    const num = fromId ? fromId[1]
-              : (ep.number != null ? ep.number : (eps.length - i));
-    // Published + has a video: the card opens YouTube Studio's analytics tab,
-    // not the public watch page — that's the only place scheduled date, watch
-    // time, views and likes all live together. Draft/running/review episodes
-    // have no video yet, so they stay non-interactive.
-    const isPublished = ['uploaded','published'].includes(ep.status) && ep.video_id;
-    const cardAttrs = isPublished
-      ? `class="card clickable" data-video="${esc(ep.video_id)}" tabindex="0" role="link"
-         aria-label="Open ${esc(ep.topic)} in YouTube Studio analytics"`
-      : `class="card"`;
-    return `<div ${cardAttrs}>
+function episodeCardHtml(ep, num){
+  const stageMap = Object.fromEntries((ep.stages||[]).map(s=>[s.name,s.status]));
+  const segs = STAGES.map(([key,label,tier]) => {
+    const st = stageMap[key] || 'pending';
+    const stLbl = st==='done'?'Complete':st==='running'?'Running now':
+      st==='halted'?'Halted':st==='failed'?'Failed':'Not reached';
+    return `<div class="seg ${st}" tabindex="0">
+      <span class="tip"><b>${label}</b> · ${TIER_NAMES[tier]} · ${stLbl}</span></div>`;
+  }).join('');
+  const gates = ['G0.25','G0.5','G1','G2','G3','G4','G5'].map(g => {
+    const gd = (ep.gates||{})[g];
+    const cls = !gd ? '' : gd.result==='PASS' ? 'pass' : 'fail';
+    const scoreTxt = gd && gd.score != null ? ` ${gd.score}${gd.max_score?'/'+gd.max_score:''}` : '';
+    const verdict = !gd ? '' : gd.result==='PASS' ? ' ✓' : ' ✕';
+    return `<span class="gate ${cls}">${g}${verdict}${scoreTxt}</span>`;
+  }).join('');
+  const status = STATUS_LABELS[ep.status] || ep.status;
+  // Published + has a video: the card opens YouTube Studio's analytics tab,
+  // not the public watch page — that's the only place scheduled date, watch
+  // time, views and likes all live together. Draft/running/review episodes
+  // have no video yet, so they stay non-interactive.
+  const isYtLink = isPublishedStatus(ep) && ep.video_id;
+  const cardAttrs = isYtLink
+    ? `class="card clickable" data-video="${esc(ep.video_id)}" tabindex="0" role="link"
+       aria-label="Open ${esc(ep.topic)} in YouTube Studio analytics"`
+    : `class="card"`;
+  return `<div ${cardAttrs}>
       <div class="epnum" aria-hidden="true">${String(num).padStart(2,'0')}<small>EP</small></div>
       <div class="card-body">
       <div class="card-top">
         <p class="topic">${esc(ep.topic)}</p>
         <div class="badges">
-          ${isPublished?'<span class="badge yt">↗ YouTube Studio</span>':''}
+          ${isYtLink?'<span class="badge yt">↗ YouTube Studio</span>':''}
           <span class="badge">${ep.mode||''}</span>
           <span class="badge status-${ep.status}">${status}</span>
         </div>
@@ -502,9 +528,66 @@ function renderEpisodes(data){
       <div class="gates">${gates}</div>
       </div>
     </div>`;
-  }).join('');
+}
 
+function renderEpisodes(data){
+  const el = document.getElementById('episodes');
+  const archiveWrap = document.getElementById('archiveWrap');
+  const archiveEl = document.getElementById('archiveEpisodes');
+  const archiveCount = document.getElementById('archiveCount');
+  const eps = (data && data.episodes) || [];
+  document.getElementById('legend').hidden = eps.length === 0;
+  document.getElementById('mProd').textContent =
+    eps.filter(e=>['running','halted','draft'].includes(e.status)).length;
+  document.getElementById('mReview').textContent =
+    eps.filter(e=>['review','approved'].includes(e.status)).length;
+  document.getElementById('mDone').textContent =
+    eps.filter(isPublishedStatus).length;
+
+  if(!eps.length){
+    el.innerHTML = `<div class="empty">Nothing on the floor yet.
+      <span class="mono">Run the app on the studio Mac with GITHUB_SYNC_TOKEN set — episodes appear here automatically.</span></div>`;
+    archiveWrap.hidden = true;
+    return;
+  }
+
+  // Episode number, best source first: the id carries the real one
+  // ("EP22" -> 22) in the artifact-driven payload; `number` is what the
+  // FastAPI sync emits; position is the last resort. Shared with the
+  // calendar's epNumOf — this wrapper only adds the positional fallback,
+  // which needs the index/length epNumOf doesn't have.
+  const numOf = (ep, i) => {
+    const n = epNumOf(ep);
+    return n !== '?' ? n : String(eps.length - i);
+  };
+  const numbered = eps.map((ep, i) => ({ep, num: numOf(ep, i)}));
+
+  // Once a video is live, its card keeps growing history (gates, stages,
+  // metadata) it no longer needs day-to-day — so cap the main page at the
+  // 5 most recently numbered published episodes and move the rest into the
+  // archive accordion below. In-flight episodes (draft/running/review) are
+  // never archived regardless of count; only "published" is subject to the cap.
+  const publishedSorted = numbered.filter(x => isPublishedStatus(x.ep))
+                                   .sort((a,b) => Number(b.num) - Number(a.num));
+  const recentIds = new Set(publishedSorted.slice(0, 5).map(x => x.ep.id));
+  const archived = publishedSorted.slice(5).sort((a,b) => Number(a.num) - Number(b.num));
+
+  // Filtering (not re-sorting) the main list preserves the feed's own order
+  // for whatever mix of in-flight and recent-published episodes remains.
+  const main = numbered.filter(x => !isPublishedStatus(x.ep) || recentIds.has(x.ep.id));
+
+  el.innerHTML = main.map(x => episodeCardHtml(x.ep, x.num)).join('');
   bindEpisodeCardLinks(el);
+
+  if (archived.length) {
+    archiveWrap.hidden = false;
+    archiveCount.textContent = `${archived.length} episode${archived.length===1?'':'s'}`;
+    archiveEl.innerHTML = archived.map(x => episodeCardHtml(x.ep, x.num)).join('');
+    bindEpisodeCardLinks(archiveEl);
+  } else {
+    archiveWrap.hidden = true;
+    archiveEl.innerHTML = '';
+  }
 }
 
 /** #episodes persists across refresh() calls (only its innerHTML is replaced),
