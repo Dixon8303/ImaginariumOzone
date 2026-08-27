@@ -1984,3 +1984,69 @@ judges this.
 
 385 tests passing (3 new for the FWD-3 tag, 2 new for the OI floor / exit
 fixes).
+
+## 2026-08-27 — The two named gaps: earnings blackout, portfolio exposure
+
+Both gaps named in the 2026-08-26 entry above as "not built this pass"
+are built now.
+
+**Earnings blackout — mechanism only, not backtested, and it cannot
+be.** A long call carries binary IV-crush risk around an earnings
+release that RS-02's breakout signal has no view on; the mechanism is
+the same shape as the VXX/UVXY ban (2026-08-16) — a structural
+headwind the position has no edge against, not a market prediction.
+
+The honest limitation: this project has no forward earnings-calendar
+feed, paid or free, wired up. Rather than invent one or leave the gap
+open, `mve.fundamentals.next_expected_filing_window` estimates a
+blackout window from a ticker's OWN filing history — the median gap
+between past SEC `filed` dates (already fetched for FWD-3), projected
+forward from the most recent one, ±5 calendar days (CALIBRATE). This is
+explicitly a PROXY for the earnings date, not the date itself: a 10-Q
+filing usually lands within days of the release, not on it, and
+`buffer_days` is a guess at that slop, not a measured one.
+
+Two honesty constraints followed from that: it can only ever GATE a
+trade, never gate on an assumption — a ticker with fewer than two known
+filings (every ETF: QQQ, IWM) always returns no window and never blocks
+anything, the same fail-toward-inaction rule the IV-rank penalty
+already uses for an uncalibrated reading. And it cannot be pre-registered
+as a testable hypothesis the way FWD-3 was: judging it needs a ground-truth
+earnings calendar to check the proxy against, which is exactly the
+missing piece. It is adopted on mechanism, the same basis as the VXX
+ban, and named here as needing a real calendar feed before it can be
+tightened, loosened, or measured — not before it can be used.
+
+Wired into `run_option_cycle` right after contract selection: an
+overlap between the estimated window and the contract's own DTE
+(entry through expiry) skips the entry, logged under the same
+`notes` list everything else in this loop already reports through —
+never silent.
+
+**Portfolio-level options exposure — reusing existing numbers, not
+inventing new ones.** `MAX_OPEN = 8` caps position COUNT; nothing
+stopped all eight landing in one cluster, which the equity side's
+hard-limits table (`robinhood_copilot_playbook.md`) already guards
+against for notional ("Max per underlying 5% of equity", "Max per
+cluster ... 10% of equity"). Applied the same two percentages to
+options PREMIUM AT RISK instead of re-deriving new numbers — deliberate,
+since a fresh CALIBRATE constant with no anchor would be exactly the
+kind of unaccountable parameter LAW 12 exists to prevent.
+
+Said plainly so it isn't overstated: at today's RISK_PCT (1%) and
+MAX_OPEN (8), **neither cap currently binds.** A single 1%-risk position
+cannot reach the 5% per-underlying cap, and even eight positions packed
+into one cluster tops out at 8% of equity, under the 10% cluster cap.
+Both exist as defense-in-depth — a future change to RISK_PCT or
+MAX_OPEN (or a bug in `contracts_to_buy`) can no longer silently exceed
+the same concentration limits already promised for equities, because
+the check exists independently of how those other constants are tuned.
+
+Implementation: `cluster_premium_at_risk`, `exceeds_underlying_cap`,
+`exceeds_cluster_cap` in `paper/daily.py`, called from `run_option_cycle`
+right before `buy_to_open`. Kept as small pure functions rather than
+inlined, specifically so the arithmetic could be tested directly against
+constructed numbers rather than only through the currently-unreachable
+end-to-end path.
+
+397 tests passing.

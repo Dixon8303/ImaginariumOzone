@@ -25,7 +25,7 @@ import json
 import os
 import time
 import urllib.request
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 
@@ -173,6 +173,68 @@ def is_profitable(facts: dict, ticker: str, trade_date: str) -> bool:
     unknown fundamental blocks rather than assuming quality."""
     total = trailing_net_income(facts, ticker, trade_date)
     return total is not None and total > 0
+
+
+# Buffer around the estimated next filing — CALIBRATE, not validated.
+# Widened rather than narrowed on purpose: the cadence estimate below is
+# already an approximation, and the failure mode this guards against
+# (holding long premium through an unpriced IV event) is asymmetric —
+# missing a real earnings date costs a skipped trade; treating a
+# earnings-adjacent trade as safe costs a crushed position.
+EARNINGS_WINDOW_BUFFER_DAYS = 5
+
+
+def next_expected_filing_window(facts: dict, ticker: str,
+                                trade_date: str,
+                                buffer_days: int = EARNINGS_WINDOW_BUFFER_DAYS
+                                ) -> tuple | None:
+    """Estimate an earnings-adjacent blackout window from this ticker's
+    OWN filing cadence — the median gap between past `filed` dates,
+    projected forward from the most recent one.
+
+    This is a PROXY for the next earnings date, not the date itself: a
+    10-Q/10-K filing usually lands within days of the earnings release
+    but is a different event, and no forward earnings-calendar feed is
+    wired into this project (that is real, undone work — see
+    docs/RESEARCH_LOG.md). Reported and used as an estimate everywhere
+    it appears, never presented as a known date.
+
+    Returns None when fewer than two filings are known for this ticker
+    as of `trade_date` — cadence is unknowable from a single data point,
+    and this must fail toward NOT gating rather than guessing at a
+    window (an ETF like QQQ/IWM, with no filings at all, always returns
+    None here — correctly, since single-company earnings risk does not
+    apply to it).
+    """
+    df = facts.get(ticker)
+    if df is None or df.empty:
+        return None
+    known = df[df["filed"] <= trade_date]
+    filed_dates = sorted(set(known["filed"]))
+    if len(filed_dates) < 2:
+        return None
+    gaps = sorted(
+        (date.fromisoformat(b) - date.fromisoformat(a)).days
+        for a, b in zip(filed_dates, filed_dates[1:]))
+    median_gap = gaps[len(gaps) // 2]
+    last_filed = date.fromisoformat(filed_dates[-1])
+    next_expected = last_filed + timedelta(days=median_gap)
+    start = next_expected - timedelta(days=buffer_days)
+    end = next_expected + timedelta(days=buffer_days)
+    return (start.isoformat(), end.isoformat())
+
+
+def overlaps_earnings_window(entry_date: date, expiry: date,
+                             window: tuple | None) -> bool:
+    """Whether a position held from `entry_date` through `expiry` would
+    span the estimated blackout `window`. `window=None` (cadence
+    unknown) always returns False — an unknown estimate must not gate a
+    trade, the same fail-toward-inaction rule as the IV-rank penalty
+    ('unknown -> no penalty, reported as uncalibrated')."""
+    if window is None:
+        return False
+    start, end = date.fromisoformat(window[0]), date.fromisoformat(window[1])
+    return start <= expiry and end >= entry_date
 
 
 def main() -> None:
