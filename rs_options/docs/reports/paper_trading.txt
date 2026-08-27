@@ -1,32 +1,9 @@
-generated: 2026-08-25
+generated: 2026-08-27
 
-PAPER SHADOW TRACK — RS-02 doctrine, as of 2026-08-25
-paper equity: $100,000.00   cash: $100,000.00
+PAPER SHADOW TRACK — 2026-08-27
 
-ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-08-25  $100,000.00   (+0.00, +0.0%)
-  over 1 calendar days, 2 recorded sessions: 0 with a change, 1 flat.
-  range so far: $100,000.00 (low) to $100,000.00 (high).
-  Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
-  Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
-
-TODAY'S SIGNALS (0):
-  none — no ticker passed breakout + regime + quality
-
-OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
-
-PAPER ORDERS PLACED (0):
-  none
-
-OPEN POSITIONS (0):
-  none
-
-PAPER OPTIONS (Alpaca, autonomous):
-  no option trades today
+No session today (market holiday, or bars not yet published). No scan, no orders, no equity changes.
+Prices below are the last available, not today's.
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
-
-CUMULATIVE RECORD: no closed trades yet
-
-Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.
