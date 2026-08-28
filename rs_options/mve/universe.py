@@ -32,6 +32,27 @@ UNIVERSE = {
     "WMT":  "consumer",
     "KO":   "consumer",
     "SBUX": "consumer",
+    # H-23 expansion, ADOPTED 2026-08-28 (operator decision, all-or-none
+    # per the registration). Selected on structure with live quotes at
+    # registration; CONFIRMED by the pre-registered walk-forward:
+    # candidates-only +0.135R over 420 OOS trades vs baseline +0.133R
+    # (docs/PREREGISTERED.md H-23, docs/reports/expansion_study.txt).
+    "UNH":  "healthcare",
+    "ABBV": "healthcare",
+    "PFE":  "healthcare",
+    "BA":   "industrials",
+    "RTX":  "industrials",
+    "T":    "telecom",
+    "VZ":   "telecom",
+    "V":    "payments",
+    "PYPL": "payments",
+    "COIN": "crypto_fin",
+    "HOOD": "crypto_fin",
+    "SOFI": "financials",
+    "ORCL": "software",
+    "CRM":  "software",
+    "CVX":  "energy",
+    "F":    "ev_auto",
 }
 # 2026-08-16 expansion (TSLA, MU, PLTR, SBUX): selected on STRUCTURE —
 # deep options liquidity (tight spreads, high OI) and cluster coverage —
@@ -42,13 +63,12 @@ UNIVERSE = {
 # out of §87 scope), VXX (banned ETP), PLUG (price too low for clean
 # long-call structures, spreads too wide).
 
-# H-23 expansion candidates (docs/PREREGISTERED.md, registered
-# 2026-08-27) — NOT tradeable. These exist only so the expansion study
-# and its backfill can target them; nothing in the live scan or paper
-# trader reads this set, and none of these names enters UNIVERSE unless
-# H-23 confirms (adoption is all-or-none, per the registration).
-# Selected on STRUCTURE with live quotes at registration; the rejected
-# names and their reasons are frozen in the H-23 entry.
+# The H-23 cohort (registered 2026-08-27, CONFIRMED and ADOPTED
+# 2026-08-28 — the 16 names are now in UNIVERSE above). Kept as a named
+# set for study reproducibility and for the tests that pin the cohort;
+# `mve.expansion_study` reads it to split cohort-vs-incumbent results.
+# Note the study's "baseline" arm meant the pre-adoption 22-name
+# UNIVERSE; re-running it post-adoption measures something different.
 CANDIDATE_UNIVERSE = {
     "UNH":  "healthcare",
     "ABBV": "healthcare",
@@ -78,12 +98,22 @@ SECTOR_ETF = {
     "JPM": "XLF", "BAC": "XLF",
     "XOM": "XLE",
     "WMT": "XLP", "KO": "XLP",
+    # H-23 adoption (2026-08-28): GICS-aligned — V/PYPL are financials
+    # since the March-2023 payment-processor reclassification; COIN,
+    # HOOD, SOFI likewise; T/VZ are communication services beside
+    # META/NFLX/DIS.
+    "UNH": "XLV", "ABBV": "XLV", "PFE": "XLV",
+    "BA": "XLI", "RTX": "XLI",
+    "T": "XLC", "VZ": "XLC",
+    "V": "XLF", "PYPL": "XLF", "COIN": "XLF", "HOOD": "XLF", "SOFI": "XLF",
+    "ORCL": "XLK", "CRM": "XLK",
+    "CVX": "XLE",
+    "F": "XLY",
 }
 
-# Candidate sector benchmarks (H-23) — GICS-aligned: V/PYPL sit in
-# financials since the March-2023 GICS reclassification of payment
-# processors; COIN and HOOD are classified financials; T/VZ are
-# communication services alongside the existing META/NFLX/DIS -> XLC.
+# The H-23 cohort's sector benchmarks — now duplicated into SECTOR_ETF
+# above by the 2026-08-28 adoption; kept, like CANDIDATE_UNIVERSE, for
+# study reproducibility and the cohort-pinning tests.
 CANDIDATE_SECTOR_ETF = {
     "UNH": "XLV", "ABBV": "XLV", "PFE": "XLV",
     "BA": "XLI", "RTX": "XLI",

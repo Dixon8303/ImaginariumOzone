@@ -2214,3 +2214,68 @@ and its gates, 5 unit — sizing caps, drawdown/cool-off logic,
 warnings). The 1-share `micro_position_size` remains as the documented
 fallback for a non-fractionable asset, no longer wired to the daily
 path.
+
+## 2026-08-28 — H-23 CONFIRMED; H-24 and H-25 registered
+
+**H-23 verdict: CONFIRMED, by the criterion frozen before the run.**
+The operator triggered the one-click study minutes after merging it;
+the runner backfilled a single 20-year pull for all 49 tickers and
+walked 18 expanding-window test years. Candidates-only: n=420,
++0.135R, 52% win rate. Baseline 22: n=846, +0.133R. Combined: n=1,266,
++0.133R. The registered bar (candidates ≥ 0R at n ≥ 30, combined
+within 0.05R of baseline) was cleared 14x over on sample size with a
+zero delta on the combined arm. The expansion thesis — frequency up
+~50% at unchanged per-trade edge — is exactly what the data shows, and
+nothing more. Four candidates were individually negative on 18-32-trade
+samples; recorded in the verdict as context and explicitly not
+actionable — the all-or-none rule exists precisely because per-ticker
+noise looks like information the moment it is convenient. Adoption
+awaits the operator's word; the candidates remain non-tradeable until
+then.
+
+**Two new setups registered before implementation.** Operator asked
+what other strategies — better, more advanced, or simpler — the program
+should consider. The survey answer is in the session record; the
+actionable residue is two entries, both drawn from the fixed-capital
+philosophy's strategy menu and both genuinely different mechanisms from
+RS-02 (mean-reversion-timed entries inside intact trends, where RS-02
+buys new highs):
+
+- **H-24 — failed-breakdown reclaim (long):** sellers close a stock
+  below its prior 20-day low, the break attracts no follow-through,
+  and the reclaim close strands them. One new frozen number
+  (`RECLAIM_WINDOW = 3` bars); everything else reuses existing
+  constants, including the deliberate choice to apply H2b but NOT H4b
+  (extension would collapse the population into near-RS-02).
+- **H-25 — pullback-and-reclaim (long):** established trend (H2b+H4b
+  verbatim), a close below the 20-day SMA within the last 5 bars, and
+  a reclaim close above it. Introduces ZERO new numeric parameters —
+  every threshold is an existing constant reused — plus a committed
+  overlap report against RS-02, so a setup that merely re-times RS-02's
+  trades cannot masquerade as diversification.
+
+Both share the frozen bar: yearly walk-forward, test windows only,
+aggregate OOS expectancy ≥ 0R at n ≥ 50 AND positive in at least half
+of judged (≥10-trade) windows. Both registered with doctrine exits
+unchanged, so exits are not a hidden degree of freedom. Confirmation
+makes a setup adoption-ELIGIBLE; activation into `ACTIVE_SETUPS` is a
+separate operator decision, one live setup at a time — the
+philosophy's own sequencing rule. What was surveyed and NOT registered,
+with reasons in the session record: cross-sectional momentum (H-22,
+already failed), short-premium income structures (§8/§87 prohibition,
+and unreachable capital requirements), volatility ETPs (banned on
+mechanism), pairs/stat-arb (needs shorting and infrastructure), ML on
+a ~40-trade/year sample (overfitting by construction), post-earnings
+drift (legitimate, blocked on a real earnings-calendar feed — still
+the program's named data gap).
+
+**Adoption, same day (operator decision): all 16 in.** The cohort
+entered `UNIVERSE` under its registered clusters — 38 tradeable names,
+five new clusters, seven of them affordable to the micro account. The
+daily fetch grows to 45 series (16 names + XLV and XLI). Expected
+signal cadence roughly doubles the old ~1-per-10-sessions; the OOS
+record says expectancy should not change, and FWD-1/2/3 accumulate
+their samples proportionally faster. The guard tests flipped from
+"candidates stay out" to "the cohort stays exactly as registered" —
+either direction of quiet drift now fails a test. First live scan over
+the expanded universe: the next evening run.

@@ -30,7 +30,12 @@ def test_save_and_load_roundtrip(tmp_path, monkeypatch):
 
 
 def test_stock_tickers_excludes_etfs():
+    from mve.universe import UNIVERSE
     stocks = stock_tickers()
     assert not set(stocks) & ETF_TICKERS
     assert "AAPL" in stocks and "NVDA" in stocks
-    assert len(stocks) <= 25          # fits the free daily request limit
+    assert "PFE" in stocks            # H-23 adoption flows through
+    # Every non-ETF universe name, exactly — the old "<= 25 fits one
+    # free-tier day" bound died with the H-23 adoption (36 stocks now);
+    # the fetcher's skip-on-disk resume is what absorbs the API limit.
+    assert len(stocks) == len(UNIVERSE) - len(ETF_TICKERS)
