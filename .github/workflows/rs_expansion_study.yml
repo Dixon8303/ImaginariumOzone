@@ -1,0 +1,51 @@
+# RS Options — H-23 universe-expansion study (docs/PREREGISTERED.md).
+# Manual-trigger only: backfills ~20 years of daily bars for the incumbent
+# universe + registered candidates from Stooq/Yahoo (free, reachable from
+# Actions runners, NOT from restricted-egress Claude sessions), runs the
+# registered baseline-vs-expanded walk-forward comparison, and commits the
+# report. Deliberately NOT on a schedule — the study is run once per
+# registration, read against the frozen criterion, and closed.
+name: RS Expansion Study
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rs-expansion-study
+  cancel-in-progress: false
+
+jobs:
+  study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet -r rs_options/mve/requirements.txt
+
+      - name: Backfill deep history (incumbents + candidates, one pull)
+        working-directory: rs_options
+        run: |
+          TICKERS=$(python -c "from mve.universe import expansion_required_tickers; print(' '.join(expansion_required_tickers()))")
+          python -m mve.backfill --years 20 $TICKERS
+
+      - name: Run the registered comparison
+        working-directory: rs_options
+        run: python -m mve.expansion_study
+
+      - name: Commit report
+        run: |
+          git config user.name "rs-paper-bot"
+          git config user.email "noreply@github.com"
+          git add rs_options/docs/reports/expansion_study.txt
+          git diff --cached --quiet || git commit -m "H-23 expansion study report"
+          git pull --rebase origin main
+          git push
