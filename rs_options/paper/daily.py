@@ -53,6 +53,7 @@ from mve.position_manager import (OpenPosition, evaluate_exit,
 from mve.report import save_report
 from mve.rs_features import compute_features
 from mve.setups import MAX_ENTRY_GAP, detect_all, entry_limit_price
+from mve.significance import forward_track_line
 from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
 from mve.volume_profile import overhead_supply, point_of_control
@@ -760,9 +761,7 @@ def build_report(today, acct, positions, signals, placed, skipped,
                   f"win rate {len(wins) / len(rs):.0%} | "
                   f"expectancy {sum(rs) / len(rs):+.3f}R | "
                   f"total {sum(rs):+.2f}R"]
-        if len(rs) < 20:
-            lines.append(f"  (n={len(rs)} — the track record starts meaning "
-                         "something around 20+ closed trades)")
+        lines.append(forward_track_line(len(rs), len(wins) / len(rs)))
     else:
         lines.append("CUMULATIVE RECORD: no closed trades yet")
     lines += ["", "Paper account, fake money, §87 shadow track. Live "

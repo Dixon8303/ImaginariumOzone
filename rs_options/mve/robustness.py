@@ -201,6 +201,18 @@ def summary(r: dict) -> str:
         lines.append("  For scale: 0.5 is a common minimum screen, 1.0 is "
                      "good, and anything above 2 on a retail daily-bar "
                      "system should be assumed wrong until proven.")
+        from .significance import T_SIGNIFICANT, t_stat, years_to_t
+        t = t_stat(s, 15.0)
+        need = years_to_t(s)
+        if t is not None:
+            lines.append(
+                f"  t-stat (Sharpe x sqrt(years)): {t:.2f} over 15y — "
+                f"{'at' if t >= T_SIGNIFICANT else 'below'} the "
+                f"conventional {T_SIGNIFICANT:.0f}.0 bar. A forward track "
+                f"at this Sharpe needs ~{need:.0f}y to reach it alone: "
+                "the paper track verifies execution and can DISconfirm; "
+                "it cannot independently re-prove the edge on any "
+                "reasonable clock (mve/significance.py).")
 
     b = r.get("bootstrap") or {}
     if b:
