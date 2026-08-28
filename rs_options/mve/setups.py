@@ -156,6 +156,82 @@ def detect_rs02(stock: pd.DataFrame, features: dict) -> dict | None:
                                  f"rel volume {features['rel_volume']:.1f}x"))
 
 
+# ── H-24 / H-25 (docs/PREREGISTERED.md, registered 2026-08-28 BEFORE
+#    this code existed; implemented same day — the registration commit
+#    precedes this one, and dated implementation notes there record the
+#    two places the frozen prose needed an exact reading). Research
+#    setups: in DETECTORS for the backtester, deliberately NOT in
+#    ACTIVE_SETUPS — activation is a separate operator decision that
+#    only becomes available if the registered study confirms.
+
+# H-24's one genuinely new number, frozen at registration: the break
+# must have happened within this many bars before the reclaim close.
+RECLAIM_WINDOW = 3
+
+
+def detect_h24(stock: pd.DataFrame, features: dict) -> dict | None:
+    """H-24 — failed-breakdown reclaim, long. Sellers CLOSED the stock
+    below its prior 20-day low within the last RECLAIM_WINDOW bars, the
+    break attracted no follow-through, and the latest bar closes back
+    above the level, on normal volume, with the market not in freefall,
+    in an intact long-term trend (H2b; H4b deliberately NOT applied —
+    frozen choice, see the registration).
+
+    Level reading (implementation note in PREREGISTERED.md): the 20-day
+    low window ENDS before the reclaim window, because a break bar
+    inside its own level window can never close below that window's
+    minimum low — the level must predate the break to be breakable."""
+    close, low = stock["close"], stock["low"]
+    need = RS02_BREAKOUT_LOOKBACK + RECLAIM_WINDOW + 1
+    if len(close) < max(need, REGIME_SMA_LEN):
+        return None
+    if not above_sma(stock):                       # H2b, fail-closed
+        return None
+    level = float(low.iloc[-need:-(RECLAIM_WINDOW + 1)].min())
+    break_closes = close.iloc[-(RECLAIM_WINDOW + 1):-1]
+    broke = bool((break_closes < level).any())
+    reclaimed = float(close.iloc[-1]) > level
+    volume_ok = features["rel_volume"] >= 1.0      # "at least normal"
+    market_ok = features["bench_return"] >= RS02_BENCH_MIN_RETURN
+    if not (broke and reclaimed and volume_ok and market_ok):
+        return None
+    return _candidate(stock, features, "H-24",
+                      rationale=(f"closed below the {RS02_BREAKOUT_LOOKBACK}d "
+                                 f"low {level:.2f} within {RECLAIM_WINDOW} "
+                                 f"bars, reclaimed at "
+                                 f"{float(close.iloc[-1]):.2f} on "
+                                 f"{features['rel_volume']:.1f}x volume"))
+
+
+def detect_h25(stock: pd.DataFrame, features: dict) -> dict | None:
+    """H-25 — pullback-and-reclaim, long. Established trend (H2b AND
+    H4b, both adopted filters verbatim), at least one of the last
+    INVALIDATION_LOOKBACK bars CLOSED below its own rolling 20-day SMA
+    (RS01_STRUCTURE_SMA), and the latest bar closes back above it, on
+    normal volume, market not in freefall. Introduces no new numeric
+    parameter — every threshold is an existing constant reused."""
+    close = stock["close"]
+    if len(close) < MOM_LOOKBACK + 1:              # H4b horizon, fail-closed
+        return None
+    if not (above_sma(stock) and quality_mom(stock)):
+        return None
+    sma20 = close.rolling(RS01_STRUCTURE_SMA).mean()
+    pull_closes = close.iloc[-(INVALIDATION_LOOKBACK + 1):-1]
+    pull_smas = sma20.iloc[-(INVALIDATION_LOOKBACK + 1):-1]
+    pulled_back = bool((pull_closes < pull_smas).any())
+    reclaimed = float(close.iloc[-1]) > float(sma20.iloc[-1])
+    volume_ok = features["rel_volume"] >= 1.0
+    market_ok = features["bench_return"] >= RS02_BENCH_MIN_RETURN
+    if not (pulled_back and reclaimed and volume_ok and market_ok):
+        return None
+    return _candidate(stock, features, "H-25",
+                      rationale=(f"pullback closed under the "
+                                 f"{RS01_STRUCTURE_SMA}d SMA within "
+                                 f"{INVALIDATION_LOOKBACK} bars, reclaimed "
+                                 f"at {float(close.iloc[-1]):.2f} on "
+                                 f"{features['rel_volume']:.1f}x volume"))
+
+
 def opportunity_score(features: dict, setup_id: str) -> int:
     """0-10 interpretability score (§32) — CALIBRATE rubric.
 
@@ -196,7 +272,8 @@ def _candidate(stock: pd.DataFrame, features: dict, setup_id: str,
     }
 
 
-DETECTORS = {"RS-01": detect_rs01, "RS-02": detect_rs02}
+DETECTORS = {"RS-01": detect_rs01, "RS-02": detect_rs02,
+             "H-24": detect_h24, "H-25": detect_h25}
 
 
 def detect_all(stock: pd.DataFrame, features: dict,

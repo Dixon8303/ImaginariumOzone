@@ -382,6 +382,24 @@ this file; a re-parameterized variant registers as a new entry.
 
 **Status:** OPEN — registered, implementation and study to follow.
 
+**Implementation notes (2026-08-28, added after the fact — the frozen
+text above is NOT edited).** Two places the prose needed an exact
+reading, resolved before any result existed:
+
+1. *The level window ends before the reclaim window.* Read literally,
+   "the prior 20-day low excluding the latest bar" would include the
+   break bars themselves — and a bar can never CLOSE below the minimum
+   LOW of a window containing itself, making rule 2 unsatisfiable. The
+   only satisfiable reading, implemented: the level is the 20-day low
+   of the window ending immediately before the last `RECLAIM_WINDOW`
+   bars, so the level predates the break it must be broken by.
+2. *"The last 3 bars"* means the 3 bars immediately preceding the
+   signal bar (the signal bar itself closed above and cannot be the
+   break).
+3. The H2b trend condition is embedded IN the detector, so every
+   research run of this setup carries it — there is no unfiltered
+   variant to accidentally study.
+
 ---
 
 ## H-25 — Pullback-and-reclaim, long
@@ -430,6 +448,19 @@ data-pull rules as in H-24. Activation is a separate operator decision,
 one live setup at a time.
 
 **Status:** OPEN — registered, implementation and study to follow.
+
+**Implementation notes (2026-08-28, added after the fact — the frozen
+text is NOT edited).** The 20-day SMA is the ROLLING SMA evaluated at
+each bar (a pullback bar is compared to the SMA as of that bar, not
+today's); "the last 5 bars" means the 5 bars immediately preceding the
+signal bar; both trend conditions (H2b and H4b) are embedded in the
+detector itself. The committed overlap report is measured on FILLED
+trades' (ticker, signal-date) pairs — the backtester records tickered
+signal dates only for fills — a slightly narrower measure than "all
+signals," disclosed here rather than silently substituted. Shared
+corner case for both entries, resolved toward no verdict: n ≥ 50 with
+NO single window reaching 10 trades leaves the breadth clause
+unjudgeable and returns INCONCLUSIVE, never a convenient pass.
 
 ---
 
