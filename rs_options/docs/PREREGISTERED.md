@@ -272,6 +272,159 @@ study reads them only through `mve.expansion_study`.
 that can reach the bar vendors: the operator's Mac, or the
 `rs_expansion_study` GitHub Actions job).
 
+**Verdict (2026-08-28). CONFIRMED by the registered criterion.** The
+study ran on a single 20-year pull (Actions run 33140266618, report
+committed as `docs/reports/expansion_study.txt`), 18 expanding-window
+test years:
+
+    baseline (22)     n=  846  +0.133R  wr 52%  total +112.2R
+    candidates only   n=  420  +0.135R  wr 52%  total  +56.7R
+    combined          n=1,266  +0.133R  wr 52%  total +168.9R
+
+Candidates-only expectancy ≥ 0R at n ≥ 30: met, 14x over the minimum
+sample. Combined within 0.05R of baseline: met exactly — the delta is
+zero at the reported precision, with the candidates fractionally ahead.
+Frequency rose ~50% at unchanged per-trade edge, which is precisely the
+mechanism the registration predicted and nothing more.
+
+Honest notes that travel with the verdict: four candidates were
+individually negative (PFE −0.126R, T −0.199R, V −0.169R, VZ −0.039R)
+on per-ticker samples of 18–32 trades — noise-sized, reported for
+context, and NOT actionable: per-ticker cherry-picking after seeing
+results is prohibited above. This pull's baseline (+0.133R) also sits
+above the H20 holdout figure (+0.117R) — a different vendor and a test
+span that includes the flattering 2021–2026 years; the comparison
+between arms is internally consistent, which is what the criterion
+measures.
+
+**Adoption (all 16 or none) is the operator's decision and has not
+been taken as of this verdict.** The candidates remain non-tradeable
+until the operator gives the word.
+
+---
+
+## H-24 — Failed-breakdown reclaim, long
+
+**Registered:** 2026-08-28, BEFORE any detector or study code exists.
+The commit carrying this entry precedes the implementation commit; git
+history is the timestamp.
+
+**Provenance.** The fixed-capital philosophy's "forced participation"
+proxy (`docs/FIXED_CAPITAL_PHILOSOPHY.md` §13: break of a level, failed
+continuation, return through the level, normal volume, market not
+contradicting, entry after the retest confirms), translated to daily
+bars and to the long-only side this program is allowed to trade (§87):
+the tradeable version of a failed move is a failed BREAKDOWN — sellers
+break support, the break attracts no follow-through, and the reclaim
+strands them. This is a mean-reversion-timed entry inside an intact
+trend, mechanically different from RS-02's strength-breakout: RS-02
+buys a stock making new highs; H-24 buys one that just survived a trip
+below support. The two cannot fire on the same bar (a close above the
+prior 20-day high cannot also be a reclaim of the prior 20-day low).
+
+**Frozen rules — daily bars; every reused number imports the existing
+constant, never re-types it:**
+
+1. **Level:** the prior 20-day low (`RS02_BREAKOUT_LOOKBACK` window,
+   excluding the latest bar — the mirror of RS-02's prior-high).
+2. **Break:** at least one of the last 3 bars CLOSED below that level
+   (a close, not a wick — "a visible break"). The 3-bar window is the
+   one genuinely new number in this registration
+   (`RECLAIM_WINDOW = 3`, CALIBRATE): the document's "holds on a
+   retest" reads as days, not weeks, and it is frozen here before any
+   result exists.
+3. **Reclaim (the signal bar):** the latest bar closes back ABOVE the
+   level.
+4. **Volume:** signal-bar relative volume ≥ 1.0 — the document's "at
+   least normal," which is the existing RS-01 volume standard.
+5. **Market context:** benchmark return ≥ `RS02_BENCH_MIN_RETURN`
+   (−2%) — "the broader market is not contradicting."
+6. **Trend context — frozen choice, stated in advance:** H2b applies
+   (stock above its own 200-day SMA; a reclaim in a broken long-term
+   trend is a falling knife, not trapped sellers). H4b does NOT apply:
+   requiring +10% 12-1 momentum would collapse the population into
+   near-RS-02 extension, and the mechanism under test is trend-intact
+   dip-survival, not extension. Fails closed under 200 bars of history.
+7. **Stop:** the standard 5-day swing-low invalidation every setup
+   already uses (`INVALIDATION_LOOKBACK`) — the breakdown episode's low
+   by construction. **Entry:** next open, H15a limit cap. **Exits:**
+   the doctrine bracket unchanged — +3R target, stop, 15-bar time exit.
+   Zero new exit machinery, so exits are not a hidden degree of
+   freedom.
+
+**Success criterion, fixed now.** Yearly expanding-window walk-forward
+(`yearly_splits`), test windows only, on the tradeable UNIVERSE as of
+the study run (recorded in the report), one consistent data pull,
+corrupt-bar guards active, judged GROSS with the break-even cost
+reported (consistent with every prior verdict):
+
+- **CONFIRMED (adoption-eligible)** if aggregate out-of-sample
+  expectancy ≥ 0R at **n ≥ 50** closed trades (the philosophy's own
+  minimum initial sample), AND expectancy is positive in at least half
+  of the judged test windows (a window counts when it holds ≥ 10
+  trades) — one lucky year must not carry the verdict.
+- **FAILED** if aggregate < 0R at n ≥ 50, or fewer than half the
+  judged windows are positive.
+- **INCONCLUSIVE** below n = 50, regardless of how the numbers look.
+
+**What CONFIRMED does and does not do.** It makes the setup
+adoption-ELIGIBLE. Activation into `ACTIVE_SETUPS` is a separate
+operator decision (§60), one new live setup at a time per the
+philosophy's own sequencing rule, sharing `MAX_OPEN` and the cluster
+caps with RS-02 — never a private allocation. A FAILED verdict stays in
+this file; a re-parameterized variant registers as a new entry.
+
+**Status:** OPEN — registered, implementation and study to follow.
+
+---
+
+## H-25 — Pullback-and-reclaim, long
+
+**Registered:** 2026-08-28, same commit-order discipline as H-24.
+
+**Provenance.** The fixed-capital philosophy's priority-1 strategy
+(`docs/FIXED_CAPITAL_PHILOSOPHY.md` §5): "identify a security in an
+established daily trend; wait for a controlled pullback toward a
+support or moving-average zone; enter only after price reclaims the
+level with acceptable volume and market context; define invalidation
+below the recent swing low." Buying strength on a discount inside a
+trend, versus RS-02's buying strength at new highs — entry timing is
+the difference under test.
+
+**Frozen rules — this registration introduces NO new numeric
+parameter; every threshold is an existing constant reused:**
+
+1. **Established trend:** H2b AND H4b, both adopted filters verbatim —
+   close above the 200-day SMA and 12-1 momentum ≥ +10%. "Established
+   daily trend" is exactly what they already measure. Fails closed
+   under ~13 months of history.
+2. **Controlled pullback:** at least one of the last 5 bars
+   (`INVALIDATION_LOOKBACK` window) CLOSED below the 20-day SMA
+   (`RS01_STRUCTURE_SMA` — the moving-average zone the codebase
+   already defines).
+3. **Reclaim (the signal bar):** the latest bar closes back ABOVE the
+   20-day SMA.
+4. **Volume:** signal-bar relative volume ≥ 1.0 ("acceptable volume,"
+   the RS-01 standard).
+5. **Market context:** benchmark return ≥ `RS02_BENCH_MIN_RETURN`.
+6. **Stop:** the standard 5-day swing-low invalidation (the pullback
+   low by construction). **Entry:** next open, H15a cap. **Exits:**
+   doctrine bracket unchanged.
+
+**Overlap accounting, committed in advance:** the study reports how
+many H-25 signals coincide with an RS-02 signal on the same
+ticker-date. A setup that mostly re-times RS-02's trades adds
+correlation, not coverage, and the report must say which it is.
+
+**Success criterion, fixed now:** identical machinery and thresholds to
+H-24 — CONFIRMED at aggregate OOS expectancy ≥ 0R with n ≥ 50 AND
+positive in ≥ half of judged (≥10-trade) windows; FAILED and
+INCONCLUSIVE as in H-24; GROSS with break-even reported; universe and
+data-pull rules as in H-24. Activation is a separate operator decision,
+one live setup at a time.
+
+**Status:** OPEN — registered, implementation and study to follow.
+
 ---
 
 ## H-22 — Cross-sectional momentum, long only
