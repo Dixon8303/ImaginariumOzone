@@ -2350,3 +2350,39 @@ with each other is the standing argument for testing over adopting;
 registrable someday as a stop-placement study, low priority. The
 prop-firm sections (trailing-vs-EOD drawdown, account routing) do not
 apply to any account this program touches.
+
+## 2026-08-28 — H-24 and H-25 implemented (registration preceded, as required)
+
+Operator said "build them." The detectors (`mve/setups.py ::
+detect_h24, detect_h25`), the study runner (`mve/setup_study.py`), and
+the one-click Actions job (`rs_setup_study.yml`) now exist; the commits
+land AFTER the registration commit, so git history shows the rules were
+frozen before the first line of implementation.
+
+Design notes worth recording:
+
+- **Conditions are embedded in the detectors**, not layered through
+  `ENTRY_FILTERS`: H-24 carries H2b inside itself, H-25 carries
+  H2b+H4b. There is deliberately NO unfiltered variant of either setup
+  for a later study to "discover" — the registered setup IS the only
+  runnable one.
+- **The study applies the H15a entry cap** (`max_gap_pct =
+  MAX_ENTRY_GAP`) because the registrations froze "entry at next open,
+  H15a limit cap" as part of the setups.
+- **Two prose ambiguities resolved before results existed**, recorded
+  as dated implementation notes in PREREGISTERED.md (the frozen text
+  untouched): H-24's level window must end before the reclaim window
+  (the literal reading is unsatisfiable — a bar cannot close below the
+  minimum low of a window containing itself), and H-25's SMA is the
+  rolling per-bar value. The overlap report runs on filled trades'
+  ticker+signal-date pairs, disclosed as narrower than "all signals."
+- **The criterion is a pure function** (`setup_study.judge`) with its
+  own tests, including the lucky-year case the breadth clause exists
+  for: aggregate positive but 1-of-4 windows positive correctly FAILS.
+- **`ACTIVE_SETUPS` is untouched and pinned by a test**: the live
+  scanner cannot trade either setup before a CONFIRMED verdict AND a
+  separate operator activation, one live setup at a time.
+
+The study runs where the bar vendors are reachable: Actions ->
+"RS Setup Study" -> Run workflow (button appears once this merges), or
+the operator's Mac. 449 tests passing (20 new).

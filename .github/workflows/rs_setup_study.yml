@@ -1,0 +1,51 @@
+# RS Options — H-24 / H-25 setup study (docs/PREREGISTERED.md).
+# Manual-trigger only, same pattern as rs_expansion_study: backfills
+# ~20 years of daily bars from Stooq/Yahoo (reachable from Actions
+# runners, not from restricted-egress Claude sessions), runs the
+# registered walk-forward for both setups, and commits the report. The
+# study is run once per registration, read against the frozen
+# criterion, and closed.
+name: RS Setup Study
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rs-setup-study
+  cancel-in-progress: false
+
+jobs:
+  study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet -r rs_options/mve/requirements.txt
+
+      - name: Backfill deep history (one pull, whole universe)
+        working-directory: rs_options
+        run: |
+          TICKERS=$(python -c "from mve.universe import expansion_required_tickers; print(' '.join(expansion_required_tickers()))")
+          python -m mve.backfill --years 20 $TICKERS
+
+      - name: Run the registered setup study
+        working-directory: rs_options
+        run: python -m mve.setup_study
+
+      - name: Commit report
+        run: |
+          git config user.name "rs-paper-bot"
+          git config user.email "noreply@github.com"
+          git add rs_options/docs/reports/setup_study.txt
+          git diff --cached --quiet || git commit -m "H-24/H-25 setup study report"
+          git pull --rebase origin main
+          git push
