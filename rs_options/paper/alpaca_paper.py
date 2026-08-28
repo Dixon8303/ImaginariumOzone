@@ -85,6 +85,21 @@ class PaperBroker:
             body["limit_price"] = f"{limit_price:.2f}"
         return self._req("POST", "/v2/orders", body=body)
 
+    def submit_fractional_limit(self, symbol: str, qty: float,
+                                limit_price: float) -> dict:
+        """Simple limit day buy with a fractional quantity — the entry
+        used by the fixed-capital micro doctrine. Alpaca does not accept
+        fractional quantities inside bracket orders, so a fractional
+        entry has NO attached stop or target: the daily loop enforces
+        exits at the close (docs/FIXED_CAPITAL_PHILOSOPHY.md §6 owns the
+        gap-risk consequences of that). The limit price still expresses
+        the H15a gap cap exactly as the bracket path does."""
+        return self._req("POST", "/v2/orders", body={
+            "symbol": symbol, "qty": f"{qty:g}", "side": "buy",
+            "type": "limit", "limit_price": f"{limit_price:.2f}",
+            "time_in_force": "day",
+        })
+
     def cancel_symbol_orders(self, symbol: str) -> int:
         n = 0
         for o in self.orders(status="open", symbols=symbol):

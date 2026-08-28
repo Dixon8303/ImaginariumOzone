@@ -59,9 +59,10 @@ from mve.volume_profile import overhead_supply, point_of_control
 
 from .growth_tracker import format_growth, growth_summary, load_equity_history
 from .growth_tracker import record_equity
-from .micro_sizing import (count_open_micro_positions, micro_mode_banner,
-                           micro_override_active, micro_position_size,
-                           micro_trade_warning)
+from .micro_sizing import (count_open_micro_positions, micro_cooloff_active,
+                           micro_drawdown_paused, micro_fractional_size,
+                           micro_fractional_warning, micro_mode_banner,
+                           micro_override_active)
 from .option_costs import collect as collect_option_costs
 from .option_costs import format_costs
 from .option_costs import record as record_option_costs
@@ -490,7 +491,9 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
                   else "time/other")
         closed_today.append(dict(ticker=sym, entry_date=rec["entry_date"],
                                  exit_date=today, entry=rec["entry"],
-                                 exit=exit_px, r=r, reason=reason))
+                                 exit=exit_px, r=r, reason=reason,
+                                 micro_override=rec.get("micro_override",
+                                                        False)))
     ledger["closed"].extend(closed_today)
 
     # 3. time exits (held past the doctrine's 15 trading days)
@@ -503,10 +506,59 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             time_exits.append(sym)
             rec["closing"] = today            # reconciled next run
 
+    # 3b. micro fractional exits — a fractional entry carries no bracket
+    # (Alpaca rejects fractional quantities in bracket orders), so for
+    # these positions this loop IS the stop and the target, evaluated at
+    # the close like the options cycle. The sell is a market day order:
+    # the universe is liquid large caps, the notional is tens of
+    # dollars, and a certain exit beats pennies of spread when the rule
+    # says the trade is over (the philosophy's market-order prohibition
+    # is scoped to thin securities). Booked by the step-2 reconciliation
+    # next run, same as time exits.
+    micro_exits = []
+    for sym, rec in list(ledger["open"].items()):
+        if not rec.get("fractional") or rec.get("entry_estimated") \
+                or sym not in positions or rec.get("closing"):
+            continue
+        bars = all_bars.get(sym)
+        if bars is None or bars.empty:
+            continue
+        close = float(bars["close"].iloc[-1])
+        reason = ("stop" if close <= rec["stop"]
+                  else "target" if close >= rec["target"] else None)
+        if reason:
+            broker.cancel_symbol_orders(sym)
+            broker.close_position(sym)
+            rec["closing"] = today
+            micro_exits.append((sym, close, reason))
+    micro_exit_lines = [
+        f"  MICRO EXIT: {sym} {reason.upper()} at close ${close:.2f} — "
+        "market sell submitted; booked by next run's reconciliation."
+        for sym, close, reason in micro_exits]
+
     # 4. new entries
     signals = scan(all_bars)
     micro = micro_override_active(equity)
-    micro_warnings = [micro_mode_banner(equity)] if micro else []
+    micro_warnings = ([micro_mode_banner(equity)] + micro_exit_lines
+                      if micro else micro_exit_lines)
+    fundamentals = load_fundamentals()
+    # Fixed-capital survival gates (docs/FIXED_CAPITAL_PHILOSOPHY.md,
+    # integrated 2026-08-27): each can only PREVENT a micro entry,
+    # never force or enlarge one, so the non-martingale guarantee is
+    # untouched. None applies to standard doctrine sizing.
+    micro_paused = None
+    if micro:
+        if micro_drawdown_paused(load_equity_history()):
+            micro_paused = ("drawdown pause: equity is 10%+ below its "
+                            "recent peak — no new micro entries until it "
+                            "recovers (playbook freeze, applied to the "
+                            "micro book)")
+        elif micro_cooloff_active(ledger, today):
+            micro_paused = ("cooling-off: last two micro trades were "
+                            "losses — no new micro entries for "
+                            "5 trading days (adapted two-loss shutdown)")
+        if micro_paused:
+            micro_warnings.append("  " + micro_paused.upper())
     placed, skipped = [], []
     for sig in signals:
         sym = sig["ticker"]
@@ -518,18 +570,38 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             continue
         if micro:
             # Operator-authorized override for accounts too small for
-            # doctrine sizing to ever return a share — see
-            # paper/micro_sizing.py. Never applied to options.
+            # doctrine sizing — now the fixed-capital fractional
+            # doctrine (see paper/micro_sizing.py). Never applied to
+            # options.
+            if micro_paused:
+                skipped.append((sym, micro_paused))
+                continue
             if count_open_micro_positions(ledger) >= 1:
-                skipped.append((sym, "micro override: a micro position "
-                                "is already open"))
+                skipped.append((sym, "micro: one position at a time "
+                                "(fixed-capital doctrine)"))
                 continue
-            qty = micro_position_size(equity, sig["close"])
-            if qty < 1:
-                skipped.append((sym, "micro override: cannot afford "
-                                "even 1 share"))
+            # No overnight binary-event exposure during validation: skip
+            # when the estimated earnings window (filing-cadence proxy —
+            # same mechanism as the options gate) overlaps the expected
+            # hold. Unknown cadence never gates.
+            window = next_expected_filing_window(fundamentals, sym, today) \
+                if fundamentals else None
+            hold_end = date.fromisoformat(today) + timedelta(days=30)
+            if overlaps_earnings_window(date.fromisoformat(today), hold_end,
+                                        window):
+                skipped.append((sym, "micro: estimated earnings window "
+                                f"{window[0]}..{window[1]} inside the "
+                                "expected hold — no binary-event "
+                                "exposure during validation"))
                 continue
-            micro_warnings += micro_trade_warning(sym, equity, sig["close"])
+            qty = micro_fractional_size(equity, sig["close"], sig["stop"])
+            if qty <= 0:
+                skipped.append((sym, "micro: no size satisfies the risk "
+                                "ceiling + reserve floor + broker "
+                                "minimum — no trade IS the decision"))
+                continue
+            micro_warnings += micro_fractional_warning(
+                sym, equity, qty, sig["close"], sig["stop"])
         else:
             qty = position_size(equity, sig["close"], sig["stop"])
             if qty < 1:
@@ -540,22 +612,30 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
         # open when the open is at or below the cap, and does not fill
         # when the open gapped through.
         cap = entry_limit_price(sig["close"])
-        order = broker.submit_bracket(sym, qty, sig["stop"], sig["target"],
-                                      limit_price=cap)
+        if micro:
+            try:
+                order = broker.submit_fractional_limit(sym, qty, cap)
+            except Exception as e:      # asset not fractionable, etc.
+                skipped.append((sym, f"micro: fractional order rejected "
+                                f"({e}) — no trade"))
+                continue
+        else:
+            order = broker.submit_bracket(sym, qty, sig["stop"],
+                                          sig["target"], limit_price=cap)
         placed.append((sig, qty))
         ledger["open"][sym] = dict(
             entry_date=today, entry=sig["close"], entry_estimated=True,
             entry_cap=cap, signal_close=sig["close"],
             stop=sig["stop"], target=sig["target"], qty=qty,
             order_id=order.get("id"), setup="RS-02",
-            micro_override=micro)
+            micro_override=micro, fractional=micro)
 
     # ── autonomous PAPER options (the co-pilot side, now hands-off) ──
     opt = ([], [], ["options disabled: broker has no options support"])
     if hasattr(broker, "option_positions"):
         try:
             opt = run_option_cycle(broker, signals, all_bars, today, ledger,
-                                   fundamentals=load_fundamentals())
+                                   fundamentals=fundamentals)
         except Exception as e:                  # never lose the equity run
             opt = ([], [], [f"option cycle FAILED: {e}"])
 

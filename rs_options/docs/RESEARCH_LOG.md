@@ -2050,3 +2050,167 @@ constructed numbers rather than only through the currently-unreachable
 end-to-end path.
 
 397 tests passing.
+
+## 2026-08-27 — The 20%-a-day question, answered with numbers
+
+Operator asked whether the system can grow the account ~20% a day, with
+every trade making at least 20%, and what would have to change. Three
+answers, all arithmetic, then what was actually done.
+
+**1. 20% a day is not a target, it is a category error.** Compounding
+20% daily for one trading year multiplies an account by 1.2^252 ≈
+9×10^19. Starting from $29, that crosses the total wealth of Earth
+(~$5×10^14) in about 167 trading days — eight months. No parameter in
+this repo, no leverage, and no instrument changes that arithmetic; any
+system that could do it would consume the entire market as a rounding
+error. The best documented track records in history — Medallion at
+~66%/year gross, Buffett at ~20%/year over decades — are per YEAR.
+
+**2. The measured edge sets a mathematical growth ceiling, and it is
+~15% a year.** With RS-02's 20-year numbers (51% win rate, avg win
+1.19R vs avg loss 1R, +0.117R expectancy), the Kelly-optimal risk is
+~9.8% of equity per trade, and the log-optimal compound growth at that
+sizing is ~+15%/year — at the price of routine 50%+ drawdowns. Risking
+MORE than that lowers long-run growth (over-betting past Kelly is how
+accounts die faster by trying to grow faster). Doctrine sizing (1%
+risk) compounds ~+2.8%/year at ~0.5 Sharpe. There is no strategy
+change that reaches 20%/day, because the ceiling belongs to the EDGE,
+not the wrapper: at ~1 trade per 10 days, 20%/day compounded requires
++519% of the account per trade — +519R at doctrine sizing, roughly
+4,400x the measured +0.117R. The 21 hypotheses tested so far moved
+expectancy by hundredths of an R each. (Kelly figures are approximate
+— the R distribution is not binary — but the order of magnitude is not
+in question.)
+
+**3. "Every trade makes at least 20%" is the operator's own recorded
+failure mode, inverted.** Half of RS-02's trades LOSE (49% over 20
+years); no filter ever tested removed losing trades except H15a, which
+trimmed 34 of them. A per-trade profit floor can only be implemented as
+a tight take-profit — and the 2026-08-15 exit study measured exactly
+that: tight targets nearly zeroed the edge, "wide" won on train AND
+test. The operator's own two broker histories are the same lesson in
+cash: 65% win rate and −$625 net (Robinhood), 58% and small-loss
+(Schwab, 1,429 round trips) — both from capping winners while losers
+ran. On the options track the 20% figure is already routine for
+WINNERS (a 0.6-delta call on a +1R underlying move typically gains far
+more than 20% of premium); what no design can deliver is "every trade."
+
+**Related operator question, same session: "high-probability setups."**
+Answered from the file: what the phrase usually sells is win rate, and
+win rate is half a number — expectancy = p×W − q×L is the whole one.
+The repo's evidence, in one place: the two broker histories above (high
+probability, negative money); the §32 opportunity score FAILING its
+holdout (H20) with score-10 gating cutting total return from +36.1R to
++24.6R even while raising the average; and round 5's autopsy, where six
+of seven selectivity filters deleted PROFITABLE trades (H9a alone
+removed 406 trades worth +43.56R). RS-02 wins ~51% of the time and is
+positive because its winners average 1.19R against 1R losers — a
+"low-probability" system by marketing standards and a profitable one by
+arithmetic. High-probability OPTION structures as marketed (far-OTM
+premium selling, "90% win rate") are short premium: prohibited (§8,
+§87), and structurally the same trap — frequent small wins funding a
+catastrophic tail.
+
+**What was actually done: the one honest lever is frequency.** The
+edge per trade is what it measures; the trades per year is a design
+choice. H-23 (docs/PREREGISTERED.md) registers a structurally-selected
+16-name universe expansion — five new clusters (healthcare,
+industrials, telecom, payments, crypto-adjacent financials), seven
+micro-affordable names for the sub-$500 account, every candidate
+screened against the repo's own criteria with LIVE quotes at
+registration (prices recorded in the entry; MSTR rejected under the
+VXX mechanism standard as a leveraged proxy vehicle; AVGO/INTC/QCOM
+and COST/HD rejected as concentration in already-3-deep clusters). At
+~40 signals/year instead of ~25, doctrine-sized compounding rises from
+~2.8% to ~4.8%/year IF the edge holds on the new names — which is
+precisely what H-23 exists to test before any of them trades. The
+registration commit precedes the study implementation; the study
+(`mve.expansion_study`) aborts on any data-coverage gap rather than
+shrinking an arm; adoption is all-or-none. Expansion also accelerates
+FWD-1/2/3, whose verdicts wait on sample sizes that ~25 signals/year
+accumulate slowly.
+
+Registered before implementation; see the H-23 entry for the frozen
+criterion. The study needs a machine that can reach the bar vendors
+(this cloud session cannot): the operator's Mac, or the one-click
+`rs_expansion_study` GitHub Actions job added alongside.
+
+## 2026-08-27 — Outside philosophy integrated: the fixed-capital doctrine
+
+Operator supplied an evidence-based fixed-capital trading philosophy
+(committed verbatim as `docs/FIXED_CAPITAL_PHILOSOPHY.md`) for the real
+~$26 Robinhood account: no deposits ever, growth only from realized
+results. Assessed the same way the 2026-08-23 outside dossier was —
+adopt what fills a real gap, adapt what needs translating, reject what
+conflicts with measured evidence, and record all three.
+
+**First, what it independently confirms.** The document arrives at this
+repo's core laws from its own direction: expectancy after costs over
+win rate, pre-registration and parameter freeze, no averaging down or
+revenge sizing, no-trade as a valid outcome, win rate "descriptive, not
+sufficient by itself," and 50-100+ trades before robustness claims.
+Convergent doctrine from an independent source is worth noting — it is
+the same lesson the operator's own broker histories taught.
+
+**ADOPTED — fractional fixed-capital sizing replaces the 1-share micro
+override.** The override's whole design ("one full share or no trade")
+existed because whole shares made risk-based sizing return zero below
+~$500 equity. Fractional shares dissolve that constraint: quantity =
+planned dollar risk / stop distance is computable at any equity.
+`micro_fractional_size` now sizes micro entries under three caps —
+planned loss <= 4% of equity (the document's $0.75-1.00 at $26),
+notional <= 75% so a 25% cash reserve always survives a full stop-out,
+and the broker's $1 minimum (below it: no trade). Constants are
+CALIBRATE, sourced from the document's tables, not from a backtest.
+Mechanically this forced one real trade-off: Alpaca rejects fractional
+quantities in bracket orders, so micro entries are now simple limit
+day orders (H15a cap unchanged) and the evening run enforces stop and
+target at the close — the same loop-managed pattern the options cycle
+already uses. An overnight gap can therefore exceed the planned loss;
+the report says so on every micro entry rather than pretending the
+ceiling is guaranteed (the document's own §6 makes the same
+disclosure).
+
+**ADOPTED — survival gates, all trade-preventing.** Three of the
+document's rules now gate micro entries (only micro — see REJECTED):
+the earnings blackout (reusing the filing-cadence proxy built for the
+options track; unknown cadence never gates), a drawdown pause when
+equity sits 10%+ below its recent peak (the playbook's freeze made
+concrete for the micro book — it reads the growth log to HALT, never to
+size, so the non-martingale guarantee holds in the only direction it
+can move: less exposure), and a 5-session cooling-off after two
+consecutive micro losses.
+
+**ADAPTED.** The document's two-loss shutdown ends a discretionary
+trader's session; an automated system trading once per ~10 days has no
+session to end, so it became the bounded cooling-off above. Its
+market-off switch maps onto machinery that already exists
+(`data_is_fresh`, the canary suite, the daily/drawdown halts). Its
+"copy decision architecture, not the button press" is this assessment
+itself.
+
+**REJECTED for the validated track, with reasons.** None of the
+survival gates apply to standard doctrine sizing on the $100k paper
+account: an earnings filter on stock entries is exactly the shape of
+selectivity that round 5 measured destroying value (H9a deleted 406
+trades worth +43.56R), and one-position-at-a-time would discard the
+breadth the 20-year figures were measured on. Survival rules earn
+their keep where ruin is the binding risk — a $26 account — not where
+they would silently rewrite a measured system. The document's strategy
+menu (pullback-and-reclaim, failed-breakout reversal) is genuinely
+different from RS-02 and is NOT adopted by recommendation: a setup
+enters this codebase through registration and out-of-sample evidence
+(LAW 12/20) or not at all. The failed-breakout/reclaim setup is a
+reasonable future H-24 candidate if the operator wants it tested.
+
+**Also worth quoting, because it is the house position exactly:**
+"Treating AI output as a risk-control mechanism" appears on the
+document's prohibited list. Correct — the risk controls here are the
+tested interlocks and caps in code, not any model's judgment,
+including mine.
+
+419 tests passing (12 new: 7 integration for the fractional doctrine
+and its gates, 5 unit — sizing caps, drawdown/cool-off logic,
+warnings). The 1-share `micro_position_size` remains as the documented
+fallback for a non-fractionable asset, no longer wired to the daily
+path.

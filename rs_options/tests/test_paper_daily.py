@@ -85,7 +85,7 @@ class FakeBroker:
         self._positions = positions or {}
         self._equity = equity
         self.brackets, self.closed_syms, self.cancelled = [], [], []
-        self.limits = []
+        self.limits, self.fractionals = [], []
 
     def account(self):
         return {"equity": str(self._equity), "cash": str(self._equity)}
@@ -106,6 +106,10 @@ class FakeBroker:
         self.brackets.append((symbol, qty, stop_price, target_price))
         self.limits.append(limit_price)
         return {"id": f"ord-{symbol}"}
+
+    def submit_fractional_limit(self, symbol, qty, limit_price):
+        self.fractionals.append((symbol, qty, limit_price))
+        return {"id": f"frac-{symbol}"}
 
     def cancel_symbol_orders(self, symbol):
         self.cancelled.append(symbol)
@@ -431,15 +435,28 @@ def test_run_ignores_micro_override_when_not_armed(monkeypatch):
     assert "MICRO OVERRIDE" not in report
 
 
-def test_run_places_one_share_when_micro_override_armed(monkeypatch):
+def test_run_places_fractional_entry_under_fixed_capital_doctrine(monkeypatch):
+    """Micro entries are FRACTIONAL simple limit orders (no bracket —
+    Alpaca rejects fractional bracket orders), sized under the
+    fixed-capital doctrine: planned loss <= 4% of equity, notional <=
+    75% of equity (docs/FIXED_CAPITAL_PHILOSOPHY.md)."""
+    from paper.micro_sizing import (MICRO_RESERVE_PCT,
+                                    MICRO_RISK_CEILING_PCT)
     monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
     broker = FakeBroker(equity=29.0)
     report = daily.run(broker, cheap_breakout_universe(), TODAY)
-    assert broker.brackets and broker.brackets[0][1] == 1   # qty == 1
+    assert broker.brackets == []                # never a bracket for micro
+    assert broker.fractionals and broker.fractionals[0][0] == "NVDA"
+    sym, qty, cap = broker.fractionals[0]
     ledger = daily.load_ledger()
-    assert ledger["open"]["NVDA"]["micro_override"] is True
+    rec = ledger["open"]["NVDA"]
+    assert rec["micro_override"] is True and rec["fractional"] is True
+    assert qty * rec["signal_close"] <= 29.0 * (1 - MICRO_RESERVE_PCT) + 1e-6
+    assert qty * (rec["signal_close"] - rec["stop"]) \
+        <= 29.0 * MICRO_RISK_CEILING_PCT + 1e-6
     assert "MICRO OVERRIDE ACTIVE" in report
-    assert "MICRO OVERRIDE: NVDA" in report
+    assert "fixed-capital doctrine" in report
+    assert "reserve kept" in report
 
 
 def test_micro_override_caps_at_one_concurrent_position(monkeypatch):
@@ -451,7 +468,90 @@ def test_micro_override_caps_at_one_concurrent_position(monkeypatch):
     broker = FakeBroker(equity=29.0,
                         positions={"OLD": {"qty": "1", "unrealized_pl": "0"}})
     daily.run(broker, cheap_breakout_universe(), TODAY)
-    assert broker.brackets == []                # second micro trade blocked
+    assert broker.brackets == [] and broker.fractionals == []
+
+
+def test_micro_fractional_stop_is_enforced_at_the_close(monkeypatch):
+    """A fractional position has no broker-side bracket, so the daily
+    loop must sell when the close breaks the stop."""
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+    daily.save_ledger({"open": {"NVDA": dict(
+        entry_date="2026-08-10", entry=19.0, entry_estimated=False,
+        stop=18.0, target=23.0, qty=0.8, order_id="x", setup="RS-02",
+        micro_override=True, fractional=True)}, "closed": []})
+    bars = cheap_breakout_universe()
+    # force NVDA's last close below the stop
+    bars["NVDA"] = make_bars([19.0] * 299 + [17.5], end=TODAY)
+    broker = FakeBroker(equity=27.0,
+                        positions={"NVDA": {"qty": "0.8",
+                                            "unrealized_pl": "-1.2"}})
+    report = daily.run(broker, bars, TODAY)
+    assert "NVDA" in broker.closed_syms
+    assert "MICRO EXIT: NVDA STOP" in report
+    ledger = daily.load_ledger()
+    assert ledger["open"]["NVDA"]["closing"] == TODAY
+
+
+def test_micro_drawdown_pause_blocks_new_entries(monkeypatch):
+    """Equity 10%+ below its recent peak -> no new micro entries (the
+    playbook's freeze, applied to the micro book). Trade-preventing
+    only — nothing is sold, nothing is resized."""
+    from paper import growth_tracker
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+    growth_tracker.record_equity("2026-08-26", 33.0)
+    broker = FakeBroker(equity=29.0)            # 12% below the 33 peak
+    report = daily.run(broker, cheap_breakout_universe(), TODAY)
+    assert broker.fractionals == []
+    assert "DRAWDOWN PAUSE" in report
+
+
+def test_micro_cooloff_after_two_straight_losses(monkeypatch):
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+    daily.save_ledger({"open": {}, "closed": [
+        dict(ticker="A", entry_date="2026-08-18", exit_date="2026-08-20",
+             entry=10.0, exit=9.5, r=-1.0, reason="stop",
+             micro_override=True),
+        dict(ticker="B", entry_date="2026-08-21", exit_date="2026-08-24",
+             entry=10.0, exit=9.4, r=-1.2, reason="stop",
+             micro_override=True),
+    ]})
+    broker = FakeBroker(equity=29.0)
+    report = daily.run(broker, cheap_breakout_universe(), TODAY)
+    assert broker.fractionals == []
+    assert "COOLING-OFF" in report
+
+
+def test_micro_earnings_window_blocks_entry(monkeypatch):
+    """No overnight binary-event exposure during validation: an
+    estimated earnings window inside the expected hold skips the micro
+    entry (filing-cadence proxy, same mechanism as the options gate)."""
+    import pandas as pd
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+    # quarterly cadence projecting the next filing right into the hold
+    facts = {"NVDA": pd.DataFrame([
+        {"filed": "2026-02-25", "period_end": "2026-01-31", "value": 1.0},
+        {"filed": "2026-05-27", "period_end": "2026-04-30", "value": 1.0},
+    ])}   # gap 91d -> next expected 2026-08-26, inside TODAY+30d
+    monkeypatch.setattr(daily, "load_fundamentals", lambda: facts)
+    broker = FakeBroker(equity=29.0)
+    report = daily.run(broker, cheap_breakout_universe(), TODAY)
+    assert broker.fractionals == []
+    assert "earnings window" in report
+
+
+def test_micro_fractional_rejection_degrades_to_no_trade(monkeypatch):
+    """An asset the broker will not trade fractionally is a no-trade,
+    never a crash and never a silent fallback to a whole-share bracket."""
+    monkeypatch.setenv("RS_MICRO_ACCOUNT_OVERRIDE", "YES")
+
+    class NoFractions(FakeBroker):
+        def submit_fractional_limit(self, symbol, qty, limit_price):
+            raise RuntimeError("asset is not fractionable")
+
+    broker = NoFractions(equity=29.0)
+    report = daily.run(broker, cheap_breakout_universe(), TODAY)
+    assert broker.brackets == []
+    assert "fractional order rejected" in report
 
 
 def test_micro_override_steps_aside_once_equity_recovers(monkeypatch):

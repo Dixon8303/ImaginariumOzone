@@ -184,6 +184,96 @@ hard gate would repeat here.
 
 ---
 
+## H-23 — Universe expansion holds the RS-02 edge
+
+**Registered:** 2026-08-27, BEFORE the study module or any backtest on
+the candidate names existed. The commit carrying this entry precedes the
+commit implementing `mve.expansion_study`; git history is the timestamp.
+
+**Why an expansion at all.** The operator asked how to grow the account
+faster. The honest levers are expectancy and trade frequency; the 22-name
+universe produces ~25 RS-02 signals a year. A structurally-selected
+expansion raises frequency at (if this hypothesis holds) the same
+per-trade edge, and accelerates every forward test in this file
+(FWD-1/2/3 all wait on sample size). It also widens the set of
+micro-affordable names for the sub-$500 override account.
+
+**Claim.** RS-02, with the adopted filters exactly as they stand today
+(H2b 200-day regime, H4b 12-1 momentum ≥10%, H15a 2% gap cap), has
+non-negative out-of-sample expectancy on the candidate names below, and
+adding them does not degrade the combined universe's edge.
+
+**The candidates, fixed now — selected on STRUCTURE only** (options
+depth, cluster coverage, price structure able to carry doctrine
+contracts), with live prices recorded at registration (2026-08-27):
+
+| Ticker | Cluster | Sector ETF | Price | Micro-affordable |
+|---|---|---|---|---|
+| UNH | healthcare (new) | XLV | $395 | no |
+| ABBV | healthcare (new) | XLV | $258 | no |
+| PFE | healthcare (new) | XLV | $28 | yes |
+| BA | industrials (new) | XLI | $210 | no |
+| RTX | industrials (new) | XLI | $212 | no |
+| T | telecom (new) | XLC | $25 | yes |
+| VZ | telecom (new) | XLC | $49 | yes |
+| V | payments (new) | XLF | $380 | no |
+| PYPL | payments (new) | XLF | $61 | yes |
+| COIN | crypto_fin (new) | XLF | $191 | no |
+| HOOD | crypto_fin (new) | XLF | $110 | yes |
+| SOFI | financials | XLF | $19 | yes |
+| ORCL | software | XLK | $152 | no |
+| CRM | software | XLK | $252 | no |
+| CVX | energy | XLE | $200 | no |
+| F | ev_auto | XLY | $14 | yes |
+
+Evaluated and REJECTED at registration, so the rejections cannot be
+quietly revisited after results exist: MSTR (leveraged single-asset
+proxy whose premium-to-holdings can compress structurally — the
+mechanism standard behind the VXX/UVXY ban extends to it), AVGO, INTC,
+QCOM (semis already 3-deep; concentration, not coverage), COST, HD
+(consumer already 3-deep), LLY, CAT (a doctrine call on a ~$800-1,200
+underlying costs several times the 1% risk budget at current equity —
+equity-only names add cluster weight without serving the options
+track), JNJ (healthcare 4th, no distinct structure over the three
+kept), GE (aerospace already covered by BA+RTX).
+
+**Data requirement.** One consistent daily-bar pull for BOTH arms —
+every incumbent, every candidate, benchmark and sector ETFs from the
+same vendor in the same backfill, corrupt-bar guards active. A missing
+ticker aborts the study (LAW 18); it never silently shrinks an arm.
+Young listings (COIN, HOOD, SOFI — 2021; PLTR already in-universe —
+2020) contribute their full real history; the H4b filter already
+fail-closes their first ~13 months.
+
+**Success criterion, fixed now.** On the yearly expanding-window
+walk-forward (benchmark-span windows, MIN_TRAIN_YEARS=3), test windows
+only, measured inside the combined universe:
+
+- **CONFIRMED** if candidate-only expectancy ≥ 0R at **n ≥ 30 candidate
+  trades**, AND combined-universe expectancy ≥ baseline − 0.05R (both
+  arms from the same pull).
+- **FAILED** if candidate-only expectancy < −0.05R at n ≥ 30, OR the
+  combined universe drags more than 0.05R below baseline.
+- **INCONCLUSIVE** below n = 30, regardless of how the numbers look.
+
+**Adoption is ALL candidates or NONE.** Per-ticker cherry-picking after
+seeing results is prohibited — keeping only the names that backtested
+well is selection bias wearing a lab coat, the exact failure H-22's
+control exposed. If the list fails, a narrower list may be registered
+later as a NEW entry with a written structural rationale, never by
+editing this one.
+
+**What may NOT be done before the verdict.** The candidates do not
+enter the tradeable `UNIVERSE`, the live scan, or the paper trader.
+They exist only in `CANDIDATE_UNIVERSE` (a fetch/study set), and the
+study reads them only through `mve.expansion_study`.
+
+**Status:** OPEN — registered, awaiting the study run (needs a machine
+that can reach the bar vendors: the operator's Mac, or the
+`rs_expansion_study` GitHub Actions job).
+
+---
+
 ## H-22 — Cross-sectional momentum, long only
 
 **Registered:** 2026-08-23, before any implementation exists. The study
