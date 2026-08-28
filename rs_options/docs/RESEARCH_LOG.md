@@ -2050,3 +2050,87 @@ constructed numbers rather than only through the currently-unreachable
 end-to-end path.
 
 397 tests passing.
+
+## 2026-08-27 — The 20%-a-day question, answered with numbers
+
+Operator asked whether the system can grow the account ~20% a day, with
+every trade making at least 20%, and what would have to change. Three
+answers, all arithmetic, then what was actually done.
+
+**1. 20% a day is not a target, it is a category error.** Compounding
+20% daily for one trading year multiplies an account by 1.2^252 ≈
+9×10^19. Starting from $29, that crosses the total wealth of Earth
+(~$5×10^14) in about 167 trading days — eight months. No parameter in
+this repo, no leverage, and no instrument changes that arithmetic; any
+system that could do it would consume the entire market as a rounding
+error. The best documented track records in history — Medallion at
+~66%/year gross, Buffett at ~20%/year over decades — are per YEAR.
+
+**2. The measured edge sets a mathematical growth ceiling, and it is
+~15% a year.** With RS-02's 20-year numbers (51% win rate, avg win
+1.19R vs avg loss 1R, +0.117R expectancy), the Kelly-optimal risk is
+~9.8% of equity per trade, and the log-optimal compound growth at that
+sizing is ~+15%/year — at the price of routine 50%+ drawdowns. Risking
+MORE than that lowers long-run growth (over-betting past Kelly is how
+accounts die faster by trying to grow faster). Doctrine sizing (1%
+risk) compounds ~+2.8%/year at ~0.5 Sharpe. There is no strategy
+change that reaches 20%/day, because the ceiling belongs to the EDGE,
+not the wrapper: at ~1 trade per 10 days, 20%/day compounded requires
++519% of the account per trade — +519R at doctrine sizing, roughly
+4,400x the measured +0.117R. The 21 hypotheses tested so far moved
+expectancy by hundredths of an R each. (Kelly figures are approximate
+— the R distribution is not binary — but the order of magnitude is not
+in question.)
+
+**3. "Every trade makes at least 20%" is the operator's own recorded
+failure mode, inverted.** Half of RS-02's trades LOSE (49% over 20
+years); no filter ever tested removed losing trades except H15a, which
+trimmed 34 of them. A per-trade profit floor can only be implemented as
+a tight take-profit — and the 2026-08-15 exit study measured exactly
+that: tight targets nearly zeroed the edge, "wide" won on train AND
+test. The operator's own two broker histories are the same lesson in
+cash: 65% win rate and −$625 net (Robinhood), 58% and small-loss
+(Schwab, 1,429 round trips) — both from capping winners while losers
+ran. On the options track the 20% figure is already routine for
+WINNERS (a 0.6-delta call on a +1R underlying move typically gains far
+more than 20% of premium); what no design can deliver is "every trade."
+
+**Related operator question, same session: "high-probability setups."**
+Answered from the file: what the phrase usually sells is win rate, and
+win rate is half a number — expectancy = p×W − q×L is the whole one.
+The repo's evidence, in one place: the two broker histories above (high
+probability, negative money); the §32 opportunity score FAILING its
+holdout (H20) with score-10 gating cutting total return from +36.1R to
++24.6R even while raising the average; and round 5's autopsy, where six
+of seven selectivity filters deleted PROFITABLE trades (H9a alone
+removed 406 trades worth +43.56R). RS-02 wins ~51% of the time and is
+positive because its winners average 1.19R against 1R losers — a
+"low-probability" system by marketing standards and a profitable one by
+arithmetic. High-probability OPTION structures as marketed (far-OTM
+premium selling, "90% win rate") are short premium: prohibited (§8,
+§87), and structurally the same trap — frequent small wins funding a
+catastrophic tail.
+
+**What was actually done: the one honest lever is frequency.** The
+edge per trade is what it measures; the trades per year is a design
+choice. H-23 (docs/PREREGISTERED.md) registers a structurally-selected
+16-name universe expansion — five new clusters (healthcare,
+industrials, telecom, payments, crypto-adjacent financials), seven
+micro-affordable names for the sub-$500 account, every candidate
+screened against the repo's own criteria with LIVE quotes at
+registration (prices recorded in the entry; MSTR rejected under the
+VXX mechanism standard as a leveraged proxy vehicle; AVGO/INTC/QCOM
+and COST/HD rejected as concentration in already-3-deep clusters). At
+~40 signals/year instead of ~25, doctrine-sized compounding rises from
+~2.8% to ~4.8%/year IF the edge holds on the new names — which is
+precisely what H-23 exists to test before any of them trades. The
+registration commit precedes the study implementation; the study
+(`mve.expansion_study`) aborts on any data-coverage gap rather than
+shrinking an arm; adoption is all-or-none. Expansion also accelerates
+FWD-1/2/3, whose verdicts wait on sample sizes that ~25 signals/year
+accumulate slowly.
+
+Registered before implementation; see the H-23 entry for the frozen
+criterion. The study needs a machine that can reach the bar vendors
+(this cloud session cannot): the operator's Mac, or the one-click
+`rs_expansion_study` GitHub Actions job added alongside.
