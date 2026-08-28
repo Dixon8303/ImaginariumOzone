@@ -2279,3 +2279,74 @@ their samples proportionally faster. The guard tests flipped from
 "candidates stay out" to "the cohort stays exactly as registered" —
 either direction of quiet drift now fails a test. First live scan over
 the expanded universe: the next evening run.
+
+## 2026-08-28 — Day-trading dossier assessed: two methods adopted, one self-critique
+
+Operator supplied extracted notes from a day-trading-bot video (mean
+reversion to the open, prop-firm survival math, statistical
+verification) and asked what is new, novel, or useful. Assessed on the
+established pattern — METHODS verifiable here versus FINDINGS that are
+someone else's unverified claims — with the same outcome shape as the
+2026-08-23 dossier: its statistics transferred, its strategy did not.
+
+**ADOPTED — the t-statistic of a track record
+(`mve/significance.py`).** t ≈ Sharpe x sqrt(years). Standard
+statistics, and a real gap: this project computed Sharpe but never how
+much EVIDENCE a record of that Sharpe and length constitutes. Computed
+honestly it cuts both ways. The 15-year holdout at Sharpe 0.52 earns
+**t ≈ 2.0 — the entire 20-year evidence base sits exactly at the
+conventional significance bar, not comfortably past it.** And a
+forward track at the same Sharpe needs **~16 years** to reach t = 2 by
+itself, which permanently reframes the paper track and the §67 gate:
+the forward record's jobs are execution verification (do fills, costs,
+and slippage match what the backtest assumed?) and DISconfirmation (a
+sufficiently bad run can kill the hypothesis fast — asymmetry works in
+that direction); independent re-proof of the edge is not on any
+reasonable clock. Wired into the robustness summary and, as a standing
+honesty line, into the paper report's cumulative record.
+
+**ADOPTED — exact loss-streak expectations (same module).** The
+dossier's numbers verified to the digit (50% win rate over 100 trades:
+a 4-loss streak is 97.3% likely, 5-loss 81.0%, 6-loss 54.6%; computed
+exactly by dynamic programming, not the rule-of-thumb). At RS-02's
+measured 52% win rate over one expanded year (~40 trades): a 2-loss
+streak is a CERTAINTY, 3 losses ~94%, 4 losses ~70%. The paper report
+now states the expectation next to the record, because the first real
+losing streak is the moment discipline historically breaks — the
+operator's own broker history is the exhibit.
+
+**The self-critique that math forced.** Yesterday's fixed-capital
+integration adopted a 2-consecutive-loss cooling-off for micro
+entries. The streak table says that trigger fires on noise
+essentially every year — P(2-loss streak) ≈ 1 at any honest win rate
+over a year of trades. KEPT anyway, eyes open: it is trade-preventing
+only, costs at most a handful of skipped sessions at this cadence, and
+its purpose was always behavioral (a survival brake for the account's
+operator, per the philosophy document), not informational. But it is
+now documented as noise-triggered by design, so nobody later mistakes
+its firing for a signal that something is wrong.
+
+**Corroboration, already core here (not new, worth the cross-check):**
+position size as the ruin lever (our Kelly analysis, 1%/5% caps),
+overfitting via multiple testing (the pre-registration file exists
+because of exactly the "run 100 strategies, one wins by luck"
+failure), survival over profit maximization (the fixed-capital
+doctrine), and frequency as the honest route to sample size (H-23 was
+registered on precisely that logic).
+
+**REJECTED, with reasons.** The core strategy — fading displacement
+from the market open, ~20 setups/day — is an INTRADAY program: it
+needs intraday data, execution, and monitoring this architecture does
+not have, its economics die at retail spreads without prop-firm
+leverage, and a sub-$25k Robinhood account is structurally barred from
+it by the pattern-day-trader rule regardless of merit. Its daily-bar
+cousins are already registered (H-24 failed-breakdown reclaim, H-25
+pullback-and-reclaim) — the reversion-after-overreaction idea is being
+tested at the timescale this program can actually trade. Static
+math-based stops (vs structural swing-low invalidation) directly
+contradict the other outside source integrated this week, which
+demanded strict structural invalidation — outside experts disagreeing
+with each other is the standing argument for testing over adopting;
+registrable someday as a stop-placement study, low priority. The
+prop-firm sections (trailing-vs-EOD drawdown, account routing) do not
+apply to any account this program touches.
