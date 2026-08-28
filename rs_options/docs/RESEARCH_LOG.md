@@ -2268,3 +2268,14 @@ mechanism), pairs/stat-arb (needs shorting and infrastructure), ML on
 a ~40-trade/year sample (overfitting by construction), post-earnings
 drift (legitimate, blocked on a real earnings-calendar feed — still
 the program's named data gap).
+
+**Adoption, same day (operator decision): all 16 in.** The cohort
+entered `UNIVERSE` under its registered clusters — 38 tradeable names,
+five new clusters, seven of them affordable to the micro account. The
+daily fetch grows to 45 series (16 names + XLV and XLI). Expected
+signal cadence roughly doubles the old ~1-per-10-sessions; the OOS
+record says expectancy should not change, and FWD-1/2/3 accumulate
+their samples proportionally faster. The guard tests flipped from
+"candidates stay out" to "the cohort stays exactly as registered" —
+either direction of quiet drift now fails a test. First live scan over
+the expanded universe: the next evening run.

@@ -4,10 +4,12 @@ Fetches each stock's historical reported dates from Alpha Vantage's
 EARNINGS endpoint into data/earnings/<ticker>.csv. The API key comes
 from the ALPHAVANTAGE_API_KEY environment variable ONLY — never a file.
 
-Free-tier limits: ~25 requests/day, 5/minute. The universe holds 16
-stocks (ETFs have no earnings), so one run fits in a day; the fetch
-sleeps between calls and skips tickers already on disk, so an
-interrupted or rate-limited run just gets rerun tomorrow.
+Free-tier limits: ~25 requests/day, 5/minute. Since the H-23 adoption
+(2026-08-28) the universe holds 36 stocks (ETFs have no earnings), so a
+FULL fresh fetch no longer fits in one free-tier day — it takes two.
+That is already handled, not a problem: the fetch sleeps between calls
+and skips tickers on disk, so a rate-limited run simply gets rerun
+tomorrow and picks up where it stopped.
 
     python -m mve.earnings              # fetch missing tickers
     python -m mve.earnings --refresh    # re-fetch everything

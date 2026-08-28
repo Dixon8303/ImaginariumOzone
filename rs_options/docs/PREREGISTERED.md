@@ -301,6 +301,12 @@ measures.
 been taken as of this verdict.** The candidates remain non-tradeable
 until the operator gives the word.
 
+**Adoption (2026-08-28, operator decision):** ADOPTED, all 16, the
+same day the verdict was recorded. The cohort entered `UNIVERSE` with
+its registered clusters and sector benchmarks; the ten at-registration
+rejections stayed out; the guard tests flipped from candidates-stay-
+out to cohort-stays-exactly-as-registered. Live universe: 38 names.
+
 ---
 
 ## H-24 — Failed-breakdown reclaim, long
