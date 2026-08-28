@@ -130,6 +130,27 @@ built rather than just tuning `MAX_POSITION_PCT`. Turn it off, or grow
 the account past $500, and the run reverts to validated sizing with no
 other change needed.
 
+**The fixed-capital doctrine (2026-08-27,
+`docs/FIXED_CAPITAL_PHILOSOPHY.md`).** The real small account operates
+as a fixed-capital experiment: no deposits, no margin, no options at
+this scale (a doctrine contract needs ~$5,000 of equity regardless —
+`paper/option_costs.py`), one position at a time, and growth secondary
+to survival and evidence. The micro override now sizes FRACTIONALLY
+under it instead of buying one whole share: planned loss capped at 4%
+of equity (~$1 on a $26 account), position notional capped so 25% of
+equity always stays in cash reserve, position quantity = planned risk ÷
+stop distance, floored to broker precision. Three survival gates can
+skip an entry, never enlarge one: an estimated earnings window inside
+the expected hold (filing-cadence proxy — no binary-event exposure
+during validation), equity 10%+ below its recent peak (the drawdown
+freeze applied to the micro book), and a 5-session cooling-off after
+two consecutive micro losses. Fractional positions carry no broker-side
+bracket — the evening run enforces stop/target at the close, and an
+overnight gap can exceed the planned loss; that residual risk is
+accepted and stated, not hidden. The playbook's prohibited list applies
+in full: no averaging down, no widened stops, no doubling after losses,
+no forced trades, and no rule changes after seeing a result.
+
 **Tracking growth, without ever resizing for it.** Every evening run
 records the account's equity for that session (`paper/growth_tracker.py`)
 and the report shows the running total, the range since inception, and

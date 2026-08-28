@@ -82,10 +82,111 @@ def micro_position_size(equity: float, close: float) -> int:
     NOT apply RISK_PCT or MAX_POSITION_PCT — at this equity size those
     rules are exactly what returns zero every time; the override exists
     to skip that math for a single share, not to relax it into a
-    fractional cap that still returns zero."""
+    fractional cap that still returns zero.
+
+    SUPERSEDED for live micro entries by `micro_fractional_size` (the
+    2026-08-27 fixed-capital doctrine, docs/FIXED_CAPITAL_PHILOSOPHY.md)
+    — kept because "one whole share" remains the honest fallback for a
+    broker or asset without fractional support."""
     if close <= 0 or equity < close:
         return 0
     return 1
+
+
+# ── Fixed-capital fractional sizing (docs/FIXED_CAPITAL_PHILOSOPHY.md,
+#    integrated 2026-08-27 — see docs/RESEARCH_LOG.md for the
+#    adopt/adapt/reject assessment). CALIBRATE: these constants come
+#    from the philosophy document's §3/§6 tables, not from a backtest.
+MICRO_RESERVE_PCT = 0.25        # cash never committed to the position
+MICRO_RISK_CEILING_PCT = 0.04   # planned loss cap (~$1 on a $26 account)
+MICRO_MIN_NOTIONAL = 1.00       # broker fractional minimum order value
+MICRO_QTY_PRECISION = 3         # decimal places, floored (never rounded up)
+MICRO_DRAWDOWN_PAUSE_PCT = 0.10   # playbook's 10% freeze, applied to the
+                                  # micro book concretely
+MICRO_COOLOFF_SESSIONS = 5        # trading days paused after 2 straight
+                                  # losing micro trades (adapted from the
+                                  # philosophy's two-loss shutdown)
+
+
+def micro_fractional_size(equity: float, close: float, stop: float) -> float:
+    """Fractional quantity under the fixed-capital doctrine: planned
+    dollar loss capped at MICRO_RISK_CEILING_PCT of equity, notional
+    capped so MICRO_RESERVE_PCT stays in cash, floored to broker
+    precision, zero when the result is below the broker minimum.
+
+    Unlike `micro_position_size`, this restores RISK-BASED sizing at
+    small equity — fractional shares are what make `risk / stop
+    distance` computable below one whole share, which is the
+    philosophy's answer to the arithmetic that forced the 1-share
+    override in the first place.
+
+    Fails to 0.0 (no trade) on any degenerate input: that is the
+    doctrine's "no-trade is a successful decision", not an error."""
+    if close <= 0 or stop <= 0 or stop >= close or equity <= 0:
+        return 0.0
+    risk_per_share = close - stop
+    qty_by_risk = (equity * MICRO_RISK_CEILING_PCT) / risk_per_share
+    qty_by_notional = (equity * (1.0 - MICRO_RESERVE_PCT)) / close
+    scale = 10 ** MICRO_QTY_PRECISION
+    qty = int(min(qty_by_risk, qty_by_notional) * scale) / scale
+    if qty * close < MICRO_MIN_NOTIONAL:
+        return 0.0
+    return qty
+
+
+def micro_drawdown_paused(history: list) -> bool:
+    """True when current equity sits MICRO_DRAWDOWN_PAUSE_PCT or more
+    below the peak of the last ~week of recorded sessions — the
+    playbook's "10% drawdown -> FREEZE" made concrete for the micro
+    book. Reads the growth log (reporting data) to HALT entries only;
+    it never sizes anything, so the non-martingale guarantee holds —
+    a drawdown can only ever REDUCE exposure."""
+    recent = history[-6:]
+    if len(recent) < 2:
+        return False
+    peak = max(h["equity"] for h in recent)
+    current = recent[-1]["equity"]
+    return peak > 0 and current <= peak * (1.0 - MICRO_DRAWDOWN_PAUSE_PCT)
+
+
+def micro_cooloff_active(ledger: dict, today: str) -> bool:
+    """True when the last two CLOSED micro trades were both losses and
+    the most recent exit is within MICRO_COOLOFF_SESSIONS trading days —
+    the philosophy's two-consecutive-loss shutdown, adapted to a daily
+    cadence (a per-'session' shutdown is vacuous for a system that
+    trades about once every 10 days). Trade-preventing only."""
+    import pandas as pd
+    micro_closed = [c for c in ledger.get("closed", [])
+                    if c.get("micro_override") and c.get("r") is not None]
+    if len(micro_closed) < 2:
+        return False
+    last_two = micro_closed[-2:]
+    if not all(c["r"] < 0 for c in last_two):
+        return False
+    last_exit = last_two[-1].get("exit_date")
+    if not last_exit:
+        return False
+    held = max(0, len(pd.bdate_range(last_exit, today)) - 1)
+    return held < MICRO_COOLOFF_SESSIONS
+
+
+def micro_fractional_warning(ticker: str, equity: float, qty: float,
+                             close: float, stop: float) -> list:
+    """Report lines for a fractional micro entry — what is committed,
+    what is planned to be lost, and what stays in reserve."""
+    notional = qty * close
+    planned_loss = qty * (close - stop)
+    return [
+        f"  MICRO (fixed-capital doctrine): {ticker} {qty:g} sh "
+        f"@ ${close:.2f} = ${notional:.2f} "
+        f"({notional / equity:.0%} of equity; "
+        f"{1 - notional / equity:.0%} reserve kept).",
+        f"    planned loss ${planned_loss:.2f} "
+        f"({planned_loss / equity:.1%} of equity, ceiling "
+        f"{MICRO_RISK_CEILING_PCT:.0%}). Stops are enforced at the close "
+        "by the daily loop, not intraday — an overnight gap can exceed "
+        "the planned loss (docs/FIXED_CAPITAL_PHILOSOPHY.md §6).",
+    ]
 
 
 def count_open_micro_positions(ledger: dict) -> int:

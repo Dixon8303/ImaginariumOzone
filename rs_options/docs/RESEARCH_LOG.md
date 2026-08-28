@@ -2134,3 +2134,83 @@ Registered before implementation; see the H-23 entry for the frozen
 criterion. The study needs a machine that can reach the bar vendors
 (this cloud session cannot): the operator's Mac, or the one-click
 `rs_expansion_study` GitHub Actions job added alongside.
+
+## 2026-08-27 — Outside philosophy integrated: the fixed-capital doctrine
+
+Operator supplied an evidence-based fixed-capital trading philosophy
+(committed verbatim as `docs/FIXED_CAPITAL_PHILOSOPHY.md`) for the real
+~$26 Robinhood account: no deposits ever, growth only from realized
+results. Assessed the same way the 2026-08-23 outside dossier was —
+adopt what fills a real gap, adapt what needs translating, reject what
+conflicts with measured evidence, and record all three.
+
+**First, what it independently confirms.** The document arrives at this
+repo's core laws from its own direction: expectancy after costs over
+win rate, pre-registration and parameter freeze, no averaging down or
+revenge sizing, no-trade as a valid outcome, win rate "descriptive, not
+sufficient by itself," and 50-100+ trades before robustness claims.
+Convergent doctrine from an independent source is worth noting — it is
+the same lesson the operator's own broker histories taught.
+
+**ADOPTED — fractional fixed-capital sizing replaces the 1-share micro
+override.** The override's whole design ("one full share or no trade")
+existed because whole shares made risk-based sizing return zero below
+~$500 equity. Fractional shares dissolve that constraint: quantity =
+planned dollar risk / stop distance is computable at any equity.
+`micro_fractional_size` now sizes micro entries under three caps —
+planned loss <= 4% of equity (the document's $0.75-1.00 at $26),
+notional <= 75% so a 25% cash reserve always survives a full stop-out,
+and the broker's $1 minimum (below it: no trade). Constants are
+CALIBRATE, sourced from the document's tables, not from a backtest.
+Mechanically this forced one real trade-off: Alpaca rejects fractional
+quantities in bracket orders, so micro entries are now simple limit
+day orders (H15a cap unchanged) and the evening run enforces stop and
+target at the close — the same loop-managed pattern the options cycle
+already uses. An overnight gap can therefore exceed the planned loss;
+the report says so on every micro entry rather than pretending the
+ceiling is guaranteed (the document's own §6 makes the same
+disclosure).
+
+**ADOPTED — survival gates, all trade-preventing.** Three of the
+document's rules now gate micro entries (only micro — see REJECTED):
+the earnings blackout (reusing the filing-cadence proxy built for the
+options track; unknown cadence never gates), a drawdown pause when
+equity sits 10%+ below its recent peak (the playbook's freeze made
+concrete for the micro book — it reads the growth log to HALT, never to
+size, so the non-martingale guarantee holds in the only direction it
+can move: less exposure), and a 5-session cooling-off after two
+consecutive micro losses.
+
+**ADAPTED.** The document's two-loss shutdown ends a discretionary
+trader's session; an automated system trading once per ~10 days has no
+session to end, so it became the bounded cooling-off above. Its
+market-off switch maps onto machinery that already exists
+(`data_is_fresh`, the canary suite, the daily/drawdown halts). Its
+"copy decision architecture, not the button press" is this assessment
+itself.
+
+**REJECTED for the validated track, with reasons.** None of the
+survival gates apply to standard doctrine sizing on the $100k paper
+account: an earnings filter on stock entries is exactly the shape of
+selectivity that round 5 measured destroying value (H9a deleted 406
+trades worth +43.56R), and one-position-at-a-time would discard the
+breadth the 20-year figures were measured on. Survival rules earn
+their keep where ruin is the binding risk — a $26 account — not where
+they would silently rewrite a measured system. The document's strategy
+menu (pullback-and-reclaim, failed-breakout reversal) is genuinely
+different from RS-02 and is NOT adopted by recommendation: a setup
+enters this codebase through registration and out-of-sample evidence
+(LAW 12/20) or not at all. The failed-breakout/reclaim setup is a
+reasonable future H-24 candidate if the operator wants it tested.
+
+**Also worth quoting, because it is the house position exactly:**
+"Treating AI output as a risk-control mechanism" appears on the
+document's prohibited list. Correct — the risk controls here are the
+tested interlocks and caps in code, not any model's judgment,
+including mine.
+
+419 tests passing (12 new: 7 integration for the fractional doctrine
+and its gates, 5 unit — sizing caps, drawdown/cool-off logic,
+warnings). The 1-share `micro_position_size` remains as the documented
+fallback for a non-fractionable asset, no longer wired to the daily
+path.
