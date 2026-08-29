@@ -1,0 +1,29 @@
+H-24 / H-25 SETUP STUDY — out-of-sample (test windows only)
+expanding-window splits: 18   universe: 38 names   H15a entry cap applied
+
+Frozen criterion (docs/PREREGISTERED.md): CONFIRMED needs aggregate >= 0R at n >= 50 AND positive expectancy in >= half of judged (>= 10-trade) windows. CONFIRMED means adoption-ELIGIBLE; activation is a separate operator decision, one live setup at a time.
+
+── H-24 ────────────────────────────────────────
+  n=604  exp=+0.123R  wr=45%  total=+74.3R  (GROSS)
+  net at 5bp: +0.088R   break-even ~18bp (linear estimate)
+  VERDICT: CONFIRMED — aggregate +0.123R at n=604, positive in 10/18 judged windows
+  overlap with RS-02 (filled-trade ticker+signal-date): 2/604 = 0% — largely distinct from RS-02's trades
+  per test window (year, n, expectancy):
+    2009:13@+0.68 2010:25@-0.14 2011:32@+0.17 2012:35@+0.42 2013:39@+0.81
+    2014:42@-0.43 2015:28@+0.01 2016:46@+0.03 2017:39@-0.06 2018:20@-0.10
+    2019:27@+0.54 2020:25@-0.09 2021:77@-0.01 2022:10@-0.05 2023:24@+0.36
+    2024:48@+0.31 2025:36@+0.18 2026:38@-0.10
+
+── H-25 ────────────────────────────────────────
+  n=2009  exp=+0.116R  wr=47%  total=+232.4R  (GROSS)
+  net at 5bp: +0.086R   break-even ~19bp (linear estimate)
+  VERDICT: CONFIRMED — aggregate +0.116R at n=2009, positive in 12/18 judged windows
+  overlap with RS-02 (filled-trade ticker+signal-date): 70/2009 = 4% — largely distinct from RS-02's trades
+  per test window (year, n, expectancy):
+    2009:45@+0.52 2010:100@+0.35 2011:119@-0.03 2012:97@+0.28
+    2013:157@+0.34 2014:139@-0.23 2015:113@-0.13 2016:77@-0.05
+    2017:166@+0.38 2018:113@+0.10 2019:88@+0.27 2020:95@+0.17
+    2021:192@+0.03 2022:47@-0.35 2023:96@+0.05 2024:143@+0.26
+    2025:134@+0.09 2026:88@-0.14
+
+A verdict here is read against the registration and recorded there; per-window numbers are context, not criteria (LAW 20).
