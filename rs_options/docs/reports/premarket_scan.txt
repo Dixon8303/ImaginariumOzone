@@ -1,7 +1,7 @@
-generated: 2026-08-28
+generated: 2026-08-31
 
-PRE-OPEN SCAN — 2026-08-28 (signals from the 2026-08-28 close)
-paper equity: $99,975.82
+PRE-OPEN SCAN — 2026-08-31 (signals from the 2026-08-31 close)
+paper equity: $99,963.38
 
 CANDIDATES FOR TODAY (0):
   none — nothing passed breakout + regime + quality
@@ -9,11 +9,11 @@ CANDIDATES FOR TODAY (0):
 ORDERS QUEUED FOR THE OPEN (0): none
 
 OPEN POSITIONS (5):
-  AAPL  qty 1  unrealized $+3.95  stop ? / target ?
-  IBM  qty 1  unrealized $-2.62  stop ? / target ?
-  NVDA  qty 1  unrealized $-8.46  stop ? / target ?
-  QQQ  qty 5  unrealized $-14.40  stop ? / target ?
-  TGT  qty 1  unrealized $-2.65  stop ? / target ?
+  AAPL  qty 1  unrealized $-0.12  stop ? / target ?
+  IBM  qty 1  unrealized $-2.60  stop ? / target ?
+  NVDA  qty 1  unrealized $-7.45  stop ? / target ?
+  QQQ  qty 5  unrealized $-21.05  stop ? / target ?
+  TGT  qty 1  unrealized $-5.40  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
