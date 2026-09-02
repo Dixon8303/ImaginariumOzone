@@ -16,6 +16,13 @@ on:
     # 21:35 UTC weekdays — after the NYSE close year-round. The trading
     # run: scans, places orders, keeps the record.
     - cron: "35 21 * * 1-5"
+    # 22:10 UTC weekdays — backup trading fire. GitHub drops or delays
+    # scheduled fires under load (2026-08-26..28 the evening fire never
+    # arrived on time); mode selection is wall-clock-based, and a
+    # duplicate evening run is safe — entries are already-held-skipped,
+    # the equity snapshot is date-deduped, and the concurrency group
+    # serializes.
+    - cron: "10 22 * * 1-5"
   workflow_dispatch:
     inputs:
       mode:
@@ -47,17 +54,26 @@ jobs:
         # import (this is what broke the first run).
         run: pip install --quiet -r rs_options/mve/requirements.txt
 
-      # The morning cron briefs; the evening cron trades. A manual run
-      # uses the chosen mode, defaulting to the read-only briefing so an
-      # accidental click cannot place orders.
+      # Scheduled runs decide their mode by WALL CLOCK, not by which
+      # cron GitHub claims fired: `github.event.schedule` proved
+      # unreliable — on 2026-08-28 the 12:45 morning cron was delivered
+      # at 22:41 UTC (and the evening fire never came), so the
+      # cron-string branch ran a read-only briefing at night while no
+      # trade run happened for three sessions. At or after 21:00 UTC —
+      # past the NYSE close year-round (4pm ET in winter, 5pm in
+      # summer) — a scheduled run trades; earlier it briefs, read-only.
+      # A manual run keeps the explicit input, defaulting to the
+      # briefing so an accidental click cannot place orders.
       - name: Select run mode
         id: mode
         run: |
-          if [ "${{ github.event.schedule }}" = "35 21 * * 1-5" ]; then
-            echo "flag=" >> "$GITHUB_OUTPUT"
-          elif [ "${{ github.event.schedule }}" = "45 12 * * 1-5" ]; then
-            echo "flag=--preopen" >> "$GITHUB_OUTPUT"
-          elif [ "${{ inputs.mode }}" = "trade" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ "${{ inputs.mode }}" = "trade" ]; then
+              echo "flag=" >> "$GITHUB_OUTPUT"
+            else
+              echo "flag=--preopen" >> "$GITHUB_OUTPUT"
+            fi
+          elif [ "$(date -u +%H)" -ge 21 ]; then
             echo "flag=" >> "$GITHUB_OUTPUT"
           else
             echo "flag=--preopen" >> "$GITHUB_OUTPUT"
