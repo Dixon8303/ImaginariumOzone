@@ -1,5 +1,49 @@
 {
   "closed": [],
-  "open": {},
-  "options": {}
+  "open": {
+    "F": {
+      "entry": 14.15,
+      "entry_cap": 14.433,
+      "entry_date": "2026-09-02",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "e54f75e3-4862-4dd2-b67b-176c50b535fd",
+      "qty": 353,
+      "setup": "H-25",
+      "signal_close": 14.15,
+      "stop": 13.73,
+      "target": 15.41
+    },
+    "NVDA": {
+      "entry": 224.435,
+      "entry_cap": 228.9237,
+      "entry_date": "2026-09-02",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "47fb7fb7-7d89-4333-b4df-c75bae217f21",
+      "qty": 22,
+      "setup": "H-25",
+      "signal_close": 224.435,
+      "stop": 215.12,
+      "target": 252.38
+    }
+  },
+  "options": {
+    "F260925C00014000": {
+      "basis": "delta",
+      "delta": 0.5762,
+      "entry_date": "2026-09-02",
+      "entry_price": 0.545,
+      "entry_underlying": 14.15,
+      "expiry": "2026-09-25",
+      "fundamental_net_income": null,
+      "invalidation_price": 13.73,
+      "qty": 5,
+      "spread_pct": 0.055,
+      "strike": 14.0,
+      "ticker": "F"
+    }
+  }
 }

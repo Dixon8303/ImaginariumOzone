@@ -1,32 +1,52 @@
-generated: 2026-09-01
+generated: 2026-09-02
 
-PAPER SHADOW TRACK — RS-02 doctrine, as of 2026-09-01
-paper equity: $99,935.17   cash: $95,457.94
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-02
+paper equity: $99,942.85   cash: $95,677.33
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-01  $99,935.17   (-64.83, -0.1%)
-  over 8 calendar days, 3 recorded sessions: 1 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-09-02  $99,942.85   (-57.15, -0.1%)
+  over 9 calendar days, 4 recorded sessions: 2 with a change, 1 flat.
   range so far: $99,935.17 (low) to $100,000.00 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (0):
-  none — no ticker passed breakout + regime + quality
+TODAY'S SIGNALS (2):
+  NVDA  [H-25]  close 224.44  stop 215.12  target 252.38  (1R = 9.31)  score 9/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 224.44 on 1.3x volume
+      volume profile: 7% of 60d volume sits ABOVE here, heaviest at 208.93  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 224, spread <= 10%; exit on stop/target/15 sessions
+  F  [H-25]  close 14.15  stop 13.73  target 15.41  (1R = 0.42)  score 6/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 14.15 on 1.3x volume
+      volume profile: 50% of 60d volume sits ABOVE here, heaviest at 14.00  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 14, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
+OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
+  F      F260925C00014000  delta 0.58  23d  mid 0.55  spread 5.5%
+         costs $54.50 per contract; needs $1,090 equity to buy one inside the 5% position cap
+  NVDA   NVDA260925C00220000  delta 0.64  23d  mid 10.01  spread 2.6%
+         costs $1,001.00 per contract; needs $20,020 equity to buy one inside the 5% position cap
 
-PAPER ORDERS PLACED (0):
-  none
+  cheapest doctrine contract today: F at $54.50
+  at $99,942.85 equity you can buy 2 of 2 inside the position cap
+  (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-OPEN POSITIONS (5):
-  AAPL  qty 1  unrealized $+8.86  stop ?  target ?  since ?
-  IBM  qty 1  unrealized $-6.93  stop ?  target ?  since ?
-  NVDA  qty 1  unrealized $-8.92  stop ?  target ?  since ?
-  QQQ  qty 5  unrealized $-55.75  stop ?  target ?  since ?
-  TGT  qty 1  unrealized $-2.08  stop ?  target ?  since ?
+PAPER ORDERS PLACED (2):
+  BUY 22 NVDA @ next open, limit 228.92 (H15a cap, 2% over the 224.44 close), bracket stop 215.12 / target 252.38
+  BUY 353 F @ next open, limit 14.43 (H15a cap, 2% over the 14.15 close), bracket stop 13.73 / target 15.41
+MANUAL POSITIONS CLOSED (3) — operator decision 2026-09-02, hand-placed positions outside the doctrine (not booked as trades): IBM, QQQ, TGT
+
+OPEN POSITIONS (4):
+  AAPL  qty 1  unrealized $+8.58  stop ?  target ?  since ?
+  IBM  qty 1  unrealized $-6.27  stop ?  target ?  since ?
+  QQQ  qty 5  unrealized $-49.95  stop ?  target ?  since ?
+  TGT  qty 1  unrealized $-2.47  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  no option trades today
+  BOUGHT 5x F260925C00014000  @ $0.55 ($273)  23d  strike 14.00  [delta 0.58, spread 5.5%, OI 746]
+    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
+  holding 1:
+    F260925C00014000  5x @ $0.55  since 2026-09-02  stop-if-underlying <= 13.73
+  note: NVDA: premium $1,001 exceeds the 1% risk budget
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
