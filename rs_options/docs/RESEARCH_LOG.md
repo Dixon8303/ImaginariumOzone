@@ -2386,3 +2386,41 @@ Design notes worth recording:
 The study runs where the bar vendors are reachable: Actions ->
 "RS Setup Study" -> Run workflow (button appears once this merges), or
 the operator's Mac. 449 tests passing (20 new).
+
+## 2026-09-02 — H-24 and H-25 both CONFIRMED; verdicts recorded, activation NOT taken
+
+The operator ran the one-click study (Actions run 33236497138,
+2026-08-29, ~32 minutes: 20-year backfill of all 49 required tickers,
+18 expanding-window test years, 38-name universe, H15a cap applied).
+Read against the frozen criterion — aggregate OOS ≥ 0R at n ≥ 50 AND
+positive expectancy in ≥ half of judged (≥10-trade) windows:
+
+    H-24  n=  604  +0.123R  wr 45%  +74.3R gross   10/18 windows positive
+          net at 5bp +0.088R, linear break-even ~18bp
+          overlap with RS-02: 2/604 (0%)
+    H-25  n=2,009  +0.116R  wr 47%  +232.4R gross  12/18 windows positive
+          net at 5bp +0.086R, linear break-even ~19bp
+          overlap with RS-02: 70/2,009 (4%)
+
+**Both CONFIRMED.** Both dated verdicts are in PREREGISTERED.md with
+the honest notes attached: H-24's 45% win rate means longer losing
+streaks than RS-02's, and it lost for a full year in 2014 (−0.43R);
+H-25 fires ~1.6x as often as RS-02 itself — by count it would dominate
+an activated book — and its worst regime is exactly the one you'd
+predict (2022, −0.35R: pullback-buying in a downtrend year, even
+behind H2b + H4b).
+
+The overlap numbers are the study's most important structural finding:
+0% and 4%. Neither setup re-times RS-02's trades. The three setups
+sample genuinely different entry mechanics — breakout (RS-02),
+survived-breakdown (H-24), trend-pullback (H-25) — so activation would
+add coverage, not correlation. That was the registered claim; the data
+now backs it.
+
+**What has NOT happened: activation.** `ACTIVE_SETUPS` remains
+`("RS-02",)`, pinned by a test. CONFIRMED = adoption-eligible; the
+philosophy's sequencing rule allows at most ONE new live setup at a
+time, sharing MAX_OPEN and the cluster caps with RS-02. The activation
+question is now with the operator. If the answer is yes to one, the
+natural first candidate is argued in the verdicts themselves — but
+that choice is the operator's, not this log's.
