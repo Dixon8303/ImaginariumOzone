@@ -12,8 +12,9 @@ cannot double-trade against the evening run.
 The post-close trading run:
 
 1. Fetches fresh daily bars for the whole universe (Alpaca IEX, free).
-2. Runs the adopted RS-02 doctrine point-in-time: detector + 200-day
-   regime + 12-1 momentum quality (`detect_all` live path).
+2. Runs the ACTIVE_SETUPS doctrine point-in-time (`detect_all` live
+   path): RS-02 breakout (200-day regime + 12-1 momentum quality) and,
+   activated 2026-09-02, H-25 pullback-and-reclaim.
 3. PAPER-trades each surviving signal on Alpaca's paper account as the
    UNDERLYING equity: market buy queued for the next open (matching the
    backtester's next-open entry), bracket stop at the invalidation
@@ -52,7 +53,8 @@ from mve.position_manager import (OpenPosition, evaluate_exit,
                                   format_exit_report)
 from mve.report import save_report
 from mve.rs_features import compute_features
-from mve.setups import MAX_ENTRY_GAP, detect_all, entry_limit_price
+from mve.setups import (ACTIVE_SETUPS, MAX_ENTRY_GAP, detect_all,
+                        entry_limit_price)
 from mve.significance import forward_track_line
 from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
@@ -77,6 +79,14 @@ MAX_OPEN = 8                 # concurrent-position cap
 # playbook.md). CALIBRATE, not independently validated for this instrument.
 MAX_OPTIONS_UNDERLYING_PCT = 0.05
 MAX_OPTIONS_CLUSTER_PCT = 0.10
+# Operator decision 2026-09-02: the paper account carried five
+# hand-placed positions from before the shadow track existed; the
+# operator chose to close the four losers and keep AAPL. Any ticker
+# listed here that is held WITHOUT a ledger entry is closed on the
+# next trading run. Manual positions never enter the ledger, so these
+# closures change cash/equity but never the doctrine trade record.
+# Remove a ticker from this tuple to hold it manually again.
+MANUAL_CLOSE_TICKERS = ("IBM", "NVDA", "QQQ", "TGT")
 MIN_BARS = 260               # doctrine needs 253+ bars (12-1 momentum)
 HISTORY_DAYS = 420           # calendar days of bars to fetch
 MAX_BAR_AGE_DAYS = 4         # pre-open: yesterday's close is
@@ -128,7 +138,7 @@ def scan(all_bars: dict) -> list:
                 continue
             overhead = overhead_supply(bars)
             signals.append(dict(
-                ticker=ticker, close=close, stop=stop,
+                ticker=ticker, setup=hit["setup_id"], close=close, stop=stop,
                 target=round(close + TARGET_R * (close - stop), 2),
                 r_denom=round(close - stop, 2),
                 score=hit["opportunity_score"], rationale=hit["rationale"],
@@ -537,6 +547,24 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
         "market sell submitted; booked by next run's reconciliation."
         for sym, close, reason in micro_exits]
 
+    # 3c. operator-directed cleanup of MANUAL positions (see
+    # MANUAL_CLOSE_TICKERS). A listed ticker held without a ledger
+    # entry is hand-placed, sits outside every stop/target, and eats a
+    # MAX_OPEN slot — close it. Step 2 only books ledgered symbols, so
+    # nothing here ever enters the doctrine record. Idempotent once
+    # the position is gone. The closing position still counts against
+    # MAX_OPEN for the rest of THIS run (the fill lands after the
+    # close); the slot frees on the next run.
+    manual_closes = []
+    for sym in MANUAL_CLOSE_TICKERS:
+        if sym in positions and sym not in ledger["open"]:
+            try:
+                broker.cancel_symbol_orders(sym)
+                broker.close_position(sym)
+                manual_closes.append(sym)
+            except Exception:
+                pass                      # retried next run; never fatal
+
     # 4. new entries
     signals = scan(all_bars)
     micro = micro_override_active(equity)
@@ -628,7 +656,7 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             entry_date=today, entry=sig["close"], entry_estimated=True,
             entry_cap=cap, signal_close=sig["close"],
             stop=sig["stop"], target=sig["target"], qty=qty,
-            order_id=order.get("id"), setup="RS-02",
+            order_id=order.get("id"), setup=sig["setup"],
             micro_override=micro, fractional=micro)
 
     # ── autonomous PAPER options (the co-pilot side, now hands-off) ──
@@ -656,7 +684,8 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
                         closed_today, time_exits, ledger, option_review,
                         option_cycle=opt, gap_cancelled=gap_cancelled,
                         cost_rows=cost_rows, equity=equity,
-                        micro_warnings=micro_warnings, growth=growth)
+                        micro_warnings=micro_warnings, growth=growth,
+                        manual_closes=manual_closes)
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
@@ -664,8 +693,10 @@ def build_report(today, acct, positions, signals, placed, skipped,
                  option_review: str = "", option_cycle=None,
                  gap_cancelled=None, cost_rows=None,
                  equity: float | None = None,
-                 micro_warnings=None, growth=None) -> str:
-    lines = [f"PAPER SHADOW TRACK — RS-02 doctrine, as of {today}",
+                 micro_warnings=None, growth=None,
+                 manual_closes=None) -> str:
+    lines = [f"PAPER SHADOW TRACK — {'/'.join(ACTIVE_SETUPS)} doctrine, "
+             f"as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}"]
     if growth:
@@ -684,7 +715,8 @@ def build_report(today, acct, positions, signals, placed, skipped,
     if not signals:
         lines.append("  none — no ticker passed breakout + regime + quality")
     for s in signals:
-        lines += [f"  {s['ticker']}  close {s['close']:.2f}  "
+        lines += [f"  {s['ticker']}  [{s.get('setup', 'RS-02')}]  "
+                  f"close {s['close']:.2f}  "
                   f"stop {s['stop']:.2f}  target {s['target']:.2f}  "
                   f"(1R = {s['r_denom']:.2f})  score {s['score']}/10",
                   f"      {s['rationale']}",
@@ -726,6 +758,11 @@ def build_report(today, acct, positions, signals, placed, skipped,
             lines.append(f"  cancelled {sym}{detail}")
     if time_exits:
         lines.append(f"TIME EXITS SUBMITTED: {', '.join(time_exits)}")
+    if manual_closes:
+        lines.append(f"MANUAL POSITIONS CLOSED ({len(manual_closes)}) — "
+                     "operator decision 2026-09-02, hand-placed positions "
+                     "outside the doctrine (not booked as trades): "
+                     + ", ".join(manual_closes))
     lines.append("")
 
     if closed_today:

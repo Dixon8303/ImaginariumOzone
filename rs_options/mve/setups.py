@@ -28,7 +28,12 @@ INVALIDATION_LOOKBACK = 5       # swing-low window for the stop (CALIBRATE)
 # revised version shows positive OUT-OF-SAMPLE expectancy (LAW 20).
 # RS-02 backtested +0.25R over 160 trades in-sample — stays active
 # pending walk-forward validation.
-ACTIVE_SETUPS = ("RS-02",)
+# H-25 activated 2026-09-02 by operator decision, after its registered
+# study CONFIRMED it (n=2,009 OOS, +0.116R gross, 12/18 windows
+# positive, 4% trade overlap with RS-02 — docs/PREREGISTERED.md).
+# One new live setup at a time: H-24 is CONFIRMED and adoption-eligible
+# but NOT active; it may activate only by a later, separate decision.
+ACTIVE_SETUPS = ("RS-02", "H-25")
 
 # Adopted RS-02 entry filters (§72 hypothesis studies). Both apply to
 # the LIVE doctrine path only — research tools that pass `active`

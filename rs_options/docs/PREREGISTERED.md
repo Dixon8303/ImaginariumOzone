@@ -426,6 +426,11 @@ has been taken as of this verdict** — entry into `ACTIVE_SETUPS` is
 the operator's separate call, one live setup at a time, sharing
 `MAX_OPEN` and the cluster caps with RS-02.
 
+**Activation status (2026-09-02, operator decision):** NOT activated.
+The operator took H-25 for the one-at-a-time slot; H-24 stays
+CONFIRMED and adoption-eligible, activatable only by a later separate
+decision.
+
 ---
 
 ## H-25 — Pullback-and-reclaim, long
@@ -516,6 +521,15 @@ has been taken as of this verdict** — and the philosophy's own
 sequencing rule (one new live setup at a time) means H-24 and H-25
 cannot both activate in the same step even if the operator wants both
 eventually.
+
+**Activation (2026-09-02, operator decision):** ACTIVATED — H-25
+entered `ACTIVE_SETUPS` alongside RS-02, chosen over H-24 for the
+first slot (larger sample, broader window breadth, fastest forward
+evidence). It shares `MAX_OPEN`, sizing, the H15a cap, and every
+survival gate with RS-02 — no private allocation. H-24 remains
+CONFIRMED and adoption-eligible but NOT active; per the sequencing
+rule it may activate only by a later, separate operator decision,
+naturally after H-25 has forward fills to judge.
 
 ---
 

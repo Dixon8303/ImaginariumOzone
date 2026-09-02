@@ -130,12 +130,14 @@ def test_h25_respects_volume_and_market_context():
 
 
 # ── registry and live-path guarantees ────────────────────────────────
-def test_new_setups_are_registered_for_research_but_not_live():
-    """The backtester can study them; the live scanner must not trade
-    them before the registered verdict AND a separate operator
-    activation (one live setup at a time)."""
+def test_active_setups_pin():
+    """Both setups CONFIRMED 2026-09-02. The operator activated H-25
+    (one new live setup at a time); H-24 stays adoption-eligible but
+    NOT active until a later, separate decision. This pin fails on any
+    unauthorized change in either direction."""
     assert "H-24" in DETECTORS and "H-25" in DETECTORS
-    assert ACTIVE_SETUPS == ("RS-02",)
+    assert ACTIVE_SETUPS == ("RS-02", "H-25")
+    assert "H-24" not in ACTIVE_SETUPS
 
 
 def test_h24_and_h25_cannot_fire_on_the_same_bar_as_rs02():

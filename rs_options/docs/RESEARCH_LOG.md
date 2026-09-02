@@ -2424,3 +2424,46 @@ time, sharing MAX_OPEN and the cluster caps with RS-02. The activation
 question is now with the operator. If the answer is yes to one, the
 natural first candidate is argued in the verdicts themselves — but
 that choice is the operator's, not this log's.
+
+## 2026-09-02 — Operator decisions: H-25 activated; manual losers closed
+
+Two decisions taken the same day the verdicts were recorded.
+
+**H-25 is live.** `ACTIVE_SETUPS` is now `("RS-02", "H-25")` — the
+first setup activation since RS-02 itself. The operator chose H-25
+over H-24 for the one-at-a-time slot on the recommended grounds:
+larger confirmed sample (2,009 vs 604), broader breadth (12/18 vs
+10/18 windows), and the highest signal frequency, which is the
+fastest route to forward evidence. What activation means in code:
+
+- `paper/daily.py::scan` now carries each hit's `setup_id` into the
+  signal and the ledger (the ledger previously hard-coded "RS-02"),
+  and the report tags every signal `[RS-02]` or `[H-25]`, so the
+  forward record can be split per setup from the first fill.
+- H-25 shares everything: MAX_OPEN, 1% risk sizing, the H15a entry
+  cap, bracket exits, micro gates. No private allocation. If RS-02
+  and H-25 both fire on the same ticker-date (4% of H-25's historical
+  trades), the higher opportunity score places and the other is
+  skipped as already-held — one position per ticker, ever.
+- H-24 is NOT active. Its verdict block records the deferral; the
+  ACTIVE_SETUPS pin test now asserts both directions (H-25 in,
+  H-24 out).
+
+Expected effect, stated in advance so the forward record can check
+it: roughly 2.4x the signal frequency of RS-02 alone, at a similar
+per-trade edge, with H-25's known weak regime being sustained
+downtrend years. The forward track's job is unchanged — execution
+verification and disconfirmation, not proof.
+
+**Manual-position hygiene.** The operator chose to close the four
+losing hand-placed positions (IBM, NVDA, QQQ ×5, TGT — about −$74
+unrealized between them) and keep AAPL (+$9). Implemented as
+`MANUAL_CLOSE_TICKERS` in `paper/daily.py`: on each trading run, a
+listed ticker held WITHOUT a ledger entry is closed at market.
+Ledgered doctrine positions are immune (tested — a doctrine NVDA is
+spared), the closures are never booked as trades (manual positions
+were never in the record), and the step is idempotent. Net effect
+after the next trading run: 7 of 8 position slots free (AAPL keeps
+one), and from then on the equity curve moves only on doctrine
+trades plus AAPL. Keeping AAPL is recorded as what it is: a manual
+judgment outside the doctrine, on one ticker, at the operator's word.
