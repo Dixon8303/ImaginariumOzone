@@ -140,6 +140,59 @@ def test_run_places_bracket_and_records_ledger():
     assert "option guidance" in report and "CALL" in report
 
 
+# ── H-25 in the live path (activated 2026-09-02) ─────────────────────
+def h25_universe(end=TODAY):
+    """AMD in a strong uptrend (H2b + H4b pass), dips under the rolling
+    20-day SMA on bars -3/-2, then reclaims WITHOUT making a new
+    20-day high — H-25 fires, RS-02 does not."""
+    closes = [10.0 + 0.1 * i for i in range(300)]
+    closes[-3] -= 3.0
+    closes[-2] -= 3.0
+    closes[-1] = closes[-4] - 0.3          # reclaim, but no breakout
+    bars = {t: make_bars([500.0 + 0.05 * i for i in range(300)], end=end)
+            for t in daily.required_tickers()}
+    bars["AMD"] = make_bars(closes, last_volume=2_000_000, end=end)
+    return bars
+
+
+def test_h25_signal_trades_live_and_records_its_setup():
+    broker = FakeBroker()
+    report = run(broker, h25_universe(), TODAY)
+    assert broker.brackets and broker.brackets[0][0] == "AMD"
+    ledger = load_ledger(daily.LEDGER_PATH)
+    assert ledger["open"]["AMD"]["setup"] == "H-25"
+    assert "[H-25]" in report
+
+
+# ── operator-directed manual-position cleanup (2026-09-02) ───────────
+def manual_pos(qty=1):
+    return {"qty": qty, "unrealized_pl": -5.0}
+
+
+def test_manual_losers_closed_aapl_kept_nothing_booked():
+    broker = FakeBroker(positions={s: manual_pos() for s in
+                                   ("IBM", "NVDA", "QQQ", "TGT", "AAPL")})
+    report = run(broker, {}, TODAY, require_fresh=False)
+    assert sorted(broker.closed_syms) == ["IBM", "NVDA", "QQQ", "TGT"]
+    assert "AAPL" not in broker.closed_syms
+    assert "MANUAL POSITIONS CLOSED (4)" in report
+    # hand-placed positions never enter the doctrine record
+    assert load_ledger(daily.LEDGER_PATH)["closed"] == []
+
+
+def test_manual_close_spares_ledgered_doctrine_position():
+    """A doctrine-owned NVDA (in the ledger) is not a manual position,
+    even though NVDA is on the cleanup list."""
+    save_ledger({"open": {"NVDA": dict(
+        entry_date=TODAY, entry=100.0, entry_estimated=False,
+        stop=95.0, target=115.0, qty=10, order_id="x", setup="RS-02")},
+        "closed": []}, daily.LEDGER_PATH)
+    broker = FakeBroker(positions={"NVDA": {"qty": 10,
+                                            "unrealized_pl": 1.0}})
+    run(broker, {}, TODAY, require_fresh=False)
+    assert broker.closed_syms == []
+
+
 def test_run_reconciles_closed_position():
     save_ledger({"open": {"GONE": dict(
         entry_date="2026-08-01", entry=100.0, entry_estimated=False,

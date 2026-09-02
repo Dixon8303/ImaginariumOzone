@@ -400,6 +400,37 @@ reading, resolved before any result existed:
    research run of this setup carries it — there is no unfiltered
    variant to accidentally study.
 
+**Verdict (2026-09-02). CONFIRMED by the registered criterion.** The
+study ran on a single 20-year pull (Actions run 33236497138, report
+committed as `docs/reports/setup_study.txt`), 18 expanding-window test
+years on the 38-name universe, H15a entry cap applied:
+
+    n=604   +0.123R   wr 45%   total +74.3R   (GROSS)
+    net at 5bp: +0.088R    linear break-even ~18bp
+
+Aggregate ≥ 0R at n ≥ 50: met, 12x over the minimum sample. Breadth:
+positive expectancy in 10 of 18 judged windows (every window held ≥ 10
+trades) — the ≥-half clause met. The committed overlap accounting:
+2 of 604 filled trades (0%) share a (ticker, signal-date) with RS-02 —
+the registration's mechanical-distinctness claim held; this is added
+coverage, not a re-timing of RS-02's trades.
+
+Honest notes that travel with the verdict: win rate is 45% versus
+RS-02's 52% — the edge is carried by payoff, not hit rate, so losing
+streaks will run longer than the live book's; and the worst window
+(2014: −0.43R on 42 trades) shows the setup can lose for a full year.
+Per-window numbers are context, not criteria (LAW 20).
+
+**CONFIRMED makes H-24 adoption-ELIGIBLE only. No activation decision
+has been taken as of this verdict** — entry into `ACTIVE_SETUPS` is
+the operator's separate call, one live setup at a time, sharing
+`MAX_OPEN` and the cluster caps with RS-02.
+
+**Activation status (2026-09-02, operator decision):** NOT activated.
+The operator took H-25 for the one-at-a-time slot; H-24 stays
+CONFIRMED and adoption-eligible, activatable only by a later separate
+decision.
+
 ---
 
 ## H-25 — Pullback-and-reclaim, long
@@ -461,6 +492,44 @@ signals," disclosed here rather than silently substituted. Shared
 corner case for both entries, resolved toward no verdict: n ≥ 50 with
 NO single window reaching 10 trades leaves the breadth clause
 unjudgeable and returns INCONCLUSIVE, never a convenient pass.
+
+**Verdict (2026-09-02). CONFIRMED by the registered criterion.** Same
+study run as H-24 (Actions run 33236497138, one consistent pull,
+report `docs/reports/setup_study.txt`):
+
+    n=2,009   +0.116R   wr 47%   total +232.4R   (GROSS)
+    net at 5bp: +0.086R    linear break-even ~19bp
+
+Aggregate ≥ 0R at n ≥ 50: met, 40x over the minimum sample. Breadth:
+positive expectancy in 12 of 18 judged windows. The overlap accounting
+committed in advance: 70 of 2,009 filled trades (4%) share a
+(ticker, signal-date) with RS-02 — this is coverage, not correlation;
+the setup is not re-timing RS-02's trades.
+
+Honest notes that travel with the verdict: H-25 fires roughly 1.6x as
+often as RS-02 itself on the same universe (2,009 vs 1,266 filled
+test-window trades in the expansion study's combined arm) — by trade
+count it would be the dominant setup if activated, which raises the
+practical weight of its bad regimes: 2022 was −0.35R on 47 trades
+(pullback-buying in a downtrend year hurts even behind H2b + H4b),
+and the two most recent windows sit near zero (2025 +0.09R,
+2026 −0.14R partial). Per-window numbers are context, not criteria
+(LAW 20).
+
+**CONFIRMED makes H-25 adoption-ELIGIBLE only. No activation decision
+has been taken as of this verdict** — and the philosophy's own
+sequencing rule (one new live setup at a time) means H-24 and H-25
+cannot both activate in the same step even if the operator wants both
+eventually.
+
+**Activation (2026-09-02, operator decision):** ACTIVATED — H-25
+entered `ACTIVE_SETUPS` alongside RS-02, chosen over H-24 for the
+first slot (larger sample, broader window breadth, fastest forward
+evidence). It shares `MAX_OPEN`, sizing, the H15a cap, and every
+survival gate with RS-02 — no private allocation. H-24 remains
+CONFIRMED and adoption-eligible but NOT active; per the sequencing
+rule it may activate only by a later, separate operator decision,
+naturally after H-25 has forward fills to judge.
 
 ---
 
