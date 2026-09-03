@@ -1,18 +1,27 @@
-generated: 2026-09-02
+generated: 2026-09-03
 
-PRE-OPEN SCAN — 2026-09-02 (signals from the 2026-09-02 close)
-paper equity: $99,941.59
+PRE-OPEN SCAN — 2026-09-03 (signals from the 2026-09-02 close)
+paper equity: $99,942.14
 
-CANDIDATES FOR TODAY (0):
-  none — nothing passed breakout + regime + quality
+CANDIDATES FOR TODAY (2):
+  NVDA  ref close 224.44  stop 215.12  target 252.38  (1R = 9.31)  score 9/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 224.44 on 1.3x volume
+      volume profile: 7% of 60d volume sits ABOVE here, heaviest at 208.93  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 224, spread <= 10%
+  F  ref close 14.15  stop 13.73  target 15.41  (1R = 0.42)  score 6/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 14.15 on 1.3x volume
+      volume profile: 50% of 60d volume sits ABOVE here, heaviest at 14.00  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 14, spread <= 10%
 
-ORDERS QUEUED FOR THE OPEN (0): none
+ORDERS QUEUED FOR THE OPEN (2): F, NVDA
+  F limit 14.43 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
+  NVDA limit 228.92 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
 
 OPEN POSITIONS (4):
-  AAPL  qty 1  unrealized $+9.79  stop ? / target ?
-  IBM  qty 1  unrealized $-5.76  stop ? / target ?
-  QQQ  qty 5  unrealized $-54.45  stop ? / target ?
-  TGT  qty 1  unrealized $-0.95  stop ? / target ?
+  AAPL  qty 1  unrealized $+8.48  stop ? / target ?
+  IBM  qty 1  unrealized $-6.27  stop ? / target ?
+  QQQ  qty 5  unrealized $-50.70  stop ? / target ?
+  TGT  qty 1  unrealized $-2.33  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
