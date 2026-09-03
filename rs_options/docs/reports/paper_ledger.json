@@ -1,11 +1,25 @@
 {
   "closed": [],
   "open": {
+    "BAC": {
+      "entry": 63.06,
+      "entry_cap": 64.3212,
+      "entry_date": "2026-09-03",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "f07c7cf2-cf44-43c4-97d6-e3b7defa3a1b",
+      "qty": 79,
+      "setup": "H-25",
+      "signal_close": 63.06,
+      "stop": 61.37,
+      "target": 68.13
+    },
     "F": {
-      "entry": 14.15,
+      "entry": 14.17,
       "entry_cap": 14.433,
       "entry_date": "2026-09-02",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "e54f75e3-4862-4dd2-b67b-176c50b535fd",
@@ -15,11 +29,39 @@
       "stop": 13.73,
       "target": 15.41
     },
+    "JPM": {
+      "entry": 362.09,
+      "entry_cap": 369.3318,
+      "entry_date": "2026-09-03",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "a2f78e76-57a9-4116-a72e-392a31639d8f",
+      "qty": 13,
+      "setup": "H-25",
+      "signal_close": 362.09,
+      "stop": 353.86,
+      "target": 386.78
+    },
+    "KO": {
+      "entry": 88.84,
+      "entry_cap": 90.61680000000001,
+      "entry_date": "2026-09-03",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "333b3bbf-b609-449f-ac00-1e26012af703",
+      "qty": 56,
+      "setup": "H-25",
+      "signal_close": 88.84,
+      "stop": 87.73,
+      "target": 92.17
+    },
     "NVDA": {
-      "entry": 224.435,
+      "entry": 225.29,
       "entry_cap": 228.9237,
       "entry_date": "2026-09-02",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "47fb7fb7-7d89-4333-b4df-c75bae217f21",
@@ -28,9 +70,37 @@
       "signal_close": 224.435,
       "stop": 215.12,
       "target": 252.38
+    },
+    "XOM": {
+      "entry": 162.23,
+      "entry_cap": 165.47459999999998,
+      "entry_date": "2026-09-03",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "df83cac6-e3cc-491e-b613-7a79424ed2c8",
+      "qty": 30,
+      "setup": "H-25",
+      "signal_close": 162.23,
+      "stop": 155.32,
+      "target": 182.96
     }
   },
   "options": {
+    "BAC261016C00062500": {
+      "basis": "delta",
+      "delta": 0.5848,
+      "entry_date": "2026-09-03",
+      "entry_price": 2.3049999999999997,
+      "entry_underlying": 63.06,
+      "expiry": "2026-10-16",
+      "fundamental_net_income": null,
+      "invalidation_price": 61.37,
+      "qty": 4,
+      "spread_pct": 0.0304,
+      "strike": 62.5,
+      "ticker": "BAC"
+    },
     "F260925C00014000": {
       "basis": "delta",
       "delta": 0.5762,
@@ -44,6 +114,48 @@
       "spread_pct": 0.055,
       "strike": 14.0,
       "ticker": "F"
+    },
+    "JPM260925C00360000": {
+      "basis": "delta",
+      "delta": 0.5806,
+      "entry_date": "2026-09-03",
+      "entry_price": 8.82,
+      "entry_underlying": 362.09,
+      "expiry": "2026-09-25",
+      "fundamental_net_income": null,
+      "invalidation_price": 353.86,
+      "qty": 1,
+      "spread_pct": 0.0522,
+      "strike": 360.0,
+      "ticker": "JPM"
+    },
+    "KO261016C00087500": {
+      "basis": "delta",
+      "delta": 0.6451,
+      "entry_date": "2026-09-03",
+      "entry_price": 2.9299999999999997,
+      "entry_underlying": 88.84,
+      "expiry": "2026-10-16",
+      "fundamental_net_income": null,
+      "invalidation_price": 87.73,
+      "qty": 3,
+      "spread_pct": 0.0751,
+      "strike": 87.5,
+      "ticker": "KO"
+    },
+    "XOM261016C00160000": {
+      "basis": "delta",
+      "delta": 0.5953,
+      "entry_date": "2026-09-03",
+      "entry_price": 7.7695,
+      "entry_underlying": 162.23,
+      "expiry": "2026-10-16",
+      "fundamental_net_income": null,
+      "invalidation_price": 155.32,
+      "qty": 1,
+      "spread_pct": 0.09,
+      "strike": 160.0,
+      "ticker": "XOM"
     }
   }
 }
