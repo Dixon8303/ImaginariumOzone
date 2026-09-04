@@ -1,74 +1,56 @@
-generated: 2026-09-03
+generated: 2026-09-04
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-03
-paper equity: $100,196.58   cash: $89,400.95
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-04
+paper equity: $99,680.00   cash: $66,601.99
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-03  $100,196.58   (+196.58, +0.2%)
-  over 10 calendar days, 5 recorded sessions: 3 with a change, 1 flat.
-  range so far: $99,935.17 (low) to $100,196.58 (high).
+  2026-08-24  $100,000.00  ->  2026-09-04  $99,680.00   (-320.00, -0.3%)
+  over 11 calendar days, 6 recorded sessions: 4 with a change, 1 flat.
+  range so far: $99,680.00 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (4):
-  JPM  [H-25]  close 362.09  stop 353.86  target 386.78  (1R = 8.23)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 362.09 on 1.1x volume
-      volume profile: 5% of 60d volume sits ABOVE here, heaviest at 356.56  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 362, spread <= 10%; exit on stop/target/15 sessions
-  BAC  [H-25]  close 63.06  stop 61.37  target 68.13  (1R = 1.69)  score 6/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 63.06 on 1.0x volume
-      volume profile: 14% of 60d volume sits ABOVE here, heaviest at 61.99  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 63, spread <= 10%; exit on stop/target/15 sessions
-  XOM  [H-25]  close 162.23  stop 155.32  target 182.96  (1R = 6.91)  score 6/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 162.23 on 1.1x volume
-      volume profile: 11% of 60d volume sits ABOVE here, heaviest at 137.38  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 162, spread <= 10%; exit on stop/target/15 sessions
-  KO  [H-25]  close 88.84  stop 87.73  target 92.17  (1R = 1.11)  score 5/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 88.84 on 1.1x volume
-      volume profile: 16% of 60d volume sits ABOVE here, heaviest at 82.45  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 89, spread <= 10%; exit on stop/target/15 sessions
+TODAY'S SIGNALS (2):
+  QQQ  [H-25]  close 719.10  stop 704.68  target 762.36  (1R = 14.42)  score 5/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 719.10 on 1.1x volume
+      volume profile: 38% of 60d volume sits ABOVE here, heaviest at 715.86  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 719, spread <= 10%; exit on stop/target/15 sessions
+  AMD  [H-25]  close 477.45  stop 440.62  target 587.94  (1R = 36.83)  score 5/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 477.45 on 1.2x volume
+      volume profile: 75% of 60d volume sits ABOVE here, heaviest at 477.12  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 477, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER (4 contracts priced) — no orders, no buying power used:
-  BAC    BAC261016C00062500  delta 0.58  43d  mid 2.31  spread 3.0%
-         costs $230.50 per contract; needs $4,610 equity to buy one inside the 5% position cap
-  KO     KO261016C00087500  delta 0.65  43d  mid 2.93  spread 7.5%
-         costs $293.00 per contract; needs $5,860 equity to buy one inside the 5% position cap
-  XOM    XOM261016C00160000  delta 0.60  43d  mid 7.77  spread 9.0%
-         costs $776.95 per contract; needs $15,539 equity to buy one inside the 5% position cap
-  JPM    JPM260925C00360000  delta 0.58  22d  mid 8.82  spread 5.2%
-         costs $882.00 per contract; needs $17,640 equity to buy one inside the 5% position cap
+OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
-  cheapest doctrine contract today: BAC at $230.50
-  at $100,196.58 equity you can buy 4 of 4 inside the position cap
-  (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
+PAPER ORDERS PLACED (0):
+  none
+  skipped QQQ: position cap
+  skipped AMD: position cap
 
-PAPER ORDERS PLACED (4):
-  BUY 13 JPM @ next open, limit 369.33 (H15a cap, 2% over the 362.09 close), bracket stop 353.86 / target 386.78
-  BUY 79 BAC @ next open, limit 64.32 (H15a cap, 2% over the 63.06 close), bracket stop 61.37 / target 68.13
-  BUY 30 XOM @ next open, limit 165.47 (H15a cap, 2% over the 162.23 close), bracket stop 155.32 / target 182.96
-  BUY 56 KO @ next open, limit 90.62 (H15a cap, 2% over the 88.84 close), bracket stop 87.73 / target 92.17
-
-OPEN POSITIONS (4):
-  AAPL  qty 1  unrealized $+11.68  stop ?  target ?  since ?
-  F  qty 353  unrealized $+77.84  stop 13.73  target 15.41  since 2026-09-02
-  F260925C00014000  qty 5  unrealized $+60.00  stop ?  target ?  since ?
-  NVDA  qty 22  unrealized $+96.58  stop 215.12  target 252.38  since 2026-09-02
+OPEN POSITIONS (12):
+  AAPL  qty 1  unrealized $+4.06  stop ?  target ?  since ?
+  BAC  qty 79  unrealized $+5.29  stop 61.37  target 68.13  since 2026-09-03
+  BAC261016C00062500  qty 4  unrealized $+0.00  stop ?  target ?  since ?
+  F  qty 353  unrealized $+147.73  stop 13.73  target 15.41  since 2026-09-02
+  F260925C00014000  qty 5  unrealized $+130.00  stop ?  target ?  since ?
+  JPM  qty 13  unrealized $-42.30  stop 353.86  target 386.78  since 2026-09-03
+  JPM260925C00360000  qty 1  unrealized $-250.00  stop ?  target ?  since ?
+  KO  qty 56  unrealized $-21.92  stop 87.73  target 92.17  since 2026-09-03
+  KO261016C00087500  qty 3  unrealized $-147.00  stop ?  target ?  since ?
+  NVDA  qty 22  unrealized $+102.08  stop 215.12  target 252.38  since 2026-09-02
+  XOM  qty 30  unrealized $-38.00  stop 155.32  target 182.96  since 2026-09-03
+  XOM261016C00160000  qty 1  unrealized $-160.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  BOUGHT 1x JPM260925C00360000  @ $8.82 ($882)  22d  strike 360.00  [delta 0.58, spread 5.2%, OI 204]
-    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  BOUGHT 4x BAC261016C00062500  @ $2.30 ($922)  43d  strike 62.50  [delta 0.58, spread 3.0%, OI 13009]
-    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  BOUGHT 1x XOM261016C00160000  @ $7.77 ($777)  43d  strike 160.00  [delta 0.60, spread 9.0%, OI 3843]
-    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  BOUGHT 3x KO261016C00087500  @ $2.93 ($879)  43d  strike 87.50  [delta 0.65, spread 7.5%, OI 4236]
-    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
+  no option trades today
   holding 5:
     BAC261016C00062500  4x @ $2.30  since 2026-09-03  stop-if-underlying <= 61.37
     F260925C00014000  5x @ $0.55  since 2026-09-02  stop-if-underlying <= 13.73
     JPM260925C00360000  1x @ $8.82  since 2026-09-03  stop-if-underlying <= 353.86
     KO261016C00087500  3x @ $2.93  since 2026-09-03  stop-if-underlying <= 87.73
     XOM261016C00160000  1x @ $7.77  since 2026-09-03  stop-if-underlying <= 155.32
+  note: QQQ: no contract met DTE/spread/delta
+  note: AMD: no contract met DTE/spread/delta
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
