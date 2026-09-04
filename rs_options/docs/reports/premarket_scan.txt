@@ -1,25 +1,10 @@
 generated: 2026-09-04
 
-PRE-OPEN SCAN — 2026-09-04 (signals from the 2026-09-03 close)
-paper equity: $100,201.48
+PRE-OPEN SCAN — 2026-09-04 (signals from the 2026-09-04 close)
+paper equity: $99,671.27
 
-CANDIDATES FOR TODAY (4):
-  JPM  ref close 362.09  stop 353.86  target 386.78  (1R = 8.23)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 362.09 on 1.1x volume
-      volume profile: 5% of 60d volume sits ABOVE here, heaviest at 356.56  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 362, spread <= 10%
-  BAC  ref close 63.06  stop 61.37  target 68.13  (1R = 1.69)  score 6/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 63.06 on 1.0x volume
-      volume profile: 14% of 60d volume sits ABOVE here, heaviest at 61.99  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 63, spread <= 10%
-  XOM  ref close 162.23  stop 155.32  target 182.96  (1R = 6.91)  score 6/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 162.23 on 1.1x volume
-      volume profile: 11% of 60d volume sits ABOVE here, heaviest at 137.38  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 162, spread <= 10%
-  KO  ref close 88.84  stop 87.73  target 92.17  (1R = 1.11)  score 5/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 88.84 on 1.1x volume
-      volume profile: 16% of 60d volume sits ABOVE here, heaviest at 82.45  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 89, spread <= 10%
+CANDIDATES FOR TODAY (0):
+  none — nothing passed breakout + regime + quality
 
 ORDERS QUEUED FOR THE OPEN (4): BAC, JPM, KO, XOM
   BAC limit 64.32 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
@@ -27,11 +12,19 @@ ORDERS QUEUED FOR THE OPEN (4): BAC, JPM, KO, XOM
   KO limit 90.62 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
   XOM limit 165.47 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
 
-OPEN POSITIONS (4):
-  AAPL  qty 1  unrealized $+11.56  stop ? / target ?
-  F  qty 353  unrealized $+80.66  stop 13.73 / target 15.41
-  F260925C00014000  qty 5  unrealized $+60.00  stop ? / target ?
-  NVDA  qty 22  unrealized $+98.78  stop 215.12 / target 252.38
+OPEN POSITIONS (12):
+  AAPL  qty 1  unrealized $+4.82  stop ? / target ?
+  BAC  qty 79  unrealized $+4.16  stop 61.37 / target 68.13
+  BAC261016C00062500  qty 4  unrealized $+0.00  stop ? / target ?
+  F  qty 353  unrealized $+123.55  stop 13.73 / target 15.41
+  F260925C00014000  qty 5  unrealized $+80.00  stop ? / target ?
+  JPM  qty 13  unrealized $-57.30  stop 353.86 / target 386.78
+  JPM260925C00360000  qty 1  unrealized $-270.00  stop ? / target ?
+  KO  qty 56  unrealized $-18.72  stop 87.73 / target 92.17
+  KO261016C00087500  qty 3  unrealized $-126.00  stop ? / target ?
+  NVDA  qty 22  unrealized $+130.46  stop 215.12 / target 252.38
+  XOM  qty 30  unrealized $-29.76  stop 155.32 / target 182.96
+  XOM261016C00160000  qty 1  unrealized $-120.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
