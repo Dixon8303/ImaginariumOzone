@@ -1,7 +1,7 @@
-generated: 2026-09-04
+generated: 2026-09-05
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-04
-paper equity: $99,680.00   cash: $66,601.99
+paper equity: $99,671.44   cash: $66,601.99
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-09-04  $99,680.00   (-320.00, -0.3%)
@@ -28,17 +28,17 @@ PAPER ORDERS PLACED (0):
   skipped AMD: position cap
 
 OPEN POSITIONS (12):
-  AAPL  qty 1  unrealized $+4.06  stop ?  target ?  since ?
+  AAPL  qty 1  unrealized $+3.87  stop ?  target ?  since ?
   BAC  qty 79  unrealized $+5.29  stop 61.37  target 68.13  since 2026-09-03
   BAC261016C00062500  qty 4  unrealized $+0.00  stop ?  target ?  since ?
   F  qty 353  unrealized $+147.73  stop 13.73  target 15.41  since 2026-09-02
   F260925C00014000  qty 5  unrealized $+130.00  stop ?  target ?  since ?
-  JPM  qty 13  unrealized $-42.30  stop 353.86  target 386.78  since 2026-09-03
+  JPM  qty 13  unrealized $-42.06  stop 353.86  target 386.78  since 2026-09-03
   JPM260925C00360000  qty 1  unrealized $-250.00  stop ?  target ?  since ?
-  KO  qty 56  unrealized $-21.92  stop 87.73  target 92.17  since 2026-09-03
+  KO  qty 56  unrealized $-21.53  stop 87.73  target 92.17  since 2026-09-03
   KO261016C00087500  qty 3  unrealized $-147.00  stop ?  target ?  since ?
-  NVDA  qty 22  unrealized $+102.08  stop 215.12  target 252.38  since 2026-09-02
-  XOM  qty 30  unrealized $-38.00  stop 155.32  target 182.96  since 2026-09-03
+  NVDA  qty 22  unrealized $+92.34  stop 215.12  target 252.38  since 2026-09-02
+  XOM  qty 30  unrealized $-37.25  stop 155.32  target 182.96  since 2026-09-03
   XOM261016C00160000  qty 1  unrealized $-160.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
