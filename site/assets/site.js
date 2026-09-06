@@ -55,22 +55,67 @@ window.BGF_CONFIG = {
     window.gtag("js", new Date());
     window.gtag("config", cfg.GA4_MEASUREMENT_ID);
 
-    /* ---- Outbound purchase-click tracking ---------------------------------
-       Any buy button carrying data-track-buy fires a GA4 event on click —
-       covers the ebook and Study & Trivia Companion cards today, and any
-       paperback/hardcover card added later automatically, with no JS
-       changes: just add the same data attributes to the new button. */
+    /* ---- Outbound click attribution ---------------------------------------
+       One delegated listener classifies EVERY link that leaves this site, so
+       a link is measured the moment it is added rather than only when someone
+       remembers the data-track-buy attribute. That attribute previously
+       covered the two product cards and nothing else, which left links.html,
+       press-kit.html and check-your-email.html reporting no clicks at all.
+
+       "Leaves this site" cannot be a hostname comparison: the archive site,
+       the Genius Index and the assessment all share dixon8303.github.io with
+       this one, so comparing hostnames would silently drop exactly the
+       cross-property clicks worth measuring. Compare the path prefix instead —
+       every page of this site sits directly under one base path. */
+    var SITE_BASE = window.location.pathname.replace(/[^/]*$/, "");
+
+    function isOutbound(a) {
+      if (!/^https?:$/i.test(a.protocol)) return false;
+      if (a.hostname !== window.location.hostname) return true;
+      return a.pathname.indexOf(SITE_BASE) !== 0;
+    }
+
+    // Order matters: a subscribe link is also a youtube.com link, and the
+    // subscribe intent is the one worth counting.
+    function classify(href) {
+      if (/sub_confirmation/.test(href)) return "subscribe_click";
+      if (/payhip\.com/.test(href)) return "buy_click";
+      if (/ImaginariumOzone\/book/.test(href)) return "book_click";
+      if (/youtube\.com|youtu\.be/.test(href)) return "youtube_click";
+      if (/podcasts\.apple\.com/.test(href)) return "podcast_click";
+      if (/calendly\.com/.test(href)) return "interview_click";
+      if (/amazon\.[a-z.]+|amzn\.to|a\.co/.test(href)) return "buy_click";
+      return "outbound_click";
+    }
+
     document.addEventListener("click", function (ev) {
-      var el = ev.target.closest("[data-track-buy]");
-      if (!el || typeof window.gtag !== "function") return;
-      window.gtag("event", "buy_click", {
-        item_name: el.dataset.trackBuy,
-        price: el.dataset.trackPrice || "",
-        currency: "USD",
-        link_url: el.href || "",
-      });
-    });
+      var a = ev.target.closest && ev.target.closest("a[href]");
+      if (!a || typeof window.gtag !== "function") return;
+      if (!isOutbound(a)) return;
+      // One event per click: the classifier replaces the old data-track-buy
+      // dispatch rather than firing alongside it, so a buy button does not
+      // report twice. Its item/price labels are kept as parameters.
+      var params = {
+        link_url: a.href,
+        link_text: (a.innerText || "").trim().slice(0, 80),
+        transport_type: "beacon",
+      };
+      var buy = a.closest("[data-track-buy]");
+      if (buy) {
+        params.item_name = buy.dataset.trackBuy;
+        params.price = buy.dataset.trackPrice || "";
+        params.currency = "USD";
+      }
+      window.gtag("event", classify(a.href), params);
+    }, true);
   }
+
+  /* Email capture. The Chapter 1 signup posts a real form to Kit and so
+     navigates away — the beacon transport is what keeps the event alive. */
+  window.BGF_TRACK_LEAD = function (method) {
+    if (typeof window.gtag !== "function") return;
+    window.gtag("event", "lead", { method: method, transport_type: "beacon" });
+  };
 
   /* ---- UTM passthrough ----------------------------------------------------
      The traffic engine tags every inbound link (utm_source=youtube|pinterest,

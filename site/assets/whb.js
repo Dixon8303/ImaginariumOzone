@@ -343,6 +343,7 @@
     var live = cfg.FORM_ACTION && /^https:\/\//.test(cfg.FORM_ACTION);
     if (!live) { fire("THE RECOVERY LIST", "Signup opens at launch — this is a preview."); return; }
     if (!email || email.indexOf("@") < 1) { fire("THE RECOVERY LIST", "Enter your email address to receive Chapter 1."); if (input) input.focus(); return; }
+    if (window.BGF_TRACK_LEAD) window.BGF_TRACK_LEAD("free_chapter");
     var f = document.createElement("form");
     f.method = "post"; f.action = cfg.FORM_ACTION; f.style.display = "none";
     var em = document.createElement("input"); em.name = "email_address"; em.value = email; f.appendChild(em);
