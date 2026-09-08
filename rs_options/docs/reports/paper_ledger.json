@@ -115,20 +115,6 @@
       "strike": 14.0,
       "ticker": "F"
     },
-    "JPM260925C00360000": {
-      "basis": "delta",
-      "delta": 0.5806,
-      "entry_date": "2026-09-03",
-      "entry_price": 8.82,
-      "entry_underlying": 362.09,
-      "expiry": "2026-09-25",
-      "fundamental_net_income": null,
-      "invalidation_price": 353.86,
-      "qty": 1,
-      "spread_pct": 0.0522,
-      "strike": 360.0,
-      "ticker": "JPM"
-    },
     "KO261016C00087500": {
       "basis": "delta",
       "delta": 0.6451,
