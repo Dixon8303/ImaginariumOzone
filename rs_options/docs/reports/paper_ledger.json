@@ -101,34 +101,6 @@
       "strike": 62.5,
       "ticker": "BAC"
     },
-    "F260925C00014000": {
-      "basis": "delta",
-      "delta": 0.5762,
-      "entry_date": "2026-09-02",
-      "entry_price": 0.545,
-      "entry_underlying": 14.15,
-      "expiry": "2026-09-25",
-      "fundamental_net_income": null,
-      "invalidation_price": 13.73,
-      "qty": 5,
-      "spread_pct": 0.055,
-      "strike": 14.0,
-      "ticker": "F"
-    },
-    "KO261016C00087500": {
-      "basis": "delta",
-      "delta": 0.6451,
-      "entry_date": "2026-09-03",
-      "entry_price": 2.9299999999999997,
-      "entry_underlying": 88.84,
-      "expiry": "2026-10-16",
-      "fundamental_net_income": null,
-      "invalidation_price": 87.73,
-      "qty": 3,
-      "spread_pct": 0.0751,
-      "strike": 87.5,
-      "ticker": "KO"
-    },
     "XOM261016C00160000": {
       "basis": "delta",
       "delta": 0.5953,

@@ -1,67 +1,58 @@
-generated: 2026-09-08
+generated: 2026-09-09
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-08
-paper equity: $99,036.65   cash: $66,601.84
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-09
+paper equity: $98,929.92   cash: $67,046.82
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-08  $99,036.65   (-963.35, -1.0%)
-  over 15 calendar days, 7 recorded sessions: 5 with a change, 1 flat.
-  range so far: $99,036.65 (low) to $100,196.58 (high).
+  2026-08-24  $100,000.00  ->  2026-09-09  $98,929.92   (-1,070.08, -1.1%)
+  over 16 calendar days, 8 recorded sessions: 6 with a change, 1 flat.
+  range so far: $98,929.92 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (3):
-  AMD  [H-25]  close 505.63  stop 440.62  target 700.68  (1R = 65.01)  score 8/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 505.63 on 2.1x volume
-      volume profile: 50% of 60d volume sits ABOVE here, heaviest at 477.12  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 506, spread <= 10%; exit on stop/target/15 sessions
-  QQQ  [H-25]  close 718.43  stop 704.68  target 759.68  (1R = 13.75)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 718.43 on 1.2x volume
-      volume profile: 42% of 60d volume sits ABOVE here, heaviest at 715.86  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 718, spread <= 10%; exit on stop/target/15 sessions
-  UNH  [H-25]  close 400.93  stop 390.56  target 432.04  (1R = 10.37)  score 6/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 400.93 on 1.3x volume
-      volume profile: 79% of 60d volume sits ABOVE here, heaviest at 407.82  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 401, spread <= 10%; exit on stop/target/15 sessions
+TODAY'S SIGNALS (2):
+  AMD  [H-25]  close 521.13  stop 440.62  target 762.66  (1R = 80.51)  score 8/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 521.13 on 1.5x volume
+      volume profile: 34% of 60d volume sits ABOVE here, heaviest at 477.12  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 521, spread <= 10%; exit on stop/target/15 sessions
+  XOM  [H-25]  close 164.16  stop 158.76  target 180.36  (1R = 5.40)  score 8/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 164.16 on 1.4x volume
+      volume profile: 8% of 60d volume sits ABOVE here, heaviest at 137.38  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 164, spread <= 10%; exit on stop/target/15 sessions
 
 OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
-  UNH    UNH261016C00390000  delta 0.63  38d  mid 24.03  spread 3.4%
-         costs $2,403.00 per contract; needs $48,060 equity to buy one inside the 5% position cap
+  XOM    XOM261016C00160000  delta 0.65  37d  mid 8.87  spread 3.0%
+         costs $886.50 per contract; needs $17,730 equity to buy one inside the 5% position cap
 
-  cheapest doctrine contract today: UNH at $2,403.00
-  at $99,036.65 equity you can buy 1 of 1 inside the position cap
+  cheapest doctrine contract today: XOM at $886.50
+  at $98,929.92 equity you can buy 1 of 1 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
 PAPER ORDERS PLACED (0):
   none
   skipped AMD: position cap
-  skipped QQQ: position cap
-  skipped UNH: position cap
+  skipped XOM: already held
 
-OPEN POSITIONS (12):
-  AAPL  qty 1  unrealized $+0.15  stop ?  target ?  since ?
-  BAC  qty 79  unrealized $-17.33  stop 61.37  target 68.13  since 2026-09-03
-  BAC261016C00062500  qty 4  unrealized $-24.00  stop ?  target ?  since ?
-  F  qty 353  unrealized $-53.23  stop 13.73  target 15.41  since 2026-09-02
-  F260925C00014000  qty 5  unrealized $-80.00  stop ?  target ?  since ?
-  JPM  qty 13  unrealized $-108.39  stop 353.86  target 386.78  since 2026-09-03
-  JPM260925C00360000  qty 1  unrealized $-455.00  stop ?  target ?  since ?
-  KO  qty 56  unrealized $-2.45  stop 87.73  target 92.17  since 2026-09-03
-  KO261016C00087500  qty 3  unrealized $-102.00  stop ?  target ?  since ?
-  NVDA  qty 22  unrealized $+5.72  stop 215.12  target 252.38  since 2026-09-02
-  XOM  qty 30  unrealized $-1.71  stop 155.32  target 182.96  since 2026-09-03
-  XOM261016C00160000  qty 1  unrealized $-75.00  stop ?  target ?  since ?
+OPEN POSITIONS (11):
+  AAPL  qty 1  unrealized $+1.80  stop ?  target ?  since ?
+  BAC  qty 79  unrealized $+3.44  stop 61.37  target 68.13  since 2026-09-03
+  BAC261016C00062500  qty 4  unrealized $+20.00  stop ?  target ?  since ?
+  F  qty 353  unrealized $-232.98  stop 13.73  target 15.41  since 2026-09-02
+  F260925C00014000  qty 5  unrealized $-185.00  stop ?  target ?  since ?
+  JPM  qty 13  unrealized $-96.82  stop 353.86  target 386.78  since 2026-09-03
+  KO  qty 56  unrealized $-51.73  stop 87.73  target 92.17  since 2026-09-03
+  KO261016C00087500  qty 3  unrealized $-252.00  stop ?  target ?  since ?
+  NVDA  qty 22  unrealized $-39.16  stop 215.12  target 252.38  since 2026-09-02
+  XOM  qty 30  unrealized $+107.49  stop 155.32  target 182.96  since 2026-09-03
+  XOM261016C00160000  qty 1  unrealized $+135.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  SOLD   1x JPM260925C00360000  P&L $-455.00  (INVALIDATION: underlying 353.55 <= 353.86)
-  holding 4:
+  SOLD   5x F260925C00014000  P&L $-185.00  (INVALIDATION: underlying 13.48 <= 13.73)
+  SOLD   3x KO261016C00087500  P&L $-252.00  (INVALIDATION: underlying 87.58 <= 87.73)
+  holding 2:
     BAC261016C00062500  4x @ $2.30  since 2026-09-03  stop-if-underlying <= 61.37
-    F260925C00014000  5x @ $0.55  since 2026-09-02  stop-if-underlying <= 13.73
-    KO261016C00087500  3x @ $2.93  since 2026-09-03  stop-if-underlying <= 87.73
     XOM261016C00160000  1x @ $7.77  since 2026-09-03  stop-if-underlying <= 155.32
   note: AMD: no contract met DTE/spread/delta
-  note: QQQ: no contract met DTE/spread/delta
-  note: UNH: premium $2,403 exceeds the 1% risk budget
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
