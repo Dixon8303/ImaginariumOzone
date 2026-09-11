@@ -87,6 +87,20 @@
     }
   },
   "options": {
+    "AAPL261002C00330000": {
+      "basis": "delta",
+      "delta": 0.5796,
+      "entry_date": "2026-09-11",
+      "entry_price": 9.2,
+      "entry_underlying": 332.245,
+      "expiry": "2026-10-02",
+      "fundamental_net_income": null,
+      "invalidation_price": 309.92,
+      "qty": 1,
+      "spread_pct": 0.0543,
+      "strike": 330.0,
+      "ticker": "AAPL"
+    },
     "BAC261016C00062500": {
       "basis": "delta",
       "delta": 0.5848,
