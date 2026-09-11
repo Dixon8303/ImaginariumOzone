@@ -1,28 +1,5 @@
 generated: 2026-09-11
 
-PRE-OPEN SCAN — 2026-09-11 (signals from the 2026-09-10 close)
-paper equity: $99,094.65
+PRE-OPEN SCAN — 2026-09-11
 
-CANDIDATES FOR TODAY (1):
-  XOM  ref close 165.27  stop 158.76  target 184.80  (1R = 6.51)  score 8/10 [already held]
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 165.27 on 1.0x volume
-      volume profile: 6% of 60d volume sits ABOVE here, heaviest at 137.38  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 165, spread <= 10%
-
-ORDERS QUEUED FOR THE OPEN (0): none
-
-OPEN POSITIONS (9):
-  AAPL  qty 1  unrealized $+9.86  stop ? / target ?
-  BAC  qty 79  unrealized $+0.60  stop 61.37 / target 68.13
-  BAC261016C00062500  qty 4  unrealized $-28.00  stop ? / target ?
-  F  qty 353  unrealized $-97.75  stop 13.73 / target 15.41
-  JPM  qty 13  unrealized $-111.77  stop 353.86 / target 386.78
-  KO  qty 56  unrealized $-32.69  stop 87.73 / target 92.17
-  NVDA  qty 22  unrealized $-160.82  stop 215.12 / target 252.38
-  XOM  qty 30  unrealized $+130.59  stop 155.32 / target 182.96
-  XOM261016C00160000  qty 1  unrealized $+195.00  stop ? / target ?
-
-OPTION POSITIONS (Robinhood): none on file.
-  Add trades to paper/open_options.json to have them reviewed here each day.
-
-Read-only briefing — no orders placed by this run. The evening run trades and keeps the record.
+Bars are stale or missing — no briefing. The evening run will retry with fresh data.
