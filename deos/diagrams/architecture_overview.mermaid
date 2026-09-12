@@ -1,0 +1,15 @@
+graph TD
+    subgraph EE Kernel Headless Core
+        A[Ingress Buffer] --> B[Stage 1: Ingress & Catalyst System]
+        B --> C[Stage 2: Physics & Environment System]
+        C --> D[Stage 3: Metabolic & Biological System]
+        D --> E[Stage 4: Cognition & Decision System]
+        E --> F[Stage 5: Societal & Cultural System]
+        F --> G[Stage 6: State Hash & Buffer Swap]
+    end
+
+    subgraph Host Application: Emergence Digital Rise
+        G -->|Read-Only Pointer Swap| H[Visualizer Engine]
+        G -->|Event Stream| I[Procedural Audio Subsystem]
+        J[Player UI Catalyst Control] -->|Catalyst Inputs| A
+    end
