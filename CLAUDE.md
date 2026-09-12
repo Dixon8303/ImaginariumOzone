@@ -13,6 +13,7 @@ git history and a Pages deploy, nothing else. Never wire one into another.
 | 6 | **Circle of Morality / Screenplay Tracker** | `src/CircleOfMorality.jsx`, `src/ScreenplayTracker.jsx` | Earlier React features, preserved at `/circle` and `/tracker`. |
 | 7 | **Dixon Grant Studio** | `dixon-grant-studio/` | Grant-writing pipeline and outreach assets. |
 | 8 | **RS Options Engine** | `rs_options/` | Risk engine + MVE for the RS Options spec. **Co-pilot mode:** autonomous trade selection via the scan playbook; execution requires the operator's explicit word per trade session. Unattended execution stays locked behind the spec §67 release gate. See `rs_options/robinhood_copilot_playbook.md`. |
+| 9 | **DEOS: Emergence** | `deos/` | Deterministic Emergence Operating Specification: the engineering spec for the game *Emergence: The Digital Rise*. Documentation-only subtree, self-contained so it can be extracted into its own repository. `python3 deos/tools/spec_lint.py` must pass before any change under `deos/` merges. |
 
 **Target platform:** macOS (Apple Silicon). `start.sh` uses BSD `sed -i ''`, narration
 falls back to the macOS `say` command, and ComfyUI is tuned for MPS. Linux/CI runs of
@@ -263,6 +264,27 @@ Without `HONEYDRIP_ARMED=YES` the engine aborts immediately in any mode.
 Watches TMDb for new/changed Marvel Studios releases, syncs a dedicated iCloud
 calendar, sends push/SMS. Runs daily at 13:00 UTC via
 `.github/workflows/marvel_tracker.yml`. Setup in `marvel_tracker/README.md`.
+
+---
+
+## 9. DEOS: Emergence
+
+Specification-only component. `deos/DEOS.md` is the root contract (identity,
+identifier scheme, canonical vocabulary, shared registry, game-facing invariants);
+the module specs live in `deos/docs/` in dependency order: Foundation → Core →
+ECS → Runtime → Protocol → Play → MVS. There is no code to build or run.
+
+- **The product is a game.** Every mechanism must state its player-facing
+  consequence; DEOS-Play owns the loops, Catalyst interface, Chronicle, and
+  retention rules. Never strip that layer to "simplify" the engineering.
+- **Identifiers are enforced.** Requirements are defined once as
+  `### REQ-PREFIX-nnn:` headings under the module that owns the prefix
+  (`deos/DEOS.md` §3.2). `python3 deos/tools/spec_lint.py` must report 0 errors
+  before commit. Retired `EESS-` IDs appear only in lineage/Supersedes rows.
+- **Extraction path.** The subtree has its own README, LICENSE, CHANGELOG and
+  CONTRIBUTING; split it out with `git subtree split -P deos` when it graduates
+  to a standalone repo. Nothing under `deos/` may import from or link to the
+  other components, and `pages.yml` does not deploy it.
 
 ---
 
