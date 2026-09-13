@@ -1204,7 +1204,7 @@ Player-facing consequence: the MVS numbers are what make an Epoch catch-up strea
 ## 12. Future Expansion
 
 1. **Sparse archetype pools.** A later revision may omit Cognitive and Cultural slabs for Chunks that hold no Agents; the catalog order and canonical stream stay unchanged (zeros serialize as zeros), so the Tick Hash stays identical.
-2. **Buffer B elision in Snapshots.** Under REQ-MUT-001 rule 1, buffer B at a tick boundary never influences a later tick; an ADR may permit Snapshots that omit sections 15 to 26 with `SNAPSHOT_LAYOUT_VERSION` = 2, halving Snapshot size at v1.0.
+2. **Buffer B elision in Snapshots.** Under REQ-MUT-001 rule 1, buffer B at a tick boundary never influences a later tick; an ADR may permit Snapshots that omit sections 15 to 26 under a bumped layout version, halving Snapshot size at v1.0.
 3. **SIMD leaf layouts.** The leaf-array slab layout (REQ-DAT-004) is already the layout AVX-512 and NEON kernels for Stage 2 and Stage 4 consume; no data change is needed for ROADMAP Phase 7.
 4. **Registry growth.** Raising `MEMORY_SLOTS`, `TRUST_EDGES`, `MEME_DIM`, or `NEED_COUNT` changes byte counts in section 8.1 and REQ-DAT-010 and bumps `SNAPSHOT_LAYOUT_VERSION`; nothing else in this module depends on their values beyond the sizes stated.
 5. **Additional Command kinds.** Kinds 10 to 15 are held for this module; assigning one follows the DEOS-F06 rubric and states its three-pass semantics and conservation identity in the REQ-MUT-004 table.

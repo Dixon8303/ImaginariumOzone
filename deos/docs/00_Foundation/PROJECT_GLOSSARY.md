@@ -38,10 +38,14 @@ This table is the single canonical vocabulary of the repository. Section 1.1 car
 | **Master Seed** | The 64-bit unsigned integer from which every PRNG stream in a world is derived. With the Input Log it fully determines the world. | world seed, random seed, map seed |
 | **Input Log** | The ordered, append-only sequence of Catalyst Actions and host commands, each stamped with the tick at which it takes effect. `world(t) = F(MasterSeed, InputLog[0..t])`. The Input Log *is* the save file. | replay file, command history, save game |
 | **Catalyst Budget** | The player's spendable, regenerating pool of catalyst energy. A pacing valve, never a paywall: regeneration is a visible, deterministic function of simulated ticks. | mana, action points, unqualified "energy" (collides with substrate energy) |
-| **Tick Hash** | Refines *State Hash*: the BLAKE3-256 digest of the write buffer at the end of a tick, computed as the Merkle root over Chunk Hashes. | checksum, world hash |
+| **Tick Hash** | Refines *State Hash*: the BLAKE3-256 digest computed every tick over the tick's write folds, the `Ledger`, the `CatalystLedger`, and the `WorldMoodSlot` (DEOS-RT REQ-HASH-002; ADR-0001). Sufficient to detect a Desync within one tick. | checksum, world hash |
 | **Chunk** | A contiguous slice of `CHUNK_SIZE` entity slots processed by exactly one worker thread per stage. The unit of parallelism and of hashing. | batch, block, partition |
-| **Chunk Hash** | BLAKE3-256 of one Chunk's component data at end of tick. The leaves of the Tick Hash tree; they localize a Desync. | — |
-| **Checkpoint** | A Tick Hash recorded in the Input Log every `CHECKPOINT_INTERVAL` ticks so replays and challenge submissions verify incrementally. | — |
+| **Chunk Hash** | BLAKE3-256 of one Chunk's (or Cell Chunk's) canonical byte stream (DEOS-ECS REQ-DAT-007), computed at Checkpoint ticks. The leaves of the Checkpoint Hash tree; they localize a Desync to a Chunk. | — |
+| **Checkpoint Hash** | The BLAKE3-256 Merkle root over the Chunk Hashes, the global records, and the tick at a Checkpoint tick (DEOS-RT REQ-HASH-003); the value a `CHECKPOINT` record stores and a verifier compares. | strong hash, full hash |
+| **Write fold** | A 64-bit fold a Worker accumulates over the canonical bytes it writes to the write buffer in one stage, or over the Commands it applies at one barrier (DEOS-RT REQ-HASH-001). The input of the Tick Hash. | digest (unqualified) |
+| **Cell Chunk** | `CELL_CHUNK_SIZE` consecutive Cells in row-major index order; the Substrate's unit of parallelism, Command targeting, and hashing, mirroring the entity Chunk. | tile block, region (unqualified) |
+| **Command** | A fixed-size 64-byte record describing one cross-entity or cross-Cell effect, appended by the issuing Worker to its Chunk's outbox and applied at a stage barrier in canonical order (DEOS-ECS `MUT`). | message, order, effect (unqualified) |
+| **Checkpoint** | A `CHECKPOINT` record carrying the Checkpoint Hash, appended to the Input Log at tick 0 and every `CHECKPOINT_INTERVAL` ticks so replays and challenge submissions verify incrementally. | — |
 | **Snapshot** | A complete, versioned serialization of both state buffers, all PRNG stream counters, and the Input Log cursor at a tick boundary. Restoring a Snapshot and stepping yields Tick Hashes identical to the original run. | save state, memento |
 | **Desync** | A Tick Hash mismatch between two executions of the same (Master Seed, Input Log) prefix. Always a defect; never tolerated silently. | drift, divergence |
 | **Chronicle** | The append-only stream of Notable Events emitted by the Kernel each tick, and the game's presentation of that stream as history the player reads, rewinds, and shares. | event log, news feed, history tab |
@@ -87,4 +91,4 @@ Player-facing consequence: the words the player reads in the Host (Chronicle, Ca
 | Version | Date | Description | Author |
 | :--- | :--- | :--- | :--- |
 | v0.1.0 (EESS) | 2026-07-20 | Canonical terminology baseline (lineage) | EE Arch Team |
-| v0.1.0 (DEOS) | 2026-09-12 | Rebranded to DEOS-F04; DEOS section 4 terms mirrored in; State Hash refined to Tick Hash; player-loop and interface vocabulary added; usage rules added; supersedes EESS-0004 | DEOS Arch Team |
+| v0.1.0 (DEOS) | 2026-09-12 | Rebranded to DEOS-F04; DEOS section 4 terms mirrored in; State Hash refined to Tick Hash; player-loop and interface vocabulary added; usage rules added; supersedes EESS-0004. Integration: Tick Hash and Chunk Hash refined per ADR-0001; Checkpoint Hash, write fold, Cell Chunk, Command added | DEOS Arch Team |

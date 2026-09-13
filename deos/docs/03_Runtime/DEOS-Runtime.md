@@ -302,7 +302,7 @@ TickHash(t) = BLAKE3-256( 0x54 ‖ LE64(t)
                           ‖ folds of Cell Chunks 0..NUM_CELL_CHUNKS−1, each in the order:
                               fields 0..5 owner folds, then the stage-3, stage-4, stage-5 Command folds
                           ‖ the IngressOverlay fold
-                          ‖ Ledger (160 bytes, DEOS-CORE section 8.3)
+                          ‖ Ledger (176 bytes, DEOS-CORE section 8.3)
                           ‖ CatalystLedger (48 bytes, DEOS section 5.4)
                           ‖ WorldMoodSlot (64 bytes) )
 ```
@@ -357,7 +357,7 @@ A Snapshot is the ECS payload of DEOS-ECS REQ-DAT-008 followed by Runtime sectio
 | `kind` | Name | Content | Length |
 | :--- | :--- | :--- | :--- |
 | 16 | `RT_HEADER` | `{ deos_version u32, scale u32, threads_hint u32, pad u32, master_seed u64, tick u64, checkpoint_interval u32, snapshot_interval u32 }` | 40 |
-| 17 | `LEDGER` | the `Ledger` record | 160 |
+| 17 | `LEDGER` | the `Ledger` record | 176 |
 | 18 | `CATALYST_LEDGER` | the `CatalystLedger` record | 48 |
 | 19 | `TICK_HASH_RING` | `CHECKPOINT_INTERVAL` × 32 bytes, oldest first, plus `LE64(count)` | 8 + 32 × `CHECKPOINT_INTERVAL` |
 | 20 | `INPUT_LOG` | every Input Log record with `record.tick ≤ tick` (Checkpoints included), in order | 64 × n |
@@ -419,7 +419,7 @@ Every row is one step; a barrier follows every row. "Unit" is the parallel unit;
 | 6.1 | 6 | spawn assignment | W0 | DEOS-ECS REQ-MUT-010 |
 | 6.2 | 6 | spawn initialization (Genome from SpawnPayload or `SPAWN_INIT` Stream) | Chunk | DEOS-ECS REQ-MUT-010; REQ-LOOP-006 |
 | 6.3 | 6 | despawn finalization | Chunk | DEOS-ECS REQ-MUT-010 |
-| 6.4a | 6 | ledger sums (Chunk ledgers, `fx_flags` OR), Stage 6 conservation check | W0 | DEOS-ECS REQ-MUT-009 rule 3; DEOS-CORE REQ-LAW-004 rule 5; REQ-HASH-006 |
+| 6.4a | 6 | Chunk-ledger sums credited to `Ledger.heat_sink`, `births`/`deaths` folded, `fx_flags` OR; `E_total` and the Stage 6 conservation check; `WORLD_PHASE_REACHED` 2, `EXTINCTION`, `STARVATION_WAVE` detection from the folded counts | W0 | DEOS-ECS REQ-MUT-009 rule 3; DEOS-CORE REQ-LAW-004 rule 5; REQ-HASH-006; DEOS-PROTO REQ-EVT-002, 004 |
 | 6.4b | 6 | Tick Hash | W0 | REQ-HASH-002 |
 | 6.4c | 6 | Checkpoint tick only: Chunk Hashes | Chunk, Cell Chunk | REQ-HASH-003 rule 1 |
 | 6.4d | 6 | Checkpoint tick only: Merkle root, Checkpoint Hash, `CHECKPOINT` record or comparison | W0 | REQ-HASH-003 rules 2–4, REQ-HASH-004, REQ-HASH-005 |
@@ -454,7 +454,7 @@ uint64_t fold_bytes(uint64_t h, const uint8_t* b, size_t n) {
 }
 ```
 
-Test vectors: `fold_bytes(fold_init(), "", 0) = 0x2A63BDC8E6F1E3B3`; `fold_bytes(fold_init(), "DEOS", 4) = 0x2F5DFC1C6B3C2B0E`; `fold_bytes(fold_init(), LE64(1) ‖ LE64(2), 16) = 0x9C5E0A2E6F0C3B1D`. These three values are recomputed by TS-BENCH-001 from the definition above; an implementation that disagrees with the definition is wrong even if it agrees with a mistyped vector, and the definition governs.
+Test vectors (computed from the definition above with Python integer arithmetic): `fold_bytes(fold_init(), "", 0) = 0x8D90CE85BACE8238`; `fold_bytes(fold_init(), "DEOS", 4) = 0xFFC4FD73F5660C75`; `fold_bytes(fold_init(), LE64(1) ‖ LE64(2), 16) = 0x29D6014757C19CA8`. TS-PLAY-003 recomputes them; the definition governs.
 
 Merkle combination:
 

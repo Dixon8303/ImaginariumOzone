@@ -43,21 +43,21 @@ Dependency order is `DEOS → Foundation → Core → ECS → Runtime → Protoc
 | Module | Document ID | Location | Owns | Prefixes |
 | :--- | :--- | :--- | :--- | :--- |
 | DEOS-Foundation | DEOS-F01 … DEOS-F06 | [`docs/00_Foundation/`](docs/00_Foundation/) | identity, terminology, rubric, acceptance metrics | — |
-| DEOS-Core | DEOS-CORE | [`docs/01_Core/`](docs/01_Core/) (`DEOS-Core.md`) | Q32.32 arithmetic, tables, conservation laws, fixed-tick integration, PRNG streams, ordering rules | `LAW` `MATH` `PRNG` `TICK` `ORD` |
-| DEOS-ECS | DEOS-ECS | [`docs/02_ECS/`](docs/02_ECS/) (`DEOS-ECS.md`) | EntityID, component catalog, memory pools, mutation rules, command buffers | `ENT` `CMP` `DAT` `MUT` |
-| DEOS-Runtime | DEOS-RT | [`docs/03_Runtime/`](docs/03_Runtime/) (`DEOS-Runtime.md`) | Kernel/Host ABI, six-stage pipeline, threading, Tick Hash, Snapshots, replay, Acceleration | `ARCH` `LOOP` `THR` `HASH` `SNAP` |
-| DEOS-Protocol | DEOS-PROTO | [`docs/04_Protocol/`](docs/04_Protocol/) (`DEOS-Protocol.md`) | perception → utility → action, memory, Meme-Vectors, trust, Institutions, technology, Notable Events | `COG` `SOC` `XL` `EVT` |
-| DEOS-Play | DEOS-PLAY | [`docs/05_Play/`](docs/05_Play/) (`DEOS-Play.md`) | core and meta loops, Catalyst interface and Budget, Chronicle, sessions, challenges, retention | `PLAY` `CAT` `SES` |
-| DEOS-MVS | DEOS-MVS | [`docs/06_Prototype/`](docs/06_Prototype/) (`DEOS-MVS.md`) | scope, acceptance criteria, and benchmarks of the first playable build | `MVS` |
+| DEOS-Core | DEOS-CORE | [`docs/01_Core/DEOS-Core.md`](docs/01_Core/DEOS-Core.md) | Q32.32 arithmetic, tables, conservation laws, fixed-tick integration, PRNG streams, ordering rules | `LAW` `MATH` `PRNG` `TICK` `ORD` |
+| DEOS-ECS | DEOS-ECS | [`docs/02_ECS/DEOS-ECS.md`](docs/02_ECS/DEOS-ECS.md) | EntityID, component catalog, memory pools, mutation rules, command buffers | `ENT` `CMP` `DAT` `MUT` |
+| DEOS-Runtime | DEOS-RT | [`docs/03_Runtime/DEOS-Runtime.md`](docs/03_Runtime/DEOS-Runtime.md) | Kernel/Host ABI, six-stage pipeline, threading, Tick Hash, Snapshots, replay, Acceleration | `ARCH` `LOOP` `THR` `HASH` `SNAP` |
+| DEOS-Protocol | DEOS-PROTO | [`docs/04_Protocol/DEOS-Protocol.md`](docs/04_Protocol/DEOS-Protocol.md) | perception → utility → action, memory, Meme-Vectors, trust, Institutions, technology, Notable Events | `COG` `SOC` `XL` `EVT` |
+| DEOS-Play | DEOS-PLAY | [`docs/05_Play/DEOS-Play.md`](docs/05_Play/DEOS-Play.md) | core and meta loops, Catalyst interface and Budget, Chronicle, sessions, challenges, retention | `PLAY` `CAT` `SES` |
+| DEOS-MVS | DEOS-MVS | [`docs/06_Prototype/DEOS-MVS.md`](docs/06_Prototype/DEOS-MVS.md) | scope, acceptance criteria, and benchmarks of the first playable build | `MVS` |
 
-Files named `LEGACY_*.md` inside a module directory are the EESS content that module absorbs; they are lineage, never edited, and their requirement IDs keep their meaning.
+The absorbed EESS documents lived in the module directories as `LEGACY_*.md` files during drafting; they are removed now that every legacy requirement is defined in its absorbing module, and remain in git history as lineage.
 
 ## Reading order
 
 1. [`DEOS.md`](DEOS.md): identity, hierarchy, identifier scheme, canonical vocabulary, shared registry, Game-Facing Invariants GI-1 through GI-8, conformance.
 2. [`docs/00_Foundation/`](docs/00_Foundation/): Vision (DEOS-F01), Core Principles (DEOS-F02), Design Pillars (DEOS-F03), Glossary (DEOS-F04), Success Criteria (DEOS-F05), Decision Framework (DEOS-F06).
 3. The module specifications in dependency order: Core → ECS → Runtime → Protocol → Play → MVS.
-4. [`docs/architecture/`](docs/architecture/): the dependency graph and requirement traceability matrix generated from the modules.
+4. [`docs/architecture/`](docs/architecture/): the dependency graph, the requirement traceability matrix generated from the modules, and the ADRs ([ADR-0001](docs/architecture/adr/ADR-0001-two-tier-hashing.md) two-tier hashing, [ADR-0002](docs/architecture/adr/ADR-0002-substrate-insolation.md) substrate insolation).
 5. [`research/INTERFACE_INSPIRATION.md`](research/INTERFACE_INSPIRATION.md): the interface and experience references and the design commitments each module adopts.
 
 ## Directory layout
@@ -69,18 +69,18 @@ deos/
 ├── .github/                    PR and issue templates
 ├── docs/
 │   ├── 00_Foundation/          DEOS-F01 … DEOS-F06
-│   ├── 01_Core/                DEOS-CORE  (+ LEGACY_ lineage)
-│   ├── 02_ECS/                 DEOS-ECS   (+ LEGACY_ lineage)
-│   ├── 03_Runtime/             DEOS-RT    (+ LEGACY_ lineage)
+│   ├── 01_Core/                DEOS-CORE
+│   ├── 02_ECS/                 DEOS-ECS
+│   ├── 03_Runtime/             DEOS-RT
 │   ├── 04_Protocol/            DEOS-PROTO
 │   ├── 05_Play/                DEOS-PLAY
-│   ├── 06_Prototype/           DEOS-MVS   (+ LEGACY_ lineage)
-│   ├── architecture/           generated dependency graph and traceability matrix
+│   ├── 06_Prototype/           DEOS-MVS
+│   ├── architecture/           dependency graph, generated traceability matrix, adr/ (ADR-0001, ADR-0002)
 │   └── templates/              specification and ADR templates
 ├── diagrams/                   Mermaid architecture overview
 ├── research/                   inspiration references and reading notes
 ├── tests/                      specification consistency and determinism test plan
-└── tools/                      spec_lint.py and Kernel coding standards
+└── tools/                      spec_lint.py, gen_rtm.py, and Kernel coding standards
 ```
 
 ## Guidance for contributors and AI agents

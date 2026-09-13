@@ -23,8 +23,8 @@ All simulation runtime code written for the **DEOS Kernel** (the EE Kernel of DE
 
 ## 4. Hashing Rule (Little-Endian Serialization)
 - Every value that enters a Chunk Hash or Tick Hash is serialized in **little-endian byte order** at its declared width before hashing: `int64_t` and `uint64_t` as 8 bytes, `uint32_t` as 4, `uint16_t` as 2, `uint8_t` as 1, in the field order the DEOS-ECS component layout declares, with padding bytes written as zero. In-memory representation is never hashed directly; a big-endian platform serializes explicitly.
-- A Chunk Hash is `BLAKE3-256` over the concatenation of that Chunk's component arrays in catalog order (`DEOS.md` section 5.3), each array serialized slot by slot in ascending slot index, followed by the Chunk's Substrate Cell fields in the ordering DEOS-Runtime specifies.
-- The Tick Hash is the Merkle root over Chunk Hashes in ascending Chunk index, with the DEOS-Runtime domain-separation prefix and the tick number serialized little-endian as 8 bytes, using the tree construction DEOS-Runtime specifies.
+- Every write path folds exactly the canonical bytes it writes (or the Command records it applies) into its write fold with the fold function of DEOS-Runtime REQ-HASH-001; the Tick Hash is `BLAKE3-256` over the tick number, every fold in canonical order, and the global records (REQ-HASH-002). A write that is not folded is a determinism defect even when the state it produces is correct.
+- A Chunk Hash is `BLAKE3-256` over the Chunk's canonical stream (DEOS-ECS REQ-DAT-007: the entity-table slice, then the component arrays in catalog order, each slot by slot), computed at Checkpoint ticks; the Checkpoint Hash is the Merkle root over Chunk Hashes, Cell Chunk Hashes, and the global records with the domain-separation prefixes and the tick number serialized little-endian, using the tree construction of DEOS-Runtime REQ-HASH-003 (ADR-0001).
 - Hash inputs never include pointers, thread identifiers, wall-clock values, or padding with undefined contents.
 
 ## 5. Ordering Rule (Core ORD)
