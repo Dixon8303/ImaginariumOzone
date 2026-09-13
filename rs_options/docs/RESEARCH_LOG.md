@@ -2467,3 +2467,43 @@ after the next trading run: 7 of 8 position slots free (AAPL keeps
 one), and from then on the equity curve moves only on doctrine
 trades plus AAPL. Keeping AAPL is recorded as what it is: a manual
 judgment outside the doctrine, on one ticker, at the operator's word.
+
+## 2026-09-13 — Live defect: option contracts were eating stock slots
+
+The doctrine started trading on 2026-09-02 and the 2026-09-08 report
+exposed a coupling the backtest could never have shown. It read:
+
+    OPEN POSITIONS (12)
+    skipped AMD: position cap
+    skipped QQQ: position cap
+    skipped UNH: position cap
+
+Twelve positions against MAX_OPEN = 8 — except only seven were stocks.
+The other five were option contracts. Alpaca's `/v2/positions` returns
+equity and options in ONE list, and `paper/daily.py` counted the raw
+dict against the stock cap. The options cycle already caps its own
+book (`open_count = len(broker.option_positions())`), so every
+contract was counted twice and the overlay was crowding out the
+doctrine that generates its signals. Three H-25 entries were declined
+on 2026-09-08 with a stock slot actually free.
+
+Fixed: `equity_positions()` filters the book by the broker's
+`asset_class` when present and by OCC symbol shape otherwise (so it
+holds for brokers and test fakes that omit the field), and the stock
+cap counts that. The report now states the split — "N of 8 stock
+slots used, M option contracts" — so the same conflation cannot hide
+in a total again. Three regression tests, one of them a
+reconstruction of the exact 2026-09-08 book.
+
+Worth naming the class of bug: nothing was wrong with either cap in
+isolation, and both tracks passed their own tests. The defect lived in
+a shared resource neither track owned, and it only became visible once
+the two ran together with real positions on both sides. The backtest
+has no options overlay, so no amount of historical validation could
+have surfaced it — this is exactly the category of error the forward
+paper track exists to catch, and the first one it has caught.
+
+Not corrected, recorded: the three signals declined on 2026-09-08 are
+gone. Whether they would have won is unknowable and not worth
+modelling; the forward record simply has three fewer trades than the
+doctrine called for, and that gap belongs in it.

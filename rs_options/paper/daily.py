@@ -40,6 +40,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from datetime import date, timedelta
 
 import pandas as pd
@@ -113,6 +114,31 @@ def save_ledger(ledger: dict, path: str | None = None) -> None:
 
 def bdays_between(a: str, b: str) -> int:
     return max(0, len(pd.bdate_range(a, b)) - 1)
+
+
+# OCC option symbol: root, 6-digit expiry, C/P, 8-digit strike —
+# e.g. BAC261016C00062500. A plain equity ticker never matches.
+OCC_SYMBOL = re.compile(r"^[A-Z]{1,6}\d{6}[CP]\d{8}$")
+
+
+def is_option_symbol(sym: str) -> bool:
+    return bool(OCC_SYMBOL.match(str(sym)))
+
+
+def equity_positions(positions: dict) -> dict:
+    """Stock-only view of the broker's position book.
+
+    Alpaca's /v2/positions returns equity AND option contracts in one
+    list. Anything that counts stock slots must filter first: the
+    options overlay keeps its own book and enforces its own cap in
+    run_option_cycle, so counting contracts twice silently shrinks the
+    stock doctrine. Prefers the broker's own asset_class when present
+    and falls back to the OCC symbol shape, so it holds for brokers
+    (and test fakes) that omit the field.
+    """
+    return {s: p for s, p in positions.items()
+            if "option" not in str(p.get("asset_class", "")).lower()
+            and not is_option_symbol(s)}
 
 
 # ── scan ─────────────────────────────────────────────────────────────
@@ -589,12 +615,21 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
         if micro_paused:
             micro_warnings.append("  " + micro_paused.upper())
     placed, skipped = [], []
+    # MAX_OPEN is the STOCK doctrine's cap and must count stocks only.
+    # Alpaca's /v2/positions returns equity and option contracts in one
+    # list, so the raw dict double-counts the options overlay, which
+    # already enforces MAX_OPEN against its own book inside
+    # run_option_cycle. Left uncorrected the two tracks share one cap:
+    # on 2026-09-08 five held contracts plus seven stocks tripped the
+    # cap at 12 and all three H-25 signals were skipped while a stock
+    # slot was actually free.
+    equity_open = equity_positions(positions)
     for sig in signals:
         sym = sig["ticker"]
         if sym in positions or sym in ledger["open"]:
             skipped.append((sym, "already held"))
             continue
-        if len(positions) + len(placed) >= MAX_OPEN:
+        if len(equity_open) + len(placed) >= MAX_OPEN:
             skipped.append((sym, "position cap"))
             continue
         if micro:
@@ -773,7 +808,13 @@ def build_report(today, acct, positions, signals, placed, skipped,
                          f"{t['exit_date']}  {r_txt}  ({t['reason']})")
         lines.append("")
 
-    lines.append(f"OPEN POSITIONS ({len(positions)}):")
+    # The count that matters for entries is the STOCK count — option
+    # contracts appear in the same broker book but are capped by the
+    # options cycle against its own list.
+    stock_open = equity_positions(positions)
+    lines.append(f"OPEN POSITIONS ({len(positions)}) — "
+                 f"{len(stock_open)} of {MAX_OPEN} stock slots used, "
+                 f"{len(positions) - len(stock_open)} option contracts:")
     for sym, p in sorted(positions.items()):
         rec = ledger["open"].get(sym, {})
         lines.append(f"  {sym}  qty {p['qty']}  "

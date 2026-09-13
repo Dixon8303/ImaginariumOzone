@@ -164,6 +164,52 @@ def test_h25_signal_trades_live_and_records_its_setup():
     assert "[H-25]" in report
 
 
+# ── MAX_OPEN counts stocks only (live defect, 2026-09-08) ────────────
+def test_option_contracts_do_not_consume_stock_slots():
+    """Alpaca returns equity and option positions in ONE list. On
+    2026-09-08 five held contracts plus seven stocks tripped MAX_OPEN=8
+    and all three H-25 signals were skipped while a stock slot was
+    free. The stock cap must count stocks only — the options cycle
+    caps its own book separately."""
+    held = {t: {"qty": 1, "unrealized_pl": 0.0}
+            for t in ("AAPL", "BAC", "F", "JPM", "KO", "XOM")}
+    held.update({c: {"qty": 1, "unrealized_pl": 0.0} for c in (
+        "BAC261016C00062500", "F260925C00014000", "KO261016C00087500",
+        "XOM261016C00160000", "JPM260925C00360000")})
+    broker = FakeBroker(positions=held)          # 6 stocks + 5 contracts
+    report = run(broker, breakout_universe(), TODAY)
+    # 6 stocks < MAX_OPEN, so the NVDA signal must still be placed
+    assert broker.brackets and broker.brackets[0][0] == "NVDA"
+    assert "position cap" not in report
+    # the snapshot is taken before the new order fills: 6 held stocks,
+    # 5 contracts, and the report must not conflate the two
+    assert "6 of 8 stock slots used" in report
+    assert "5 option contracts" in report
+
+
+def test_stock_cap_still_binds_on_stocks_alone():
+    held = {t: {"qty": 1, "unrealized_pl": 0.0} for t in
+            ("AAPL", "BAC", "F", "JPM", "KO", "XOM", "DIS", "WMT")}
+    broker = FakeBroker(positions=held)                     # 8 == MAX_OPEN
+    report = run(broker, breakout_universe(), TODAY)
+    assert broker.brackets == []
+    assert "skipped NVDA: position cap" in report
+
+
+def test_equity_positions_classifies_by_asset_class_and_symbol():
+    from paper.daily import equity_positions, is_option_symbol
+    assert is_option_symbol("BAC261016C00062500")
+    assert is_option_symbol("F260925C00014000")
+    assert not is_option_symbol("NVDA")
+    assert not is_option_symbol("BRK.B")
+    # a broker that labels asset_class is trusted even if the symbol
+    # shape is unfamiliar
+    mixed = {"NVDA": {"asset_class": "us_equity"},
+             "WEIRD1": {"asset_class": "us_option"},
+             "KO261016C00087500": {}}
+    assert set(equity_positions(mixed)) == {"NVDA"}
+
+
 # ── operator-directed manual-position cleanup (2026-09-02) ───────────
 def manual_pos(qty=1):
     return {"qty": qty, "unrealized_pl": -5.0}
