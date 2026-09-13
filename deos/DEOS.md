@@ -253,7 +253,7 @@ Names and owners are fixed here; DEOS-ECS specifies exact layouts, and DEOS-Prot
 | `Affiliation` | Cultural | 5 | Institution EntityID and role |
 | `InstitutionState` | Institutional | 5 | pooled energy, member count, policy MemeVector, founding tick |
 
-Substrate Cell fields (SoA arrays, not components): `energy`, `temperature`, `moisture`, `elevation`, `material_id`.
+Substrate Cell fields (SoA arrays, not components): `energy`, `temperature`, `moisture`, `elevation`, `material_id`, `mutation_bias` (Q32.32, default 1.0, range [0.25, 4.0]; written by Stage 1 Catalyst Actions, decays toward 1.0 in Stage 2, read by Protocol reproduction).
 
 Archetype tags: `0x01` Physical · `0x02` Biological · `0x04` Cognitive · `0x08` Cultural · `0x10` Institutional.
 
@@ -267,8 +267,13 @@ Exact field order is binding; the owning module may only append reserved padding
 | `NotableEvent` | `{ tick: u64, kind: u16, pad: u16, cell: u32, subject: EntityID, object: EntityID, magnitude: Q32.32, cause: u32, pad: u32 }` — 48 bytes, stored in 64-byte slots | Protocol (`EVT`) | Runtime (`LOOP`) |
 | `DecisionTrace` | `{ action: u16, pad: u16, contributors: [3] { need: u8, pad: [3] u8, weight: Q32.32 } }` — 40 bytes | Protocol (`COG`) | — |
 | `Checkpoint` | `{ tick: u64, tick_hash: [32] u8 }` — 40 bytes | Runtime (`HASH`) | Runtime |
+| `WorldMood` | `{ tick: u64, population: u32, institutions: u32, cooperation: Q32.32, conflict: Q32.32, growth: Q32.32, entropy: Q32.32 }` — 48 bytes, stored in 64-byte slots | Protocol (`SOC`, values) | Runtime (`LOOP`, emitted in Stage 6 egress) |
 
 `target_kind` ∈ { 0 = global, 1 = Cell, 2 = entity }. `EntityID` is the 64-bit packed identifier of REQ-ENT-001. `cause` is the index of the Decision Trace that produced the event, or 0.
+
+Reserved `NotableEvent.kind` values (all modules): `0` NONE · `1` INGRESS_REJECTED (Runtime) · `2` COMMAND_DROPPED (ECS) · `3` DESYNC (Runtime) · `4` EPOCH_BOUNDARY (Play) · `5` CATALYST_APPLIED (Runtime, on ingress) · `6` WORLD_PHASE_REACHED (Protocol; magnitude = phase index 1–4). Domain kinds begin at `16` and are enumerated by DEOS-PROTO.
+
+Composite `CatalystAction` kinds (the Cosmic family of DEOS-PLAY) expand deterministically into primitive field writes during Stage 1; the Input Log stores only the composite record. See `research/INTERFACE_INSPIRATION.md` §C for the interface commitments these records serve.
 
 ---
 
