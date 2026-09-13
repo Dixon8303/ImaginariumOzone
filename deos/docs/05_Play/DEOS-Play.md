@@ -317,7 +317,7 @@ At `r = 4` (`af = 1.0`): `WARM` with `m = 8.0` costs 6.0; `m = 32.0` costs 24.0.
 
 ### 7.2 Seed code example
 
-Master Seed `0x0123456789ABCDEF`, scale 0, version 1: the nineteen nibbles above the check are `0,1,0,0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F`, whose XOR is `0x0`; the 80 bits grouped into sixteen 5-bit values and mapped through the alphabet give **`0401-4D2P-F2DB-SQQG`** (computed from the definition with Python integer arithmetic; TS-PLAY-003 recomputes it).
+Master Seed `0x0123456789ABCDEF`, scale 0, version 1: the nineteen nibbles above the check, from bit 4 upward, are the seed's `F,E,D,C,B,A,9,8,7,6,5,4,3,2,1,0`, the scale `0`, and the version's `1,0`, whose XOR is `0x1`; the 80 bits grouped into sixteen 5-bit values and mapped through the alphabet give **`0401-4D2P-F2DB-SQQH`** (computed from the definition with Python integer arithmetic; TS-PLAY-003 recomputes it).
 
 ### 7.3 Catch-up batch loop
 
