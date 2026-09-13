@@ -125,6 +125,52 @@ CANDIDATE_SECTOR_ETF = {
 }
 
 
+# The H-26 cohort (registered 2026-09-12 in docs/PREREGISTERED.md,
+# BEFORE this set existed). Ten names filling six clusters the universe
+# has never held, selected on STRUCTURE — options depth, cluster
+# coverage, price structure able to carry a doctrine contract — and
+# explicitly NOT on the analyst ratings that prompted the question.
+#
+# These are NOT tradeable. They are a fetch/study set and nothing else
+# until the registered walk-forward returns CONFIRMED and the operator
+# adopts (all ten or none). H-23's CANDIDATE_UNIVERSE above is left
+# frozen for that study's reproducibility — this is a separate set, not
+# an edit of it.
+H26_CANDIDATE_UNIVERSE = {
+    "FCX":  "materials",        # copper
+    "NEM":  "materials",        # gold — grouped with FCX deliberately:
+                                # different drivers, but the cluster cap
+                                # is a risk control and the tighter
+                                # reading is the safe one (registration)
+    "CCJ":  "energy",           # uranium; GICS Energy, 3rd in cluster
+    "NEE":  "utilities",
+    "SO":   "utilities",
+    "DHI":  "homebuilders",
+    "LEN":  "homebuilders",
+    "UNP":  "rail",             # a railroad is neither the aerospace
+                                # pair (BA/RTX) nor the airlines
+    "PLD":  "real_estate",
+    "ISRG": "health_devices",   # device/robotics, not insurer (UNH) or
+                                # pharma (ABBV/PFE) — the argument JNJ
+                                # lacked at H-23. Stated risk: a 4th
+                                # healthcare name widens that exposure.
+}
+
+# Sector benchmarks for the H-26 cohort. XLB, XLU and XLRE are new to
+# this program and must be fetched for the study. CCJ->XLE is recorded
+# in the registration as an imperfect benchmark (a uranium miner does
+# not track oil) rather than solved by inventing one.
+H26_CANDIDATE_SECTOR_ETF = {
+    "FCX": "XLB", "NEM": "XLB",
+    "CCJ": "XLE",
+    "NEE": "XLU", "SO": "XLU",
+    "DHI": "XLY", "LEN": "XLY",
+    "UNP": "XLI",
+    "PLD": "XLRE",
+    "ISRG": "XLV",
+}
+
+
 # All bar series a full scan needs: universe + benchmark + sector ETFs.
 def required_tickers() -> list:
     return sorted(set(UNIVERSE) | {BENCHMARK} | set(SECTOR_ETF.values()))
@@ -135,3 +181,12 @@ def required_tickers() -> list:
 def expansion_required_tickers() -> list:
     return sorted(set(required_tickers()) | set(CANDIDATE_UNIVERSE)
                   | set(CANDIDATE_SECTOR_ETF.values()))
+
+
+# All bar series the H-26 study needs — the live universe AND the
+# H-26 candidates from ONE pull, so the two arms are never on mixed
+# data (LAW 18). H-23's candidates are already inside UNIVERSE since
+# adoption, so they arrive via required_tickers().
+def h26_required_tickers() -> list:
+    return sorted(set(required_tickers()) | set(H26_CANDIDATE_UNIVERSE)
+                  | set(H26_CANDIDATE_SECTOR_ETF.values()))

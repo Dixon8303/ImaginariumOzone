@@ -1,0 +1,55 @@
+# RS Options — H-26 universe expansion study (docs/PREREGISTERED.md).
+# Manual-trigger only, same pattern as rs_expansion_study/rs_setup_study:
+# backfills ~20 years of daily bars from Stooq/Yahoo (reachable from
+# Actions runners, not from restricted-egress Claude sessions), runs the
+# registered walk-forward pooled across ACTIVE_SETUPS, and commits the
+# report. The study is run once per registration, read against the
+# frozen criterion, and closed.
+name: RS H-26 Study
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rs-h26-study
+  cancel-in-progress: false
+
+jobs:
+  study:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet -r rs_options/mve/requirements.txt
+
+      - name: Backfill deep history (one pull, both arms)
+        working-directory: rs_options
+        run: |
+          TICKERS=$(python -c "from mve.universe import h26_required_tickers; print(' '.join(h26_required_tickers()))")
+          python -m mve.backfill --years 20 $TICKERS
+
+      - name: Run the registered H-26 study
+        working-directory: rs_options
+        run: python -m mve.h26_study
+
+      - name: Commit report
+        # Stage and commit BEFORE rebasing: the study step writes the
+        # report into the working tree, and `git pull --rebase` refuses
+        # to run over unstaged changes (this ordering broke every
+        # scheduled paper-trader run from 2026-08-17 onward).
+        run: |
+          git config user.name "rs-paper-bot"
+          git config user.email "noreply@github.com"
+          git add rs_options/docs/reports/h26_study.txt
+          git diff --cached --quiet || git commit -m "H-26 expansion study report"
+          git pull --rebase origin main
+          git push
