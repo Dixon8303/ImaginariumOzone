@@ -184,6 +184,177 @@ hard gate would repeat here.
 
 ---
 
+## H-26 — Second expansion: sector coverage the universe has never held
+
+**Registered:** 2026-09-12, BEFORE the candidate set or any study code
+exists. The commit carrying this entry precedes the implementation
+commit; git history is the timestamp.
+
+**Provenance.** The operator asked whether seven names (TSLA, OUST,
+ISRG, AMBA, CGNX, AME, COPR) should be added, supplying analyst
+consensus ratings and 12-month price targets for each. The ratings are
+NOT an input here and were not used: this program selects universe
+members on market structure — options depth, cluster coverage, price
+structure able to carry a doctrine contract — and measures edge
+cross-sectionally. A "Buy / $535 target" changes nothing about whether
+a detector fires. Six of the seven were declined on structure (below);
+the useful question underneath was the general one — which names would
+add genuine coverage — and this entry is the structurally-selected
+answer to it.
+
+**Claim.** The live doctrine as it stands today — ACTIVE_SETUPS =
+(RS-02, H-25), with the adopted filters H2b / H4b / H15a — has
+non-negative out-of-sample expectancy on the candidate names below, and
+adding them does not degrade the combined universe's edge.
+
+**What is different from H-23, stated in advance.** H-23 measured a
+single setup (RS-02). The live book now runs two. This study therefore
+pools the candidate trades from BOTH active setups and judges the
+criterion on the pooled population — that is what the live scanner
+will actually trade on these names. Per-setup splits are reported as
+context, not as criteria (LAW 20): a cohort that passes pooled but
+fails on one setup alone is still a PASS, and the reverse is still a
+FAIL. No per-setup cherry-picking.
+
+**The candidates, fixed now — selected on STRUCTURE only**, with live
+measurements recorded at registration. Chain depth is the expiration
+count and total listed contracts; the spread is measured on the CALL
+whose delta is nearest 0.60 in the 2026-10-16 expiry, the doctrine's
+21–60 DTE window:
+
+| Ticker | Cluster | Sector ETF | Price | Mkt cap | Avg vol | Chain (exp/contracts) | 0.60δ strike | Bid/Ask | Spread |
+|---|---|---|---|---|---|---|---|---|---|
+| FCX | materials (new) | XLB | $72.73 | $104B | 7.3M | 17 / 1,094 | 70 (δ0.63) | 5.90 / 6.10 | **3.3%** |
+| NEM | materials (new) | XLB | $128.09 | $135B | 5.7M | 16 / 1,580 | 125 (δ0.60) | 8.65 / 9.30 | **7.2%** |
+| CCJ | energy (3rd) | XLE | $100.74 | $44B | 1.6M | 13 / 1,066 | 100 (δ0.55) | 6.65 / 6.90 | **3.7%** |
+| NEE | utilities (new) | XLU | $83.43 | $174B | 10.8M | 16 / 1,022 | 82.5 (δ0.56) | 2.91 / 3.15 | **7.9%** |
+| SO | utilities (new) | XLU | $87.17 | $101B | 7.2M | 16 / 1,002 | 87.5 (δ0.52) | 1.60 / 2.70 | 51.2% |
+| DHI | homebuilders (new) | XLY | $142.75 | $40B | 1.7M | 16 / 1,108 | 140 (δ0.60) | 7.40 / 9.30 | 22.8% |
+| LEN | homebuilders (new) | XLY | $79.60 | $20B | 2.3M | 16 / 978 | 80 (δ0.51) | 2.40 / 4.70 | 64.8% |
+| UNP | rail (new) | XLI | $289.62 | $172B | 1.3M | 17 / 1,776 | 285 (δ0.60) | 11.50 / 13.30 | 14.5% |
+| PLD | real_estate (new) | XLRE | $137.34 | $133B | 2.3M | 10 / 552 | 135 (δ0.60) | 5.20 / 6.40 | 20.7% |
+| ISRG | health_devices (new) | XLV | $366.70 | $130B | 2.1M | 18 / 2,468 | 355 (δ0.64) | 21.80 / 25.60 | 16.0% |
+
+Measurement provenance, recorded so the numbers can be audited: all
+rows measured post-close via the TradingView feed — FCX, NEM, CCJ,
+NEE, DHI, UNP, PLD, ISRG and every chain-depth figure on 2026-09-05
+(41 DTE); SO and LEN prices and spreads on 2026-09-12 (34 DTE), which
+is why their prices differ from the same-day snapshot of the others.
+**Open interest is not in this feed and was therefore NOT verified** —
+the registered MIN_OPEN_INTEREST = 100 floor is enforced live and
+fail-closed inside `select_contract`, so an OI-thin contract is
+refused at trade time rather than screened here. Stating that gap
+rather than implying a check that did not happen.
+
+**The spread bar is an OPTIONS-track criterion, not a study gate.**
+This distinction is frozen now because it would otherwise be tempting
+to blur later. The study measures the STOCK doctrine, which needs only
+daily bars; a wide options chain cannot make a stock's breakout edge
+better or worse. What a wide chain does mean is that the name cannot
+carry the options overlay economically. So: a candidate that fails the
+spread bar stays in the STUDY (its stock trades are measured like any
+other) and, if the cohort is CONFIRMED and adopted, is tradeable as
+stock while the options cycle's existing MAX_SPREAD_PCT check declines
+its contracts on its own. No name is silently dropped from the study
+for a reason the study does not measure.
+
+**Pre-specified exclusion rule, fixed now.** Post-close marks are
+systematically wider than intraday ones, so the table above is
+suggestive, not conclusive. On the first OPEN-MARKET measurement taken
+after this registration, any candidate whose 0.60-delta spread exceeds
+MAX_SPREAD_PCT (10%) is recorded in a dated implementation note as
+options-ineligible — and STAYS IN the study per the paragraph above.
+On the evidence in hand, SO (51.2%) and LEN (64.8%) are the likely
+ineligibles, with DHI, PLD, ISRG, UNP borderline; FCX, NEM, CCJ and
+NEE already pass even on post-close marks. Naming the expected outcome
+in advance is the point: it cannot be quietly revised after results.
+
+**Cluster assignments, frozen, with the reasoning.** FCX (copper) and
+NEM (gold) are both GICS Materials and share one `materials` cluster
+even though their drivers differ — when in doubt, group, because the
+§78 cluster cap is a risk control and the tighter reading is the safe
+one. CCJ is GICS Energy (uranium) and joins `energy` beside XOM/CVX;
+XLE is an imperfect RS_sector benchmark for a uranium miner and that
+imperfection is recorded here rather than solved by inventing a
+benchmark. UNP takes its own `rail` cluster: a railroad is not the
+aerospace pair (BA/RTX) and not the airlines (AAL/DAL), and a
+single-name cluster is honest here because nothing else in the
+universe co-moves with it. ISRG takes `health_devices` rather than
+joining `healthcare`: this is the argument JNJ lacked when it was
+rejected at H-23 — an insurer (UNH) and two pharma names (ABBV, PFE)
+do not share a device/robotics business's drivers. The risk in that
+call is that a 4th healthcare name effectively widens healthcare
+exposure past what one cluster cap would allow, and that risk is
+stated here, in advance, as the cost of the choice.
+
+**Evaluated and REJECTED at registration**, so the rejections cannot
+be quietly revisited after results exist:
+
+- **TSLA** — already in UNIVERSE since 2026-08-16. Not a candidate.
+- **CPPMF** (Coppernico Metals, $0.29, $57M cap) — OTC, no listed US
+  options, penny price. The PLUG rejection reasons compounded; Alpaca
+  cannot trade it.
+- **OUST** ($2.6B) and **AMBA** ($2.8B) — small caps, and semis is
+  already 3-deep (NVDA/AMD/MU). The AVGO/INTC/QCOM rejection
+  (concentration, not coverage) applies, plus every name in the
+  universe to date is large or mega cap: the measured edge has never
+  been tested on small caps, so adding them is a bet, not an extension.
+- **CGNX** (4 expiries / 124 contracts, 15.4% at δ0.63) and **AME**
+  (5 / 308, 21.3% at δ0.68) — the two thinnest chains screened by a
+  wide margin; both would also sit in industrials beside BA/RTX.
+- **FSLR** — GICS semiconductors, which makes it the 4th semi.
+- **LIN** ($478) and **GLD** ($407) — a doctrine call on an underlying
+  this expensive costs several times the 1% risk budget at current
+  equity (the LLY/CAT precedent); GLD is additionally an ETP whose
+  exposure NEM already covers.
+- **NUE** (776K shares/day) — thinnest equity liquidity screened.
+- **GM** — ev_auto 3rd (TSLA, F). **CRWD** — software 4th (PLTR, ORCL,
+  CRM). **RCL / CCL** — cruise lines move on the same travel-demand
+  story as the airlines cluster: correlation, not coverage.
+
+**Data requirement.** One consistent daily-bar pull for BOTH arms —
+every incumbent, every candidate, benchmark and all sector ETFs
+(including the three new ones, XLB / XLU / XLRE) from the same vendor
+in the same backfill, corrupt-bar guards active. A missing ticker
+aborts the study (LAW 18); it never silently shrinks an arm. All ten
+candidates are long-established listings, so unlike H-23 this cohort
+has no young-listing caveat.
+
+**Success criterion, fixed now.** Yearly expanding-window walk-forward
+(`yearly_splits`, MIN_TRAIN_YEARS=3), test windows only, pooled across
+ACTIVE_SETUPS as of registration, judged GROSS with the break-even
+cost reported:
+
+- **CONFIRMED (adoption-eligible)** if candidate-only pooled
+  expectancy ≥ 0R at **n ≥ 50** closed candidate trades, AND
+  combined-universe expectancy ≥ baseline − 0.05R (both arms from the
+  same pull).
+- **FAILED** if candidate-only pooled expectancy < 0R at n ≥ 50, OR
+  the combined universe drags more than 0.05R below baseline.
+- **INCONCLUSIVE** below n = 50, regardless of how the numbers look.
+
+The n ≥ 50 bar is deliberately stricter than H-23's n ≥ 30: two pooled
+setups over ten names will clear it easily, and it matches the bar the
+two most recent registrations (H-24, H-25) already use. Tightening a
+threshold before seeing results is the only direction it may move.
+
+**Adoption is ALL candidates or NONE.** Per-ticker cherry-picking
+after seeing results is prohibited — keeping only the names that
+backtested well is selection bias wearing a lab coat. If the list
+fails, a narrower list may be registered later as a NEW entry with a
+written structural rationale, never by editing this one.
+
+**What may NOT be done before the verdict.** The candidates do not
+enter the tradeable `UNIVERSE`, the live scan, or the paper trader.
+They exist only in `H26_CANDIDATE_UNIVERSE` (a fetch/study set), and
+the study reads them only through its own runner. H-23's
+`CANDIDATE_UNIVERSE` is NOT reused or mutated — it stays frozen for
+that study's reproducibility.
+
+**Status:** OPEN — registered, implementation and study to follow.
+
+---
+
 ## H-23 — Universe expansion holds the RS-02 edge
 
 **Registered:** 2026-08-27, BEFORE the study module or any backtest on
