@@ -1,91 +1,113 @@
-# Emergence Engine Software Specification (EESS)
-> **Substrate Architecture & Reference Implementation Document**  
-> *Target Application: Emergence: The Digital Rise*
+> **DEOS-v0.1.0**
+> **Title:** Deterministic Emergence Operating Specification
+> **Status:** Draft / Active Specification
+> **Reference Implementation:** Emergence: The Digital Rise
+> **Repository:** DEOS: Emergence
+> **Supersedes:** Emergence Engine Software Specification (EESS) v0.1.0
 
----
+# DEOS: Emergence
 
-## 1. Project Overview
-The **Emergence Engine (EE)** is an open, deterministic, data-oriented simulation platform designed to model complex emergent phenomena across physical, biological, cognitive, and societal domains. 
+**DEOS** (Deterministic Emergence Operating Specification) is the engineering specification for a deterministic, data-oriented emergence substrate: fixed-point mathematics, an entity-component data layout, a six-stage tick pipeline, and the cognition and society rules that run on top of them, written to be implemented bit-for-bit on any platform.
 
-Rather than constructing a single-purpose video game, the Emergence Engine is engineered as an **extensible substrate platform**. **Emergence: The Digital Rise** serves as the flagship reference application built atop this engine.
+***Emergence: The Digital Rise*** is the game built on it. The player is a Catalyst who shapes the probabilities, not the people: they warm a coastline, raise mutation in a valley, or seed an idea, then wait to see what a population of autonomous agents makes of it, and read the result in a Chronicle the Kernel wrote itself. There are no quests, no scripts, and no stat tables; every civilization, war, and religion is computed from substrate laws.
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│             Emergence Engine Kernel (EE Kernel)                 │
-│  (Headless, Deterministic, Fixed-Point Math, Zero-GC ECS Core)  │
-└────────────────────────────────┬────────────────────────────────┘
-                                 │ API / Event Stream / State Snapshots
-┌────────────────────────────────▼────────────────────────────────┐
-│          Emergence: The Digital Rise (Reference App)            │
-│  (Visualization, Player Catalyst Interface, Procedural Audio)   │
-└─────────────────────────────────────────────────────────────────┘
-```
+The repository is named for both because the two are inseparable by design: the substrate is research-grade, and the product is a game people play compulsively for months. The binding contract is [`DEOS.md`](DEOS.md).
 
----
+## Why determinism is the product
 
-## 2. Specification Structure & Versioning Roadmap
+Every world is a pure function `world(t) = F(MasterSeed, InputLog[0..t])`, reproduced bitwise on x86-64 and ARM64, with 1 or 4 threads, attended or in Acceleration. The game's signature features are consequences of that fact, not features layered over it:
 
-The repository is structured following strict software engineering principles rather than unstructured game design notes. Every subsystem is specified with semantic versioning (`v0.1` through `v1.0` for Foundation; `v1.x`+ for Engine Implementations).
+- **Shareable worlds.** A 64-bit Master Seed plus an Input Log reproduces any world on any device; "try this seed, a religion forms by day 40" is a claim anyone can verify.
+- **Verified challenges and leaderboards.** A submission is an Input Log; the verifier re-simulates it against its Checkpoints. Cheating is structurally impossible.
+- **The Chronicle.** Every significant change is a Notable Event and every agent decision carries a Decision Trace, so the player can rewind, replay, and ask "how did this war start?"
+- **Offline catch-up.** Simulated time is a tick count and wall-clock never enters the Kernel; leave overnight and return to an Epoch of consequences that actually happened.
+- **The log is the save.** A world persists as (Master Seed, Input Log, optional Snapshot) and nothing else.
 
-| Version | Milestone | Specification Focus | Primary Artifact |
-| :--- | :--- | :--- | :--- |
-| **v0.1** | **Vision & Foundation** | Mission, philosophy, terms, success criteria | `docs/00_Foundation/` |
-| **v0.2** | **Universal Laws** | Axioms of energy, entropy, physics, & information | `docs/01_Universal_Laws/` |
-| **v0.3** | **Simulation Mathematics** | Fixed-point math, flux/progress equations, PRNG | `docs/02_Mathematics/` |
-| **v0.4** | **System Architecture** | Kernel-Host decoupling, pipeline, ECS specs | `docs/03_Architecture/` |
-| **v0.5** | **Entity Component Model** | Data-Oriented Design (DOD), 64-bit Entity IDs | `docs/04_Entity_Model/` |
-| **v0.6** | **Simulation Loop** | Deterministic tick ordering & double-buffering | `docs/05_Simulation_Loop/` |
-| **v0.7** | **Data & Memory Layout** | SoA cache layout, memory pools, zero-GC rules | `docs/06_Data_Model/` |
-| **v0.8** | **Prototype Spec** | Minimum Viable Simulation (MVS) baseline | `docs/07_Prototype/` |
-| **v0.9** | **Validation & Audit** | Cross-specification consistency & performance audit | `tests/` |
-| **v1.0** | **Blueprint Complete** | Full engineering blueprint ready for coding | Milestone Release Tag |
-
----
-
-## 3. Directory Layout
+## Specification hierarchy
 
 ```
-emergence-engine/
-├── README.md
-├── LICENSE
-├── CHANGELOG.md
-├── ROADMAP.md
-├── CONTRIBUTING.md
-├── .github/
-│   ├── ISSUE_TEMPLATE/
-│   └── PULL_REQUEST_TEMPLATE.md
+DEOS (Deterministic Emergence Operating Specification)
+ ├── DEOS-Foundation  Vision · Principles · Pillars · Glossary · Success Criteria · Decision Framework
+ ├── DEOS-Core        Mathematical Foundations & Fixed-Tick Rules
+ ├── DEOS-ECS         Data Schemas & Entity-Component Architecture
+ ├── DEOS-Runtime     Simulation Loop, Threading & State Hashing
+ ├── DEOS-Protocol    Agent Cognition, Society Models & Inter-entity Rules
+ ├── DEOS-Play        Player Loop, Catalyst Interface, Chronicle & Retention Systems
+ └── DEOS-MVS         Minimum Viable Simulation: the first playable, verifiable build
+```
+
+Dependency order is `DEOS → Foundation → Core → ECS → Runtime → Protocol → Play → MVS`. A module may cite only `DEOS.md`, the Foundation, and modules above it; nothing cites DEOS-Play except DEOS-MVS.
+
+## Modules
+
+| Module | Document ID | Location | Owns | Prefixes |
+| :--- | :--- | :--- | :--- | :--- |
+| DEOS-Foundation | DEOS-F01 … DEOS-F06 | [`docs/00_Foundation/`](docs/00_Foundation/) | identity, terminology, rubric, acceptance metrics | — |
+| DEOS-Core | DEOS-CORE | [`docs/01_Core/`](docs/01_Core/) (`DEOS-Core.md`) | Q32.32 arithmetic, tables, conservation laws, fixed-tick integration, PRNG streams, ordering rules | `LAW` `MATH` `PRNG` `TICK` `ORD` |
+| DEOS-ECS | DEOS-ECS | [`docs/02_ECS/`](docs/02_ECS/) (`DEOS-ECS.md`) | EntityID, component catalog, memory pools, mutation rules, command buffers | `ENT` `CMP` `DAT` `MUT` |
+| DEOS-Runtime | DEOS-RT | [`docs/03_Runtime/`](docs/03_Runtime/) (`DEOS-Runtime.md`) | Kernel/Host ABI, six-stage pipeline, threading, Tick Hash, Snapshots, replay, Acceleration | `ARCH` `LOOP` `THR` `HASH` `SNAP` |
+| DEOS-Protocol | DEOS-PROTO | [`docs/04_Protocol/`](docs/04_Protocol/) (`DEOS-Protocol.md`) | perception → utility → action, memory, Meme-Vectors, trust, Institutions, technology, Notable Events | `COG` `SOC` `XL` `EVT` |
+| DEOS-Play | DEOS-PLAY | [`docs/05_Play/`](docs/05_Play/) (`DEOS-Play.md`) | core and meta loops, Catalyst interface and Budget, Chronicle, sessions, challenges, retention | `PLAY` `CAT` `SES` |
+| DEOS-MVS | DEOS-MVS | [`docs/06_Prototype/`](docs/06_Prototype/) (`DEOS-MVS.md`) | scope, acceptance criteria, and benchmarks of the first playable build | `MVS` |
+
+Files named `LEGACY_*.md` inside a module directory are the EESS content that module absorbs; they are lineage, never edited, and their requirement IDs keep their meaning.
+
+## Reading order
+
+1. [`DEOS.md`](DEOS.md): identity, hierarchy, identifier scheme, canonical vocabulary, shared registry, Game-Facing Invariants GI-1 through GI-8, conformance.
+2. [`docs/00_Foundation/`](docs/00_Foundation/): Vision (DEOS-F01), Core Principles (DEOS-F02), Design Pillars (DEOS-F03), Glossary (DEOS-F04), Success Criteria (DEOS-F05), Decision Framework (DEOS-F06).
+3. The module specifications in dependency order: Core → ECS → Runtime → Protocol → Play → MVS.
+4. [`docs/architecture/`](docs/architecture/): the dependency graph and requirement traceability matrix generated from the modules.
+5. [`research/INTERFACE_INSPIRATION.md`](research/INTERFACE_INSPIRATION.md): the interface and experience references and the design commitments each module adopts.
+
+## Directory layout
+
+```
+deos/
+├── DEOS.md                     root contract (binding)
+├── README.md · LICENSE · CHANGELOG.md · ROADMAP.md · CONTRIBUTING.md
+├── .github/                    PR and issue templates
 ├── docs/
-│   ├── 00_Foundation/
-│   ├── 01_Universal_Laws/
-│   ├── 02_Mathematics/
-│   ├── 03_Architecture/
-│   ├── 04_Entity_Model/
-│   ├── 05_Simulation_Loop/
-│   ├── 06_Data_Model/
-│   ├── 07_Prototype/
-│   ├── architecture/
-│   └── templates/
-├── diagrams/
-├── research/
-├── prototypes/
-├── tools/
-└── tests/
+│   ├── 00_Foundation/          DEOS-F01 … DEOS-F06
+│   ├── 01_Core/                DEOS-CORE  (+ LEGACY_ lineage)
+│   ├── 02_ECS/                 DEOS-ECS   (+ LEGACY_ lineage)
+│   ├── 03_Runtime/             DEOS-RT    (+ LEGACY_ lineage)
+│   ├── 04_Protocol/            DEOS-PROTO
+│   ├── 05_Play/                DEOS-PLAY
+│   ├── 06_Prototype/           DEOS-MVS   (+ LEGACY_ lineage)
+│   ├── architecture/           generated dependency graph and traceability matrix
+│   └── templates/              specification and ADR templates
+├── diagrams/                   Mermaid architecture overview
+├── research/                   inspiration references and reading notes
+├── tests/                      specification consistency and determinism test plan
+└── tools/                      spec_lint.py and Kernel coding standards
 ```
 
----
+## Guidance for contributors and AI agents
 
-## 4. Guidance for AI Agents & Human Contributors
+Every contribution, human or agent, obeys the nine rules of [`CONTRIBUTING.md`](CONTRIBUTING.md):
 
-All contributions—whether by human engineers or AI agent pipelines—must strictly comply with the **7 Rules for AI Development** detailed in `CONTRIBUTING.md`:
-1. **Never redefine existing terminology** (refer to `PROJECT_GLOSSARY.md`).
-2. **Never invent mechanics without downstream dependencies** (refer to `SYSTEM_DEPENDENCY_GRAPH.md`).
-3. **List explicit dependencies, assumptions, risks, and interactions** for all proposed changes.
-4. **Subject every feature proposal to rubric scoring** (`DECISION_FRAMEWORK.md`).
-5. **Reference preceding specification versions**.
-6. **Ensure every subsystem is independently testable**.
-7. **No placeholder systems; every spec must be implementable**.
+1. Never redefine terminology; use `DEOS.md` section 4 and `docs/00_Foundation/PROJECT_GLOSSARY.md` verbatim.
+2. Respect the dependency order; never cite a module below your own.
+3. Every new section documents upstream dependencies, assumptions, subsystem interactions, and failure modes.
+4. Score every change with the rubric in `docs/00_Foundation/DECISION_FRAMEWORK.md`; 42 of 60 is the floor.
+5. Add a revision-history row to every document you change.
+6. Every module defines its verification tests in `tests/`.
+7. Concrete specifications only: every equation in Q32.32 with rounding and overflow behaviour, every struct with exact field order and byte sizes, every threshold with a number.
+8. Every mechanism states its player-facing consequence.
+9. The linter passes with zero errors before any change under `deos/` merges:
 
----
+```bash
+python3 deos/tools/spec_lint.py          # from the monorepo root
+python3 deos/tools/spec_lint.py --warn   # also show banned-synonym and constant-drift warnings
+```
 
-## 5. License
+Requirements are defined exactly once as `### REQ-PREFIX-nnn: Title` headings under the module that owns the prefix (`DEOS.md` section 3.2) and referenced everywhere else in plain text. Retired EESS identifiers appear only in `Supersedes` rows, lineage rows, and `CHANGELOG.md`.
+
+## Standalone extraction
+
+This subtree is self-contained: it carries its own README, LICENSE, CHANGELOG, CONTRIBUTING, templates, tests, and tooling, and nothing under `deos/` imports from or links to any other component of the monorepo it currently lives in. When the specification graduates it is split out with `git subtree split -P deos` and continues under its own history without modification.
+
+## License
+
 Licensed under the [MIT License](LICENSE).

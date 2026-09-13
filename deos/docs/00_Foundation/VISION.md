@@ -53,10 +53,29 @@ The signature features of *Emergence: The Digital Rise* are direct consequences 
 
 Player-facing consequence: the reasons to return (a world to share, a challenge to verify, a history to interrogate, an absence to catch up on, a decision to understand) are each a property of the Kernel, not a layer painted over it; the game cannot lose them without breaking determinism.
 
+### 3.5 Five Phases
+The public frame of the DEOS hierarchy is five phases of universal evolution (research/INTERFACE_INSPIRATION.md, commitment C5). Four of them form a ladder the world climbs; the fifth is constant. The ladder is the same ladder three other structures already use: tick pipeline Stages 2 through 5 (DEOS section 5.2), the module order Core → Protocol → Play (DEOS section 2.2), and the ROADMAP release phases.
+
+| Phase | Index | Public frame | Pipeline stage | Owning module | Reached when |
+| :--- | :---: | :--- | :--- | :--- | :--- |
+| **Reality** | 1 | physics: energy, temperature, moisture, material | Stage 2 Substrate | DEOS-Core | the Substrate exists (tick 0 of every world) |
+| **Life** | 2 | genetics: metabolism, Lifecycle, reproduction, Genome | Stage 3 Biology | DEOS-Protocol | the first self-sustaining population, as the threshold Notable Event enumerated in DEOS-PROTO (`EVT`) |
+| **Society** | 3 | culture: Meme-Vectors, trust, Institutions | Stage 5 Society | DEOS-Protocol | the first Institution is founded |
+| **Intelligence** | 4 | knowledge: technology discovery, policy | Stage 5 Society | DEOS-Protocol | the first technology discovery |
+| **Player Interaction** | constant | the Catalyst: Observe · Influence · Wait · Adapt · History | Stage 1 Ingress | DEOS-Play | present from tick 0; never "reached" |
+
+Rules of the frame:
+1. A phase is reached when its threshold Notable Event first occurs in a world. DEOS-Protocol emits the reserved `NotableEvent.kind` 6 `WORLD_PHASE_REACHED` with `magnitude` equal to the phase index (1 to 4) at that tick, once per phase per world. The marker is derived from firsts, never scripted (GI-7).
+2. Phases are monotone: a world never leaves a phase it has reached, because the marker records a first occurrence, not a current condition. A world whose only Institution dissolves remains in phase 3.
+3. Which Notable Event kinds are the thresholds is owned by DEOS-Protocol (`EVT`); how the phase is shown, celebrated, and summarized at the Epoch boundary is owned by DEOS-Play. Foundation fixes only the names, the indices, and the ordering.
+4. Player Interaction is the player's loop, Observe · Influence · Wait · Adapt · History (commitment C2). Every module that names the player loop uses those five verbs and no others.
+
+Player-facing consequence: the player always knows where their world stands on a four-rung ladder that every other player's world climbs too, so "my world reached Intelligence by day 22" is a comparable, verifiable claim (GI-1, GI-3), and each rung is a reason to keep the world running until the next one.
+
 ---
 
 ## 4. Primary System Goals
-1. **Uncompromised Scale**: Support `MAX_ENTITIES` = 1,048,576 active autonomous entities in a continuous simulation loop at `TICK_RATE_HZ` = 60 within `TICK_BUDGET_MS` = 16.6 per tick.
+1. **Uncompromised Scale**: Support `MAX_ENTITIES` (1,048,576) active autonomous entities in a continuous simulation loop at `TICK_RATE_HZ` (60) within `TICK_BUDGET_MS` (16.6) per tick.
 2. **Deterministic Reproducibility**: Absolute reproducibility for scientific analysis, replay verification, and Acceleration (GI-1 through GI-4).
 3. **Deep Emergence**: Interlocking physical, biological, cognitive, and societal loops with zero hardcoded outcome scripts (GI-7).
 4. **Compulsive Playability**: A player perceives a Notable Event within 90 real seconds of a fresh world at speed 1×, sees an Institution form by simulated day 10 in at least 80% of seeds, returns to an Epoch of legible consequences after an absence, and can share, verify, and interrogate any world (the DEOS-F05 Playability Metrics). Retention comes from novelty and agency, never from hidden timers or purchasable advantage (GI-8).
@@ -67,4 +86,4 @@ Player-facing consequence: the reasons to return (a world to share, a challenge 
 | Version | Date | Description | Author |
 | :--- | :--- | :--- | :--- |
 | v0.1.0 (EESS) | 2026-07-20 | Initial Foundation Specification release (lineage) | EE Arch Team |
-| v0.1.0 (DEOS) | 2026-09-12 | Rebranded to DEOS-F01; section 3.1 rewritten for the game-first identity; section 3.4 Determinism as Product added; goal 4 Compulsive Playability added; supersedes EESS-0001 | DEOS Arch Team |
+| v0.1.0 (DEOS) | 2026-09-12 | Rebranded to DEOS-F01; section 3.1 rewritten for the game-first identity; section 3.4 Determinism as Product and section 3.5 Five Phases added; goal 4 Compulsive Playability added; supersedes EESS-0001 | DEOS Arch Team |
