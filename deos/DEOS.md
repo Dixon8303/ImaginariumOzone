@@ -22,7 +22,7 @@
 1. This document. It is the binding contract: identity, hierarchy, identifiers, vocabulary, shared registry, and the invariants every module must satisfy.
 2. `docs/00_Foundation/` — vision, principles, pillars, glossary, success criteria, decision rubric.
 3. The six module specifications in dependency order: Core → ECS → Runtime → Protocol → Play → MVS.
-4. `docs/architecture/` — the dependency graph and requirement traceability matrix generated from the modules.
+4. `docs/architecture/` — the dependency graph, the requirement traceability matrix generated from the modules by `tools/gen_rtm.py`, and the Architecture Decision Records in `docs/architecture/adr/` (ADR-0001 two-tier hashing, ADR-0002 substrate insolation).
 
 A module may cite only this document, the Foundation, and modules above it in the order. Nothing cites DEOS-Play except DEOS-MVS.
 
@@ -164,10 +164,14 @@ These terms are canonical from this document forward and are mirrored into the G
 | **Master Seed** | The 64-bit unsigned integer from which every PRNG stream in a world is derived. With the Input Log it fully determines the world. | world seed, random seed, map seed |
 | **Input Log** | The ordered, append-only sequence of Catalyst Actions and host commands, each stamped with the tick at which it takes effect. `world(t) = F(MasterSeed, InputLog[0..t])`. The Input Log *is* the save file. | replay file, command history, save game |
 | **Catalyst Budget** | The player's spendable, regenerating pool of catalyst energy. A pacing valve, never a paywall: regeneration is a visible, deterministic function of simulated ticks. | mana, action points, unqualified "energy" (collides with substrate energy) |
-| **Tick Hash** | Refines *State Hash*: the BLAKE3-256 digest of the write buffer at the end of a tick, computed as the Merkle root over Chunk Hashes. | checksum, world hash |
+| **Tick Hash** | Refines *State Hash*: the BLAKE3-256 digest computed every tick over the tick's write folds, the `Ledger`, the `CatalystLedger`, and the `WorldMoodSlot` (DEOS-RT REQ-HASH-002; ADR-0001). Sufficient to detect a Desync within one tick. | checksum, world hash |
 | **Chunk** | A contiguous slice of `CHUNK_SIZE` entity slots processed by exactly one worker thread per stage. The unit of parallelism and of hashing. | batch, block, partition |
-| **Chunk Hash** | BLAKE3-256 of one Chunk's component data at end of tick. The leaves of the Tick Hash tree; they localize a Desync. | — |
-| **Checkpoint** | A Tick Hash recorded in the Input Log every `CHECKPOINT_INTERVAL` ticks so replays and challenge submissions verify incrementally. | — |
+| **Chunk Hash** | BLAKE3-256 of one Chunk's (or Cell Chunk's) canonical byte stream (DEOS-ECS REQ-DAT-007), computed at Checkpoint ticks. The leaves of the Checkpoint Hash tree; they localize a Desync to a Chunk. | — |
+| **Checkpoint Hash** | The BLAKE3-256 Merkle root over the Chunk Hashes, the global records, and the tick at a Checkpoint tick (DEOS-RT REQ-HASH-003); the value a `CHECKPOINT` record stores and a verifier compares. | strong hash, full hash |
+| **Write fold** | A 64-bit fold a Worker accumulates over the canonical bytes it writes to the write buffer in one stage, or over the Commands it applies at one barrier (DEOS-RT REQ-HASH-001). The input of the Tick Hash. | digest (unqualified) |
+| **Cell Chunk** | `CELL_CHUNK_SIZE` consecutive Cells in row-major index order; the Substrate's unit of parallelism, Command targeting, and hashing, mirroring the entity Chunk. | tile block, region (unqualified) |
+| **Command** | A fixed-size 64-byte record describing one cross-entity or cross-Cell effect, appended by the issuing Worker to its Chunk's outbox and applied at a stage barrier in canonical order (DEOS-ECS `MUT`). | message, order, effect (unqualified) |
+| **Checkpoint** | A `CHECKPOINT` record carrying the Checkpoint Hash, appended to the Input Log at tick 0 and every `CHECKPOINT_INTERVAL` ticks so replays and challenge submissions verify incrementally. | — |
 | **Snapshot** | A complete, versioned serialization of both state buffers, all PRNG stream counters, and the Input Log cursor at a tick boundary. Restoring a Snapshot and stepping yields Tick Hashes identical to the original run. | save state, memento |
 | **Desync** | A Tick Hash mismatch between two executions of the same (Master Seed, Input Log) prefix. Always a defect; never tolerated silently. | drift, divergence |
 | **Chronicle** | The append-only stream of Notable Events emitted by the Kernel each tick, and the game's presentation of that stream as history the player reads, rewinds, and shares. | event log, news feed, history tab |
@@ -206,7 +210,7 @@ Defaults. The owning module may tighten a value with justification; no module ma
 | `MEMORY_SLOTS` | 16 | Protocol | ring buffer per agent |
 | `TRUST_EDGES` | 8 | Protocol | fixed fan-out per agent |
 | `PERCEPTION_RADIUS` | 4 cells | Protocol | |
-| `CHECKPOINT_INTERVAL` | 64 ticks | Runtime | |
+| `CHECKPOINT_INTERVAL` | 64 ticks at MVS scale; 3,600 (= `SNAPSHOT_INTERVAL`) at v1.0 scale | Runtime | scale profile, ADR-0001 |
 | `SNAPSHOT_INTERVAL` | 3,600 ticks | Runtime | one simulated day |
 | `TICKS_PER_DAY` | 3,600 | Play | one real minute at speed 1× |
 | `TICKS_PER_EPOCH` | 108,000 | Play | 30 simulated days; 30 real minutes at 1× |
@@ -215,9 +219,25 @@ Defaults. The owning module may tighten a value with justification; no module ma
 | `MAX_OFFLINE_TICKS` | 3 × `TICKS_PER_EPOCH` | Play | catch-up ceiling per absence |
 | `MIN_ACCELERATION` | 32× real time at MVS scale | Runtime | 1,920 ticks per second; consistent with the MVS benchmark |
 | `HASH` | BLAKE3-256 | Runtime | |
-| `PRNG` | PCG64 (XSL-RR 128/64) | Core | one stream per (system, tick, chunk) |
+| `PRNG` | PCG64 (XSL-RR 128/64) | Core | one stream per (system, tick, chunk); per-slot Substreams |
+| `CELL_CHUNK_SIZE` | 1,024 Cells | ECS | 64 Cell Chunks at MVS, 1,024 at v1.0 |
+| `NUM_CHUNKS` | `MAX_ENTITIES` / `CHUNK_SIZE` (16 at MVS, 1,024 at v1.0) | ECS | |
+| `MAX_INSTITUTIONS` | `MAX_ENTITIES` / 16 (1,024 at MVS, 65,536 at v1.0) | ECS | Institutions occupy the top slot range |
+| `INSTITUTION_BASE` | `MAX_ENTITIES` − `MAX_INSTITUTIONS` (15,360 at MVS) | ECS | |
+| `NULL_ENTITY_ID` | 0 | ECS | slot 0 is reserved |
+| `MAX_COMMANDS_PER_ENTITY_PER_STAGE` | 4 | ECS | outbox capacity by construction |
+| `MAX_INGRESS_WRITES_PER_TICK` | 1,024 | ECS | IngressOverlay capacity |
+| `GENE_COUNT` | 32 | ECS | `uint16_t` genes |
+| `PERCEPTION_SECTORS`, `PERCEPTION_NEAREST` | 8, 4 | ECS | |
+| `SNAPSHOT_LAYOUT_VERSION` | 1 | ECS | |
+| `EVENT_OUTBOX` | 256 records per Chunk per tick | Runtime | deterministic overflow rule |
+| `CHRONICLE_RING`, `WORLDMOOD_RING` | 65,536, 4,096 records | Runtime | egress backpressure, never drops |
+| `INPUT_LOG_CAPACITY` | 1,048,576 records (131,072 recommended for phones) | Runtime | |
+| `CAT_CAPACITY`, `CAT_REGEN` | 120.0, 2^-5 per tick | Play | Catalyst Budget |
+| `CAT_MAX_RADIUS` | 8 Cells (Chebyshev) | Play | at most 289 Cells per action |
+| `FX_INSOLATION` | 2^-7 energy per Cell per tick | Core | REQ-LAW-013, ADR-0002 |
 
-Derived consistency checks: at MVS scale, one Epoch of catch-up (108,000 ticks) at `MIN_ACCELERATION` takes 56.25 s of compute; the MVS benchmark (10,000 ticks in under 5.0 s) is 33.3×; `MAX_OFFLINE_TICKS` at `MIN_ACCELERATION` is under 3 minutes and is therefore always streamed into the Chronicle incrementally rather than blocked on a loading screen (DEOS-PLAY).
+Derived consistency checks: at MVS scale, one Epoch of catch-up (108,000 ticks) at `MIN_ACCELERATION` takes 56.25 s of compute; the MVS benchmark (10,000 ticks in under 5.0 s) is 33.3×; `MAX_OFFLINE_TICKS` at `MIN_ACCELERATION` is under 3 minutes and is therefore always streamed into the Chronicle incrementally rather than blocked on a loading screen (DEOS-PLAY). Module-local constants (the `FX_*` pacing constants of DEOS-CORE section 8.6 and DEOS-PROTO section 8.5, the generation constants of DEOS-RT section 8.6, the cost table of DEOS-PLAY REQ-CAT-003) live in their modules; this table holds only names two or more modules share.
 
 ### 5.2 Tick pipeline
 
@@ -243,7 +263,7 @@ Names and owners are fixed here; DEOS-ECS specifies exact layouts, and DEOS-Prot
 | `Position2D` | Physical | 4 | `x`, `y` in Q32.32 Cell units; an entity writes only its own slot |
 | `EnergyState` | Biological | 3 | current, max capacity, metabolic rate |
 | `Lifecycle` | Biological | 3 | age, generation, alive flag, death cause |
-| `Genome` | Biological | 3 (at reproduction) | fixed gene array; parameterizes metabolism and utility weights |
+| `Genome` | Biological | computed in 3 at reproduction, written at spawn in 6 | fixed gene array; parameterizes metabolism and utility weights |
 | `Needs` | Cognitive | 3 (levels), 4 (weights) | `NEED_COUNT` levels and weights |
 | `Perception` | Cognitive | 4 | fixed-size summary of sensed Cells and neighbours within `PERCEPTION_RADIUS` |
 | `Memory` | Cognitive | 4 | `MEMORY_SLOTS` ring of past outcomes |
@@ -266,14 +286,33 @@ Exact field order is binding; the owning module may only append reserved padding
 | `CatalystAction` | `{ tick: u64, seq: u32, kind: u16, target_kind: u8, pad: u8, target: u64, payload: [4] Q32.32, cost: Q32.32 }` — 64 bytes | Play (`CAT`) | Runtime (`LOOP`) |
 | `NotableEvent` | `{ tick: u64, kind: u16, pad: u16, cell: u32, subject: EntityID, object: EntityID, magnitude: Q32.32, cause: u32, pad: u32 }` — 48 bytes, stored in 64-byte slots | Protocol (`EVT`) | Runtime (`LOOP`) |
 | `DecisionTrace` | `{ action: u16, pad: u16, contributors: [3] { need: u8, pad: [3] u8, weight: Q32.32 } }` — 40 bytes | Protocol (`COG`) | — |
-| `Checkpoint` | `{ tick: u64, tick_hash: [32] u8 }` — 40 bytes | Runtime (`HASH`) | Runtime |
+| `Checkpoint` | stored as an Input Log record of kind `0x8000`: `{ tick: u64, seq: u32 = 0xFFFFFFFF, kind: u16, target_kind: u8, pad: u8, target: u64 = 0, payload: [4] u64 = the 32-byte Checkpoint Hash, cost: Q32.32 = 0 }` — 64 bytes (DEOS-RT REQ-LOOP-004) | Runtime (`HASH`) | Runtime |
+| `CatalystLedger` | `{ balance: Q32.32, capacity: Q32.32, regen_per_tick: Q32.32, spent_total: Q32.32, actions_applied: u64, reserved: u64 }` — 48 bytes; Kernel state, hashed and serialized; `reserved` bits 0–3 World Phases reached, bits 8–15 first-of-kind mask (DEOS-PROTO) | Play (`CAT`, constants) | Runtime (`LOOP`, enforcement and hashing) |
+| `Ledger` | the 176-byte global conservation record of DEOS-CORE section 8.3 (`e_total, e_cat, e_rad, s_tick, s_total, atmosphere, m_cat, m_total, e_sun, heat_sink, fault`) | Core (`LAW`) | Runtime (hashing, Snapshot section 17) |
 | `WorldMood` | `{ tick: u64, population: u32, institutions: u32, cooperation: Q32.32, conflict: Q32.32, growth: Q32.32, entropy: Q32.32 }` — 48 bytes, stored in 64-byte slots | Protocol (`SOC`, values) | Runtime (`LOOP`, emitted in Stage 6 egress) |
 
 `target_kind` ∈ { 0 = global, 1 = Cell, 2 = entity }. `EntityID` is the 64-bit packed identifier of REQ-ENT-001. `cause` is the index of the Decision Trace that produced the event, or 0.
 
-Reserved `NotableEvent.kind` values (all modules): `0` NONE · `1` INGRESS_REJECTED (Runtime) · `2` COMMAND_DROPPED (ECS) · `3` DESYNC (Runtime) · `4` EPOCH_BOUNDARY (Play) · `5` CATALYST_APPLIED (Runtime, on ingress) · `6` WORLD_PHASE_REACHED (Protocol; magnitude = phase index 1–4). Domain kinds begin at `16` and are enumerated by DEOS-PROTO.
+Reserved `NotableEvent.kind` values (all modules): `0` NONE · `1` INGRESS_REJECTED (Runtime) · `2` COMMAND_DROPPED (ECS) · `3` DESYNC (Runtime) · `4` EPOCH_BOUNDARY (Play, emitted by Runtime) · `5` CATALYST_APPLIED (Runtime, on ingress) · `6` WORLD_PHASE_REACHED (Protocol; magnitude = phase index 1–4) · `7` LEDGER_FAULT (Core condition, emitted by Runtime) · `8` EVENT_OVERFLOW (Runtime). Domain kinds begin at `16` and are enumerated by DEOS-PROTO REQ-EVT-002.
 
 Composite `CatalystAction` kinds (the Cosmic family of DEOS-PLAY) expand deterministically into primitive field writes during Stage 1; the Input Log stores only the composite record. See `research/INTERFACE_INSPIRATION.md` §C for the interface commitments these records serve.
+
+---
+
+### 5.5 SystemIDs (PRNG stream namespace)
+
+| SystemID | Name | Stage | Owner |
+| :--- | :--- | :--- | :--- |
+| 0 | `WORLDGEN` | tick 0 | Runtime (DEOS-RT REQ-LOOP-002) |
+| 1 | `SUBSTRATE` | 1 (composite expansion), 2 | Core; Runtime and Play for expansion |
+| 2 | `BIOLOGY` | 3 | Protocol |
+| 3 | `COGNITION` | 4 | Protocol |
+| 4 | `SOCIETY` | 5 | Protocol |
+| 5–15 | reserved | — | Core |
+| 16 | `SPAWN_INIT` | 6 (substep 6.2) | Runtime, consumed by ECS |
+| 17 | `EVENT_SELECT` | 6 | Runtime (reserved) |
+| 18–31 | reserved | — | Runtime |
+| 32–255 | assignable | — | Protocol, by table in DEOS-PROTO |
 
 ---
 
@@ -302,7 +341,7 @@ An implementation is **DEOS-conformant** when it passes all of:
 | :--- | :--- |
 | Core determinism vectors | published (input → output) vectors for every Q32.32 operation, table function, and PRNG draw |
 | ECS zero-allocation and alignment | allocation counter reads 0 across a full tick; every array is 64-byte aligned |
-| Runtime hash parity | identical Tick Hash sequences on x86-64 and ARM64 for the MVS run |
+| Runtime hash parity | identical Tick Hash and Checkpoint Hash sequences on x86-64 and ARM64, at 1 and 4 threads, attended and in Acceleration, for the MVS run |
 | Protocol legibility | every `Decision` carries a `DecisionTrace`; Notable Event cadence within DEOS-PLAY targets |
 | MVS acceptance | the DEOS-MVS acceptance run passes on baseline hardware |
 
@@ -314,4 +353,4 @@ Test names are registered in `docs/architecture/REQUIREMENT_TRACEABILITY_MATRIX.
 
 | Version | Date | Description | Author |
 | :--- | :--- | :--- | :--- |
-| v0.1.0 | 2026-09-12 | Initial DEOS root specification; supersedes EESS v0.1.0 | DEOS Arch Team |
+| v0.1.0 | 2026-09-12 | Initial DEOS root specification; supersedes EESS v0.1.0. Integration: registry additions from the module drafts (Cell Chunk, Command, write fold, Checkpoint Hash, `CatalystLedger`, `Ledger`, SystemIDs, reserved kinds 7–8, shared constants), Tick Hash refined per ADR-0001 | DEOS Arch Team |

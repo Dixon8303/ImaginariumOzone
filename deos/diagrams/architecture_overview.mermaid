@@ -1,15 +1,27 @@
 graph TD
-    subgraph EE Kernel Headless Core
-        A[Ingress Buffer] --> B[Stage 1: Ingress & Catalyst System]
-        B --> C[Stage 2: Physics & Environment System]
-        C --> D[Stage 3: Metabolic & Biological System]
-        D --> E[Stage 4: Cognition & Decision System]
-        E --> F[Stage 5: Societal & Cultural System]
-        F --> G[Stage 6: State Hash & Buffer Swap]
+    subgraph Kernel["DEOS Kernel (headless, deterministic, Q32.32, zero-allocation)"]
+        IL[(Input Log<br/>CatalystAction records in tick,seq order<br/>Checkpoints every CHECKPOINT_INTERVAL)] --> S1
+        S1[Stage 1: Ingress<br/>apply Input Log entries for this tick] --> S2
+        S2[Stage 2: Substrate<br/>conservation, diffusion, thermodynamics, material decay] --> S3
+        S3[Stage 3: Biology<br/>metabolism, Lifecycle, reproduction, Genome inheritance] --> S4
+        S4[Stage 4: Cognition<br/>Perception, utility scoring, Decision + Decision Trace, Memory] --> S5
+        S5[Stage 5: Society<br/>Meme-Vector transmission, trust, Institutions, technology] --> S6
+        S6[Stage 6: Commit<br/>command resolution, Chunk Hashes, Tick Hash, Chronicle flush, buffer swap, egress]
+        S6 -->|Tick Hash every tick| CK[Checkpoint every 64 ticks]
+        CK -.->|appended| IL
+        S6 -->|every SNAPSHOT_INTERVAL| SN[(Snapshot)]
     end
 
-    subgraph Host Application: Emergence Digital Rise
-        G -->|Read-Only Pointer Swap| H[Visualizer Engine]
-        G -->|Event Stream| I[Procedural Audio Subsystem]
-        J[Player UI Catalyst Control] -->|Catalyst Inputs| A
+    subgraph Host["Host: Emergence: The Digital Rise"]
+        S6 -->|read-only buffer swap| OV[Observation View<br/>Particles, Living Diagram, Network Map]
+        S6 -->|Chronicle egress: NotableEvent stream| CH[Chronicle<br/>Living History with cause drill-down]
+        S6 -->|WorldMood egress| AU[Generative audio<br/>harmony and dissonance]
+        CP[Catalyst Palette<br/>Climate, Resource, Mutation, Cosmic] -->|CatalystAction appended| IL
+        TC[Time Control<br/>SPEED_LEVELS, Acceleration catch-up] -->|host commands| IL
+    end
+
+    subgraph Share["Sharing and verification"]
+        IL -->|Master Seed + Input Log| SW[Shared world, challenge submission]
+        SW -->|re-simulate, compare Checkpoints| VF[Verifier]
+        SN -->|Seed Lineage| SW
     end
