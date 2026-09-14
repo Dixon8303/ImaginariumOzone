@@ -29,6 +29,20 @@
       "stop": 13.73,
       "target": 15.41
     },
+    "GOOGL": {
+      "entry": 349.445,
+      "entry_cap": 356.4339,
+      "entry_date": "2026-09-14",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "ac239268-4a2b-4fb2-ab91-3905c3a3daf2",
+      "qty": 14,
+      "setup": "H-25",
+      "signal_close": 349.445,
+      "stop": 327.79,
+      "target": 414.41
+    },
     "JPM": {
       "entry": 362.157692,
       "entry_cap": 369.3318,
@@ -101,19 +115,19 @@
       "strike": 330.0,
       "ticker": "AAPL"
     },
-    "BAC261016C00062500": {
+    "KO261016C00087500": {
       "basis": "delta",
-      "delta": 0.5848,
-      "entry_date": "2026-09-03",
-      "entry_price": 2.3049999999999997,
-      "entry_underlying": 63.06,
+      "delta": 0.7134,
+      "entry_date": "2026-09-14",
+      "entry_price": 2.8499999999999996,
+      "entry_underlying": 89.365,
       "expiry": "2026-10-16",
       "fundamental_net_income": null,
-      "invalidation_price": 61.37,
-      "qty": 4,
-      "spread_pct": 0.0304,
-      "strike": 62.5,
-      "ticker": "BAC"
+      "invalidation_price": 87.42,
+      "qty": 3,
+      "spread_pct": 0.0491,
+      "strike": 87.5,
+      "ticker": "KO"
     },
     "XOM261016C00160000": {
       "basis": "delta",
