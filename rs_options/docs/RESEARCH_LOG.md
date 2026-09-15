@@ -2507,3 +2507,43 @@ Not corrected, recorded: the three signals declined on 2026-09-08 are
 gone. Whether they would have won is unknowable and not worth
 modelling; the forward record simply has three fewer trades than the
 doctrine called for, and that gap belongs in it.
+
+## 2026-09-13 — H-26 implemented (registration preceded, as required)
+
+The registration merged first (PR #162), so the candidate set, the
+study runner and the one-click job land here in a commit that git
+timestamps strictly after the frozen rules. Same order as H-23, H-24
+and H-25.
+
+Design notes worth recording:
+
+- **A separate module, not a parameter on the H-23 study.** Re-running
+  `mve.expansion_study` post-adoption would measure something else
+  entirely — its "baseline" arm meant the pre-adoption 22-name
+  universe, and those 16 candidates are now incumbents. `mve.h26_study`
+  is its own runner and the old one is untouched, so H-23's report
+  stays reproducible.
+- **Pooled across ACTIVE_SETUPS.** This is the first expansion judged
+  against a two-setup book. The criterion reads the pooled candidate
+  population because that is what the live scanner will trade on these
+  names; the per-setup split is computed and printed but explicitly
+  labelled context, not criteria. A cohort that passes pooled while
+  failing on one setup alone is still a PASS — otherwise the pooling
+  would be decoration over a hidden second gate.
+- **`judge()` is a pure function with its own tests**, including the
+  case the second clause exists for: candidates positive on their own
+  while dragging the combined universe past the registered 0.05R
+  bound correctly FAILS. Also pinned: drag landing exactly on the
+  bound passes, so the boundary cannot drift by accident.
+- **The fetch set is 62 tickers** (38 live + 10 candidates + 3 new
+  sector ETFs + existing benchmarks), pulled in ONE backfill so the
+  arms can never sit on mixed vendor data (LAW 18).
+- **Nine guard tests pin the cohort out of the tradeable universe** —
+  exact membership, exact clusters, exact benchmarks, the recorded
+  rejections staying rejected, H-23's set unmutated, and an AST check
+  that importing `universe.py` cannot `.update()` UNIVERSE or
+  SECTOR_ETF at import time (an accidental adoption by side effect).
+
+469 tests passing (14 new). The study runs where the bar vendors are
+reachable: Actions -> "RS H-26 Study" -> Run workflow, which appears
+once this merges.
