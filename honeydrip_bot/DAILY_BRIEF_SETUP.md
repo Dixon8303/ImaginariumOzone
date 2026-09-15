@@ -4,44 +4,36 @@ Automated daily email reports of your trading activity: positions, P&L, signals,
 
 ## One-Time Setup
 
-### 1. Store Alpaca credentials in GitHub Secrets
+### 1. Add GitHub Secrets for Alpaca and Email
 
-The workflow needs your paper trading credentials to fetch account data:
+On GitHub.com, go to **Settings → Secrets and Variables → Actions** and create these secrets:
 
-```bash
-# On GitHub.com: Settings → Secrets and Variables → Actions → New repository secret
-
-# Add these two secrets:
-APCA_API_KEY_ID=<your_paper_key_id>
-APCA_API_SECRET_KEY=<your_paper_secret>
+**Trading credentials:**
+```
+APCA_API_KEY_ID = <your_paper_key_id>
+APCA_API_SECRET_KEY = <your_paper_secret>
 ```
 
-Never commit these to the repository.
-
-### 2. Set up daily email delivery (Claude Code)
-
-The workflow generates the brief and commits it to the repo. To have it emailed to you automatically:
-
-```bash
-# In Claude Code with Gmail MCP connected:
-
-# Run this command once:
-/brief-email-routine
-
-# This creates a daily Routine that:
-# - Reads the latest brief from honeydrip_bot/briefs/
-# - Formats it as an email
-# - Sends it to your inbox at 8:15 AM UTC (Mon-Fri)
+**Email delivery:**
+```
+GMAIL_ADDRESS = eatmediaTV@gmail.com
+GMAIL_APP_PASSWORD = <16-char app password from Google Account>
+EMAIL_RECIPIENT = eatmediaTV@gmail.com
 ```
 
-Or set it up manually via Claude Code:
+#### Getting Gmail App Password
 
-```
-Create a Routine named "HoneyDrip Daily Brief" that fires at 8:15 AM UTC Mon-Fri.
-The Routine should read honeydrip_bot/briefs/<today's date>.txt, format it as an
-email, and send it to eatmediatv@gmail.com via Gmail MCP. Use the brief's content
-as the email body and title it "HoneyDrip Daily Brief — <date>".
-```
+1. Go to [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
+2. Select **Mail** and **Windows Computer** (doesn't matter)
+3. Google generates a 16-character password
+4. Copy it to GitHub as `GMAIL_APP_PASSWORD` secret
+5. Keep it safe — treat it like your Gmail password
+
+#### Why not your regular Gmail password?
+
+App passwords are safer: they only work for this one app, can't access your Google account, and can be revoked instantly without changing your main password.
+
+**Never commit these secrets to the repository.**
 
 ## What You Get Daily
 
@@ -66,6 +58,22 @@ Today's Signals & Trades
 └─ Trade count per day for past week
 ```
 
+## How It Works
+
+**Daily at 08:00 UTC (Mon–Fri):**
+1. ✓ GitHub Actions runs the workflow
+2. ✓ Fetches your Alpaca account data (equity, positions, P&L)
+3. ✓ Reads today's trade log
+4. ✓ Generates formatted brief
+5. ✓ Commits it to `honeydrip_bot/briefs/<YYYYMMDD>.txt` (git history)
+6. ✓ Sends it to your email via Gmail SMTP
+
+**What you receive:**
+- Account equity and cash balance
+- Current open positions with unrealized P&L
+- All trades executed today with timestamps
+- 7-day trade summary
+
 ## Manual Brief Generation
 
 To generate a brief on-demand:
@@ -78,7 +86,7 @@ export HONEYDRIP_ARMED=YES
 python -m honeydrip_bot.daily_brief
 ```
 
-Briefs are saved to `honeydrip_bot/briefs/` and committed to git history for long-term tracking.
+Briefs are automatically saved to `honeydrip_bot/briefs/` for long-term tracking in git history.
 
 ## Workflow Schedule
 
@@ -112,15 +120,23 @@ Edit `honeydrip_bot/daily_brief.py` to add new fields to the brief output (volat
 
 ## Troubleshooting
 
-**Workflow fails with auth error:**
-- Verify `APCA_API_KEY_ID` and `APCA_API_SECRET_KEY` are set in GitHub Secrets
-- Ensure they are your *paper* trading keys (from `https://paper-api.alpaca.markets`)
+**Workflow fails with "auth error":**
+- ✓ Verify `APCA_API_KEY_ID` and `APCA_API_SECRET_KEY` are set in GitHub Secrets
+- ✓ Ensure they are your *paper* trading keys from `https://paper-api.alpaca.markets`
+- ✓ Check Alpaca API status at `https://status.alpaca.markets`
+
+**Email not sending:**
+- ✓ Verify all three email secrets are set: `GMAIL_ADDRESS`, `GMAIL_APP_PASSWORD`, `EMAIL_RECIPIENT`
+- ✓ Double-check the app password is exactly 16 characters (with spaces removed)
+- ✓ Ensure 2FA is enabled on your Google Account (required for app passwords)
+- ✓ Check GitHub Actions workflow run logs: Settings → Actions → HoneyDrip Daily Brief → latest run
 
 **Brief doesn't show positions:**
-- Confirm trading account is active and has open positions
-- Check Alpaca API status at `https://status.alpaca.markets`
+- ✓ Confirm your paper trading account is active
+- ✓ Verify you have open positions (equity > cash)
+- ✓ Check Alpaca API status at `https://status.alpaca.markets`
 
-**Email not arriving:**
-- Confirm the Claude Code Routine was created successfully
-- Check Gmail's "All Mail" folder (may be filtered as automated)
-- Verify the Routine's last run status in Claude Code's Routines list
+**Email arrives but workflow shows "continue-on-error":**
+- This is normal — the workflow completes even if email fails, so your brief is always saved
+- Check the workflow logs to diagnose email issues (SMTP auth, server connectivity, etc.)
+- The brief is always committed to git regardless of email success
