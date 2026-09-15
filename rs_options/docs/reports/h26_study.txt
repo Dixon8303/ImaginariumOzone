@@ -1,0 +1,28 @@
+H-26 UNIVERSE EXPANSION STUDY — out-of-sample (test windows only)
+expanding-window splits: 18   setups pooled: RS-02+H-25   live universe: 38 names   candidates: 10
+
+Frozen criterion (docs/PREREGISTERED.md H-26): CONFIRMED needs candidates-only >= 0R at n >= 50 AND combined within 0.05R of baseline. CONFIRMED means adoption-ELIGIBLE; adoption is all ten or none, and is the operator's decision.
+
+  baseline (38)        n= 2968  exp=+0.123R  wr=48%  total=+365.2R
+  candidates only      n=  880  exp=+0.039R  wr=47%  total=+34.1R
+  combined             n= 3848  exp=+0.104R  wr=48%  total=+399.3R
+
+  VERDICT: CONFIRMED — candidates-only +0.039R at n=880, combined within 0.019R of baseline
+
+per-setup split of the candidate trades (CONTEXT ONLY — not a criterion, LAW 20):
+    RS-02              n=  296  exp=+0.055R  wr=48%  total=+16.4R
+    H-25               n=  584  exp=+0.030R  wr=46%  total=+17.7R
+
+per-candidate (CONTEXT ONLY — per-ticker cherry-picking is prohibited by the registration):
+  CCJ    n=  88  exp=-0.101R
+  DHI    n=  95  exp=-0.009R
+  FCX    n=  84  exp=-0.245R
+  ISRG   n= 105  exp=+0.070R
+  LEN    n=  90  exp=-0.016R
+  NEE    n=  91  exp=+0.238R
+  NEM    n=  68  exp=+0.105R
+  PLD    n=  89  exp=+0.155R
+  SO     n=  66  exp=+0.138R
+  UNP    n= 104  exp=+0.066R
+
+A verdict here is read against the registration and recorded there. Adoption does not follow automatically from CONFIRMED.
