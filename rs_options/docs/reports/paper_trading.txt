@@ -1,73 +1,61 @@
-generated: 2026-09-14
+generated: 2026-09-15
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-14
-paper equity: $98,115.95   cash: $66,922.34
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-15
+paper equity: $98,225.67   cash: $61,534.38
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-14  $98,115.95   (-1,884.05, -1.9%)
-  over 21 calendar days, 11 recorded sessions: 9 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-09-15  $98,225.67   (-1,774.33, -1.8%)
+  over 22 calendar days, 12 recorded sessions: 10 with a change, 1 flat.
   range so far: $98,115.95 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (4):
-  XOM  [H-25]  close 165.05  stop 158.76  target 183.92  (1R = 6.29)  score 8/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 165.05 on 1.2x volume
-      volume profile: 9% of 60d volume sits ABOVE here, heaviest at 137.43  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 165, spread <= 10%; exit on stop/target/15 sessions
-  GOOGL  [H-25]  close 349.44  stop 327.79  target 414.41  (1R = 21.65)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 349.44 on 1.8x volume
-      volume profile: 41% of 60d volume sits ABOVE here, heaviest at 342.06  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 349, spread <= 10%; exit on stop/target/15 sessions
-  KO  [H-25]  close 89.36  stop 87.42  target 95.20  (1R = 1.94)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 89.36 on 1.6x volume
-      volume profile: 13% of 60d volume sits ABOVE here, heaviest at 87.95  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 89, spread <= 10%; exit on stop/target/15 sessions
-  ABBV  [H-25]  close 261.74  stop 247.43  target 304.65  (1R = 14.31)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 261.74 on 1.6x volume
-      volume profile: 12% of 60d volume sits ABOVE here, heaviest at 254.44  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 262, spread <= 10%; exit on stop/target/15 sessions
+TODAY'S SIGNALS (2):
+  CVX  [RS-02]  close 217.71  stop 211.29  target 236.97  (1R = 6.42)  score 10/10
+      RS persistence 80%, close 217.71 > 20d high 217.50, rel volume 1.6x
+      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 167.87  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 218, spread <= 10%; exit on stop/target/15 sessions
+  ABBV  [H-25]  close 263.00  stop 247.43  target 309.69  (1R = 15.56)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 263.00 on 1.4x volume
+      volume profile: 9% of 60d volume sits ABOVE here, heaviest at 254.69  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 263, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER (3 contracts priced) — no orders, no buying power used:
-  KO     KO261016C00087500  delta 0.71  32d  mid 2.85  spread 4.9%
-         costs $285.00 per contract; needs $5,700 equity to buy one inside the 5% position cap
-  XOM    XOM261016C00165000  delta 0.54  32d  mid 6.08  spread 6.1%
-         costs $608.50 per contract; needs $12,170 equity to buy one inside the 5% position cap
-  ABBV   ABBV261016C00250000  delta 0.75  32d  mid 15.88  spread 8.6%
-         costs $1,587.50 per contract; needs $31,750 equity to buy one inside the 5% position cap
+OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
+  CVX    CVX261016C00210000  delta 0.70  31d  mid 11.97  spread 1.4%
+         costs $1,197.50 per contract; needs $23,950 equity to buy one inside the 5% position cap
+  ABBV   ABBV261016C00230000  ~moneyness  31d  mid 33.27  spread 8.2%
+         costs $3,326.50 per contract; needs $66,530 equity to buy one inside the 5% position cap
 
-  cheapest doctrine contract today: KO at $285.00
-  at $98,115.95 equity you can buy 3 of 3 inside the position cap
+  cheapest doctrine contract today: CVX at $1,197.50
+  at $98,225.67 equity you can buy 2 of 2 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-PAPER ORDERS PLACED (1):
-  BUY 14 GOOGL @ next open, limit 356.43 (H15a cap, 2% over the 349.44 close), bracket stop 327.79 / target 414.41
-  skipped XOM: already held
-  skipped KO: already held
+PAPER ORDERS PLACED (0):
+  none
+  skipped CVX: position cap
   skipped ABBV: position cap
 
-OPEN POSITIONS (10) — 7 of 8 stock slots used, 3 option contracts:
-  AAPL  qty 1  unrealized $+16.07  stop ?  target ?  since ?
-  AAPL261002C00330000  qty 1  unrealized $-15.00  stop ?  target ?  since ?
-  BAC  qty 79  unrealized $-233.24  stop 61.37  target 68.13  since 2026-09-03
-  BAC261016C00062500  qty 4  unrealized $-612.00  stop ?  target ?  since ?
-  F  qty 353  unrealized $-102.72  stop 13.73  target 15.41  since 2026-09-02
-  JPM  qty 13  unrealized $-147.65  stop 353.86  target 386.78  since 2026-09-03
-  KO  qty 56  unrealized $+44.59  stop 87.73  target 92.17  since 2026-09-03
-  NVDA  qty 22  unrealized $-291.28  stop 215.12  target 252.38  since 2026-09-02
-  XOM  qty 30  unrealized $+132.78  stop 155.32  target 182.96  since 2026-09-03
-  XOM261016C00160000  qty 1  unrealized $+135.00  stop ?  target ?  since ?
+OPEN POSITIONS (11) — 8 of 8 stock slots used, 3 option contracts:
+  AAPL  qty 1  unrealized $+15.71  stop ?  target ?  since ?
+  AAPL261002C00330000  qty 1  unrealized $-120.00  stop ?  target ?  since ?
+  BAC  qty 79  unrealized $-231.66  stop 61.37  target 68.13  since 2026-09-03
+  F  qty 353  unrealized $-236.51  stop 13.73  target 15.41  since 2026-09-02
+  GOOGL  qty 14  unrealized $-36.02  stop 327.79  target 414.41  since 2026-09-14
+  JPM  qty 13  unrealized $-117.88  stop 353.86  target 386.78  since 2026-09-03
+  KO  qty 56  unrealized $+12.11  stop 87.73  target 92.17  since 2026-09-03
+  KO261016C00087500  qty 3  unrealized $-36.00  stop ?  target ?  since ?
+  NVDA  qty 22  unrealized $-285.90  stop 215.12  target 252.38  since 2026-09-02
+  XOM  qty 30  unrealized $+251.62  stop 155.32  target 182.96  since 2026-09-03
+  XOM261016C00160000  qty 1  unrealized $+425.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  BOUGHT 3x KO261016C00087500  @ $2.85 ($855)  32d  strike 87.50  [delta 0.71, spread 4.9%, OI 5653]
-    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  SOLD   4x BAC261016C00062500  P&L $-612.00  (INVALIDATION: underlying 59.47 <= 61.37)
+  no option trades today
   holding 3:
     AAPL261002C00330000  1x @ $9.20  since 2026-09-11  stop-if-underlying <= 309.92
     KO261016C00087500  3x @ $2.85  since 2026-09-14  stop-if-underlying <= 87.42
     XOM261016C00160000  1x @ $7.77  since 2026-09-03  stop-if-underlying <= 155.32
-  note: GOOGL: no contract met DTE/spread/delta
-  note: ABBV: premium $1,588 exceeds the 1% risk budget
+  note: CVX: premium $1,198 exceeds the 1% risk budget
+  note: ABBV: premium $3,326 exceeds the 1% risk budget
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.

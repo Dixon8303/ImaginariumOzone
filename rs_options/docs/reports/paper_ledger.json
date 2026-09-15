@@ -30,10 +30,10 @@
       "target": 15.41
     },
     "GOOGL": {
-      "entry": 349.445,
+      "entry": 346.625715,
       "entry_cap": 356.4339,
       "entry_date": "2026-09-14",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "ac239268-4a2b-4fb2-ab91-3905c3a3daf2",
