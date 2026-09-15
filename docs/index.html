@@ -2347,7 +2347,7 @@ async function buildShareCardSVG(m){
   ${bars}
   ${collage}
   <text x="${W/2}" y="998" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="24" fill="#6B6258">Everybody carries a genius. Find yours — free.</text>
-  <text x="${W/2}" y="1034" text-anchor="middle" font-family="Lato,sans-serif" font-weight="700" font-size="20" letter-spacing="0.2" fill="#7A5B31">Take the assessment → dixon8303.github.io/genius-index-booksite</text>
+  <text x="${W/2}" y="1034" text-anchor="middle" font-family="Lato,sans-serif" font-weight="700" font-size="20" letter-spacing="0.2" fill="#7A5B31">Take the assessment → dixon8303.github.io/genius-index-booksite/assessment</text>
   <rect x="${W/2-190}" y="1054" width="380" height="1" fill="rgba(122,91,49,.3)"/>
   <text x="${W/2}" y="1086" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-style="italic" font-size="22" fill="#6B6258">↺ Retake it ${esc(retestDate().toLocaleDateString(undefined,{month:"long", day:"numeric"}))} — see what's changed</text>
   <rect y="${H-10}" width="${W}" height="10" fill="url(#edgeBar)"/>
@@ -2419,7 +2419,7 @@ function retestDate(){ return new Date(Date.now()+RETEST_DAYS*86400000); }
 function buildRetestICS(m){
  const when = retestDate();
  const braidName = m && m.primary ? m.primary.name : "your braid";
- const desc = `You took The Genius Index and came out ${braidName}. Come back and retake it to see whether that still holds -- or what's shifted since. https://dixon8303.github.io/ImaginariumOzone/`;
+ const desc = `You took The Genius Index and came out ${braidName}. Come back and retake it to see whether that still holds -- or what's shifted since. https://dixon8303.github.io/genius-index-booksite/assessment`;
  const dt = icsLocalDate_(when);
  const lines = ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//The Genius Index//EN","CALSCALE:GREGORIAN",
   "BEGIN:VEVENT",
@@ -2429,7 +2429,7 @@ function buildRetestICS(m){
   `DTEND;VALUE=DATE:${dt}`,
   `SUMMARY:${icsEscape_("Retake the Genius Index — see what's changed")}`,
   `DESCRIPTION:${icsEscape_(desc)}`,
-  "URL:https://dixon8303.github.io/ImaginariumOzone/",
+  "URL:https://dixon8303.github.io/genius-index-booksite/assessment",
   "END:VEVENT","END:VCALENDAR"];
  return lines.join("\r\n");
 }
