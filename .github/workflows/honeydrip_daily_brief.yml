@@ -39,6 +39,18 @@ jobs:
           python -m honeydrip_bot.daily_brief > /tmp/brief.txt
           cat /tmp/brief.txt
 
+      - name: Get date for email
+        id: date
+        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
+
+      - name: Read brief for email body
+        id: read_brief
+        run: |
+          CONTENT=$(cat /tmp/brief.txt)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Save brief artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -58,3 +70,26 @@ jobs:
           git diff --cached --quiet || git commit -m "Daily brief: $(date +%Y-%m-%d)"
           git pull --rebase origin main
           git push
+
+      - name: Email daily brief
+        if: always()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_ADDRESS }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: 'HoneyDrip Daily Brief — ${{ steps.date.outputs.date }}'
+          to: ${{ secrets.EMAIL_RECIPIENT }}
+          from: 'HoneyDrip Bot <${{ secrets.GMAIL_ADDRESS }}>'
+          body: |
+            Here's your daily trading report.
+
+            ---
+
+            ${{ steps.read_brief.outputs.content }}
+
+            ---
+
+            View all briefs: https://github.com/Dixon8303/ImaginariumOzone/tree/main/honeydrip_bot/briefs
+        continue-on-error: true
