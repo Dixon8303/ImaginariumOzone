@@ -1,0 +1,60 @@
+name: HoneyDrip Daily Brief
+
+on:
+  schedule:
+    # 08:00 UTC = 3 AM ET / midnight PT (before market open)
+    - cron: '0 8 * * 1-5'  # Mon-Fri only
+  workflow_dispatch
+
+permissions:
+  contents: read
+
+jobs:
+  daily_brief:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install --quiet -r honeydrip_bot/requirements.txt
+
+      - name: Set trading environment
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          HONEYDRIP_ARMED: YES
+        run: echo "Trading credentials loaded"
+
+      - name: Generate daily brief
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+          HONEYDRIP_ARMED: YES
+        run: |
+          python -m honeydrip_bot.daily_brief > /tmp/brief.txt
+          cat /tmp/brief.txt
+
+      - name: Save brief artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-brief-${{ github.run_id }}
+          path: /tmp/brief.txt
+          retention-days: 30
+
+      - name: Commit brief to repo
+        # Stores briefs in git history for long-term tracking
+        run: |
+          git config user.name "honeydrip-bot"
+          git config user.email "noreply@github.com"
+          mkdir -p honeydrip_bot/briefs
+          cp /tmp/brief.txt "honeydrip_bot/briefs/$(date +%Y%m%d).txt"
+          git add "honeydrip_bot/briefs/$(date +%Y%m%d).txt"
+          git diff --cached --quiet || git commit -m "Daily brief: $(date +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push
