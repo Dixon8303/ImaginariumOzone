@@ -1,9 +1,9 @@
 H-23 UNIVERSE EXPANSION STUDY — out-of-sample (test windows only)
 expanding-window splits: 18   setup: RS-02
 
-  baseline (22)      n= 846  exp=+0.133R  wr=52%  total=+112.2R
-  candidates only    n= 420  exp=+0.135R  wr=52%  total=+56.7R
-  combined           n=1266  exp=+0.133R  wr=52%  total=+168.9R
+  baseline (22)      n=1281  exp=+0.136R  wr=52%  total=+173.8R
+  candidates only    n= 426  exp=+0.135R  wr=52%  total=+57.5R
+  combined           n=1281  exp=+0.136R  wr=52%  total=+173.8R
 
 Registered criterion (docs/PREREGISTERED.md H-23):
   CONFIRMED: candidates-only expectancy >= 0R at n >= 30, AND
@@ -14,19 +14,19 @@ Registered criterion (docs/PREREGISTERED.md H-23):
   after seeing these numbers is prohibited by the registration.
 
 per-candidate (context only — NOT an adoption criterion):
-  ABBV   n= 31  exp=+0.211R
+  ABBV   n= 34  exp=+0.458R
   BA     n= 38  exp=+0.543R
-  COIN   n= 13  exp=+0.397R
+  COIN   n= 12  exp=+0.177R
   CRM    n= 44  exp=+0.034R
   CVX    n= 17  exp=+0.133R
   F      n= 39  exp=+0.037R
-  HOOD   n= 18  exp=+0.160R
+  HOOD   n= 13  exp=+0.092R
   ORCL   n= 22  exp=+0.248R
-  PFE    n= 19  exp=-0.126R
-  PYPL   n= 26  exp=+0.456R
+  PFE    n= 20  exp=-0.064R
+  PYPL   n= 31  exp=+0.160R
   RTX    n= 34  exp=+0.101R
-  SOFI   n= 11  exp=+0.447R
+  SOFI   n= 11  exp=+0.538R
   T      n= 22  exp=-0.199R
   UNH    n= 36  exp=+0.098R
-  V      n= 32  exp=-0.169R
+  V      n= 35  exp=-0.119R
   VZ     n= 18  exp=-0.039R
