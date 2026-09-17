@@ -1,45 +1,39 @@
-generated: 2026-09-16
+generated: 2026-09-17
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-16
-paper equity: $97,360.02   cash: $61,534.24
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-17
+paper equity: $97,769.96   cash: $61,534.24
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-16  $97,360.02   (-2,639.98, -2.6%)
-  over 23 calendar days, 13 recorded sessions: 11 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-09-17  $97,769.96   (-2,230.04, -2.2%)
+  over 24 calendar days, 14 recorded sessions: 12 with a change, 1 flat.
   range so far: $97,360.02 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
 TODAY'S SIGNALS (1):
-  ABBV  [H-25]  close 262.55  stop 250.08  target 299.96  (1R = 12.47)  score 5/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 262.55 on 1.1x volume
-      volume profile: 11% of 60d volume sits ABOVE here, heaviest at 254.20  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 263, spread <= 10%; exit on stop/target/15 sessions
+  QQQ  [H-25]  close 716.89  stop 700.04  target 767.44  (1R = 16.85)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 716.89 on 1.2x volume
+      volume profile: 36% of 60d volume sits ABOVE here, heaviest at 716.97  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 717, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
-  ABBV   ABBV261016C00220000  ~moneyness  30d  mid 42.95  spread 7.6%
-         costs $4,294.50 per contract; needs $85,890 equity to buy one inside the 5% position cap
-
-  cheapest doctrine contract today: ABBV at $4,294.50
-  at $97,360.02 equity you can buy 1 of 1 inside the position cap
-  (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
+OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
 PAPER ORDERS PLACED (0):
   none
-  skipped ABBV: position cap
+  skipped QQQ: position cap
 
 OPEN POSITIONS (11) — 8 of 8 stock slots used, 3 option contracts:
-  AAPL  qty 1  unrealized $+17.52  stop ?  target ?  since ?
-  AAPL261002C00330000  qty 1  unrealized $-85.00  stop ?  target ?  since ?
-  BAC  qty 79  unrealized $-364.38  stop 61.37  target 68.13  since 2026-09-03
-  F  qty 353  unrealized $-268.28  stop 13.73  target 15.41  since 2026-09-02
-  GOOGL  qty 14  unrealized $-17.16  stop 327.79  target 414.41  since 2026-09-14
-  JPM  qty 13  unrealized $-164.42  stop 353.86  target 386.78  since 2026-09-03
-  KO  qty 56  unrealized $-35.49  stop 87.73  target 92.17  since 2026-09-03
-  KO261016C00087500  qty 3  unrealized $-195.00  stop ?  target ?  since ?
-  NVDA  qty 22  unrealized $-218.02  stop 215.12  target 252.38  since 2026-09-02
-  XOM  qty 30  unrealized $+80.19  stop 155.32  target 182.96  since 2026-09-03
-  XOM261016C00160000  qty 1  unrealized $+25.00  stop ?  target ?  since ?
+  AAPL  qty 1  unrealized $+20.20  stop ?  target ?  since ?
+  AAPL261002C00330000  qty 1  unrealized $+175.00  stop ?  target ?  since ?
+  BAC  qty 79  unrealized $-346.21  stop 61.37  target 68.13  since 2026-09-03
+  F  qty 353  unrealized $-194.15  stop 13.73  target 15.41  since 2026-09-02
+  GOOGL  qty 14  unrealized $+1.74  stop 327.79  target 414.41  since 2026-09-14
+  JPM  qty 13  unrealized $-165.21  stop 353.86  target 386.78  since 2026-09-03
+  KO  qty 56  unrealized $-25.97  stop 87.73  target 92.17  since 2026-09-03
+  KO261016C00087500  qty 3  unrealized $-201.00  stop ?  target ?  since ?
+  NVDA  qty 22  unrealized $-133.10  stop 215.12  target 252.38  since 2026-09-02
+  XOM  qty 30  unrealized $+73.60  stop 155.32  target 182.96  since 2026-09-03
+  XOM261016C00160000  qty 1  unrealized $-20.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
@@ -47,7 +41,7 @@ PAPER OPTIONS (Alpaca, autonomous):
     AAPL261002C00330000  1x @ $9.20  since 2026-09-11  stop-if-underlying <= 309.92
     KO261016C00087500  3x @ $2.85  since 2026-09-14  stop-if-underlying <= 87.42
     XOM261016C00160000  1x @ $7.77  since 2026-09-03  stop-if-underlying <= 155.32
-  note: ABBV: premium $4,294 exceeds the 1% risk budget
+  note: QQQ: no contract met DTE/spread/delta
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
