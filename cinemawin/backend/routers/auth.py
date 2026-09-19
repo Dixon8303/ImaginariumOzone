@@ -59,7 +59,11 @@ def _issue(user: dict) -> dict:
 async def _send_new_otp(email: str) -> None:
     code = f"{secrets.randbelow(1_000_000):06d}"
     await database.create_otp(email, code, _expiry(config.OTP_EXPIRY_MINUTES))
-    await mailer.send_otp(email, code)
+    if not await mailer.send_otp(email, code):
+        # SMTP is configured but the send failed. Without this the account is
+        # unrecoverable: registration reports verification_required and the
+        # code exists nowhere the operator can reach.
+        log.warning("OTP email to %s failed to send. Code for manual delivery: %s", email, code)
 
 
 @router.post("/register")

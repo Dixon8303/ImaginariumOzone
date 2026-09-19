@@ -15,8 +15,9 @@ from typing import Any, Awaitable, Callable
 from fastapi import APIRouter, HTTPException, Request
 
 import config
+import database
 import security
-from services import claude_client, demo_responses, postprocess
+from services import demo_responses, llm, postprocess
 
 log = logging.getLogger("cinemawin.functions")
 router = APIRouter(prefix="/functions", tags=["functions"])
@@ -86,16 +87,20 @@ async def _run(
     post_fn: Callable[[dict], dict],
 ) -> dict:
     if config.DEMO_MODE:
-        return post_fn(demo_fn(fields))
-    if not claude_client.is_configured():
+        result = post_fn(demo_fn(fields))
+        # The client renders a banner off this flag so canned output is never
+        # mistaken for a real read of the user's film.
+        result["demo"] = True
+        return result
+    if not llm.is_configured():
         raise HTTPException(status_code=503, detail="llm_not_configured")
     try:
         raw = await llm_fn(fields)
-    except claude_client.LLMNotConfigured:
+    except llm.LLMNotConfigured:
         raise HTTPException(status_code=503, detail="llm_not_configured")
-    except claude_client.LLMRefused:
+    except llm.LLMRefused:
         raise HTTPException(status_code=502, detail="llm_refused")
-    except claude_client.LLMError as exc:
+    except llm.LLMError as exc:
         log.error("LLM error: %s", exc)
         raise HTTPException(status_code=502, detail="llm_error")
     return post_fn(raw)
@@ -109,7 +114,7 @@ async def develop_story(request: Request) -> dict:
     if not fields["logline"].strip():
         raise HTTPException(status_code=400, detail="logline_required")
     return await _run(
-        fields, demo_responses.develop_story, claude_client.develop_story, postprocess.process_develop_story
+        fields, demo_responses.develop_story, llm.develop_story, postprocess.process_develop_story
     )
 
 
@@ -119,7 +124,7 @@ async def build_structure(request: Request, user: dict = security.CurrentUser) -
         request, ("title", "logline", "premise", "protagonist", "central_question", "theme", "genre")
     )
     return await _run(
-        fields, demo_responses.build_structure, claude_client.build_structure, postprocess.process_build_structure
+        fields, demo_responses.build_structure, llm.build_structure, postprocess.process_build_structure
     )
 
 
@@ -130,7 +135,7 @@ async def score_story(request: Request, user: dict = security.CurrentUser) -> di
         ("title", "logline", "premise", "protagonist", "central_question", "theme", "genre", "track"),
     )
     return await _run(
-        fields, demo_responses.score_story, claude_client.score_story, postprocess.process_score_story
+        fields, demo_responses.score_story, llm.score_story, postprocess.process_score_story
     )
 
 
@@ -139,6 +144,12 @@ async def build_finance(request: Request, user: dict = security.CurrentUser) -> 
     fields = await _fields(
         request, ("title", "logline", "genre", "premise", "story_score", "story_verdict")
     )
+    # The deck and the waterfall are Premium. Gate them here, not just in the
+    # UI: a blurred div still ships the real text to the browser.
+    deck_unlocked = database.derive_plan_flags(user["plan"])["pitch_deck_unlocked"]
     return await _run(
-        fields, demo_responses.build_finance, claude_client.build_finance, postprocess.process_build_finance
+        fields,
+        demo_responses.build_finance,
+        llm.build_finance,
+        lambda raw: postprocess.process_build_finance(raw, deck_unlocked=deck_unlocked),
     )

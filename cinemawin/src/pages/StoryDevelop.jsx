@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { cw } from "@/api/client";
 import { Loader2, Sparkles, Save, Layers, ArrowRight, Check } from "lucide-react";
+import SampleNotice from "@/components/SampleNotice";
 
 const fields = [
   ["premise", "Premise"],
@@ -19,6 +20,7 @@ export default function StoryDevelop() {
   const [saved, setSaved] = useState(false);
   const [building, setBuilding] = useState(false);
   const [structure, setStructure] = useState(project.structure || null);
+  const [isSample, setIsSample] = useState(false);
   const [error, setError] = useState("");
 
   const update = (k, v) => {
@@ -52,6 +54,9 @@ export default function StoryDevelop() {
     setBuilding(true);
     setError("");
     try {
+      // Build from what is actually stored, not from unsaved edits — otherwise
+      // the saved structure describes text that was never written down.
+      if (!saved) await save();
       const { data: res } = await cw.functions.invoke("buildStructure", {
         title: draft.title,
         logline: draft.logline,
@@ -62,6 +67,7 @@ export default function StoryDevelop() {
         genre: draft.genre,
       });
       setStructure(res.sequences);
+      setIsSample(!!res.demo);
       // Persist so the structure survives a reload.
       try {
         const updated = await cw.entities.Project.update(project.id, { structure: res.sequences, maturity_level: Math.max(project.maturity_level || 0, 1) });
@@ -115,6 +121,8 @@ export default function StoryDevelop() {
       </div>
 
       {error && <p className="text-sm text-destructive">{error}</p>}
+
+      {isSample && <SampleNotice />}
 
       {structure && (
         <div className="rounded-2xl border border-accent/30 bg-card p-6">

@@ -1,0 +1,44 @@
+# Render blueprint for the CinemaWin backend.
+#
+# Render's free tier needs no credit card. Point Render at this repository and
+# it reads this file; the only thing left to do by hand is paste an AI provider
+# key into the dashboard (it is marked sync: false so it is never committed).
+#
+# Free-tier behaviour worth knowing before you rely on it:
+#   * The service sleeps after ~15 minutes idle. The next request wakes it,
+#     which takes roughly 30-60 seconds. The app will look slow, then be fine.
+#   * The disk is ephemeral. The SQLite database is wiped on every restart and
+#     every deploy, so accounts and projects do not survive. That is acceptable
+#     for a demo and not acceptable for real work — attach a paid disk, or
+#     point CINEMAWIN_DATABASE_PATH at a managed database, when it matters.
+services:
+  - type: web
+    name: cinemawin-api
+    runtime: docker
+    plan: free
+    rootDir: cinemawin
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      # Which provider to call. "gemini" and "groq" both have a free tier that
+      # needs no credit card. See backend/.env.example for the full list.
+      - key: CINEMAWIN_LLM_PROVIDER
+        value: gemini
+
+      # Paste the key in the Render dashboard. Never commit it.
+      - key: CINEMAWIN_LLM_API_KEY
+        sync: false
+
+      # Signs login tokens. Render generates one; without it every restart
+      # logs everybody out.
+      - key: CINEMAWIN_SECRET_KEY
+        generateValue: true
+
+      # The frontend is hosted separately (GitHub Pages), so allow it in.
+      # Replace * with your exact Pages origin once you know it, e.g.
+      # https://yourname.github.io
+      - key: CINEMAWIN_CORS_ORIGINS
+        value: "*"
+
+      - key: CINEMAWIN_DEMO_MODE
+        value: "0"

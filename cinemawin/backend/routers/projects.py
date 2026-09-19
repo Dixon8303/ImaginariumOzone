@@ -64,6 +64,10 @@ def sanitize(body: dict, *, creating: bool) -> dict:
             out["budget_ceiling"] = _opt_int(value)
         elif key == "paywall_email_captured":
             out["paywall_email_captured"] = bool(value)
+        elif key == "paywall_email":
+            # Stored so a captured lead is not silently discarded. Capped hard
+            # because it is free text from the browser.
+            out["paywall_email"] = _cap(value, 320).strip()
         elif key in _TEXT_FIELDS:
             if key in ("story_verdict_label", "story_headline"):
                 out[key] = None if value is None else _cap(value, config.PROJECT_TEXT_MAX)

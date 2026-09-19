@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { cw } from "@/api/client";
 import { Loader2, Gauge, Lock, Crown, ArrowRight, Sparkles, RefreshCw } from "lucide-react";
+import SampleNotice from "@/components/SampleNotice";
 
 const categories = [
   ["Premise & Hook", 10],
@@ -23,6 +24,7 @@ const verdictColor = { RECOMMEND: "bg-primary/15 text-primary", CONSIDER: "bg-ac
 export default function StoryScore() {
   const { project, setProject } = useOutletContext();
   const [running, setRunning] = useState(false);
+  const [isSample, setIsSample] = useState(false);
   const [error, setError] = useState("");
 
   const runScore = async () => {
@@ -45,9 +47,11 @@ export default function StoryScore() {
         story_verdict_label: res.verdict_label,
         story_headline: res.headline,
         score_breakdown: res.breakdown,
+        top_fixes: res.top_fixes,
         current_module: "score",
       });
-      setProject({ ...updated, _top_fixes: res.top_fixes });
+      setProject(updated);
+      setIsSample(!!res.demo);
     } catch (e) {
       setError(e.message || "Couldn't run the score. Try again.");
     } finally {
@@ -56,6 +60,7 @@ export default function StoryScore() {
   };
 
   const hasScore = project.story_score != null;
+  const topFixes = project.top_fixes || [];
   // Derived server-side from the owner's plan (Entry → locked).
   const locked = project.score_locked !== false;
 
@@ -82,6 +87,8 @@ export default function StoryScore() {
         </div>
       )}
 
+      {isSample && <SampleNotice />}
+
       {hasScore && (
         <>
           <div className="rounded-2xl border border-border/70 bg-card p-7">
@@ -100,9 +107,9 @@ export default function StoryScore() {
                 <p className="text-sm leading-relaxed text-foreground/90">
                   {project.story_headline || "Your project has a clear core. Here's what's working — and what to sharpen before you pitch."}
                 </p>
-                {!locked && project._top_fixes?.length > 0 && (
+                {!locked && topFixes.length > 0 && (
                   <ul className="mt-3 space-y-1.5 text-sm text-muted-foreground">
-                    {project._top_fixes.map((f, i) => (
+                    {topFixes.map((f, i) => (
                       <li key={i} className="flex gap-2">
                         <span className="text-primary">→</span>
                         <span>{f}</span>

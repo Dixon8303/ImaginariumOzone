@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { cw } from "@/api/client";
+import { cw, navigateHard } from "@/api/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,7 @@ export default function ResetPassword() {
     setLoading(true);
     try {
       await cw.auth.resetPassword({ resetToken, newPassword });
-      window.location.href = "/login";
+      navigateHard("/login");
     } catch (err) {
       setError(err.message || "Failed to reset password");
       setLoading(false);

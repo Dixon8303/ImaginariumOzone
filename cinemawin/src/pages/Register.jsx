@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { cw } from "@/api/client";
+import { cw, navigateHard } from "@/api/client";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ export default function Register() {
 
   const finish = async () => {
     // Full navigation so the auth context re-initialises with the new token.
-    window.location.href = await postAuthDestination(returnTo);
+    navigateHard(await postAuthDestination(returnTo));
   };
 
   const handleSubmit = async (e) => {

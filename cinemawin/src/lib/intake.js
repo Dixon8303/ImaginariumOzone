@@ -43,6 +43,7 @@ export async function consumePendingIntake() {
       emotional_wound: intake.emotional_wound,
       central_question: intake.central_question,
       theme: intake.theme,
+      first_step: intake.first_step,
       maturity_level: intake.maturity_level ?? 1,
       current_module: "develop",
     });

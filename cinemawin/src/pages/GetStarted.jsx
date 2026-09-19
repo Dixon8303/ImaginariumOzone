@@ -67,7 +67,8 @@ export default function GetStarted() {
         emotional_wound: developed?.emotional_wound,
         central_question: developed?.central_question,
         theme: developed?.theme,
-        maturity_level: 1,
+        first_step: developed?.first_step,
+        maturity_level: developed?.maturity_level ?? 1,
         current_module: "develop",
       });
       navigate(`/project/${project.id}/develop`);

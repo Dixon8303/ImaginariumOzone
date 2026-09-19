@@ -22,6 +22,7 @@ import config
 import database
 from routers import app as app_router
 from routers import auth, functions, projects
+from services import providers
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("cinemawin")
@@ -30,13 +31,22 @@ log = logging.getLogger("cinemawin")
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     await database.init_db()
+    provider = providers.status()
     log.info(
-        "CinemaWin backend ready — demo_mode=%s llm_configured=%s smtp=%s db=%s",
+        "CinemaWin backend ready — provider=%s model=%s configured=%s demo_mode=%s smtp=%s db=%s",
+        provider["provider"] or "(none)",
+        provider["craft_model"],
+        provider["configured"],
         config.DEMO_MODE,
-        config.LLM_CONFIGURED,
         config.SMTP_CONFIGURED,
         config.DATABASE_PATH,
     )
+    if not provider["configured"] and not config.DEMO_MODE:
+        log.warning(
+            "No LLM provider is configured and demo mode is off — the four story "
+            "functions will return 503. Set a provider key in .env (several have a "
+            "free tier; see README) or set CINEMAWIN_DEMO_MODE=1."
+        )
     if config.SECRET_KEY_EPHEMERAL:
         log.warning(
             "CINEMAWIN_SECRET_KEY is unset — generated a random key for this boot. "
@@ -47,10 +57,15 @@ async def lifespan(_: FastAPI):
 
 app = FastAPI(title=config.APP_NAME, lifespan=lifespan)
 
+# CINEMAWIN_CORS_ORIGINS="*" is the common case for a static frontend hosted
+# somewhere else (GitHub Pages) calling this backend. Credentials are off in
+# that mode because "*" and allow_credentials are incompatible — and CinemaWin
+# does not need them: the session rides on an Authorization header our own
+# code sets, not on a cookie.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=config.CORS_ORIGINS,
-    allow_credentials=True,
+    allow_origins=["*"] if config.CORS_ALLOW_ALL else config.CORS_ORIGINS,
+    allow_credentials=not config.CORS_ALLOW_ALL,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -64,7 +79,12 @@ app.include_router(app_router.router, prefix=API_PREFIX)
 
 @app.get(f"{API_PREFIX}/health")
 async def health() -> dict:
-    return {"ok": True, "demo_mode": config.DEMO_MODE, "llm_configured": config.LLM_CONFIGURED}
+    return {
+        "ok": True,
+        "demo_mode": config.DEMO_MODE,
+        "llm_configured": providers.is_configured(),
+        "provider": providers.status()["provider"],
+    }
 
 
 # ── SPA static mount (production) ───────────────────────────────────────────

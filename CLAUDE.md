@@ -14,7 +14,7 @@ git history and a Pages deploy, nothing else. Never wire one into another.
 | 7 | **Dixon Grant Studio** | `dixon-grant-studio/` | Grant-writing pipeline and outreach assets. |
 | 8 | **RS Options Engine** | `rs_options/` | Risk engine + MVE for the RS Options spec. **Co-pilot mode:** autonomous trade selection via the scan playbook; execution requires the operator's explicit word per trade session. Unattended execution stays locked behind the spec §67 release gate. See `rs_options/robinhood_copilot_playbook.md`. |
 | 9 | **DEOS: Emergence** | `deos/` | Deterministic Emergence Operating Specification: the engineering spec for the game *Emergence: The Digital Rise*. Documentation-only subtree, self-contained so it can be extracted into its own repository. `python3 deos/tools/spec_lint.py` must pass before any change under `deos/` merges. |
-| 10 | **CinemaWin** | `cinemawin/` | Film development SaaS: guided story intake → 100-point Greenlight Scorecard → finance package (capital stack, 12-slide deck). Vite/React frontend + its **own** FastAPI backend (port 8002) on the Anthropic API, driven by the five CinemaWin doctrine docs. Ported from Base44; self-contained, extractable. See `cinemawin/README.md`. |
+| 10 | **CinemaWin** | `cinemawin/` | Film development SaaS: guided story intake → 100-point Greenlight Scorecard → finance package (capital stack, 12-slide deck). Vite/React frontend + its **own** FastAPI backend (port 8002), provider-agnostic (Gemini/Groq/Ollama/Anthropic/OpenAI), driven by the five CinemaWin doctrine docs. Also builds as a static browser-only site deployed to Pages at `/cinemawin/`. Self-contained and extractable. See `cinemawin/README.md` and `cinemawin/COOPERATION.md`. |
 
 **Target platform:** macOS (Apple Silicon). `start.sh` uses BSD `sed -i ''`, narration
 falls back to the macOS `say` command, and ComfyUI is tuned for MPS. Linux/CI runs of
@@ -293,35 +293,49 @@ ECS → Runtime → Protocol → Play → MVS. There is no code to build or run.
 
 Self-contained product at `cinemawin/`: React frontend (`cinemawin/src/`, Vite on
 port **5174**) and its own FastAPI + SQLite backend (`cinemawin/backend/`, port
-**8002**). `cinemawin/start.sh` runs both. It is a port of a Base44 app: the UI is
-unchanged, the Base44 SDK is replaced by `cinemawin/src/api/client.js` talking to
-the local backend. Nothing under `cinemawin/` imports from `backend/` or `src/`,
-and `pages.yml` does not deploy it.
+**8002**, both configurable via `CINEMAWIN_PORT`). `cinemawin/start.sh` runs both.
+Ported from a Base44 app: the UI is unchanged, the Base44 SDK is replaced by
+`cinemawin/src/api/client.js`. Nothing under `cinemawin/` imports from `backend/`
+or `src/`.
 
-- **Doctrine is the system prompt.** The five spec documents in
-  `cinemawin/backend/prompts/doctrine/` (Master Controller, Creative Craft,
-  Production Prep, Finance & Packaging, Closed-Loop Bridge) are concatenated as
-  the system prompt for every Claude call. Editorial or financial doctrine
-  changes belong there, not in Python strings. Per-function user prompts live in
-  `cinemawin/backend/prompts/*.txt`.
+- **Two build modes, one codebase.** The default build is served by the FastAPI
+  backend. `npm run build:static` (`CINEMAWIN_MODE=static`) produces a
+  browser-only site — hash routing, projects in `localStorage`, sample AI output
+  — which `pages.yml` deploys to `/cinemawin/`. Never write code that assumes
+  `window.location.pathname` is the route.
+- **Provider-agnostic.** `services/providers.py` speaks the Anthropic protocol
+  and the OpenAI-compatible protocol, which covers Gemini, Groq, OpenRouter,
+  Cerebras, Together, Ollama and OpenAI. Several have a free tier, so no paid
+  account is required. Provider, key and models resolve in `config.py`; never
+  hard-code a model string or a base URL in a service.
+- **Doctrine numbers live in `cinemawin/doctrine.json`**, loaded by
+  `backend/config.py` and imported by `src/lib/doctrine.js` so Python and the
+  browser cannot drift. Editorial doctrine lives in
+  `backend/prompts/doctrine/*.md`, with one deliberate exception: the
+  house-style preamble in `services/llm.py` (`HOUSE_STYLE_PREAMBLE`).
 - **Hard rules are enforced in code, not trusted to the model.**
   `services/postprocess.py` forces the 12 scorecard categories and maximums,
   recomputes the total, applies the §II verdict thresholds, renames and
   re-balances the 4 capital-stack layers to exactly 100%, computes the equity
   gap from the ceiling, snaps the budget tier, and pads the deck to the 12 §V
-  slide titles. `tests/test_postprocess.py` covers the boundaries; keep it green.
-- **Model IDs live only in `cinemawin/backend/config.py`** (`CINEMAWIN_MODEL_CRAFT`,
-  `CINEMAWIN_MODEL_JUDGE`, both default `claude-opus-5`). Refusal fallbacks are on
-  by default. Structured output via `output_config.format`; never `budget_tokens`,
-  `temperature`, or prefill.
-- **Demo mode** (`CINEMAWIN_DEMO_MODE=1`) returns canned responses so the whole UI
-  runs with no API key; `/api/health` reports it. With demo off and no key, the
-  functions return 503 — they never fake a result silently.
-- **Plans gate the paywall server-side.** `score_locked` / `pitch_deck_unlocked`
-  are derived from the owner's plan on every read; client writes are ignored.
-  No billing exists yet — operators set plans with `tools/set_plan.py`.
-- **Verify before you claim:** `cd cinemawin && npx vite build`, then
-  `cd backend && .venv/bin/python -c "import main" && .venv/bin/python -m pytest -q tests`.
+  slide titles. Add a model-backed number, add its enforcement.
+- **Paid content is withheld server-side, not blurred.** `pad_deck_slides` and
+  the waterfall gate on the caller's plan, so locked slides never reach the
+  browser. A CSS blur alone is a data leak; do not regress this.
+- **Sample output must announce itself.** Demo responses carry `demo: true` and
+  the UI renders `<SampleNotice />`. A user must never mistake canned text for a
+  reading of their film.
+- **Demo mode** (`CINEMAWIN_DEMO_MODE=1`) runs the whole UI with no key;
+  `/api/health` reports it. With demo off and no provider, the functions return
+  503 — they never fabricate a result.
+- **Plans gate the paywall.** `score_locked` / `pitch_deck_unlocked` are derived
+  from the owner's plan on every read and client writes are ignored. No billing
+  exists; operators use `tools/set_plan.py`.
+- **Contributor contract:** `cinemawin/COOPERATION.md` — file ownership, work
+  packages, and the verification gate. Point external contributors there.
+- **Verify before you claim:** `cd cinemawin && npm run build && npm run build:static`,
+  then `cd backend && .venv/bin/python -c "import main" && .venv/bin/python -m pytest -q tests`
+  (pytest comes from `requirements-dev.txt`).
 
 ---
 
@@ -337,7 +351,7 @@ and `pages.yml` does not deploy it.
 | `YOUTUBE_CLIENT_SECRETS` | BGF upload | OAuth client JSON path |
 | `APCA_API_KEY_ID` / `APCA_API_SECRET_KEY` | HoneyDrip | Paper keys only, never committed |
 | `HONEYDRIP_ARMED` | HoneyDrip | `YES` only in a confirmed paper environment |
-| `ANTHROPIC_API_KEY` / `CINEMAWIN_SECRET_KEY` | CinemaWin | Own `.env` in `cinemawin/backend/`; `CINEMAWIN_DEMO_MODE=1` runs without a key |
+| `CINEMAWIN_LLM_API_KEY` / `CINEMAWIN_SECRET_KEY` | CinemaWin | Own `.env` in `cinemawin/backend/`. Any provider (Gemini/Groq/Ollama free tiers); `CINEMAWIN_DEMO_MODE=1` runs with no key at all |
 
 Copy `backend/.env.example` → `backend/.env`, `honeydrip_bot/.env.example` →
 `honeydrip_bot/.env`, and `cinemawin/backend/.env.example` → `cinemawin/backend/.env`
