@@ -78,3 +78,11 @@ yarn-error.log*
 # numbers). NEVER commit: this repo is public.
 rs_options/data/
 *Transactions*.csv
+
+# CinemaWin (cinemawin/)
+cinemawin/node_modules/
+cinemawin/dist/
+cinemawin/backend/.env
+cinemawin/backend/.venv/
+cinemawin/backend/*.db
+cinemawin/backend/*.db-journal

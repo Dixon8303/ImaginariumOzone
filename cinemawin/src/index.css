@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* CinemaWin — Dark Screening Room */
+    --background: 222 8% 9%;
+    --foreground: 43 12% 91%;
+    --card: 222 8% 12%;
+    --card-foreground: 43 12% 91%;
+    --popover: 222 10% 11%;
+    --popover-foreground: 43 12% 91%;
+    --primary: 152 64% 29%;
+    --primary-foreground: 43 30% 96%;
+    --secondary: 222 8% 16%;
+    --secondary-foreground: 43 12% 91%;
+    --muted: 222 8% 18%;
+    --muted-foreground: 43 8% 62%;
+    --accent: 37 48% 59%;
+    --accent-foreground: 222 8% 9%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 43 30% 96%;
+    --border: 222 8% 20%;
+    --input: 222 8% 20%;
+    --ring: 152 64% 29%;
+    --success: 150 56% 42%;
+    --success-foreground: 43 30% 96%;
+    --chart-1: 152 64% 42%;
+    --chart-2: 37 48% 59%;
+    --chart-3: 197 37% 50%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 340 60% 60%;
+    --radius: 0.75rem;
+    --font-heading: "Fraunces", ui-serif, Georgia, serif;
+    --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --sidebar-background: 222 10% 7%;
+    --sidebar-foreground: 43 12% 91%;
+    --sidebar-primary: 152 64% 29%;
+    --sidebar-primary-foreground: 43 30% 96%;
+    --sidebar-accent: 222 8% 16%;
+    --sidebar-accent-foreground: 43 12% 91%;
+    --sidebar-border: 222 8% 18%;
+    --sidebar-ring: 152 64% 29%;
+  }
+}
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground font-body antialiased; }
+  h1, h2, h3, h4 { @apply font-heading; letter-spacing: -0.02em; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .bg-grain {
+    background-image: radial-gradient(circle at 1px 1px, hsl(var(--foreground) / 0.025) 1px, transparent 0);
+    background-size: 24px 24px;
+  }
+  .glow-green { box-shadow: 0 0 40px -8px hsl(var(--primary) / 0.45); }
+  .glow-gold { box-shadow: 0 0 40px -8px hsl(var(--accent) / 0.4); }
+  .blur-paywall { filter: blur(7px); user-select: none; pointer-events: none; }
+  .scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { background: hsl(var(--border)); border-radius: 9999px; }
+}
