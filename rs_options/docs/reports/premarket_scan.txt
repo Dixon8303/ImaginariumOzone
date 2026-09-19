@@ -1,27 +1,35 @@
-generated: 2026-09-18
+generated: 2026-09-19
 
-PRE-OPEN SCAN — 2026-09-18 (signals from the 2026-09-18 close)
-paper equity: $97,266.38
+PRE-OPEN SCAN — 2026-09-19 (signals from the 2026-09-18 close)
+paper equity: $97,479.84
 
-CANDIDATES FOR TODAY (1):
-  GOOGL  ref close 349.95  stop 340.69  target 377.73  (1R = 9.26)  score 8/10 [already held]
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 349.95 on 1.0x volume
-      volume profile: 39% of 60d volume sits ABOVE here, heaviest at 343.45  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 350, spread <= 10%
+CANDIDATES FOR TODAY (3):
+  MU  ref close 1015.53  stop 902.76  target 1353.84  (1R = 112.77)  score 9/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 1015.53 on 1.5x volume
+      volume profile: 16% of 60d volume sits ABOVE here, heaviest at 929.61  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 1016, spread <= 10%
+  GOOGL  ref close 349.23  stop 340.69  target 374.85  (1R = 8.54)  score 9/10 [already held]
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 349.23 on 1.6x volume
+      volume profile: 41% of 60d volume sits ABOVE here, heaviest at 343.45  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 349, spread <= 10%
+  QQQ  ref close 721.36  stop 700.04  target 785.32  (1R = 21.32)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 721.36 on 1.5x volume
+      volume profile: 20% of 60d volume sits ABOVE here, heaviest at 716.97  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 721, spread <= 10%
 
 ORDERS QUEUED FOR THE OPEN (0): none
 
 OPEN POSITIONS (11):
-  AAPL  qty 1  unrealized $+18.42  stop ? / target ?
-  AAPL261002C00330000  qty 1  unrealized $-40.00  stop ? / target ?
-  BAC  qty 79  unrealized $-368.72  stop 61.37 / target 68.13
-  F  qty 353  unrealized $-379.48  stop 13.73 / target 15.41
-  GOOGL  qty 14  unrealized $+47.24  stop 327.79 / target 414.41
-  JPM  qty 13  unrealized $-194.97  stop 353.86 / target 386.78
-  KO  qty 56  unrealized $-38.01  stop 87.73 / target 92.17
-  KO261016C00087500  qty 3  unrealized $-222.00  stop ? / target ?
-  NVDA  qty 22  unrealized $-124.85  stop 215.12 / target 252.38
-  XOM  qty 30  unrealized $+48.69  stop 155.32 / target 182.96
+  AAPL  qty 1  unrealized $+18.73  stop ? / target ?
+  AAPL261002C00330000  qty 1  unrealized $-25.00  stop ? / target ?
+  BAC  qty 79  unrealized $-384.13  stop 61.37 / target 68.13
+  F  qty 353  unrealized $-335.35  stop 13.73 / target 15.41
+  GOOGL  qty 14  unrealized $+59.25  stop 327.79 / target 414.41
+  JPM  qty 13  unrealized $-165.07  stop 353.86 / target 386.78
+  KO  qty 56  unrealized $-18.13  stop 87.73 / target 92.17
+  KO261016C00087500  qty 3  unrealized $-198.00  stop ? / target ?
+  NVDA  qty 22  unrealized $-60.72  stop 215.12 / target 252.38
+  XOM  qty 30  unrealized $+68.19  stop 155.32 / target 182.96
   XOM261016C00160000  qty 1  unrealized $-65.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
