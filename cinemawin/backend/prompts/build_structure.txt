@@ -1,0 +1,28 @@
+COMMAND: `DEVELOP` (Module 00 §III.1) — 8-sequence storyline. Lens: `PROTECT-THE-DNA` + `FILM-FIRST`.
+
+PROJECT
+Title: {title}
+Logline: {logline}
+Genre: {genre}
+Premise: {premise}
+Protagonist: {protagonist}
+Central Dramatic Question: {central_question}
+Theme: {theme}
+
+TASK
+Generate the 8-sequence storyline (the 8-Sequence framework is a diagnostic lens, not a commandment — Module 00 Prime Directive). Exactly 8 sequences, in order. For each:
+
+- name: a short, specific sequence title in the voice of this story (not "Act One Part A").
+- summary: 2–4 sentences of what happens, written FILM-FIRST — blocking, physical behavior, spaces, sound — not literary summary. Characters act; they do not explain themselves.
+- turn: the single irreversible turn that closes the sequence and reduces the protagonist's options (Module 01 §III THRILLER rule applies to every genre: escalation must reduce options).
+
+Structural obligations:
+- Sequence 4 must land the midpoint reversal that recontextualizes the Central Dramatic Question.
+- Sequence 6 must dramatize the thematic climax (Module 04 §II "Thematic Depth": dramatized philosophy, not stated).
+- Sequence 8 must answer the Central Dramatic Question with cost; no unearned neat ending (AHAG Instant Rejection).
+- Every turn must follow from the previous sequence by causality, not coincidence.
+- Route through the Primary genre engine (Module 01 §III / §IV GSDE) and honor its mechanics (e.g. COMEDY: sincere objectives under pressure; HORROR: vulnerability before spectacle; BLACK CULTURAL STORYTELLING: complete human worlds, joy and agency, not vehicles for struggle).
+
+Apply the AHAG gatekeeper (Module 01 §II) to your prose. Do not introduce budget or market claims here.
+
+Return only the JSON object.

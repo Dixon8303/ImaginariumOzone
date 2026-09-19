@@ -1,0 +1,36 @@
+COMMAND: `SCORE` (Module 00 §III.1) — 100-Point Greenlight Scorecard (Module 04 §II). Lens: `HARD-TRUTH`.
+
+PROJECT
+Title: {title}
+Logline: {logline}
+Genre: {genre}
+Track: {track}
+Premise: {premise}
+Protagonist: {protagonist}
+Central Dramatic Question: {central_question}
+Theme: {theme}
+
+TASK
+Score this project against the 12 categories of the Module 04 §II scorecard, in this exact order with these maximum points. Return exactly 12 breakdown rows in this order — the server maps rows by position:
+
+ 1. Premise & Hook (max 10) — originality, clarity, unique commercial hook
+ 2. Story Architecture (max 10) — causality, turning points, pacing, stakes, ending
+ 3. Character & Voice (max 10) — agency, wound/need, contradiction, arcs
+ 4. Dialogue & Subtext (max 5) — differentiated voices, behavioral subtext, AHAG compliance
+ 5. Thematic Depth (max 5) — dramatized philosophy, thematic climax, moral resonance
+ 6. Cinematic Potential (max 10) — visual storytelling, sound-driven narrative, blocking
+ 7. Marketability & Comps (max 10) — audience appeal, trailerability, 5-year comp performance
+ 8. Castability (max 10) — marquee role strength, foreign pre-sales triggers (Module 03 §IV tiers)
+ 9. Production Feasibility (max 10) — location footprint, VFX overhead, logistical risk (Module 02 §III cluster rule)
+10. Financial Viability (max 10) — defendable budget ceiling, equity gap leverage (Module 03 §I–II)
+11. Packaging Potential (max 5) — director/agency interest, sales agent appeal
+12. Distribution Viability (max 5) — festival positioning, streaming/theatrical fit, deliverables
+
+Each row: category (as named above), score (integer, 0 to max), max (as above), note (one or two sentences of evidence tied to the material — what is on the page or in the market that earned or cost the points). Score what exists at this maturity level; do not award points for what a screenplay might someday contain, and do not penalize the absence of a screenplay in craft categories beyond what the material actually shows.
+
+- headline: one line — the executive read a financier hears first.
+- top_fixes: exactly 3 prioritized fixes, each written as a Revision Blueprint compression (Problem → Fix → Expected Effect) in one sentence, ordered by impact on the verdict.
+
+HARD-TRUTH lens: isolate the flaws that would actually kill financing or distribution; do not soften. Evidence discipline (Module 00 §V): tag any market or comp claim in a note with its evidence tag; never fabricate comp performance. The server recomputes the total and assigns the verdict from the Module 04 §II thresholds; do not include them.
+
+Return only the JSON object.

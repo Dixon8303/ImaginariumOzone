@@ -1,0 +1,42 @@
+COMMAND: `FINANCE` + `PACKAGE` (Module 00 §III.3). Lens: `INVESTOR-FIRST`.
+
+PROJECT
+Title: {title}
+Logline: {logline}
+Genre: {genre}
+Premise: {premise}
+Greenlight Score: {story_score}
+Greenlight Verdict: {story_verdict}
+
+TASK — FINANCE (Module 03 §I–III)
+- budget_ceiling: a single defendable ceiling in USD (integer), placed in one of the Module 03 §I tiers (Micro / Ultra-Low <$500K · Contained Indie $1.5M–$3.0M · Mid-Tier Indie / Streamer Buyout $4.0M–$7.0M · Studio Independent / Prestige $10M–$15M+) and justified by the comps, cast size, and physical scale implied by the material. Scale ambition to the Greenlight Verdict: a CONSIDER or PASS project does not earn a Mid-Tier ceiling.
+- budget_rationale: 2–4 sentences. State the evidence tag of the ceiling itself (it is normally a MODEL ASSUMPTION until a top sheet exists — Module 03 §VII).
+- comps: 3 to 5 market comparables from the last 5 years of equivalent genre, cast size, and scale. For each: title, year, budget_note (reported budget or acquisition range with its evidence tag — write "undisclosed" rather than inventing a number), relevance (why it is a comp for this project). Never fabricate performance figures.
+- capital_stack: exactly 4 layers, in this order, with these exact layer names and Module 03 §II industry ranges:
+  1. "Tax Incentives / Soft Money" (20%–35%) — name the candidate jurisdiction(s) and monetization path
+  2. "Foreign Pre-Sales & MGs" (15%–30%) — territories and the talent-tier contingency
+  3. "Brand Integration & Grants" (5%–10%)
+  4. "Equity Gap" (35%–50%) — the net private equity request
+  Each: layer, source, percent (integer), note, evidence (one of the Module 00 §V tags). Percents should sum to 100; the server re-balances and Equity Gap absorbs any remainder.
+- waterfall: the Module 03 §III recoupment order as a list of strings, in institutional priority order from Gross Receipts to the net-profits split, with the 110%–120% preferred return stated.
+- assumptions: every figure, range, or market claim you relied on, each as claim + tag from Module 00 §V (FACT, VERIFIED CURRENT DATA, INDUSTRY RANGE, MODEL ASSUMPTION, PROJECT-SPECIFIC ASSUMPTION, SCENARIO, UNKNOWN). Data you needed but do not have is tagged UNKNOWN — do not estimate silently.
+
+TASK — PACKAGE (Module 03 §V)
+- deck_slides: exactly 12 slides in the Module 03 §V order. Return the spec title for each slide (the server enforces titles) and write the slide's investor-facing content in 2–5 sentences, specific to this project:
+  1 Title, Logline & Executive Financial Summary (budget, equity gap, soft-money offset)
+  2 The Core Commercial Hook & Cultural Urgency
+  3 World, Atmosphere & Cinematic Tone (Module 02 §IV lookbook language)
+  4 Character System & Ensemble Psychology
+  5 Target Cast Attachments & Pre-Sales Value (Module 03 §IV tiers — describe tiers and role profiles, do not name real actors as attached)
+  6 Physical Production Efficiency & Contained Footprint (Module 02 §III)
+  7 Market Comparables & Historic ROI Performance
+  8 The 4-Layer Capital Stack & Soft-Money Breakdown
+  9 Distribution Lane & Festival Premiere Strategy
+  10 Step-by-Step Investor Recoupment Waterfall (115% Preferred Return)
+  11 Institutional Risk Mitigation (Completion Bond, Escrow, E&O Insurance) — Module 04 §III risk register framing
+  12 Executive Production Leadership, Execution Timeline & Capital Call Subscription
+- headline: one line — the financing thesis a producer would say across a table.
+
+INVESTOR-FIRST lens: prioritize downside mitigation, soft-money leverage, and capital preservation. Apply the Decision Hierarchy (Module 04 §I.3) — financial constraints are documented as constraints to solve around, never as reasons to compromise story integrity.
+
+Return only the JSON object.

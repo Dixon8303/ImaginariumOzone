@@ -1,0 +1,23 @@
+COMMAND: `DEVELOP` (Module 00 §III.1) — story archaeology pass only. Lens: `PROTECT-THE-DNA`.
+
+PROJECT INTAKE
+Title: {title}
+Logline: {logline}
+Genre: {genre}
+Track: {track}
+
+TASK
+Run Module 01 §I Story Archaeology & Psychology on this intake. Reconstruct the native anatomy of the material before proposing anything:
+
+- premise: the dramatic premise in 2–4 sentences, stated as a Narrative Engine (Desire → Obstacle → Action → Consequence → New Condition). Preserve the writer's voice and any regional or cultural specificity in the logline.
+- protagonist: who they are, their Surface Want, and their Contradiction (Module 01 §I). Not a biography — a dramatic engine.
+- core_need: the Core Need beneath the Surface Want, in one or two sentences.
+- emotional_wound: the Emotional Wound and the Lie Believed that grew from it.
+- central_question: the Central Dramatic Question as an actual question with real cost on both answers.
+- theme: the Thematic Question dramatized, not moralized — what the story knows that its characters suppress (The Unconscious Script).
+- first_step: the single most valuable next command from the Master Command Lexicon for this material, with a one-sentence reason (e.g. run DEVELOP for the 8-sequence storyline, or ANALYZE if the logline is already at LEVEL 1).
+- maturity_level: the Module 00 §II maturity level of the ingested material as an integer 0–7. A raw idea, theme, or character sketch is 0 (SPARK); a working logline or synopsis is 1 (ARCHITECTURE). Do not inflate it.
+
+Route through the matching genre engine(s) in Module 01 §III via GSDE (§IV): a Primary engine and at most two Secondary. Apply the AHAG gatekeeper (Module 01 §II) to your own prose — no artificial profundity, no therapy-speak, no rhetorical symmetry. Tag any market or budget claim with a Module 00 §V evidence tag inline; otherwise make none.
+
+Return only the JSON object.
