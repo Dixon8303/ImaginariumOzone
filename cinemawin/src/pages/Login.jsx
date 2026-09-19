@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { cw } from "@/api/client";
+import { cw, navigateHard } from "@/api/client";
 import { useAuth } from "@/lib/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,8 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [needsVerification, setNeedsVerification] = useState(false);
+  const [resent, setResent] = useState(false);
   const returnTo = safeReturnTo("/workspace");
   const googleEnabled = !!appPublicSettings?.google_oauth_enabled;
 
@@ -27,9 +29,12 @@ export default function Login() {
     try {
       await cw.auth.loginViaEmailPassword(email, password);
       // Full navigation so the auth context re-initialises with the new token.
-      window.location.href = await postAuthDestination(returnTo);
+      navigateHard(await postAuthDestination(returnTo));
     } catch (err) {
       setError(err.message || "Invalid email or password");
+      // An unverified account is otherwise a dead end: the code screen only
+      // exists in the tab that registered. Offer a fresh code from here.
+      setNeedsVerification(err.code === "email_not_verified");
       setLoading(false);
     }
   };
@@ -74,6 +79,37 @@ export default function Login() {
       )}
 
       {error && <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">{error}</div>}
+
+      {needsVerification && (
+        <div className="mb-4 rounded-lg border border-accent/40 bg-accent/10 p-3 text-sm">
+          {resent ? (
+            <span className="text-foreground">A new code is on its way. Check your email, then use the link below.</span>
+          ) : (
+            <>
+              <span className="text-muted-foreground">Need a new verification code?</span>{" "}
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    await cw.auth.resendOtp(email);
+                  } catch {
+                    /* never reveal whether the address exists */
+                  }
+                  setResent(true);
+                }}
+                className="font-semibold text-accent hover:underline"
+              >
+                Send one
+              </button>
+            </>
+          )}
+          {resent && (
+            <Link to={`/register?returnTo=${encodeURIComponent(returnTo)}`} className="ml-1 font-semibold text-accent hover:underline">
+              Enter it here
+            </Link>
+          )}
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">

@@ -212,17 +212,34 @@ def rebalance_capital_stack(raw_layers: list) -> list[dict]:
     return layers
 
 
-def pad_deck_slides(raw_slides: list) -> list[dict]:
-    """Exactly 12 slides, titles forced to the spec titles, content kept by position."""
+LOCKED_SLIDE_CONTENT = "Unlock with Premium to see this slide."
+DECK_PREVIEW_SLIDES = 6
+
+
+def pad_deck_slides(raw_slides: list, deck_unlocked: bool = True) -> list[dict]:
+    """
+    Exactly 12 slides, titles forced to the spec titles, content kept by position.
+
+    When `deck_unlocked` is False the content is withheld here, on the server.
+    The UI also blurs the preview, but blur is decoration — a reader could pull
+    the text straight out of the network response, so the paid content must
+    never leave the server in the first place. Titles stay visible so the
+    preview still shows what is being bought.
+    """
     src = [_dict(s) for s in _list(raw_slides)]
     slides = []
     for i, title in enumerate(config.DECK_SLIDE_TITLES):
         content = _str(src[i].get("content")) if i < len(src) else ""
-        slides.append({"title": title, "content": content or config.DECK_PLACEHOLDER_CONTENT})
+        content = content or config.DECK_PLACEHOLDER_CONTENT
+        if not deck_unlocked:
+            # The first few keep real content as the teaser the UI blurs; the
+            # rest carry nothing worth extracting.
+            content = content if i < DECK_PREVIEW_SLIDES else LOCKED_SLIDE_CONTENT
+        slides.append({"title": title, "content": content})
     return slides
 
 
-def process_build_finance(raw: dict) -> dict:
+def process_build_finance(raw: dict, deck_unlocked: bool = True) -> dict:
     raw = _dict(raw)
     ceiling = clamp_budget_ceiling(raw.get("budget_ceiling"))
     tier = tier_for_ceiling(ceiling)
@@ -246,6 +263,9 @@ def process_build_finance(raw: dict) -> dict:
     waterfall = [_str(w) for w in _list(raw.get("waterfall")) if _str(w)]
     if not waterfall:
         waterfall = list(config.WATERFALL_STEPS)
+    if not deck_unlocked:
+        # Premium-only, and gated here rather than only in the UI.
+        waterfall = []
 
     assumptions = []
     for a in _list(raw.get("assumptions")):
@@ -263,7 +283,8 @@ def process_build_finance(raw: dict) -> dict:
         "equity_gap": equity_gap,
         "equity_gap_percent": equity_pct,
         "waterfall": waterfall,
-        "deck_slides": pad_deck_slides(raw.get("deck_slides")),
+        "deck_slides": pad_deck_slides(raw.get("deck_slides"), deck_unlocked),
+        "deck_unlocked": deck_unlocked,
         "assumptions": assumptions,
         "headline": _str(raw.get("headline")),
     }

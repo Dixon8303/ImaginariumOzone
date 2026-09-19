@@ -1,0 +1,115 @@
+{
+  "_comment": "Single source of truth for CinemaWin's doctrine constants. Loaded by backend/config.py (Python) and imported by src/lib/doctrine.js (browser). Every number here traces to a section of the five spec documents in backend/prompts/doctrine/. Change a number here and both the server and the browser follow.",
+
+  "score_categories": [
+    ["Premise & Hook", 10],
+    ["Story Architecture", 10],
+    ["Character & Voice", 10],
+    ["Dialogue & Subtext", 5],
+    ["Thematic Depth", 5],
+    ["Cinematic Potential", 10],
+    ["Marketability & Comps", 10],
+    ["Castability", 10],
+    ["Production Feasibility", 10],
+    ["Financial Viability", 10],
+    ["Packaging Potential", 5],
+    ["Distribution Viability", 5]
+  ],
+  "_score_categories_source": "Module 04 §II — 100-Point Greenlight Scorecard. Order and maximums are fixed; they sum to 100.",
+
+  "verdict_thresholds": [
+    [90, "RECOMMEND", "RECOMMEND — Market-Ready / Exceptional"],
+    [80, "RECOMMEND", "RECOMMEND — Strong / Packaging Candidate"],
+    [70, "CONSIDER", "CONSIDER — Viable with Development"],
+    [60, "CONSIDER", "CONSIDER — Major Revision Required"],
+    [0, "PASS", "PASS — Not Ready"]
+  ],
+  "_verdict_thresholds_source": "Module 04 §II Decision Thresholds. [min_inclusive, verdict, label], checked top-down.",
+
+  "maturity_labels": {
+    "0": "LEVEL 0 (SPARK)",
+    "1": "LEVEL 1 (ARCHITECTURE)",
+    "2": "LEVEL 2 (SCREENPLAY MASTER)",
+    "3": "LEVEL 3 (REVISED MATERIAL)",
+    "4": "LEVEL 4 (PRODUCTION CANDIDATE)",
+    "5": "LEVEL 5 (FINANCING CANDIDATE)",
+    "6": "LEVEL 6 (PRODUCTION-READY PACKAGE)",
+    "7": "LEVEL 7 (MARKET / INVESTMENT OFFERING)"
+  },
+  "_maturity_labels_source": "Module 00 §II — Maturity Classification.",
+
+  "capital_layers": [
+    "Tax Incentives / Soft Money",
+    "Foreign Pre-Sales & MGs",
+    "Brand Integration & Grants",
+    "Equity Gap"
+  ],
+  "equity_gap_layer": "Equity Gap",
+  "capital_layer_ranges": {
+    "Tax Incentives / Soft Money": [20, 35],
+    "Foreign Pre-Sales & MGs": [15, 30],
+    "Brand Integration & Grants": [5, 10],
+    "Equity Gap": [35, 50]
+  },
+  "_capital_layers_source": "Module 03 §II — The 4-Layer Capital Stack. Layers must sum to 100%; Equity Gap absorbs the remainder.",
+
+  "budget_ceiling_min": 100000,
+  "budget_ceiling_max": 50000000,
+  "budget_tiers": [
+    [500000, "Micro / Ultra-Low"],
+    [3500000, "Contained Indie Tier"],
+    [8500000, "Mid-Tier Indie / Streamer Buyout"],
+    [null, "Studio Independent / Prestige"]
+  ],
+  "_budget_tiers_source": "Module 03 §I — Data-Driven Budget Ceilings. [upper_exclusive_bound, tier]; null is the catch-all.",
+
+  "deck_slide_titles": [
+    "Title, Logline & Executive Financial Summary",
+    "The Core Commercial Hook & Cultural Urgency",
+    "World, Atmosphere & Cinematic Tone",
+    "Character System & Ensemble Psychology",
+    "Target Cast Attachments & Pre-Sales Value",
+    "Physical Production Efficiency & Contained Footprint",
+    "Market Comparables & Historic ROI Performance",
+    "The 4-Layer Capital Stack & Soft-Money Breakdown",
+    "Distribution Lane & Festival Premiere Strategy",
+    "Step-by-Step Investor Recoupment Waterfall (115% Preferred Return)",
+    "Institutional Risk Mitigation (Completion Bond, Escrow, E&O Insurance)",
+    "Executive Production Leadership, Execution Timeline & Capital Call Subscription"
+  ],
+  "deck_placeholder_content": "To be developed.",
+  "_deck_slide_titles_source": "Module 03 §V — 12-Slide Investor Pitch Deck Architecture.",
+
+  "waterfall_steps": [
+    "Gross Receipts",
+    "International Sales Agent Commission (10%–25%) + approved delivery expenses",
+    "Senior Debt & Tax Credit Bridge Loan payoff (+ accrued interest)",
+    "Equity Investor Capital Recoupment + 110%–120% Preferred Return (pari-passu)",
+    "Net Profits: 50% to Equity Investor Pool / 50% to Producer & Creative Talent Pool"
+  ],
+  "_waterfall_steps_source": "Module 03 §III — Investor Waterfall Recoupment Model.",
+
+  "evidence_tags": [
+    "FACT",
+    "VERIFIED CURRENT DATA",
+    "INDUSTRY RANGE",
+    "MODEL ASSUMPTION",
+    "PROJECT-SPECIFIC ASSUMPTION",
+    "SCENARIO",
+    "UNKNOWN"
+  ],
+  "_evidence_tags_source": "Module 00 §V — Assumption Discipline (mandatory evidence classification).",
+
+  "structure_sequence_count": 8,
+  "comps_min": 3,
+  "comps_max": 5,
+  "top_fixes_count": 3,
+
+  "tracks": ["Writer", "Producer", "Both"],
+  "modules": ["develop", "plan", "score", "fund"],
+  "plans": {
+    "entry": { "price": 0 },
+    "starter": { "price": 12 },
+    "premium": { "price": 29 }
+  }
+}

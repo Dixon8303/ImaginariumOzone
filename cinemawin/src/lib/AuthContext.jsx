@@ -15,6 +15,12 @@ export const AuthProvider = ({ children }) => {
   const checkUserAuth = useCallback(async () => {
     setIsLoadingAuth(true);
     try {
+      // With no server there are no accounts: this browser is the account.
+      if (cw.isLocalMode()) {
+        setUser(await cw.auth.me());
+        setIsAuthenticated(true);
+        return;
+      }
       if (!cw.getToken()) {
         setUser(null);
         setIsAuthenticated(false);
@@ -48,6 +54,16 @@ export const AuthProvider = ({ children }) => {
     await checkUserAuth();
   }, [checkUserAuth]);
 
+  // Refresh the signed-in user without a full page reload. Used after a plan
+  // change so the badge and the paywall cannot disagree.
+  const refreshUser = useCallback(async () => {
+    try {
+      setUser(await cw.auth.me());
+    } catch {
+      /* leave the current user in place */
+    }
+  }, []);
+
   useEffect(() => {
     checkAppState();
   }, [checkAppState]);
@@ -76,6 +92,8 @@ export const AuthProvider = ({ children }) => {
         navigateToLogin,
         checkUserAuth,
         checkAppState,
+        refreshUser,
+        isLocalMode: cw.isLocalMode(),
       }}
     >
       {children}

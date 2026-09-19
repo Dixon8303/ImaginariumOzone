@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 import { cw } from "@/api/client";
 import { Loader2, Landmark, Crown, Lock, Mail, Check, ArrowRight, Coins, RefreshCw, ScrollText } from "lucide-react";
+import SampleNotice from "@/components/SampleNotice";
 
 const tagColor = {
   FACT: "bg-primary/15 text-primary",
@@ -20,6 +21,7 @@ export default function FundPackage() {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [captured, setCaptured] = useState(project.paywall_email_captured);
+  const [isSample, setIsSample] = useState(!!project.finance?.demo);
 
   const runFinance = async () => {
     setRunning(true);
@@ -34,6 +36,7 @@ export default function FundPackage() {
         story_verdict: project.story_verdict,
       });
       setPkg(res);
+      setIsSample(!!res.demo);
       const updated = await cw.entities.Project.update(project.id, {
         budget_ceiling: res.budget_ceiling,
         finance: res,
@@ -50,7 +53,10 @@ export default function FundPackage() {
   const captureEmail = async () => {
     if (!email.trim()) return;
     try {
-      const updated = await cw.entities.Project.update(project.id, { paywall_email_captured: true });
+      const updated = await cw.entities.Project.update(project.id, {
+        paywall_email: email.trim(),
+        paywall_email_captured: true,
+      });
       setProject(updated);
       setCaptured(true);
     } catch {
@@ -59,7 +65,9 @@ export default function FundPackage() {
   };
 
   const fmt = (n) => (n != null ? `$${Number(n).toLocaleString()}` : "—");
-  const unlocked = project.pitch_deck_unlocked === true;
+  // The server decides this and withholds the content; the flag on the
+  // response is authoritative over the one cached on the project.
+  const unlocked = pkg?.deck_unlocked ?? project.pitch_deck_unlocked === true;
 
   return (
     <div className="space-y-6 pb-16">
@@ -92,6 +100,8 @@ export default function FundPackage() {
           {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
         </div>
       )}
+
+      {isSample && <SampleNotice />}
 
       {pkg && (
         <>
@@ -182,7 +192,7 @@ export default function FundPackage() {
                     <div className="w-full max-w-sm rounded-2xl border border-accent/40 bg-card p-6 text-center shadow-xl">
                       <Lock className="mx-auto h-7 w-7 text-accent" />
                       <h3 className="mt-3 font-heading text-lg font-semibold">Unlock the full pitch deck</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">Drop your email and we'll send your full deck preview — plus a one-time upgrade offer.</p>
+                      <p className="mt-1 text-sm text-muted-foreground">Leave your email and we'll save it with this project so we can send the full deck when exports ship.</p>
                       <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                         <input
                           value={email}
@@ -204,8 +214,8 @@ export default function FundPackage() {
                   <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-background/75 backdrop-blur-sm">
                     <div className="w-full max-w-sm rounded-2xl border border-primary/40 bg-card p-6 text-center shadow-xl">
                       <Check className="mx-auto h-7 w-7 text-primary" />
-                      <h3 className="mt-3 font-heading text-lg font-semibold">Your preview is on the way</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">We've sent your deck preview. Upgrade to Premium to export the full deck and budget.</p>
+                      <h3 className="mt-3 font-heading text-lg font-semibold">Saved to this project</h3>
+                      <p className="mt-1 text-sm text-muted-foreground">We've stored your email with this project. Upgrade to Premium to see the full deck now.</p>
                       <Link to="/#pricing" className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition hover:opacity-90 glow-gold">
                         <Crown className="h-4 w-4" /> Go Premium — $29/mo
                       </Link>

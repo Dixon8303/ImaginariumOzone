@@ -73,9 +73,11 @@ PROJECT_TEXT_FIELDS = (
     "theme",
     "story_verdict_label",
     "story_headline",
+    "first_step",
     "production_notes",
+    "paywall_email",
 )
-PROJECT_JSON_FIELDS = ("score_breakdown", "structure", "finance")
+PROJECT_JSON_FIELDS = ("score_breakdown", "structure", "finance", "top_fixes")
 PROJECT_SCALAR_COLUMNS = (
     "title",
     "track",
@@ -95,11 +97,14 @@ PROJECT_DATA_DEFAULTS: dict[str, Any] = {
     "theme": "",
     "story_verdict_label": None,
     "story_headline": None,
+    "first_step": "",
     "score_breakdown": None,
     "structure": None,
     "finance": None,
+    "top_fixes": None,
     "production_notes": "",
     "budget_ceiling": None,
+    "paywall_email": "",
     "paywall_email_captured": False,
 }
 

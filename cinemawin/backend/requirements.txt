@@ -1,7 +1,19 @@
+# Versions are MINIMUMS, not exact pins, so pip can pick a build that has a
+# wheel for whatever Python is installed. An exact pin is what breaks an
+# install a year later.
+
 fastapi>=0.111
 uvicorn[standard]>=0.29
 aiosqlite>=0.20
-anthropic>=1.0
 PyJWT>=2.8
 python-dotenv>=1.0
 pydantic>=2.5
+
+# The OpenAI-compatible provider transport (Gemini, Groq, OpenRouter, Together,
+# Cerebras, Ollama, OpenAI). This is the path that makes free tiers work, so it
+# is a hard requirement, not an extra.
+httpx>=0.27
+
+# Only needed when CINEMAWIN_LLM_PROVIDER=anthropic. Everything else goes
+# through httpx above. Safe to remove if you never use Claude.
+anthropic>=1.0

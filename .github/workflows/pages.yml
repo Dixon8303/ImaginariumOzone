@@ -7,6 +7,7 @@ on:
       - 'docs/**'
       - 'site/**'
       - 'eatmedia/**'
+      - 'cinemawin/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -36,17 +37,39 @@ jobs:
           # Enable Pages automatically on first run so no manual Settings toggle is needed.
           enablement: true
 
-      - name: Assemble site (assessment at root, book site at /book/, company site at /eatmedia/)
+      # CinemaWin is a Vite app, so unlike the other three sites it has to be
+      # built. The "static" mode produces a self-contained build: hash routing
+      # (a static host cannot rewrite deep links) and browser storage, with no
+      # backend required. Users point it at a backend from its Settings page.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: cinemawin/package-lock.json
+
+      - name: Build CinemaWin (static mode)
+        env:
+          CINEMAWIN_MODE: static
+          CINEMAWIN_BASE: /${{ github.event.repository.name }}/cinemawin/
         run: |
-          mkdir -p _site/book _site/eatmedia
+          cd cinemawin
+          npm ci
+          npm run build
+
+      - name: Assemble site (assessment at root, book site at /book/, company site at /eatmedia/, CinemaWin at /cinemawin/)
+        run: |
+          mkdir -p _site/book _site/eatmedia _site/cinemawin
           cp -r docs/. _site/
           cp -r site/. _site/book/
           cp -r eatmedia/. _site/eatmedia/
+          cp -r cinemawin/dist/. _site/cinemawin/
           # CNAME only applies at the artifact root; keep custom domains
           # out of play until DNS is set up (see site/README.md and
           # eatmedia/README.md).
           rm -f _site/book/CNAME
           rm -f _site/eatmedia/CNAME
+          rm -f _site/cinemawin/CNAME
           # The book site's 404 is self-contained and must live at the root
           # for GitHub Pages to serve it. The root has no other 404.
           cp site/404.html _site/404.html
