@@ -1,32 +1,44 @@
-generated: 2026-09-21
+generated: 2026-09-22
 
-PRE-OPEN SCAN — 2026-09-21 (signals from the 2026-09-21 close)
-paper equity: $97,411.30
+PRE-OPEN SCAN — 2026-09-22 (signals from the 2026-09-21 close)
+paper equity: $97,331.94
 
-CANDIDATES FOR TODAY (2):
-  AMD  ref close 608.97  stop 497.98  target 941.94  (1R = 110.99)  score 9/10
-      RS persistence 65%, close 608.97 > 20d high 559.89, rel volume 1.8x
-      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 479.77  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 609, spread <= 10%
-  MU  ref close 1043.52  stop 918.16  target 1419.60  (1R = 125.36)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 1043.52 on 1.0x volume
+CANDIDATES FOR TODAY (5):
+  AMD  ref close 615.53  stop 497.98  target 968.20  (1R = 117.55)  score 9/10
+      RS persistence 65%, close 615.53 > 20d high 559.89, rel volume 2.4x
+      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 480.00  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 616, spread <= 10%
+  QQQ  ref close 741.41  stop 700.04  target 865.52  (1R = 41.37)  score 8/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 741.41 on 1.6x volume
+      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 716.14  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 741, spread <= 10%
+  MU  ref close 1043.51  stop 918.16  target 1419.56  (1R = 125.35)  score 8/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 1043.51 on 1.3x volume
       volume profile: 9% of 60d volume sits ABOVE here, heaviest at 927.22  (context only, gates nothing)
       option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 1044, spread <= 10%
+  DAL  ref close 82.51  stop 76.91  target 99.31  (1R = 5.60)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 82.51 on 1.2x volume
+      volume profile: 70% of 60d volume sits ABOVE here, heaviest at 78.96  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 83, spread <= 10%
+  AMZN  ref close 258.40  stop 244.31  target 300.69  (1R = 14.09)  score 5/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 258.40 on 1.0x volume
+      volume profile: 34% of 60d volume sits ABOVE here, heaviest at 245.05  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 258, spread <= 10%
 
 ORDERS QUEUED FOR THE OPEN (0): none
 
 OPEN POSITIONS (11):
-  AAPL  qty 1  unrealized $+22.14  stop ? / target ?
-  AAPL261002C00330000  qty 1  unrealized $+165.00  stop ? / target ?
-  BAC  qty 79  unrealized $-363.58  stop 61.37 / target 68.13
+  AAPL  qty 1  unrealized $+22.53  stop ? / target ?
+  AAPL261002C00330000  qty 1  unrealized $+230.00  stop ? / target ?
+  BAC  qty 79  unrealized $-363.66  stop 61.37 / target 68.13
   F  qty 353  unrealized $-338.88  stop 13.73 / target 15.41
-  GOOGL  qty 14  unrealized $+129.00  stop 327.79 / target 414.41
-  JPM  qty 13  unrealized $-136.21  stop 353.86 / target 386.78
-  KO  qty 56  unrealized $-43.90  stop 87.73 / target 92.17
-  KO261016C00087500  qty 3  unrealized $-273.00  stop ? / target ?
-  NVDA  qty 22  unrealized $+43.23  stop 215.12 / target 252.38
-  XOM  qty 30  unrealized $-67.56  stop 155.32 / target 182.96
-  XOM261016C00160000  qty 1  unrealized $-310.00  stop ? / target ?
+  GOOGL  qty 14  unrealized $+130.96  stop 327.79 / target 414.41
+  JPM  qty 13  unrealized $-132.57  stop 353.86 / target 386.78
+  KO  qty 56  unrealized $-70.21  stop 87.73 / target 92.17
+  KO261016C00087500  qty 3  unrealized $-372.00  stop ? / target ?
+  NVDA  qty 22  unrealized $+48.62  stop 215.12 / target 252.38
+  XOM  qty 30  unrealized $-77.91  stop 155.32 / target 182.96
+  XOM261016C00160000  qty 1  unrealized $-330.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
