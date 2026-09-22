@@ -115,6 +115,20 @@
       "strike": 330.0,
       "ticker": "AAPL"
     },
+    "DAL261016C00082500": {
+      "basis": "delta",
+      "delta": 0.5886,
+      "entry_date": "2026-09-22",
+      "entry_price": 4.83,
+      "entry_underlying": 83.925,
+      "expiry": "2026-10-16",
+      "fundamental_net_income": null,
+      "invalidation_price": 76.91,
+      "qty": 2,
+      "spread_pct": 0.0455,
+      "strike": 82.5,
+      "ticker": "DAL"
+    },
     "KO261016C00087500": {
       "basis": "delta",
       "delta": 0.7134,
