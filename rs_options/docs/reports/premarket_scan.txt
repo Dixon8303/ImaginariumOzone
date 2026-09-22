@@ -1,44 +1,25 @@
 generated: 2026-09-22
 
-PRE-OPEN SCAN — 2026-09-22 (signals from the 2026-09-21 close)
-paper equity: $97,330.33
+PRE-OPEN SCAN — 2026-09-22 (signals from the 2026-09-22 close)
+paper equity: $97,500.98
 
-CANDIDATES FOR TODAY (5):
-  AMD  ref close 615.53  stop 497.98  target 968.20  (1R = 117.55)  score 9/10
-      RS persistence 65%, close 615.53 > 20d high 559.89, rel volume 2.4x
-      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 480.00  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 616, spread <= 10%
-  QQQ  ref close 741.41  stop 700.04  target 865.52  (1R = 41.37)  score 8/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 741.41 on 1.6x volume
-      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 716.14  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 741, spread <= 10%
-  MU  ref close 1043.51  stop 918.16  target 1419.56  (1R = 125.35)  score 8/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 1043.51 on 1.3x volume
-      volume profile: 9% of 60d volume sits ABOVE here, heaviest at 927.22  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 1044, spread <= 10%
-  DAL  ref close 82.51  stop 76.91  target 99.31  (1R = 5.60)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 82.51 on 1.2x volume
-      volume profile: 70% of 60d volume sits ABOVE here, heaviest at 78.96  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 83, spread <= 10%
-  AMZN  ref close 258.40  stop 244.31  target 300.69  (1R = 14.09)  score 5/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 258.40 on 1.0x volume
-      volume profile: 34% of 60d volume sits ABOVE here, heaviest at 245.05  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 258, spread <= 10%
+CANDIDATES FOR TODAY (0):
+  none — nothing passed breakout + regime + quality
 
 ORDERS QUEUED FOR THE OPEN (0): none
 
 OPEN POSITIONS (11):
-  AAPL  qty 1  unrealized $+22.32  stop ? / target ?
-  AAPL261002C00330000  qty 1  unrealized $+230.00  stop ? / target ?
-  BAC  qty 79  unrealized $-367.54  stop 61.37 / target 68.13
-  F  qty 353  unrealized $-345.94  stop 13.73 / target 15.41
-  GOOGL  qty 14  unrealized $+134.32  stop 327.79 / target 414.41
-  JPM  qty 13  unrealized $-132.57  stop 353.86 / target 386.78
-  KO  qty 56  unrealized $-69.09  stop 87.73 / target 92.17
-  KO261016C00087500  qty 3  unrealized $-372.00  stop ? / target ?
-  NVDA  qty 22  unrealized $+53.68  stop 215.12 / target 252.38
-  XOM  qty 30  unrealized $-77.91  stop 155.32 / target 182.96
-  XOM261016C00160000  qty 1  unrealized $-330.00  stop ? / target ?
+  AAPL  qty 1  unrealized $+25.25  stop ? / target ?
+  AAPL261002C00330000  qty 1  unrealized $+400.00  stop ? / target ?
+  BAC  qty 79  unrealized $-497.23  stop 61.37 / target 68.13
+  F  qty 353  unrealized $-383.00  stop 13.73 / target 15.41
+  GOOGL  qty 14  unrealized $+73.28  stop 327.79 / target 414.41
+  JPM  qty 13  unrealized $-291.04  stop 353.86 / target 386.78
+  KO  qty 56  unrealized $-12.81  stop 87.73 / target 92.17
+  KO261016C00087500  qty 3  unrealized $-192.00  stop ? / target ?
+  NVDA  qty 22  unrealized $+97.68  stop 215.12 / target 252.38
+  XOM  qty 30  unrealized $-39.21  stop 155.32 / target 182.96
+  XOM261016C00160000  qty 1  unrealized $-265.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
