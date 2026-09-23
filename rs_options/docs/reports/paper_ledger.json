@@ -15,7 +15,22 @@
       "stop": 61.37,
       "target": 68.13
     },
+    "DAL": {
+      "entry": 81.75,
+      "entry_cap": 83.385,
+      "entry_date": "2026-09-23",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "1a7b608b-e917-40cd-9e69-57a1cf7e8e47",
+      "qty": 59,
+      "setup": "H-25",
+      "signal_close": 81.75,
+      "stop": 78.95,
+      "target": 90.15
+    },
     "F": {
+      "closing": "2026-09-23",
       "entry": 14.17,
       "entry_cap": 14.433,
       "entry_date": "2026-09-02",
@@ -72,6 +87,7 @@
       "target": 92.17
     },
     "NVDA": {
+      "closing": "2026-09-23",
       "entry": 225.29,
       "entry_cap": 228.9237,
       "entry_date": "2026-09-02",
@@ -101,20 +117,6 @@
     }
   },
   "options": {
-    "AAPL261002C00330000": {
-      "basis": "delta",
-      "delta": 0.5796,
-      "entry_date": "2026-09-11",
-      "entry_price": 9.2,
-      "entry_underlying": 332.245,
-      "expiry": "2026-10-02",
-      "fundamental_net_income": null,
-      "invalidation_price": 309.92,
-      "qty": 1,
-      "spread_pct": 0.0543,
-      "strike": 330.0,
-      "ticker": "AAPL"
-    },
     "DAL261016C00082500": {
       "basis": "delta",
       "delta": 0.5886,
@@ -142,6 +144,20 @@
       "spread_pct": 0.0491,
       "strike": 87.5,
       "ticker": "KO"
+    },
+    "PFE261023C00028000": {
+      "basis": "delta",
+      "delta": 0.5731,
+      "entry_date": "2026-09-23",
+      "entry_price": 0.81,
+      "entry_underlying": 28.17,
+      "expiry": "2026-10-23",
+      "fundamental_net_income": null,
+      "invalidation_price": 27.34,
+      "qty": 5,
+      "spread_pct": 0.0741,
+      "strike": 28.0,
+      "ticker": "PFE"
     },
     "XOM261016C00160000": {
       "basis": "delta",
