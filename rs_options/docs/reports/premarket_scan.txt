@@ -1,25 +1,33 @@
-generated: 2026-09-23
+generated: 2026-09-24
 
-PRE-OPEN SCAN — 2026-09-23 (signals from the 2026-09-23 close)
-paper equity: $96,649.44
+PRE-OPEN SCAN — 2026-09-24 (signals from the 2026-09-23 close)
+paper equity: $96,614.21
 
-CANDIDATES FOR TODAY (0):
-  none — nothing passed breakout + regime + quality
+CANDIDATES FOR TODAY (2):
+  DAL  ref close 81.75  stop 78.95  target 90.15  (1R = 2.80)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 81.75 on 1.1x volume
+      volume profile: 73% of 60d volume sits ABOVE here, heaviest at 78.96  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 82, spread <= 10%
+  PFE  ref close 28.17  stop 27.34  target 30.66  (1R = 0.83)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 28.17 on 1.3x volume
+      volume profile: 12% of 60d volume sits ABOVE here, heaviest at 27.81  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 28, spread <= 10%
 
-ORDERS QUEUED FOR THE OPEN (0): none
+ORDERS QUEUED FOR THE OPEN (1): DAL
+  DAL limit 83.39 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
 
 OPEN POSITIONS (11):
   AAPL260923P00330000  qty -2  unrealized $+2.00  stop ? / target ?
-  BAC  qty 79  unrealized $-533.04  stop 61.37 / target 68.13
-  DAL261016C00082500  qty 2  unrealized $-160.00  stop ? / target ?
-  F  qty 353  unrealized $-400.65  stop 13.73 / target 15.41
-  GOOGL  qty 14  unrealized $-117.12  stop 327.79 / target 414.41
-  JPM  qty 13  unrealized $-306.96  stop 353.86 / target 386.78
-  KO  qty 56  unrealized $-36.33  stop 87.73 / target 92.17
-  KO261016C00087500  qty 3  unrealized $-267.00  stop ? / target ?
-  NVDA  qty 22  unrealized $-20.45  stop 215.12 / target 252.38
-  XOM  qty 30  unrealized $-7.11  stop 155.32 / target 182.96
-  XOM261016C00160000  qty 1  unrealized $-215.00  stop ? / target ?
+  BAC  qty 79  unrealized $-511.26  stop 61.37 / target 68.13
+  DAL261016C00082500  qty 2  unrealized $-230.00  stop ? / target ?
+  F  qty 353  unrealized $-423.60  stop 13.73 / target 15.41
+  GOOGL  qty 14  unrealized $-106.76  stop 327.79 / target 414.41
+  JPM  qty 13  unrealized $-315.35  stop 353.86 / target 386.78
+  KO  qty 56  unrealized $-22.61  stop 87.73 / target 92.17
+  KO261016C00087500  qty 3  unrealized $-249.00  stop ? / target ?
+  NVDA  qty 22  unrealized $-7.48  stop 215.12 / target 252.38
+  XOM  qty 30  unrealized $-28.11  stop 155.32 / target 182.96
+  XOM261016C00160000  qty 1  unrealized $-205.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
