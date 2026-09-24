@@ -1,66 +1,74 @@
-generated: 2026-09-23
+generated: 2026-09-24
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-23
-paper equity: $96,651.22   cash: $61,985.70
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-24
+paper equity: $96,918.76   cash: $66,627.84
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-23  $96,651.22   (-3,348.78, -3.3%)
-  over 30 calendar days, 17 recorded sessions: 15 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-09-24  $96,918.76   (-3,081.24, -3.1%)
+  over 31 calendar days, 18 recorded sessions: 16 with a change, 1 flat.
   range so far: $96,651.22 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (2):
-  DAL  [H-25]  close 81.75  stop 78.95  target 90.15  (1R = 2.80)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 81.75 on 1.1x volume
-      volume profile: 73% of 60d volume sits ABOVE here, heaviest at 78.96  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 82, spread <= 10%; exit on stop/target/15 sessions
-  PFE  [H-25]  close 28.17  stop 27.34  target 30.66  (1R = 0.83)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 28.17 on 1.3x volume
-      volume profile: 12% of 60d volume sits ABOVE here, heaviest at 27.81  (context only, gates nothing)
+TODAY'S SIGNALS (3):
+  AMD  [RS-02]  close 629.00  stop 541.53  target 891.43  (1R = 87.48)  score 10/10
+      RS persistence 75%, close 629.00 > 20d high 624.46, rel volume 1.6x
+      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 479.96  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 629, spread <= 10%; exit on stop/target/15 sessions
+  GOOGL  [H-25]  close 342.33  stop 336.24  target 360.60  (1R = 6.09)  score 6/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 342.33 on 1.1x volume
+      volume profile: 67% of 60d volume sits ABOVE here, heaviest at 343.45  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 342, spread <= 10%; exit on stop/target/15 sessions
+  PFE  [H-25]  close 28.43  stop 27.34  target 31.70  (1R = 1.09)  score 6/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 28.43 on 1.0x volume
+      volume profile: 8% of 60d volume sits ABOVE here, heaviest at 27.81  (context only, gates nothing)
       option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 28, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
-  PFE    PFE261023C00028000  delta 0.57  30d  mid 0.81  spread 7.4%
-         costs $81.00 per contract; needs $1,620 equity to buy one inside the 5% position cap
-  DAL    DAL261120C00080000  delta 0.61  58d  mid 6.47  spread 1.4%
-         costs $647.50 per contract; needs $12,950 equity to buy one inside the 5% position cap
+OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
+  PFE    PFE261120C00028000  delta 0.61  57d  mid 1.32  spread 6.1%
+         costs $132.00 per contract; needs $2,640 equity to buy one inside the 5% position cap
 
-  cheapest doctrine contract today: PFE at $81.00
-  at $96,651.22 equity you can buy 2 of 2 inside the position cap
+  cheapest doctrine contract today: PFE at $132.00
+  at $96,918.76 equity you can buy 1 of 1 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-PAPER ORDERS PLACED (1):
-  BUY 59 DAL @ next open, limit 83.39 (H15a cap, 2% over the 81.75 close), bracket stop 78.95 / target 90.15
-  skipped PFE: position cap
-TIME EXITS SUBMITTED: F, NVDA
+PAPER ORDERS PLACED (2):
+  BUY 7 AMD @ next open, limit 641.59 (H15a cap, 2% over the 629.00 close), bracket stop 541.53 / target 891.43
+  BUY 170 PFE @ next open, limit 29.00 (H15a cap, 2% over the 28.43 close), bracket stop 27.34 / target 31.70
+  skipped GOOGL: already held
+TIME EXITS SUBMITTED: BAC, JPM, KO, XOM
 
-OPEN POSITIONS (11) — 7 of 8 stock slots used, 4 option contracts:
-  AAPL260923P00330000  qty -2  unrealized $+2.00  stop ?  target ?  since ?
-  BAC  qty 79  unrealized $-508.16  stop 61.37  target 68.13  since 2026-09-03
-  DAL261016C00082500  qty 2  unrealized $-230.00  stop ?  target ?  since ?
-  F  qty 353  unrealized $-430.66  stop 13.73  target 15.41  since 2026-09-02
-  GOOGL  qty 14  unrealized $-106.06  stop 327.79  target 414.41  since 2026-09-14
-  JPM  qty 13  unrealized $-313.92  stop 353.86  target 386.78  since 2026-09-03
-  KO  qty 56  unrealized $-23.17  stop 87.73  target 92.17  since 2026-09-03
-  KO261016C00087500  qty 3  unrealized $-249.00  stop ?  target ?  since ?
-  NVDA  qty 22  unrealized $-5.28  stop 215.12  target 252.38  since 2026-09-02
-  XOM  qty 30  unrealized $+9.09  stop 155.32  target 182.96  since 2026-09-03
-  XOM261016C00160000  qty 1  unrealized $-205.00  stop ?  target ?  since ?
+CLOSED SINCE LAST RUN:
+  F  2026-09-02 -> 2026-09-24  -2.73R  (stop)
+  NVDA  2026-09-02 -> 2026-09-24  -0.28R  (time/other)
+
+OPEN POSITIONS (9) — 6 of 8 stock slots used, 3 option contracts:
+  BAC  qty 79  unrealized $-514.48  stop 61.37  target 68.13  since 2026-09-03
+  DAL  qty 59  unrealized $+50.25  stop 78.95  target 90.15  since 2026-09-23
+  DAL261016C00082500  qty 2  unrealized $-110.00  stop ?  target ?  since ?
+  GOOGL  qty 14  unrealized $-71.96  stop 327.79  target 414.41  since 2026-09-14
+  JPM  qty 13  unrealized $-306.77  stop 353.86  target 386.78  since 2026-09-03
+  KO  qty 56  unrealized $-19.04  stop 87.73  target 92.17  since 2026-09-03
+  KO261016C00087500  qty 3  unrealized $-207.00  stop ?  target ?  since ?
+  XOM  qty 30  unrealized $+33.99  stop 155.32  target 182.96  since 2026-09-03
+  XOM261016C00160000  qty 1  unrealized $-165.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  BOUGHT 5x PFE261023C00028000  @ $0.81 ($405)  30d  strike 28.00  [delta 0.57, spread 7.4%, OI 380]
+  BOUGHT 5x PFE261120C00028000  @ $1.32 ($660)  57d  strike 28.00  [delta 0.61, spread 6.1%, OI 10356]
     FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  SOLD   1x AAPL261002C00330000  (reconciled)
-  holding 4:
+  SOLD   5x PFE261023C00028000  (reconciled)
+  SOLD   1x XOM261016C00160000  P&L $-165.00  (TIME_EXIT: 15 trading days held >= 15)
+  holding 3:
     DAL261016C00082500  2x @ $4.83  since 2026-09-22  stop-if-underlying <= 76.91
     KO261016C00087500  3x @ $2.85  since 2026-09-14  stop-if-underlying <= 87.42
-    PFE261023C00028000  5x @ $0.81  since 2026-09-23  stop-if-underlying <= 27.34
-    XOM261016C00160000  1x @ $7.77  since 2026-09-03  stop-if-underlying <= 155.32
+    PFE261120C00028000  5x @ $1.32  since 2026-09-24  stop-if-underlying <= 27.34
+  note: AMD: no contract met DTE/spread/delta
+  note: GOOGL: no contract met DTE/spread/delta
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
 
-CUMULATIVE RECORD: no closed trades yet
+CUMULATIVE RECORD: 2 closed | win rate 0% | expectancy -1.504R | total -3.01R
+  significance: n=2 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge.
 
 Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.

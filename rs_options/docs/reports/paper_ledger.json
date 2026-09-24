@@ -1,7 +1,43 @@
 {
-  "closed": [],
+  "closed": [
+    {
+      "entry": 14.17,
+      "entry_date": "2026-09-02",
+      "exit": 12.97,
+      "exit_date": "2026-09-24",
+      "micro_override": false,
+      "r": -2.727,
+      "reason": "stop",
+      "ticker": "F"
+    },
+    {
+      "entry": 225.29,
+      "entry_date": "2026-09-02",
+      "exit": 222.432727,
+      "exit_date": "2026-09-24",
+      "micro_override": false,
+      "r": -0.281,
+      "reason": "time/other",
+      "ticker": "NVDA"
+    }
+  ],
   "open": {
+    "AMD": {
+      "entry": 629.005,
+      "entry_cap": 641.5851,
+      "entry_date": "2026-09-24",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "28347540-16e3-4810-a7af-33bfcfa8521b",
+      "qty": 7,
+      "setup": "RS-02",
+      "signal_close": 629.005,
+      "stop": 541.53,
+      "target": 891.43
+    },
     "BAC": {
+      "closing": "2026-09-24",
       "entry": 62.612405,
       "entry_cap": 64.3212,
       "entry_date": "2026-09-03",
@@ -16,10 +52,10 @@
       "target": 68.13
     },
     "DAL": {
-      "entry": 81.75,
+      "entry": 81.858305,
       "entry_cap": 83.385,
       "entry_date": "2026-09-23",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "1a7b608b-e917-40cd-9e69-57a1cf7e8e47",
@@ -28,21 +64,6 @@
       "signal_close": 81.75,
       "stop": 78.95,
       "target": 90.15
-    },
-    "F": {
-      "closing": "2026-09-23",
-      "entry": 14.17,
-      "entry_cap": 14.433,
-      "entry_date": "2026-09-02",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "e54f75e3-4862-4dd2-b67b-176c50b535fd",
-      "qty": 353,
-      "setup": "H-25",
-      "signal_close": 14.15,
-      "stop": 13.73,
-      "target": 15.41
     },
     "GOOGL": {
       "entry": 346.625715,
@@ -59,6 +80,7 @@
       "target": 414.41
     },
     "JPM": {
+      "closing": "2026-09-24",
       "entry": 362.157692,
       "entry_cap": 369.3318,
       "entry_date": "2026-09-03",
@@ -73,6 +95,7 @@
       "target": 386.78
     },
     "KO": {
+      "closing": "2026-09-24",
       "entry": 88.53375,
       "entry_cap": 90.61680000000001,
       "entry_date": "2026-09-03",
@@ -86,22 +109,22 @@
       "stop": 87.73,
       "target": 92.17
     },
-    "NVDA": {
-      "closing": "2026-09-23",
-      "entry": 225.29,
-      "entry_cap": 228.9237,
-      "entry_date": "2026-09-02",
-      "entry_estimated": false,
+    "PFE": {
+      "entry": 28.43,
+      "entry_cap": 28.9986,
+      "entry_date": "2026-09-24",
+      "entry_estimated": true,
       "fractional": false,
       "micro_override": false,
-      "order_id": "47fb7fb7-7d89-4333-b4df-c75bae217f21",
-      "qty": 22,
+      "order_id": "420a051d-8d1a-44c2-a9f3-f099de2b5426",
+      "qty": 170,
       "setup": "H-25",
-      "signal_close": 224.435,
-      "stop": 215.12,
-      "target": 252.38
+      "signal_close": 28.43,
+      "stop": 27.34,
+      "target": 31.7
     },
     "XOM": {
+      "closing": "2026-09-24",
       "entry": 161.007,
       "entry_cap": 165.47459999999998,
       "entry_date": "2026-09-03",
@@ -145,33 +168,19 @@
       "strike": 87.5,
       "ticker": "KO"
     },
-    "PFE261023C00028000": {
+    "PFE261120C00028000": {
       "basis": "delta",
-      "delta": 0.5731,
-      "entry_date": "2026-09-23",
-      "entry_price": 0.81,
-      "entry_underlying": 28.17,
-      "expiry": "2026-10-23",
+      "delta": 0.613,
+      "entry_date": "2026-09-24",
+      "entry_price": 1.32,
+      "entry_underlying": 28.43,
+      "expiry": "2026-11-20",
       "fundamental_net_income": null,
       "invalidation_price": 27.34,
       "qty": 5,
-      "spread_pct": 0.0741,
+      "spread_pct": 0.0606,
       "strike": 28.0,
       "ticker": "PFE"
-    },
-    "XOM261016C00160000": {
-      "basis": "delta",
-      "delta": 0.5953,
-      "entry_date": "2026-09-03",
-      "entry_price": 7.7695,
-      "entry_underlying": 162.23,
-      "expiry": "2026-10-16",
-      "fundamental_net_income": null,
-      "invalidation_price": 155.32,
-      "qty": 1,
-      "spread_pct": 0.09,
-      "strike": 160.0,
-      "ticker": "XOM"
     }
   }
 }
