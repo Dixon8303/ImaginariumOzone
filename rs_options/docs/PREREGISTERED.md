@@ -184,6 +184,188 @@ hard gate would repeat here.
 
 ---
 
+## H-28 — Liquidity rejection at range extremes, ATR-gated
+
+**Registered:** 2026-09-25, BEFORE any detector, harness or backtest for
+this strategy exists. The commit carrying this entry precedes the
+implementation commit; git history is the timestamp.
+
+**Provenance.** The operator supplied a written specification of "The
+Probability Factor / The 3R Rule" (The Rumers, YouTube), including a
+Python skeleton. Daily 50-SMA trend bias, prior-session range and swing
+levels as liquidity bounds, a 14-period ATR exhaustion gate, and M5
+rejection-candle entries targeting the opposite end of the prior
+session's range at >= 3:1. Unlike H-27 this is a latency-taker strategy
+on liquid index instruments, which is the class this program is built
+for — so it is registered on the ordinary H-* terms rather than under a
+structural exemption.
+
+**Claim.** After the macro bias and the ATR-exhaustion gate, an M5
+rejection at the prior session's range extreme has non-negative
+out-of-sample expectancy on liquid index ETFs, and the edge survives at
+several times measured friction.
+
+### The supplied skeleton is NOT the registered strategy
+
+Recorded in advance because the differences are material and would
+otherwise look like post-hoc tuning:
+
+1. **Look-ahead bias, LAW 11.** The skeleton reads
+   `daily_context['close']` and `daily_context['SMA_50']` for the
+   session being traded. Today's daily close is not knowable at 10:00
+   this morning. **Frozen fix: the macro bias uses the PRIOR completed
+   session's close against the PRIOR completed session's 50-SMA**, and
+   likewise the 14-ATR is the prior completed session's. Any result
+   produced with same-day daily values is inadmissible, not merely
+   optimistic.
+2. **The ATR exhaustion gate is absent from the skeleton.** §4 lists
+   "cumulative move from day low >= 0.70 x ATR" as a pre-condition;
+   `evaluate_m5_bar` never checks it. The gate is the strategy's
+   distinguishing filter and IS registered — its absence from the
+   skeleton is a skeleton bug, not a rule change.
+3. **Only the short setup is implemented.** Setup 2 (long) is
+   registered on the symmetric terms §4 states.
+4. **Sizing ignores `Point_Value`** despite §5A defining it. Irrelevant
+   to R-multiple expectancy, and the study is judged in R.
+5. **`min(rh, sh)`** makes the swing level inert whenever it sits above
+   the range level. The expression is frozen AS WRITTEN — first level
+   touched, not the farther one — because that is what the source
+   supplied, and substituting a "better" reading before any data is a
+   design choice made blind.
+
+### Frozen rules
+
+**Bias (prior session only).** BULLISH if prior daily close > prior
+daily 50-SMA; BEARISH if below. Counter-trend entries are **DISABLED**
+for the study. §3 offers "reduced size / scalps only / or disabled";
+disabled is chosen because it is the only one of the three that adds no
+free parameter. The half-size counter-trend variant is reported as
+context and cannot change the verdict (LAW 20).
+
+**Levels,** all from completed RTH sessions: Range High / Low = prior
+session high / low. Swing High = `high.shift(2).rolling(10).max()`,
+Swing Low = `low.shift(2).rolling(10).min()`, frozen exactly as
+supplied. ATR_14 = simple rolling mean of True Range (Cutler's, as the
+skeleton computes it), NOT Wilder's smoothing — the choice is recorded
+so it cannot be swapped later for the one that scores better.
+
+**ATR exhaustion gate.** Session extension measured on RTH bars to the
+current M5 bar. Shorts require `(price - session_low) >= 0.70 x ATR`;
+longs require `(session_high - price) >= 0.70 x ATR`.
+
+**Entry triggers.** SHORT: bar high >= `min(Range_High, Swing_High)`,
+bar closes below that level, `close < open`, and the upper wick
+`(high - max(open, close))` is **>= the body** `abs(close - open)`.
+LONG: bar low <= `max(Range_Low, Swing_Low)`, bar closes above that
+level, and `close > open`.
+
+The asymmetry is the source's — §4 asks for wick rejection on the short
+and only `Close > Open` on the long. It is frozen faithfully rather
+than tidied, because imposing symmetry before evidence is an invented
+rule. The symmetric-long variant is a reported context configuration
+that cannot change the verdict.
+
+**Stops, targets, filter.** Short stop = rejection high + 1 tick
+($0.01); long stop = local low - 1 tick. Short target = Range Low;
+long target = Range High. Entry rejected unless computed R:R >= 3.0.
+
+**Session completion, resolved now because the source leaves it
+undefined.** No new entries after 15:00 ET. Any position still open at
+16:00 ET is closed at the session close and booked at that R, win or
+lose. Without this rule an unfilled target has no defined outcome and
+the strategy's expectancy is unmeasurable.
+
+**Intrabar resolution.** If one M5 bar contains both stop and target,
+the **stop** is assumed to fill first — the conservative assumption
+already used by `mve/intraday_study.py`. Never resolved in the
+strategy's favour.
+
+**Instruments: SPY, QQQ, IWM only.** ES / NQ / YM are **OUT OF SCOPE**:
+Alpaca provides no futures data and no futures execution, so there is
+neither a study path nor a trade path for them. TSLL and leveraged ETPs
+are **EXCLUDED** — the program already declined VXX (banned ETP) and
+GLD (ETP), and a 2x daily-rebalanced product is a different instrument
+whose decay is not what this rule set measures. All three registered
+tickers are already in `UNIVERSE`; this registration adds no name.
+
+**Excluded from the criterion entirely: the "Wall Street Raise"
+protocol** (§5B). A sizing schedule cannot change per-trade expectancy
+— it only reshapes the equity path — so admitting it would let
+compounding masquerade as edge (LAW 19). Its consistency gate ("3 green
+days of 5, two weeks running") is a discretionary sizing rule, not a
+signal rule. Both are reported separately, never as evidence of edge.
+
+**Nothing in this registration is fitted.** Every threshold arrives
+from the source; no parameter is selected on this data. Every trade is
+therefore out-of-sample by construction, and the walk-forward below
+exists to expose regime breadth, not to choose parameters.
+
+**Data requirement.** RTH 5-minute bars plus completed daily bars for
+all three tickers, one consistent vendor and pull, corrupt-bar guards
+active, half and broken sessions skipped by the existing
+`MIN_SESSION_BARS` rule. A missing symbol-day aborts the study rather
+than silently shrinking the sample (LAW 18).
+
+**§38 latency gate.** H-27 exists because scalping trips
+`EDGE_FASTER_THAN_PIPE`. This strategy should clear it comfortably —
+entry is an M5 close and the target is the opposite end of the prior
+session's range, so edge half-life is hours against a 10x envelope of
+seconds. "Should" is not "does": the half-life is **measured and
+reported** on the same terms as H-27, never assumed from the timeframe.
+
+### Success criterion, fixed now
+
+Yearly expanding-window walk-forward, test windows only, judged GROSS
+with break-even friction reported — the house convention from H-24 and
+H-25, which applies here because index-ETF friction is genuinely small
+(the ~2bp round trip `intraday_study.py` already calibrates).
+
+- **CONFIRMED (adoption-eligible)** requires ALL of:
+  - gross expectancy **>= 0R**;
+  - **n >= 300** closed trades spanning **>= 150 distinct
+    session-days**;
+  - positive expectancy in **>= half** of judged calendar years (a year
+    is judged at >= 20 trades);
+  - **break-even friction >= 3x** the 2bp baseline, i.e. the edge still
+    survives at >= 6bp round trip.
+- **FAILED** if the sample is reached and any clause is missed.
+- **INCONCLUSIVE** below n = 300 or below 150 session-days.
+
+**Why n >= 300 and not the house's n >= 50.** The >= 3:1 filter makes
+this a low-win-rate payoff: break-even sits near 25%, and at a 30% win
+rate the per-trade standard deviation is roughly 1.8R. At n = 50 the
+standard error is about 0.26R — wider than the entire edge a working
+version of this strategy would produce, so n = 50 could not
+distinguish +0.20R from zero. n = 300 brings the standard error near
+0.10R, which can. The bar is raised for a stated distributional
+reason, not taste, and per house rule it may only be tightened further.
+
+**Why >= 150 session-days.** Two setups can fire on one session and
+they are one read of one day's structure, not two independent samples.
+Trade count alone is the easiest way to manufacture significance here.
+
+**Why a friction margin instead of a positive-R floor.** At 3:1 a
+strategy sitting at exactly 0R gross is a net loser once costs are
+paid. Rather than invent an R threshold, the margin is expressed in the
+units that actually decide it: the edge must survive 3x real cost
+(LAW 14).
+
+Per-ticker, per-year, per-direction, per-setup and counter-trend splits
+are computed and reported as **context, never criteria** (LAW 20).
+
+**Adoption is a separate decision.** CONFIRMED means adoption-ELIGIBLE
+only. The philosophy's one-new-live-setup-at-a-time sequencing still
+applies, and H-24 remains CONFIRMED-but-inactive ahead of it.
+
+**What may NOT be done before the verdict.** No execution path, no
+capital, no paper or live wiring, no entry into the live scan. The work
+exists as study code and nothing else. Partial results do not license a
+test position.
+
+**Status:** OPEN — registered, implementation and study to follow.
+
+---
+
 ## H-27 — Momentum scalping survives the retail latency class
 
 **Registered:** 2026-09-25, BEFORE any scanner, state machine, harness
