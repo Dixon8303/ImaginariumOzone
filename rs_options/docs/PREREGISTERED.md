@@ -719,6 +719,57 @@ license a "small test position" — that is adoption without the verdict.
 
 **Status:** OPEN — registered, implementation and study to follow.
 
+**Source-detail note (2026-09-26, added after the fact — the frozen text
+above is NOT edited).** The operator supplied a fuller, transcript-linked
+version of the same source ("How I Turned $2,000 into $105,951.28 in 46
+Days", `spaw93SAySQ`). It is the same strategy, not a new one: the five
+pillars and their A-setup tiers, the execution windows, the pullback /
+crossing-candle state machine, the $0.01 trigger, the pullback-low stop,
+the 1:1 suppression rule, all seven exits and all four circuit breakers
+match what is frozen above. What it confirms, adds, and does not change:
+
+**It confirms a fill model this entry had to choose blind.** Gate 1
+assumes the entry is marketable and therefore fills at the offer or
+worse. The fuller source says "market/marketable limit buy" outright — so
+that fill model is the source's own, not a pessimistic assumption imposed
+on it from outside.
+
+**It strengthens Gate 0 in the source's own words.** The fuller document
+states that commission-free PFOF routing introduces latency that makes
+breakout anticipation dangerous, and that direct-access routing is
+"necessary for high-frequency sub-minute executions once capital scales."
+That is `EDGE_FASTER_THAN_PIPE` arrived at from the other direction: the
+method's own author holds that it needs an execution class this program
+does not have and that §38 declines to compete in. Gate 0 is unchanged —
+it is now measuring a proposition the source itself doubts at retail
+routing.
+
+**It adds an "aggressive" variant that is NOT registered and may not be
+used.** Beside the conservative 50%-at-HOD scale, the fuller source
+offers holding the full position through the HOD breakout, or ADDING size
+into the break in "hot" conditions. The conservative rule stays the
+registered one. Adding into a breakout is a different exit-and-sizing
+policy; it contradicts the same document's own instruction not to chase
+green candles in extended squeezes; and "hot market conditions" has no
+measurable definition. Testing it would require its own registration,
+never an inherited widening of this one.
+
+**One discrepancy, resolved toward the tighter frozen rule.** The
+original specification's regime filter — "if the first two leading-gainer
+breakout setups fail in succession, suspend trading for the session" — is
+what is frozen. The fuller source is vaguer: "curtail trading and widen
+entry thresholds." Widening thresholds after losses is the opposite of a
+circuit breaker, so the frozen version stands.
+
+**Detail recorded but not promoted to a rule:** pullbacks may print
+bottoming tails or wicks as well as lower closes; the Level 2 ask block
+tends to sit at round numbers; the sympathy heuristic is more specific
+than registered (a >1,000% runner, then same-structure names hitting
+scanners up >100% on extreme early volume); and the source claims ten
+years of its own statistics behind the RVOL floor. None of this moves a
+frozen threshold, and the source's own statistics are not evidence in
+this program (LAW 19, LAW 20).
+
 ---
 
 ## H-26 — Second expansion: sector coverage the universe has never held
