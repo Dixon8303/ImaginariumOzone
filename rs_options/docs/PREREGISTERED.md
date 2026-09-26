@@ -184,6 +184,127 @@ hard gate would repeat here.
 
 ---
 
+## FWD-4 — LLM panel ratings discriminate forward outcomes
+
+**Registered:** 2026-09-26, after the operator supplied a summary of the
+"Trading Agents" framework (`TauricResearch/TradingAgents`, via a Miles
+Deutscher video of 2026-09-21): a twelve-agent LLM pipeline — analysts,
+researchers, a trader, risk management, a portfolio manager — that emits
+a Buy / Hold / Sell rating per ticker.
+
+**What is registered, and what is not.** The framework is an
+*architecture*, not a strategy: it has no threshold to freeze, no entry
+trigger, no stop, no target. An architecture makes no falsifiable
+prediction, so there is nothing in it to test directly. What IS testable
+is the only claim it implicitly makes — **that its ratings carry
+information.** That claim, and nothing else here, is what this entry
+registers.
+
+**Claim.** Among live-`UNIVERSE` tickers rated by the panel, forward
+20-trading-day return measured as **excess over SPY** orders
+**BUY > HOLD > SELL**, and the BUY bucket's mean excess is positive.
+
+Excess-over-SPY rather than raw return, deliberately: in a rising tape
+every bucket is positive and a raw-return criterion would confirm a
+panel that only discriminates market direction — which the benchmark
+already gives away for free.
+
+**Why this is FWD and not H-\*, for two reasons that no sample size
+fixes.**
+
+First, **training-data look-ahead, which is fatal to any historical
+test.** Judging the panel on history means asking a model about past
+dates whose outcomes are already in its weights. Ask about a ticker on a
+date before its earnings gap and the model knows what the gap did. This
+is LAW 11 contamination located in the *parameters*, not the data
+pipeline — so no point-in-time discipline removes it, and unlike a
+vendor's restated field it cannot be audited. Every historical backtest
+of an LLM analyst inside its training cutoff is worthless at any sample
+size and any API spend. The H-* kind is therefore unavailable here, for
+the same reason FWD-3 exists: the data that could judge it does not
+exist yet.
+
+Second, **non-determinism.** Every H-* study in this file is a
+deterministic function of bars — rerun H-28 and the trades are
+identical. Rerun a twelve-agent panel and they are not. A criterion
+cannot be applied to a quantity that changes when it is measured twice,
+which is what Gate 0 exists to establish.
+
+### Gate 0 — rating reproducibility, measured BEFORE any outcome
+
+No outcome may be scored until this is measured, because a criterion on
+an unstable rating is arithmetic on noise:
+
+- Each rated ticker-date is run **k = 5** times on identical inputs.
+- A ticker-date is **unstable** if the modal rating holds in fewer than
+  4 of 5 runs.
+- If **more than 20%** of ticker-dates are unstable, the panel is not a
+  rule set. The entry then closes **INCONCLUSIVE on reproducibility** —
+  not FAILED, because an unmeasurable claim has not been disproven.
+- Every run records the **model ID and temperature**. A model change
+  mid-accrual changes the instrument: it is disclosed, and buckets are
+  never pooled across a change without saying so.
+
+### Recording mechanism
+
+Ratings are logged **at issue time** — timestamp, model ID, temperature,
+the inputs supplied, and the rating — before the outcome window opens.
+Nothing reads a rating to gate, size, rank, or skip anything. It exists
+only so the pairing accumulates, exactly as `OpenPosition.score` does
+under FWD-1 and `fundamental_net_income` under FWD-3.
+
+The 20-trading-day horizon is frozen now so it cannot later be chosen to
+suit the results.
+
+**Success criterion, fixed now.** Judged only once at least **30 CLOSED
+rating-windows** exist in EACH of the BUY and SELL buckets (HOLD takes
+whatever it takes), and only after Gate 0 is satisfied:
+
+- **CONFIRMED** if mean SPY-excess return orders BUY > HOLD > SELL, AND
+  the BUY bucket's mean excess is positive, AND the BUY − SELL spread is
+  **>= 2.0 percentage points**.
+- **FAILED** if the ordering is violated, or BUY's mean excess is <= 0,
+  or the BUY − SELL spread is **< 1.0 percentage point**.
+- **INCONCLUSIVE** below 30 closed windows in either bucket, or with
+  Gate 0 unmet, regardless of how the numbers look.
+
+The deliberate no-verdict band between 1.0 and 2.0 points mirrors
+FWD-1's structure: a result that is neither clearly informative nor
+clearly empty earns no verdict rather than a convenient one.
+
+This is a slow test and that is its honest cost. At roughly $1–2 per
+panel run and a 20-day horizon, 30 closed BUY windows is months of
+accrual, not weeks.
+
+**What may NOT be done with it — and one part of this is permanent.**
+Nothing acts on a panel rating until CONFIRMED: no gating, no sizing,
+no ranking, no skipping.
+
+**The autonomous-execution tier is not a roadmap item, now or after a
+CONFIRMED verdict.** LAW 17 — *the learning engine may propose; it may
+not silently alter production* — describes an LLM panel exactly: it is a
+proposer by construction. So even confirmed, the only permitted use is a
+**recorded proposal the operator reads**, never an execution path. §67
+(Production Release Gate) and §65 (human acknowledgment to re-arm live
+transmission) apply on top, and `CLAUDE.md`'s co-pilot rule already
+requires the operator's explicit word per trade session.
+
+Recorded so it cannot be quietly inherited: the framework's suggested
+"maximum 10% cash per position" is **looser** than HoneyDrip's hard 5%
+position cap and the 1% risk budget this program sizes against. The
+tighter constraint governs. A new component may not relax an existing
+guardrail by arriving with its own.
+
+The framework's Level 1 (manual morning read) and Level 2 (scheduled
+report pushed to a phone) need no registration at all — no capital is at
+risk and neither makes an edge claim. Level 2 substantially duplicates
+the HoneyDrip daily brief already on `main`.
+
+**Status:** OPEN — awaiting forward data. Recording is NOT yet wired;
+accrual begins when it is, and the start date is recorded here then.
+
+---
+
 ## H-28 — Liquidity rejection at range extremes, ATR-gated
 
 **Registered:** 2026-09-25, BEFORE any detector, harness or backtest for
