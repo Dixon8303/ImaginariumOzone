@@ -184,6 +184,422 @@ hard gate would repeat here.
 
 ---
 
+## H-28 — Liquidity rejection at range extremes, ATR-gated
+
+**Registered:** 2026-09-25, BEFORE any detector, harness or backtest for
+this strategy exists. The commit carrying this entry precedes the
+implementation commit; git history is the timestamp.
+
+**Provenance.** The operator supplied a written specification of "The
+Probability Factor / The 3R Rule" (The Rumers, YouTube), including a
+Python skeleton. Daily 50-SMA trend bias, prior-session range and swing
+levels as liquidity bounds, a 14-period ATR exhaustion gate, and M5
+rejection-candle entries targeting the opposite end of the prior
+session's range at >= 3:1. Unlike H-27 this is a latency-taker strategy
+on liquid index instruments, which is the class this program is built
+for — so it is registered on the ordinary H-* terms rather than under a
+structural exemption.
+
+**Claim.** After the macro bias and the ATR-exhaustion gate, an M5
+rejection at the prior session's range extreme has non-negative
+out-of-sample expectancy on liquid index ETFs, and the edge survives at
+several times measured friction.
+
+### The supplied skeleton is NOT the registered strategy
+
+Recorded in advance because the differences are material and would
+otherwise look like post-hoc tuning:
+
+1. **Look-ahead bias, LAW 11.** The skeleton reads
+   `daily_context['close']` and `daily_context['SMA_50']` for the
+   session being traded. Today's daily close is not knowable at 10:00
+   this morning. **Frozen fix: the macro bias uses the PRIOR completed
+   session's close against the PRIOR completed session's 50-SMA**, and
+   likewise the 14-ATR is the prior completed session's. Any result
+   produced with same-day daily values is inadmissible, not merely
+   optimistic.
+2. **The ATR exhaustion gate is absent from the skeleton.** §4 lists
+   "cumulative move from day low >= 0.70 x ATR" as a pre-condition;
+   `evaluate_m5_bar` never checks it. The gate is the strategy's
+   distinguishing filter and IS registered — its absence from the
+   skeleton is a skeleton bug, not a rule change.
+3. **Only the short setup is implemented.** Setup 2 (long) is
+   registered on the symmetric terms §4 states.
+4. **Sizing ignores `Point_Value`** despite §5A defining it. Irrelevant
+   to R-multiple expectancy, and the study is judged in R.
+5. **`min(rh, sh)`** makes the swing level inert whenever it sits above
+   the range level. The expression is frozen AS WRITTEN — first level
+   touched, not the farther one — because that is what the source
+   supplied, and substituting a "better" reading before any data is a
+   design choice made blind.
+
+### Frozen rules
+
+**Bias (prior session only).** BULLISH if prior daily close > prior
+daily 50-SMA; BEARISH if below. Counter-trend entries are **DISABLED**
+for the study. §3 offers "reduced size / scalps only / or disabled";
+disabled is chosen because it is the only one of the three that adds no
+free parameter. The half-size counter-trend variant is reported as
+context and cannot change the verdict (LAW 20).
+
+**Levels,** all from completed RTH sessions: Range High / Low = prior
+session high / low. Swing High = `high.shift(2).rolling(10).max()`,
+Swing Low = `low.shift(2).rolling(10).min()`, frozen exactly as
+supplied. ATR_14 = simple rolling mean of True Range (Cutler's, as the
+skeleton computes it), NOT Wilder's smoothing — the choice is recorded
+so it cannot be swapped later for the one that scores better.
+
+**ATR exhaustion gate.** Session extension measured on RTH bars to the
+current M5 bar. Shorts require `(price - session_low) >= 0.70 x ATR`;
+longs require `(session_high - price) >= 0.70 x ATR`.
+
+**Entry triggers.** SHORT: bar high >= `min(Range_High, Swing_High)`,
+bar closes below that level, `close < open`, and the upper wick
+`(high - max(open, close))` is **>= the body** `abs(close - open)`.
+LONG: bar low <= `max(Range_Low, Swing_Low)`, bar closes above that
+level, and `close > open`.
+
+The asymmetry is the source's — §4 asks for wick rejection on the short
+and only `Close > Open` on the long. It is frozen faithfully rather
+than tidied, because imposing symmetry before evidence is an invented
+rule. The symmetric-long variant is a reported context configuration
+that cannot change the verdict.
+
+**Stops, targets, filter.** Short stop = rejection high + 1 tick
+($0.01); long stop = local low - 1 tick. Short target = Range Low;
+long target = Range High. Entry rejected unless computed R:R >= 3.0.
+
+**Session completion, resolved now because the source leaves it
+undefined.** No new entries after 15:00 ET. Any position still open at
+16:00 ET is closed at the session close and booked at that R, win or
+lose. Without this rule an unfilled target has no defined outcome and
+the strategy's expectancy is unmeasurable.
+
+**Intrabar resolution.** If one M5 bar contains both stop and target,
+the **stop** is assumed to fill first — the conservative assumption
+already used by `mve/intraday_study.py`. Never resolved in the
+strategy's favour.
+
+**Instruments: SPY, QQQ, IWM only.** ES / NQ / YM are **OUT OF SCOPE**:
+Alpaca provides no futures data and no futures execution, so there is
+neither a study path nor a trade path for them. TSLL and leveraged ETPs
+are **EXCLUDED** — the program already declined VXX (banned ETP) and
+GLD (ETP), and a 2x daily-rebalanced product is a different instrument
+whose decay is not what this rule set measures. All three registered
+tickers are already in `UNIVERSE`; this registration adds no name.
+
+**Excluded from the criterion entirely: the "Wall Street Raise"
+protocol** (§5B). A sizing schedule cannot change per-trade expectancy
+— it only reshapes the equity path — so admitting it would let
+compounding masquerade as edge (LAW 19). Its consistency gate ("3 green
+days of 5, two weeks running") is a discretionary sizing rule, not a
+signal rule. Both are reported separately, never as evidence of edge.
+
+**Nothing in this registration is fitted.** Every threshold arrives
+from the source; no parameter is selected on this data. Every trade is
+therefore out-of-sample by construction, and the walk-forward below
+exists to expose regime breadth, not to choose parameters.
+
+**Data requirement.** RTH 5-minute bars plus completed daily bars for
+all three tickers, one consistent vendor and pull, corrupt-bar guards
+active, half and broken sessions skipped by the existing
+`MIN_SESSION_BARS` rule. A missing symbol-day aborts the study rather
+than silently shrinking the sample (LAW 18).
+
+**§38 latency gate.** H-27 exists because scalping trips
+`EDGE_FASTER_THAN_PIPE`. This strategy should clear it comfortably —
+entry is an M5 close and the target is the opposite end of the prior
+session's range, so edge half-life is hours against a 10x envelope of
+seconds. "Should" is not "does": the half-life is **measured and
+reported** on the same terms as H-27, never assumed from the timeframe.
+
+### Success criterion, fixed now
+
+Yearly expanding-window walk-forward, test windows only, judged GROSS
+with break-even friction reported — the house convention from H-24 and
+H-25, which applies here because index-ETF friction is genuinely small
+(the ~2bp round trip `intraday_study.py` already calibrates).
+
+- **CONFIRMED (adoption-eligible)** requires ALL of:
+  - gross expectancy **>= 0R**;
+  - **n >= 300** closed trades spanning **>= 150 distinct
+    session-days**;
+  - positive expectancy in **>= half** of judged calendar years (a year
+    is judged at >= 20 trades);
+  - **break-even friction >= 3x** the 2bp baseline, i.e. the edge still
+    survives at >= 6bp round trip.
+- **FAILED** if the sample is reached and any clause is missed.
+- **INCONCLUSIVE** below n = 300 or below 150 session-days.
+
+**Why n >= 300 and not the house's n >= 50.** The >= 3:1 filter makes
+this a low-win-rate payoff: break-even sits near 25%, and at a 30% win
+rate the per-trade standard deviation is roughly 1.8R. At n = 50 the
+standard error is about 0.26R — wider than the entire edge a working
+version of this strategy would produce, so n = 50 could not
+distinguish +0.20R from zero. n = 300 brings the standard error near
+0.10R, which can. The bar is raised for a stated distributional
+reason, not taste, and per house rule it may only be tightened further.
+
+**Why >= 150 session-days.** Two setups can fire on one session and
+they are one read of one day's structure, not two independent samples.
+Trade count alone is the easiest way to manufacture significance here.
+
+**Why a friction margin instead of a positive-R floor.** At 3:1 a
+strategy sitting at exactly 0R gross is a net loser once costs are
+paid. Rather than invent an R threshold, the margin is expressed in the
+units that actually decide it: the edge must survive 3x real cost
+(LAW 14).
+
+Per-ticker, per-year, per-direction, per-setup and counter-trend splits
+are computed and reported as **context, never criteria** (LAW 20).
+
+**Adoption is a separate decision.** CONFIRMED means adoption-ELIGIBLE
+only. The philosophy's one-new-live-setup-at-a-time sequencing still
+applies, and H-24 remains CONFIRMED-but-inactive ahead of it.
+
+**What may NOT be done before the verdict.** No execution path, no
+capital, no paper or live wiring, no entry into the live scan. The work
+exists as study code and nothing else. Partial results do not license a
+test position.
+
+**Status:** OPEN — registered, implementation and study to follow.
+
+---
+
+## H-27 — Momentum scalping survives the retail latency class
+
+**Registered:** 2026-09-25, BEFORE any scanner, state machine, harness
+or backtest for this strategy exists. The commit carrying this entry
+precedes the implementation commit; git history is the timestamp.
+
+**Provenance.** The operator supplied a written specification of Ross
+Cameron's (Warrior Trading) momentum scalping method, sourced from a
+"$2k to $100k in 46 Days" challenge account: 5-pillar small-cap
+selection, pullback / crossing-candle entry, 1:1 reward:risk, claimed
+~70% win rate over 113 trades, claimed +0.40R per trade. The claim is
+recorded here verbatim as the thing under test. It is not adopted, and
+its provenance — a marketed challenge result — is itself a reason for
+the bar below to be set where it is.
+
+**The null, stated plainly so a later reader cannot soften it.** The
+null hypothesis is that small-cap momentum scalping has zero or
+negative NET edge at retail latency, and that the source's results are
+explained by selection and survivorship — one publicized account out of
+a population whose losers are not published. This entry does not
+presume the method works. It presumes the null and asks what evidence
+would overturn it.
+
+**Scope and placement.** If this survives, it is component #10 under
+the repo's independence rule — its own tree, its own execution path.
+It is NOT wired into RS Options or HoneyDrip: different instrument
+class (sub-$20 low-float small caps), different timeframe (10s/1m),
+different data tier. It is registered *here* because the H-* discipline
+and §38 both live here, and because §38 is what makes this hypothesis
+worth registering at all.
+
+### Gate 0 — §38 EDGE_FASTER_THAN_PIPE (structural, evaluated FIRST)
+
+The spec already answers this question by assertion: §38 states "this
+system is a latency-taker, not a latency-competitor" and lists
+"scalping and 0DTE gamma harvesting are out of scope at this latency
+class." The hard rule rejects any setup whose modeled edge half-life is
+shorter than a default 10x the measured end-to-end latency envelope,
+**regardless of backtest performance.**
+
+Registering H-27 converts that assertion into a measured proposition.
+If the gate trips, §38 is vindicated with evidence instead of assumed;
+that is a real result and it closes this entry FAILED.
+
+Frozen measurement, so neither side of it can be reshaped later:
+
+- **Latency envelope L** = p95(data age) + p95(order round-trip),
+  measured on the actual execution path over >= 500 samples spanning
+  both the 07:00-09:30 pre-market window and regular hours. Measured,
+  never assumed, never theoretical zero.
+- **Edge half-life T-half** = the smallest execution delay d for which
+  net expectancy E(d) <= E(0)/2, with d drawn from
+  {0, 100ms, 250ms, 500ms, 1s, 2s, 5s, 10s}. E(d) fills the entry from
+  the actual tick tape at (trigger_time + d) at the then-prevailing
+  offer; stop and target logic are unchanged.
+- **Gate:** if T-half < 10 x L, the hypothesis is **REJECTED —
+  structurally, regardless of E(0) and regardless of every criterion
+  below.** No expectancy number may override it. That is the spec's
+  own rule and this entry does not get an exemption from it.
+
+The spec's §6 routing note compounds this and is adopted verbatim:
+on zero-commission / wholesaler PFOF routing (Schwab, Webull,
+Robinhood, Alpaca), breakout *anticipation* entries are disallowed;
+only validated micro-pullback resting orders are admissible.
+
+### Gate 1 — Fill realism (LAW 14), and why bars are inadmissible
+
+The claimed 1:1 uses a cent-level stop at the pullback low against a
+target measured in cents. At that resolution a 1-minute bar **cannot
+tell you whether the `Prior_Candle_High + $0.01` trigger printed before
+or after the low that stops you out.** That intrabar sequencing
+ambiguity is larger than the entire claimed edge, and resolving it by
+assumption in either direction decides the result before the data does.
+
+Frozen consequence: **a bar-only study is not admissible evidence for
+this entry.** The study runs on trades-and-quotes tick data, with:
+
+- intrabar sequencing taken from the actual tick sequence, never assumed;
+- entry filled at the prevailing offer or worse (the trigger is
+  marketable by construction), never at the trigger price;
+- stop filled at the prevailing bid with slippage, gap-through filling
+  at the next available print;
+- spread carried as measured, not modeled — on $2-$20 low-float names
+  at RVOL >= 5 it runs 1-5 cents and widens in the squeeze, which is
+  40bp+ round trip on a $5 stock, roughly 8x the swing book's cost;
+- LULD halt and resume handled explicitly; a halt is not a silent skip.
+
+The spec's own admission — "expect to capture < 50% of the visual
+move" — is an acknowledgement that visible moves overstate achievable
+ones. The study therefore reports realized capture rate against the
+visually available move as a standing number.
+
+### Frozen rules — the strategy as registered
+
+Thresholds are the operator's specification, taken verbatim and frozen:
+
+1. **Pillar 1 — Price:** $2.00 <= P <= $20.00 (A-quality $5-$10).
+2. **Pillar 2 — Gain:** change >= +10.0% (A-setup >= +30.0%).
+3. **Pillar 3 — RVOL:** >= 5.0x vs. 50-day SMA volume, compared at the
+   same time-of-day (a cumulative-vs-full-day comparison would
+   manufacture 5x every morning). Preferred confirmation: day volume
+   > 25M shares. Low-volume anticipation entries forbidden.
+4. **Pillar 4 — Float:** < 20M shares (high conviction < 10M).
+5. **Pillar 5 — Catalyst:** breaking headline in AH or pre-market;
+   the no-news sympathy/squeeze exception only when the ticker is the
+   #1 leading gainer, at reduced size.
+6. **Windows:** optimal 07:00-09:30 ET, secondary 09:30-10:00 ET, hard
+   cutoff on new entries at 10:00 ET. All times America/New_York,
+   DST-aware.
+7. **Entry state machine:** impulse to new HOD on elevated volume ->
+   pullback -> buy at `Prior_Candle_High + $0.01`. Stop = pullback low.
+8. **1:1 validation gate:** abort unless
+   `(Prior_HOD - Entry) >= (Entry - Stop)`. Suppress entirely when
+   theoretical upside to prior HOD < $0.10.
+9. **Exits:** 50% at prior-HOD retest, trail the runner; hard stop at
+   the pullback low; topping tail; doji; volume divergence.
+10. **Circuit breakers:** give-back rule (liquidate and halt for the
+    day if daily P&L falls to <= 50% of intraday peak P&L); daily max
+    loss halt; regime filter (suspend the session after the first two
+    leading-gainer breakout setups fail in succession).
+11. **Sizing:** 1% of equity risked per trade, consistent with the
+    program's existing risk budget. Not specified by the source, so
+    frozen here rather than chosen later against results.
+
+**Two of the seven exits cannot be built, and this changes what is
+under test.** Exit 3 (abnormally large ask block) and exit 4 (hidden
+seller absorption) require Level 2 depth-of-book. Alpaca does not
+provide a montage; the Robinhood MCP does not either; both need a
+TotalView / DAS-class feed the program does not have. Exit 5 (tape
+aggression) is approximated by Lee-Ready trade-side classification
+against the prevailing quote, and that approximation is disclosed
+rather than presented as the rule it stands in for.
+
+Therefore **what is registered is the bar-and-tape variant, not the
+source's method**, and it **may not inherit the source's 70% / 1:1 /
++0.40R figures.** Those figures appear in this entry only as the claim
+being tested. If the variant fails, that is not evidence the full
+method fails, and the converse is equally barred.
+
+**Ambiguities resolved now, in advance, because each one is an
+opportunity to tune against results later:** a pullback is 1-3
+consecutive lower-closing 1-minute candles; "tight basing" is <= 3
+bars whose combined range <= 50% of the impulse bar's range;
+"volume contracts" means mean pullback-bar volume < impulse-bar
+volume; a topping tail is an upper wick >= 2x the candle body; a doji
+is a body <= 10% of the bar's range; volume divergence is a higher
+high on volume below the prior bar's; float is approximated as SEC
+`dei:EntityPublicFloat` / price from the most recent filing, with
+staleness bounded and disclosed (this is public float in dollars, NOT
+true share float, and the substitution is recorded rather than hidden);
+catalyst presence is evaluated over [16:00 prior session, 09:30]; the
+give-back peak tracks realized plus unrealized P&L intraday; "first two
+setups fail" means the session's first two entries both reach their
+stop.
+
+**Data requirement.** Trades and quotes tick data for every scanned
+candidate across the study period, from one consistent vendor and pull,
+with corrupt-tick guards active. A missing or partial symbol-day aborts
+the study rather than silently shrinking the sample (LAW 18). Minute
+bars alone do not satisfy this requirement — see Gate 1.
+
+**Regulatory constraint, recorded now.** Pattern Day Trader rules cap a
+sub-$25,000 margin account at three day trades per five business days.
+The strategy is unrunnable as specified below that equity. The paper
+account (~$98k) is unaffected for testing; any live decision must state
+the account it applies to.
+
+### Success criterion, fixed now
+
+Evaluated in order. Gate 0 and Gate 1 are prerequisites, not tradeable
+against performance.
+
+0. **Gate 0 (§38):** T-half >= 10 x L, else REJECTED outright.
+1. **Gate 1 (LAW 14):** results produced on tick data under the fill
+   model above, else INADMISSIBLE.
+2. **CONFIRMED (adoption-eligible)** requires ALL of:
+   - **net** expectancy >= **+0.10R**, costs and measured slippage
+     deducted — not gross;
+   - **n >= 200** closed trades spanning **>= 60 distinct ticker-days**;
+   - positive net expectancy in **>= half** of judged calendar months
+     (a month is judged at >= 10 trades);
+   - **no single ticker-day contributes > 20%** of total net R.
+3. **FAILED** if the sample is reached and any clause above is missed.
+4. **INCONCLUSIVE** below n = 200 or below 60 ticker-days, however the
+   numbers look.
+
+**Why these numbers, written down before the result so the reasoning
+cannot be retrofitted:**
+
+- **NET, not gross.** Every other entry in this file judges gross and
+  reports break-even, because swing-trading friction is ~5bp against
+  expectancies near +0.12R. Scalping inverts that: spread alone is
+  40bp+ round trip. A gross criterion here would confirm strategies
+  that lose money, so the house convention is deliberately broken and
+  the break-even friction level is still reported alongside.
+- **+0.10R, not >= 0R.** The claim under test is +0.40R. A zero bar
+  would "confirm" a strategy delivering none of its claim while
+  consuming more operator attention — pre-market hours, halt risk, live
+  tape — than everything else in the program combined. +0.10R is a
+  deliberate 4x haircut on the claim: generous to the hypothesis, still
+  a real edge, and above the noise floor once scalping costs are paid.
+- **60 ticker-days, not just n >= 200.** Scalp trades cluster: ten
+  entries on one squeeze are one bet, not ten. Raw trade count alone is
+  the easiest way to manufacture significance here, so independence is
+  required explicitly.
+- **The 20% concentration clause** exists because one 2021-style
+  parabolic day can carry an entire result. If it does, that is a
+  finding about that day, not about the strategy.
+- **Breadth across months** because small-cap momentum is violently
+  regime-dependent; a 2021-only edge is a regime artifact.
+
+Per-ticker, per-day, per-window and per-setup-quality (A-setup vs.
+baseline) splits are computed and reported as **context, never as
+criteria** (LAW 20). Net expectancy is reported beside the live book's
+for scale — also context, not a criterion. The thresholds above may be
+**tightened** before results and never loosened; that is the only
+direction any of them may move.
+
+**Adoption is a separate decision.** CONFIRMED means adoption-ELIGIBLE
+only. No activation follows automatically, the philosophy's one-new-
+setup-at-a-time sequencing still applies, and because this is a new
+component it additionally requires its own execution path, its own
+ARMED interlock, and an explicit operator decision naming the account.
+
+**What may NOT be done before the verdict.** No execution path, no
+capital, no paper or live wiring, no scanner running against the live
+book, and no entry into any tradeable universe. The work exists as
+study code in its own tree and nothing else. Partial results do not
+license a "small test position" — that is adoption without the verdict.
+
+**Status:** OPEN — registered, implementation and study to follow.
+
+---
+
 ## H-26 — Second expansion: sector coverage the universe has never held
 
 **Registered:** 2026-09-12, BEFORE the candidate set or any study code
