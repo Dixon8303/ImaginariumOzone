@@ -42,6 +42,10 @@ on:
 
 permissions:
   contents: write
+  # The digest is posted as a comment on a single tracking issue, which is
+  # the only delivery channel here that needs no operator-supplied
+  # credential: it authenticates with the built-in GITHUB_TOKEN.
+  issues: write
 
 concurrency:
   group: rs-paper-trader
@@ -116,15 +120,43 @@ jobs:
           git pull --rebase origin main
           git push
 
-      - name: Push digest to phone
-        # Gated on a report actually changing: read-only pre-open runs and
-        # duplicate evening fires would otherwise re-send identical text.
-        # continue-on-error because a notification must never take the
-        # trading job down, and it no-ops until the secrets exist, so the
-        # step is inert rather than red while they are absent.
+      # Every notification step below is gated on the report actually
+      # changing — read-only pre-open runs and duplicate evening fires
+      # would otherwise re-send identical text — and each is
+      # continue-on-error, because a notification must never take the
+      # trading job down with it.
+
+      - name: Build digest
         if: steps.commit.outputs.changed == 'true'
         continue-on-error: true
         working-directory: rs_options
+        run: python -m paper.notify > /tmp/digest.txt
+
+      - name: Post digest to the tracking issue
+        # Needs no operator-supplied secret: GITHUB_TOKEN is built in, and
+        # a comment on an issue the operator owns is what their GitHub
+        # mobile app turns into a push notification. One issue, one
+        # comment per session, so the thread reads chronologically.
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: "RS paper track — daily digest"
+        run: |
+          test -s /tmp/digest.txt || { echo "no digest to post"; exit 0; }
+          NUM=$(gh issue list --state open --limit 100 --json number,title \
+                  --jq "map(select(.title == \"$TITLE\")) | .[0].number // empty")
+          if [ -z "$NUM" ]; then
+            gh issue create --title "$TITLE" --body-file /tmp/digest.txt
+          else
+            gh issue comment "$NUM" --body-file /tmp/digest.txt
+          fi
+
+      - name: Push digest to Telegram
+        # Optional second channel. No-ops while the secrets are absent, so
+        # the step is inert rather than red until they exist.
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -133,7 +165,7 @@ jobs:
             echo "Telegram secrets absent — skipping push (not an error)."
             exit 0
           fi
-          python -m paper.notify > /tmp/digest.txt
+          test -s /tmp/digest.txt || { echo "no digest to send"; exit 0; }
           curl -sS -o /dev/null -w 'telegram HTTP %{http_code}\n' \
             "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
             --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
