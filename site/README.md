@@ -8,7 +8,7 @@ No build step, no backend — ready for GitHub Pages.
 
 | URL | Purpose |
 |-----|---------|
-| `/` | The official site — case files, evidence room, timeline, excerpt, `#acquire` (aliases `#buy`, `#free-chapter`), deep links `#bgf-001`…`#bgf-012` |
+| `/` | The official site — case files, evidence room, timeline, excerpt, `#acquire` (alias `#buy`) = the format chooser, `#free-chapter` = the Recovery List signup box, deep links `#bgf-001`…`#bgf-012` |
 | `/links.html` | Link-in-bio hub: Book, Free Chapter, Archive, Genius Index, Podcast, Press Kit |
 | `/press-kit.html` | One-page press kit for media & educators |
 | `/free-chapter.html` | Stable redirect → `/#free-chapter` (the Recovery List capture) |
@@ -44,7 +44,10 @@ Everything configurable lives in **one config block** at the top of
 | `PAYHIP_STORE_URL` | ✅ https://payhip.com/BlackGeniusFiles (hub "Full Bookstore" link) |
 | `PAYHIP_STUDY_URL` | ✅ https://payhip.com/b/R0jgn (Study & Trivia Companion — hub row 08, FAQ Q·05, and a product card in `#acquire`) |
 | `YOUTUBE_URL` | ✅ https://www.youtube.com/@theblackgeniusfiles — same URL as the `YT.url` config in `black-genius-files`' `assets/data.js`; keep them matching if either changes |
-| `AMAZON_URL` | ✅ https://a.co/d/0g29KbPj (trade paperback — the Kindle ebook link is intentionally unused) |
+| `AMAZON_PAPERBACK_URL` | ✅ https://www.amazon.com/dp/B0HKT1PV5Y — 7×10 paperback, 294 pp, ISBN 979-8185207253, $36.99. The campaign's lead format. |
+| `AMAZON_HARDCOVER_URL` | ✅ https://www.amazon.com/dp/B0HKW11PSZ — hardcover, ISBN 979-8185084878, $54.99 |
+| `AMAZON_KINDLE_URL` | ✅ https://www.amazon.com/dp/B0GX32RB25 — Kindle edition (KDP Select / Kindle Unlimited) |
+| `AMAZON_URL` | Alias of the paperback URL, kept for anything that still reads it. The old `a.co/d/0g29KbPj` share link resolved to the **Kindle** page, not the paperback — never use `a.co` share links; they carry the sharer's format. |
 | `GA4_MEASUREMENT_ID` | ✅ `G-FXDJLKSKDG` |
 | `FORM_ACTION` | ✅ Kit form `9748584` (posts `email_address`; the incentive email delivers the Chapter 1 PDF) |
 | `PODCAST_URL` | ✅ The All Black Everything Podcast (Apple Podcasts) |
@@ -62,10 +65,27 @@ once the ISBN is assigned.
 ## Tracking
 
 - GA4 loads from the config block (`MEASUREMENT_ID`).
-- Inbound UTM params (`utm_source=youtube|pinterest`, `utm_campaign=bgf_engine`,
-  `utm_content=<id>`, …) are captured on landing, kept in `sessionStorage` for
-  the visit, and appended to every outbound Payhip / Amazon link — attribution
-  survives internal navigation and the click out to checkout.
+- Inbound UTM params (`utm_source=youtube|pinterest|instagram|facebook|linkedin|email`,
+  `utm_campaign=bgf_engine|what_history_buried_paperback_launch`, `utm_content=<id>`, …)
+  are captured on landing, kept in `sessionStorage` for the visit, and appended to every
+  outbound Payhip / Amazon link — attribution survives internal navigation and the click
+  out to checkout.
+- Outbound events (one per click, fired from one delegated listener in `site.js`):
+
+  | Event | Fires on | Parameters |
+  |---|---|---|
+  | `amazon_click` | Any Amazon format | `format` (paperback/hardcover/kindle), `placement`, `retailer`, `campaign_source` |
+  | `buy_click` | Payhip (PDF, companion) | same |
+  | `acquire_view` | Visitor scrolls the format chooser into view (once per page view) | — |
+  | `lead` | Recovery List signup submitted | `method` |
+
+  `format` comes from `data-track-buy`, `placement` from `data-placement` on the link.
+  To report on them, register `format`, `placement` and `retailer` as **event-scoped custom
+  dimensions** in GA4 (Admin → Custom definitions), and mark `amazon_click`, `buy_click` and
+  `lead` as **key events**.
+- Amazon's side of the funnel (did the click become a sale?) is only visible through
+  **Amazon Attribution** tags, created in the Amazon Ads console. Paste a tagged URL over
+  the plain one in the config block and every button on every page picks it up.
 
 ## Deploy — LIVE at the repo URL
 

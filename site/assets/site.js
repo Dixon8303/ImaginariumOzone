@@ -11,9 +11,18 @@ window.BGF_CONFIG = {
   PAYHIP_STORE_URL: "https://payhip.com/BlackGeniusFiles",
   PAYHIP_STUDY_URL: "https://payhip.com/b/R0jgn",
 
-  /* Amazon listing — the trade paperback. (The $12.99 Kindle ebook link is
-     deliberately not used anywhere: it undercuts the direct price.) */
-  AMAZON_URL: "https://a.co/d/0g29KbPj",
+  /* Amazon — one canonical product URL per format (verified 2026-09-27).
+     Every [data-amazon="<format>"] link on every page is rewired from here,
+     so a price change or an Amazon Attribution tag is a one-line edit:
+     paste the tagged URL over the plain one and push.
+     Do NOT use a.co share links — they carry the sharer's format.
+     a.co/d/0g29KbPj resolved to the KINDLE page (B0GX32RB25), not the
+     paperback, which is why it was retired. */
+  AMAZON_PAPERBACK_URL: "https://www.amazon.com/dp/B0HKT1PV5Y",
+  AMAZON_HARDCOVER_URL: "https://www.amazon.com/dp/B0HKW11PSZ",
+  AMAZON_KINDLE_URL: "https://www.amazon.com/dp/B0GX32RB25",
+  /* Back-compat alias: anything still reading AMAZON_URL gets the paperback. */
+  AMAZON_URL: "https://www.amazon.com/dp/B0HKT1PV5Y",
 
   /* Google Analytics 4 measurement ID. */
   GA4_MEASUREMENT_ID: "G-FXDJLKSKDG",
@@ -77,6 +86,10 @@ window.BGF_CONFIG = {
 
     // Order matters: a subscribe link is also a youtube.com link, and the
     // subscribe intent is the one worth counting.
+    //   amazon_click — any Amazon format (paperback / hardcover / kindle).
+    //                  A separate event NAME, not a parameter, so Amazon
+    //                  click-throughs show in GA4 with zero configuration.
+    //   buy_click    — direct sales through Payhip (PDF, companion).
     function classify(href) {
       if (/sub_confirmation/.test(href)) return "subscribe_click";
       if (/payhip\.com/.test(href)) return "buy_click";
@@ -84,7 +97,7 @@ window.BGF_CONFIG = {
       if (/youtube\.com|youtu\.be/.test(href)) return "youtube_click";
       if (/podcasts\.apple\.com/.test(href)) return "podcast_click";
       if (/calendly\.com/.test(href)) return "interview_click";
-      if (/amazon\.[a-z.]+|amzn\.to|a\.co/.test(href)) return "buy_click";
+      if (/amazon\.[a-z.]+|amzn\.to|a\.co/.test(href)) return "amazon_click";
       return "outbound_click";
     }
 
@@ -92,9 +105,11 @@ window.BGF_CONFIG = {
       var a = ev.target.closest && ev.target.closest("a[href]");
       if (!a || typeof window.gtag !== "function") return;
       if (!isOutbound(a)) return;
-      // One event per click: the classifier replaces the old data-track-buy
-      // dispatch rather than firing alongside it, so a buy button does not
-      // report twice. Its item/price labels are kept as parameters.
+      // One event per click. Parameters say WHICH format, WHERE on the page,
+      // and WHERE the visitor came from, so one report answers "which
+      // placement sold which format to which channel". Register format,
+      // placement and retailer as event-scoped custom dimensions in GA4
+      // (Admin > Custom definitions) to see them in standard reports.
       var params = {
         link_url: a.href,
         link_text: (a.innerText || "").trim().slice(0, 80),
@@ -103,11 +118,38 @@ window.BGF_CONFIG = {
       var buy = a.closest("[data-track-buy]");
       if (buy) {
         params.item_name = buy.dataset.trackBuy;
+        params.format = buy.dataset.trackBuy;
         params.price = buy.dataset.trackPrice || "";
         params.currency = "USD";
       }
+      params.retailer = /payhip\.com/.test(a.href) ? "payhip"
+        : /amazon\.[a-z.]+|amzn\.to|a\.co/.test(a.href) ? "amazon" : "";
+      var spot = a.closest("[data-placement]");
+      if (spot) params.placement = spot.dataset.placement;
+      var src = utms().utm_source;
+      if (src) params.campaign_source = src;
       window.gtag("event", classify(a.href), params);
     }, true);
+
+    /* Funnel step between "arrived" and "clicked to buy": the visitor
+       actually reached the format chooser. Fires once per page view. */
+    function watchAcquire() {
+      var box = document.getElementById("acquire");
+      if (!box || !("IntersectionObserver" in window)) return;
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting) return;
+          window.gtag("event", "acquire_view", { transport_type: "beacon" });
+          io.disconnect();
+        });
+      }, { threshold: 0.25 });
+      io.observe(box);
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", watchAcquire);
+    } else {
+      watchAcquire();
+    }
   }
 
   /* Email capture. The Chapter 1 signup posts a real form to Kit and so
@@ -183,12 +225,18 @@ window.BGF_CONFIG = {
       });
     }
 
-    // Amazon paperback links.
-    if (isUrl(cfg.AMAZON_URL)) {
-      document.querySelectorAll("a[data-amazon]").forEach(function (a) {
-        a.href = cfg.AMAZON_URL;
-      });
-    }
+    // Amazon links, one URL per format: data-amazon="paperback" | "hardcover"
+    // | "kindle". A bare data-amazon (no value) means the paperback — the
+    // campaign's lead format.
+    var AMAZON = {
+      paperback: cfg.AMAZON_PAPERBACK_URL || cfg.AMAZON_URL,
+      hardcover: cfg.AMAZON_HARDCOVER_URL,
+      kindle: cfg.AMAZON_KINDLE_URL,
+    };
+    document.querySelectorAll("a[data-amazon]").forEach(function (a) {
+      var url = AMAZON[a.getAttribute("data-amazon") || "paperback"];
+      if (isUrl(url)) a.href = url;
+    });
 
     // links.html hub destinations + contact.
     var hub = {
