@@ -6,6 +6,15 @@
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
 #   APCA_API_KEY_ID / APCA_API_SECRET_KEY  — Alpaca PAPER keys
+#
+# Optional, for the phone push (absent = the push step no-ops, nothing red):
+#   TELEGRAM_BOT_TOKEN  — from @BotFather. If a token has ever been pasted
+#                         anywhere but this secret, /revoke it and store the
+#                         replacement: the token alone lets anyone send
+#                         messages AS the bot, i.e. forge a trading digest.
+#   TELEGRAM_CHAT_ID    — message the bot once, then read
+#                         result[0].message.chat.id from
+#                         api.telegram.org/bot<TOKEN>/getUpdates
 name: RS Paper Trader
 
 on:
@@ -88,6 +97,7 @@ jobs:
         run: python -m paper.daily ${{ steps.mode.outputs.flag }}
 
       - name: Commit report and ledger
+        id: commit
         # The scan step above writes report/ledger files into the working
         # tree, so `git pull --rebase` must run AFTER they are committed —
         # rebase refuses to run over unstaged changes (this order caused
@@ -97,6 +107,35 @@ jobs:
           git config user.name "rs-paper-bot"
           git config user.email "noreply@github.com"
           git add rs_options/docs/reports
-          git diff --cached --quiet || git commit -m "paper trading report"
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "paper trading report"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
           git pull --rebase origin main
           git push
+
+      - name: Push digest to phone
+        # Gated on a report actually changing: read-only pre-open runs and
+        # duplicate evening fires would otherwise re-send identical text.
+        # continue-on-error because a notification must never take the
+        # trading job down, and it no-ops until the secrets exist, so the
+        # step is inert rather than red while they are absent.
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        working-directory: rs_options
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "Telegram secrets absent — skipping push (not an error)."
+            exit 0
+          fi
+          python -m paper.notify > /tmp/digest.txt
+          curl -sS -o /dev/null -w 'telegram HTTP %{http_code}\n' \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text@/tmp/digest.txt" \
+            --data "disable_web_page_preview=true"
