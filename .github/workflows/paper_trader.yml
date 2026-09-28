@@ -6,6 +6,15 @@
 #
 # Required repository secrets (Settings → Secrets and variables → Actions):
 #   APCA_API_KEY_ID / APCA_API_SECRET_KEY  — Alpaca PAPER keys
+#
+# Optional, for the phone push (absent = the push step no-ops, nothing red):
+#   TELEGRAM_BOT_TOKEN  — from @BotFather. If a token has ever been pasted
+#                         anywhere but this secret, /revoke it and store the
+#                         replacement: the token alone lets anyone send
+#                         messages AS the bot, i.e. forge a trading digest.
+#   TELEGRAM_CHAT_ID    — message the bot once, then read
+#                         result[0].message.chat.id from
+#                         api.telegram.org/bot<TOKEN>/getUpdates
 name: RS Paper Trader
 
 on:
@@ -33,6 +42,10 @@ on:
 
 permissions:
   contents: write
+  # The digest is posted as a comment on a single tracking issue, which is
+  # the only delivery channel here that needs no operator-supplied
+  # credential: it authenticates with the built-in GITHUB_TOKEN.
+  issues: write
 
 concurrency:
   group: rs-paper-trader
@@ -64,20 +77,38 @@ jobs:
       # summer) — a scheduled run trades; earlier it briefs, read-only.
       # A manual run keeps the explicit input, defaulting to the
       # briefing so an accidental click cannot place orders.
+      # A delivery past midnight UTC is still the PREVIOUS session's
+      # after-close run. Treating hour 00-04 as pre-open is what lost
+      # 2026-09-21 and 2026-09-25 entirely: on 09-25 every fire landed
+      # either before the close (17:32) or after midnight (00:05, 00:34),
+      # so all three briefed read-only and that session was never scanned,
+      # ordered, or exited. The 22:10 backup was neutered by this on
+      # exactly the nights it existed to cover.
+      #
+      # So the window is 21:00-04:59 UTC (17:00-01:00 ET, after the close
+      # and before the next session), and a run inside its post-midnight
+      # half names yesterday as its session. `data_is_fresh` in paper.daily
+      # still refuses to trade unless the benchmark's newest bar IS that
+      # session, so a Monday 00:30 delivery resolves to Sunday, finds
+      # Friday's bar, and correctly does nothing.
       - name: Select run mode
         id: mode
         run: |
+          HOUR=$(date -u +%H)
+          SESSION=$(date -u +%F)
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ inputs.mode }}" = "trade" ]; then
-              echo "flag=" >> "$GITHUB_OUTPUT"
-            else
-              echo "flag=--preopen" >> "$GITHUB_OUTPUT"
-            fi
-          elif [ "$(date -u +%H)" -ge 21 ]; then
-            echo "flag=" >> "$GITHUB_OUTPUT"
+            if [ "${{ inputs.mode }}" = "trade" ]; then FLAG=""; else FLAG="--preopen"; fi
+          elif [ "$HOUR" -ge 21 ] || [ "$HOUR" -lt 5 ]; then
+            FLAG=""
           else
-            echo "flag=--preopen" >> "$GITHUB_OUTPUT"
+            FLAG="--preopen"
           fi
+          if [ -z "$FLAG" ] && [ "$HOUR" -lt 5 ]; then
+            SESSION=$(date -u -d 'yesterday' +%F)
+          fi
+          echo "flag=$FLAG" >> "$GITHUB_OUTPUT"
+          echo "session=$SESSION" >> "$GITHUB_OUTPUT"
+          echo "hour=$HOUR mode=${FLAG:-trade} session=$SESSION"
 
       - name: Scan + paper trades + report
         working-directory: rs_options
@@ -85,9 +116,12 @@ jobs:
           APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
           APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
           RS_PAPER_ARMED: "YES"
-        run: python -m paper.daily ${{ steps.mode.outputs.flag }}
+        run: |
+          python -m paper.daily ${{ steps.mode.outputs.flag }} \
+            --session-date=${{ steps.mode.outputs.session }}
 
       - name: Commit report and ledger
+        id: commit
         # The scan step above writes report/ledger files into the working
         # tree, so `git pull --rebase` must run AFTER they are committed —
         # rebase refuses to run over unstaged changes (this order caused
@@ -97,6 +131,63 @@ jobs:
           git config user.name "rs-paper-bot"
           git config user.email "noreply@github.com"
           git add rs_options/docs/reports
-          git diff --cached --quiet || git commit -m "paper trading report"
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "paper trading report"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
           git pull --rebase origin main
           git push
+
+      # Every notification step below is gated on the report actually
+      # changing — read-only pre-open runs and duplicate evening fires
+      # would otherwise re-send identical text — and each is
+      # continue-on-error, because a notification must never take the
+      # trading job down with it.
+
+      - name: Build digest
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        working-directory: rs_options
+        run: python -m paper.notify > /tmp/digest.txt
+
+      - name: Post digest to the tracking issue
+        # Needs no operator-supplied secret: GITHUB_TOKEN is built in, and
+        # a comment on an issue the operator owns is what their GitHub
+        # mobile app turns into a push notification. One issue, one
+        # comment per session, so the thread reads chronologically.
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TITLE: "RS paper track — daily digest"
+        run: |
+          test -s /tmp/digest.txt || { echo "no digest to post"; exit 0; }
+          NUM=$(gh issue list --state open --limit 100 --json number,title \
+                  --jq "map(select(.title == \"$TITLE\")) | .[0].number // empty")
+          if [ -z "$NUM" ]; then
+            gh issue create --title "$TITLE" --body-file /tmp/digest.txt
+          else
+            gh issue comment "$NUM" --body-file /tmp/digest.txt
+          fi
+
+      - name: Push digest to Telegram
+        # Optional second channel. No-ops while the secrets are absent, so
+        # the step is inert rather than red until they exist.
+        if: steps.commit.outputs.changed == 'true'
+        continue-on-error: true
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "Telegram secrets absent — skipping push (not an error)."
+            exit 0
+          fi
+          test -s /tmp/digest.txt || { echo "no digest to send"; exit 0; }
+          curl -sS -o /dev/null -w 'telegram HTTP %{http_code}\n' \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text@/tmp/digest.txt" \
+            --data "disable_web_page_preview=true"
