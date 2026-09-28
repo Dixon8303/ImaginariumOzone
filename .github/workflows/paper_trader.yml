@@ -77,20 +77,38 @@ jobs:
       # summer) — a scheduled run trades; earlier it briefs, read-only.
       # A manual run keeps the explicit input, defaulting to the
       # briefing so an accidental click cannot place orders.
+      # A delivery past midnight UTC is still the PREVIOUS session's
+      # after-close run. Treating hour 00-04 as pre-open is what lost
+      # 2026-09-21 and 2026-09-25 entirely: on 09-25 every fire landed
+      # either before the close (17:32) or after midnight (00:05, 00:34),
+      # so all three briefed read-only and that session was never scanned,
+      # ordered, or exited. The 22:10 backup was neutered by this on
+      # exactly the nights it existed to cover.
+      #
+      # So the window is 21:00-04:59 UTC (17:00-01:00 ET, after the close
+      # and before the next session), and a run inside its post-midnight
+      # half names yesterday as its session. `data_is_fresh` in paper.daily
+      # still refuses to trade unless the benchmark's newest bar IS that
+      # session, so a Monday 00:30 delivery resolves to Sunday, finds
+      # Friday's bar, and correctly does nothing.
       - name: Select run mode
         id: mode
         run: |
+          HOUR=$(date -u +%H)
+          SESSION=$(date -u +%F)
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            if [ "${{ inputs.mode }}" = "trade" ]; then
-              echo "flag=" >> "$GITHUB_OUTPUT"
-            else
-              echo "flag=--preopen" >> "$GITHUB_OUTPUT"
-            fi
-          elif [ "$(date -u +%H)" -ge 21 ]; then
-            echo "flag=" >> "$GITHUB_OUTPUT"
+            if [ "${{ inputs.mode }}" = "trade" ]; then FLAG=""; else FLAG="--preopen"; fi
+          elif [ "$HOUR" -ge 21 ] || [ "$HOUR" -lt 5 ]; then
+            FLAG=""
           else
-            echo "flag=--preopen" >> "$GITHUB_OUTPUT"
+            FLAG="--preopen"
           fi
+          if [ -z "$FLAG" ] && [ "$HOUR" -lt 5 ]; then
+            SESSION=$(date -u -d 'yesterday' +%F)
+          fi
+          echo "flag=$FLAG" >> "$GITHUB_OUTPUT"
+          echo "session=$SESSION" >> "$GITHUB_OUTPUT"
+          echo "hour=$HOUR mode=${FLAG:-trade} session=$SESSION"
 
       - name: Scan + paper trades + report
         working-directory: rs_options
@@ -98,7 +116,9 @@ jobs:
           APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
           APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
           RS_PAPER_ARMED: "YES"
-        run: python -m paper.daily ${{ steps.mode.outputs.flag }}
+        run: |
+          python -m paper.daily ${{ steps.mode.outputs.flag }} \
+            --session-date=${{ steps.mode.outputs.session }}
 
       - name: Commit report and ledger
         id: commit

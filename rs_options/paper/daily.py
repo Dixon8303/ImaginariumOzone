@@ -5,6 +5,12 @@ Two scheduled runs (GitHub Actions), or manually from rs_options/:
     python -m paper.daily --preopen    # morning briefing, READ-ONLY
     python -m paper.daily              # post-close trading run
 
+    python -m paper.daily --session-date=2026-09-25   # name the session
+
+`--session-date` exists because a scheduled fire can be delivered after
+midnight UTC while still reporting the previous session; see
+`session_date_from_argv`. It defaults to the runner's date.
+
 The pre-open run reports what yesterday's close implies and what is
 already queued. It places no orders and never writes the ledger, so it
 cannot double-trade against the evening run.
@@ -931,13 +937,34 @@ def preopen_report(broker, all_bars: dict, today: str) -> str:
     return "\n".join(lines)
 
 
+def session_date_from_argv(argv: list) -> str:
+    """The SESSION being reported, which is not always the runner's date.
+
+    GitHub delivers scheduled fires late — observed by hours — so an
+    after-close run can land past midnight UTC. Such a run is still
+    reporting the previous session, and dating it by the runner's calendar
+    day made `data_is_fresh` compare the wrong day: on 2026-09-25 every
+    fire either arrived before the close or after midnight, so that session
+    was never scanned, ordered, or exited at all.
+
+    Explicit `--session-date=YYYY-MM-DD` wins; otherwise the runner's date,
+    so every existing caller keeps its current behaviour.
+    """
+    for arg in argv:
+        if arg.startswith("--session-date="):
+            value = arg.split("=", 1)[1]
+            date.fromisoformat(value)      # reject a malformed date loudly
+            return value
+    return str(date.today())
+
+
 def main() -> None:
     import sys
     from .options_broker import PaperOptionsBroker
     preopen = "--preopen" in sys.argv
     broker = PaperOptionsBroker()
-    today = str(date.today())
-    start = str(date.today() - timedelta(days=HISTORY_DAYS))
+    today = session_date_from_argv(sys.argv)
+    start = str(date.fromisoformat(today) - timedelta(days=HISTORY_DAYS))
     all_bars = {}
     for t in required_tickers():
         try:
@@ -951,7 +978,7 @@ def main() -> None:
         text = run(broker, all_bars, today)
         name = "paper_trading"
     print(text)
-    print(f"\nReport saved: {save_report(name, text)}")
+    print(f"\nReport saved: {save_report(name, text, stamp=today)}")
 
 
 if __name__ == "__main__":

@@ -20,13 +20,18 @@ COMMIT_HINT = (
 )
 
 
-def save_report(name: str, text: str) -> str:
+def save_report(name: str, text: str, stamp: str | None = None) -> str:
     """Write `text` to docs/reports/<name>.txt (overwrites the previous
-    run — git history keeps the old ones). Returns the path written."""
+    run — git history keeps the old ones). Returns the path written.
+
+    `stamp` overrides the header date. A run that fires after midnight UTC
+    is still reporting the PREVIOUS session, and a header reading the
+    runner's calendar date would misdate it by a day.
+    """
     os.makedirs(REPORT_DIR, exist_ok=True)
     path = os.path.join(REPORT_DIR, f"{name}.txt")
     with open(path, "w") as f:
-        f.write(f"generated: {date.today()}\n\n{text.rstrip()}\n")
+        f.write(f"generated: {stamp or date.today()}\n\n{text.rstrip()}\n")
     return path
 
 
