@@ -19,14 +19,54 @@
       "r": -0.281,
       "reason": "time/other",
       "ticker": "NVDA"
+    },
+    {
+      "entry": 62.612405,
+      "entry_date": "2026-09-03",
+      "exit": 56.257089,
+      "exit_date": "2026-09-28",
+      "micro_override": false,
+      "r": -5.115,
+      "reason": "stop",
+      "ticker": "BAC"
+    },
+    {
+      "entry": 362.157692,
+      "entry_date": "2026-09-03",
+      "exit": 339.614615,
+      "exit_date": "2026-09-28",
+      "micro_override": false,
+      "r": -2.717,
+      "reason": "stop",
+      "ticker": "JPM"
+    },
+    {
+      "entry": 88.53375,
+      "entry_date": "2026-09-03",
+      "exit": 87.913929,
+      "exit_date": "2026-09-28",
+      "micro_override": false,
+      "r": -0.771,
+      "reason": "stop",
+      "ticker": "KO"
+    },
+    {
+      "entry": 161.007,
+      "entry_date": "2026-09-03",
+      "exit": 159.846,
+      "exit_date": "2026-09-28",
+      "micro_override": false,
+      "r": -0.204,
+      "reason": "time/other",
+      "ticker": "XOM"
     }
   ],
   "open": {
     "AMD": {
-      "entry": 629.005,
+      "entry": 635.461429,
       "entry_cap": 641.5851,
       "entry_date": "2026-09-24",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "28347540-16e3-4810-a7af-33bfcfa8521b",
@@ -35,21 +75,6 @@
       "signal_close": 629.005,
       "stop": 541.53,
       "target": 891.43
-    },
-    "BAC": {
-      "closing": "2026-09-24",
-      "entry": 62.612405,
-      "entry_cap": 64.3212,
-      "entry_date": "2026-09-03",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "f07c7cf2-cf44-43c4-97d6-e3b7defa3a1b",
-      "qty": 79,
-      "setup": "H-25",
-      "signal_close": 63.06,
-      "stop": 61.37,
-      "target": 68.13
     },
     "DAL": {
       "entry": 81.858305,
@@ -79,41 +104,11 @@
       "stop": 327.79,
       "target": 414.41
     },
-    "JPM": {
-      "closing": "2026-09-24",
-      "entry": 362.157692,
-      "entry_cap": 369.3318,
-      "entry_date": "2026-09-03",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "a2f78e76-57a9-4116-a72e-392a31639d8f",
-      "qty": 13,
-      "setup": "H-25",
-      "signal_close": 362.09,
-      "stop": 353.86,
-      "target": 386.78
-    },
-    "KO": {
-      "closing": "2026-09-24",
-      "entry": 88.53375,
-      "entry_cap": 90.61680000000001,
-      "entry_date": "2026-09-03",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "333b3bbf-b609-449f-ac00-1e26012af703",
-      "qty": 56,
-      "setup": "H-25",
-      "signal_close": 88.84,
-      "stop": 87.73,
-      "target": 92.17
-    },
     "PFE": {
-      "entry": 28.43,
+      "entry": 28.495471,
       "entry_cap": 28.9986,
       "entry_date": "2026-09-24",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "420a051d-8d1a-44c2-a9f3-f099de2b5426",
@@ -122,21 +117,6 @@
       "signal_close": 28.43,
       "stop": 27.34,
       "target": 31.7
-    },
-    "XOM": {
-      "closing": "2026-09-24",
-      "entry": 161.007,
-      "entry_cap": 165.47459999999998,
-      "entry_date": "2026-09-03",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "df83cac6-e3cc-491e-b613-7a79424ed2c8",
-      "qty": 30,
-      "setup": "H-25",
-      "signal_close": 162.23,
-      "stop": 155.32,
-      "target": 182.96
     }
   },
   "options": {
@@ -153,20 +133,6 @@
       "spread_pct": 0.0455,
       "strike": 82.5,
       "ticker": "DAL"
-    },
-    "KO261016C00087500": {
-      "basis": "delta",
-      "delta": 0.7134,
-      "entry_date": "2026-09-14",
-      "entry_price": 2.8499999999999996,
-      "entry_underlying": 89.365,
-      "expiry": "2026-10-16",
-      "fundamental_net_income": null,
-      "invalidation_price": 87.42,
-      "qty": 3,
-      "spread_pct": 0.0491,
-      "strike": 87.5,
-      "ticker": "KO"
     },
     "PFE261120C00028000": {
       "basis": "delta",
