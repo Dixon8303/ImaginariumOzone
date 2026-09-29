@@ -1,7 +1,7 @@
 generated: 2026-09-28
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-28
-paper equity: $96,719.48   cash: $75,288.03
+paper equity: $96,712.89   cash: $75,288.03
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-09-28  $96,719.48   (-3,280.52, -3.3%)
@@ -18,24 +18,18 @@ OPTION COST RECORDER: no quotes today (no signals, or the account has no options
 PAPER ORDERS PLACED (0):
   none
 
-CLOSED SINCE LAST RUN:
-  BAC  2026-09-03 -> 2026-09-28  -5.12R  (stop)
-  JPM  2026-09-03 -> 2026-09-28  -2.72R  (stop)
-  KO  2026-09-03 -> 2026-09-28  -0.77R  (stop)
-  XOM  2026-09-03 -> 2026-09-28  -0.20R  (time/other)
-
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $-206.23  stop 541.53  target 891.43  since 2026-09-24
-  DAL  qty 59  unrealized $+139.93  stop 78.95  target 90.15  since 2026-09-23
+  AMD  qty 7  unrealized $-195.87  stop 541.53  target 891.43  since 2026-09-24
+  DAL  qty 59  unrealized $+126.36  stop 78.95  target 90.15  since 2026-09-23
   DAL261016C00082500  qty 2  unrealized $-60.00  stop ?  target ?  since ?
-  GOOGL  qty 14  unrealized $-60.28  stop 327.79  target 414.41  since 2026-09-14
+  GOOGL  qty 14  unrealized $-61.96  stop 327.79  target 414.41  since 2026-09-14
   KO261016C00087500  qty 3  unrealized $-426.00  stop ?  target ?  since ?
-  PFE  qty 170  unrealized $+38.17  stop 27.34  target 31.7  since 2026-09-24
+  PFE  qty 170  unrealized $+36.47  stop 27.34  target 31.7  since 2026-09-24
   PFE261120C00028000  qty 5  unrealized $+100.00  stop ?  target ?  since ?
   XOM261016C00160000  qty 1  unrealized $-170.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  SOLD   3x KO261016C00087500  P&L $-426.00  (INVALIDATION: underlying 87.19 <= 87.42)
+  no option trades today
   holding 2:
     DAL261016C00082500  2x @ $4.83  since 2026-09-22  stop-if-underlying <= 76.91
     PFE261120C00028000  5x @ $1.32  since 2026-09-24  stop-if-underlying <= 27.34
