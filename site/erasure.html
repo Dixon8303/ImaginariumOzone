@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Erasure Mechanism — A 4-Minute Declassification</title>
+<meta name="description" content="Three things you were taught about Black history. Three things the primary record says instead. Commit to your answer before you see the document — then find out how history is actually engineered." />
+<meta name="theme-color" content="#0E0D0B" />
+<link rel="icon" type="image/png" href="img/favicon.png" />
+<link rel="canonical" href="https://dixon8303.github.io/ImaginariumOzone/book/erasure.html" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="E.A.T. Media" />
+<meta property="og:title" content="They taught you she held a lantern. They hid that she commanded a gunboat." />
+<meta property="og:description" content="Three questions. Commit your answer, then read the primary document. Most people miss all three — and the reason why is the whole point." />
+<meta property="og:image" content="https://dixon8303.github.io/ImaginariumOzone/book/img/og.jpg" />
+<meta property="og:url" content="https://dixon8303.github.io/ImaginariumOzone/book/erasure.html" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="They taught you she held a lantern. They hid that she commanded a gunboat." />
+<meta name="twitter:description" content="Three questions. Commit your answer, then read the primary document." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&amp;family=Archivo:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+<style>
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:90px}
+body{margin:0;background:#0E0D0B;color:#f1e6cc;font-family:'Newsreader',Georgia,serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:#e7b24e}a:hover{color:#f1e6cc}
+::selection{background:#C2A24A;color:#0E0D0B}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #e7b24e;outline-offset:3px}
+@keyframes fadeup{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes unredact{to{transform:scaleX(0)}}
+@keyframes sealPulse{0%,100%{box-shadow:0 0 0 0 rgba(231,178,78,0)}50%{box-shadow:0 0 0 12px rgba(231,178,78,.10)}}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition-duration:.01ms!important}}
+.eyebrow{font-family:'Archivo',sans-serif;font-weight:600;letter-spacing:.34em;text-transform:uppercase;font-size:10.5px;color:#C2A24A;margin:0}
+.opt{display:block;width:100%;text-align:left;background:#14100b;border:1px solid #442216;color:#f1e6cc;font-family:'Newsreader',Georgia,serif;font-size:17px;line-height:1.5;padding:18px 20px;margin:10px 0 0;cursor:pointer;transition:border-color .18s,background .18s}
+.opt:hover:not(:disabled){border-color:rgba(231,178,78,.55);background:#191309}
+.opt:disabled{cursor:default}
+.opt .tag{display:block;font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;margin-top:9px}
+.opt.picked{border-color:#e7b24e}
+.opt.isTruth{border-color:#6f8f5a;background:#121710}
+.opt.isMyth{border-color:#8c3b2e;background:#170f0d}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;cursor:pointer;padding:17px 30px;border:1px solid #C2A24A;background:#C2A24A;color:#0E0D0B;transition:transform .15s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(194,162,74,.3);color:#0E0D0B}
+.btn.ghost{background:transparent;color:#e7b24e;border-color:rgba(231,178,78,.45)}
+.btn.ghost:hover{color:#f1e6cc;box-shadow:none}
+.card{border:1px solid #442216;background:#17130d;padding:26px 24px}
+.mech{border:1px solid #442216;background:#14100b;padding:22px 22px 24px;transition:border-color .2s,transform .2s}
+.mech:hover{border-color:rgba(231,178,78,.4);transform:translateY(-3px)}
+.redact{position:relative;display:inline-block;cursor:pointer}
+.redact i{position:absolute;inset:-2px -4px;background:#1a1611;border-right:2px solid #C2A24A;transform-origin:right;display:block}
+.redact.open i{animation:unredact .55s cubic-bezier(.76,0,.22,1) forwards}
+.redact.open{color:#e7b24e}
+.prog{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#9a6a18,#e7b24e);z-index:99;transition:width .35s ease}
+</style>
+<script src="assets/site.js" defer></script>
+<script src="https://payhip.com/payhip.js" defer></script>
+</head>
+<body>
+<div class="prog" id="prog" style="width:0"></div>
+
+<!-- ====================== [0] FRAME ====================== -->
+<section id="top" style="position:relative;min-height:100svh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:92px 20px 70px;overflow:hidden">
+  <div aria-hidden="true" style="position:absolute;inset:0;background-image:url('img/ch01_erasure.jpg');background-size:cover;background-position:center;opacity:.14"></div>
+  <div aria-hidden="true" style="position:absolute;inset:0;background:radial-gradient(ellipse 74% 56% at 50% 50%,rgba(231,178,78,.10),transparent 62%),linear-gradient(180deg,#0E0D0B 2%,rgba(14,13,11,.22) 46%,#0E0D0B 96%)"></div>
+  <div aria-hidden="true" style="position:absolute;inset:clamp(12px,2.4vw,26px);border:1px solid rgba(231,178,78,.2);pointer-events:none"></div>
+
+  <div style="position:relative;max-width:760px;display:flex;flex-direction:column;align-items:center;animation:fadeup .9s .05s both">
+    <p class="eyebrow">Case Briefing&nbsp;·&nbsp;BGF-001&nbsp;·&nbsp;Open Access</p>
+    <h1 style="margin:22px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(34px,6.6vw,68px);line-height:1.04;letter-spacing:-.015em;color:#f1e6cc;text-wrap:balance">
+      They taught you she held a lantern.
+    </h1>
+    <p style="margin:14px 0 0;font-family:'Playfair Display',serif;font-style:italic;font-weight:700;font-size:clamp(24px,4.6vw,44px);line-height:1.14;color:#e7b24e;text-wrap:balance">
+      They hid that she commanded a gunboat.
+    </p>
+    <p style="margin:30px 0 0;font-size:clamp(17px,2vw,20px);line-height:1.72;color:#c3b08a;max-width:54ch">
+      Three questions. You commit to an answer <em style="color:#f1e6cc">before</em> you see the document — because
+      the gap between what you pick and what the record says is the entire subject of this briefing.
+    </p>
+    <p style="margin:18px 0 0;font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.2em;color:#8d7c5e">4 MINUTES&nbsp;·&nbsp;NO SIGN-UP TO START</p>
+    <div style="display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:38px">
+      <button class="btn" data-go="q">Begin the briefing</button>
+      <a class="btn ghost" href="./#twelve">See all twelve case files</a>
+    </div>
+  </div>
+  <div aria-hidden="true" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px">
+    <span style="font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.32em;color:#8d7c5e">SCROLL&nbsp;TO&nbsp;EXCAVATE</span>
+    <span style="width:1px;height:26px;background:linear-gradient(#e7b24e,transparent)"></span>
+  </div>
+</section>
+
+<!-- ====================== [1] BASELINE ====================== -->
+<section id="q" style="padding:clamp(80px,12vh,140px) 22px;background:linear-gradient(180deg,#0E0D0B,#131009 50%,#0E0D0B)">
+  <div style="max-width:720px;margin:0 auto">
+    <p class="eyebrow" style="text-align:center">Step 01 — Baseline</p>
+    <h2 style="margin:14px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4.4vw,44px);line-height:1.1;color:#f1e6cc;text-align:center;text-wrap:balance">
+      Answer honestly. Not carefully.
+    </h2>
+    <p style="margin:16px auto 0;font-size:17px;line-height:1.7;color:#c3b08a;max-width:50ch;text-align:center">
+      Pick what you actually believe right now. The briefing only works if you commit first.
+    </p>
+    <div id="quiz" style="margin-top:40px"></div>
+  </div>
+</section>
+
+<!-- ====================== [2] CORE ====================== -->
+<section id="core" hidden style="padding:clamp(80px,12vh,150px) 22px;background:#0E0D0B">
+  <div style="max-width:1100px;margin:0 auto">
+    <p class="eyebrow">Step 02 — The Mechanism</p>
+    <h2 style="margin:16px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(30px,5.2vw,58px);line-height:1.04;color:#f1e6cc;max-width:20ch;text-wrap:balance">
+      Erasure is not weather. It is engineering.
+    </h2>
+    <p style="margin:24px 0 0;max-width:64ch;font-size:19px;line-height:1.76;color:#c3b08a">
+      A name does not slip from the record. It is removed — by someone, at some moment, for some reason.
+      Four ordinary jobs do nearly all of it, and not one of them requires a conspiracy.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:40px;align-items:start">
+      <div class="mech">
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:.24em;color:#C2A24A">MECHANISM 01</p>
+        <p style="margin:10px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:25px;color:#f1e6cc">The Clerk</p>
+        <p style="margin:12px 0 0;font-size:16px;line-height:1.68;color:#c3b08a">Files one ship's log and throws away another. The Union's own reports on the Combahee raid were never found.</p>
+      </div>
+      <div class="mech">
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:.24em;color:#C2A24A">MECHANISM 02</p>
+        <p style="margin:10px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:25px;color:#f1e6cc">The Editor</p>
+        <p style="margin:12px 0 0;font-size:16px;line-height:1.68;color:#c3b08a">Puts one name in the headline and folds the rest into <em style="color:#f1e6cc">and others</em>. A legend grows in the gap and undercounts the work.</p>
+      </div>
+      <div class="mech">
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:.24em;color:#C2A24A">MECHANISM 03</p>
+        <p style="margin:10px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:25px;color:#f1e6cc">The Committee</p>
+        <p style="margin:12px 0 0;font-size:16px;line-height:1.68;color:#c3b08a">Picks the textbook a generation will open — and what that generation will therefore never think to ask about.</p>
+      </div>
+      <div class="mech">
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:800;font-size:11px;letter-spacing:.24em;color:#C2A24A">MECHANISM 04</p>
+        <p style="margin:10px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:25px;color:#f1e6cc">The Publisher</p>
+        <p style="margin:12px 0 0;font-size:16px;line-height:1.68;color:#c3b08a">Decides which pages that textbook can afford to keep. Cost, not malice, does the final cutting.</p>
+      </div>
+    </div>
+
+    <p style="margin:36px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(24px,3.6vw,38px);line-height:1.18;color:#f1e6cc;max-width:22ch;text-wrap:balance">
+      None of them believe they are deciding the shape of history. <em style="color:#e7b24e">Each of them is.</em>
+    </p>
+    <div style="margin-top:34px"><button class="btn" data-go="practice">Continue to the archive check</button></div>
+  </div>
+</section>
+
+<!-- ====================== [3] PRACTICE ====================== -->
+<section id="practice" hidden style="padding:clamp(80px,12vh,150px) 22px;background:linear-gradient(180deg,#0E0D0B,#131009 50%,#0E0D0B)">
+  <div style="max-width:880px;margin:0 auto">
+    <p class="eyebrow">Step 03 — The Archive Check</p>
+    <h2 style="margin:16px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4.6vw,48px);line-height:1.06;color:#f1e6cc;max-width:22ch;text-wrap:balance">
+      Find the deletion yourself.
+    </h2>
+    <p style="margin:22px 0 0;max-width:62ch;font-size:18px;line-height:1.74;color:#c3b08a">
+      Below is how the same territory was described fifty years apart. One of these is a record.
+      The other is a decision. Tap the redactions to restore what was cleared.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;margin-top:34px;align-items:start">
+      <figure style="margin:0">
+        <img src="img/ch01_catalan.jpg" alt="The Catalan Atlas of 1375" loading="lazy" style="width:100%;aspect-ratio:4/3;object-fit:cover;border:1px solid rgba(231,178,78,.22)" />
+        <figcaption style="margin-top:10px;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;color:#8d7c5e">CATALAN ATLAS · 1375 · BnF MS. ESPAGNOL 30</figcaption>
+      </figure>
+      <div class="card">
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.26em;color:#e7b24e">1375 — THE RECORD</p>
+        <p style="margin:14px 0 0;font-size:17px;line-height:1.75;color:#c3b08a">
+          Fifty years after the pilgrimage, the best map of the age placed Musa at the centre of West Africa —
+          <span class="redact" data-r tabindex="0" role="button" aria-label="Reveal redacted text">named, titled, gold in hand<i></i></span>.
+        </p>
+        <p style="margin:18px 0 0;font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.26em;color:#8c6f3a">LATER — THE DECISION</p>
+        <p style="margin:14px 0 0;font-size:17px;line-height:1.75;color:#c3b08a">
+          As Europe turned toward conquest, the same region was redrawn as
+          <span class="redact" data-r tabindex="0" role="button" aria-label="Reveal redacted text">terra incognita — blank space<i></i></span>.
+          Erasure as a cartographic act, not an accident.
+        </p>
+        <p id="practiceNote" style="margin:22px 0 0;font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;color:#8d7c5e">TAP BOTH REDACTIONS TO CONTINUE&nbsp;·&nbsp;<span id="rCount">0</span>/2</p>
+      </div>
+    </div>
+    <div id="practiceGo" hidden style="margin-top:34px"><button class="btn" data-go="result">See your clearance</button></div>
+  </div>
+</section>
+
+<!-- ====================== [4][5] FEEDBACK + PROOF ====================== -->
+<section id="result" hidden style="padding:clamp(80px,12vh,150px) 22px;background:#0E0D0B">
+  <div style="max-width:720px;margin:0 auto;text-align:center">
+    <p class="eyebrow">Step 04 — Your Result</p>
+    <div id="resultCard" class="card" style="margin-top:26px;text-align:left;border-color:rgba(231,178,78,.35);animation:sealPulse 5s ease-in-out infinite"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px">
+      <button class="btn ghost" id="shareBtn">Share this result</button>
+      <button class="btn ghost" id="retakeBtn">Take it again</button>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== [6] CONTINUITY ====================== -->
+<section id="next" hidden style="padding:clamp(80px,12vh,150px) 22px;background:linear-gradient(180deg,#0E0D0B,#131009)">
+  <div style="max-width:1000px;margin:0 auto">
+    <p class="eyebrow" style="text-align:center">Step 05 — Keep Going</p>
+    <h2 style="margin:16px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:clamp(28px,4.8vw,50px);line-height:1.06;color:#f1e6cc;text-align:center;max-width:24ch;margin-left:auto;margin-right:auto;text-wrap:balance">
+      That was one case file. There are twelve.
+    </h2>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:44px;align-items:start">
+      <div class="card">
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.26em;color:#e7b24e">FREE — THE RECOVERY LIST</p>
+        <p style="margin:14px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:25px;color:#f1e6cc">Read Chapter 1 free</p>
+        <p style="margin:12px 0 0;font-size:16px;line-height:1.7;color:#c3b08a">The full first case file — Mansa Musa, the 1324 pilgrimage, and the map that knew — sent to your inbox.</p>
+        <form data-capture style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+          <input type="email" name="email_address" required placeholder="your@email.com" aria-label="Email address" style="flex:1;min-width:180px;background:#0E0D0B;border:1px solid #442216;color:#f1e6cc;font-family:'Archivo',sans-serif;font-size:13px;padding:14px 16px" />
+          <button type="submit" class="btn" style="padding:14px 22px">Send it</button>
+        </form>
+        <p class="form-note" style="margin:12px 0 0;font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;color:#8d7c5e">FREE CHAPTER, DELIVERED TO YOUR INBOX.</p>
+      </div>
+
+      <div class="card" style="border-color:rgba(231,178,78,.35)">
+        <p style="margin:0;font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.26em;color:#e7b24e">THE BOOK</p>
+        <p style="margin:14px 0 0;font-family:'Playfair Display',serif;font-weight:800;font-size:25px;color:#f1e6cc">What History Buried</p>
+        <p style="margin:12px 0 0;font-size:16px;line-height:1.7;color:#c3b08a">Twelve case files, reopened and sourced — from Mansa Musa's treasury to Paul Robeson's passport.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:18px">
+          <a class="btn" href="https://payhip.com/b/exquo" data-payhip data-theme="grey" rel="noopener" style="padding:14px 22px">Get the book</a>
+          <a class="btn ghost" href="unlearn.html" style="padding:14px 22px">5-day challenge</a>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin:44px 0 0;text-align:center"><a href="./" style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:#8d7c5e">← Back to the archive</a></p>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+  /* The three questions are the book's own documented corrections — each one a
+     legend the record contradicts, with the source that contradicts it. The
+     folklore option is listed first on purpose: it is the answer most people
+     already hold, and the briefing depends on them committing to it first. */
+  var Q = [
+    { id: "musa", file: "BGF-001", who: "Mansa Musa",
+      q: "How did one traveller's spending sink the price of gold in Cairo for more than a decade?",
+      opts: [
+        { t: "He gave away so much gold out of charity that the market was flooded.", myth: 1 },
+        { t: "He controlled the supply that made the Mediterranean world's money — and moved it through one market.", truth: 1 }
+      ],
+      legend: "$400,000,000,000",
+      truth: "A treasury that governed the gold supply",
+      src: "al-ʿUmari, Cairo, 1337 · Catalan Atlas, 1375",
+      after: "The headline number is a modern estimate laid over a medieval economy. The documented fact is stranger and larger: Mali sat astride the goldfields that supplied Europe's coinage, and taxed the traffic at both ends.",
+      img: "img/ch01_hajj.jpg", cap: "The pilgrimage crossing the Sahara, 1324" },
+
+    { id: "tubman", file: "BGF-004", who: "Harriet Tubman",
+      q: "Harriet Tubman is most often credited with roughly 300 people freed across 19 trips. What does the documentary record show?",
+      opts: [
+        { t: "Around 300 people across 19 trips — the figure in most textbooks.", myth: 1 },
+        { t: "About 70 people across some 13 trips — and then 750 freed in a single night.", truth: 1 }
+      ],
+      legend: "300 people · 19 trips",
+      truth: "About 70 people, some 13 trips — and 750 freed in one night at Combahee",
+      src: "Larson, from the documentary record · press account, 1863",
+      after: "The legend is smaller than the fact. On 1–2 June 1863 she guided three Union gunboats up the Combahee River past Confederate mines and brought out more than 750 people before sunrise. The official Union reports of the raid were never found.",
+      img: "img/ch04_05.jpg", cap: "The dispatch that recorded the raid, 1863" },
+
+    { id: "woods", file: "BGF-009", who: "Granville T. Woods",
+      q: "Granville T. Woods is often said to hold 60 patents. What does the patent record actually show?",
+      opts: [
+        { t: "Sixty patents — the number that circulates in most retellings.", myth: 1 },
+        { t: "Around forty-five — held, defended, and twice upheld against Edison.", truth: 1 }
+      ],
+      legend: "60 patents",
+      truth: "Around 45 U.S. patents — held, defended, twice upheld against Edison",
+      src: "Fouché, from the patent record",
+      after: "Inflating the count is not flattery — it replaces a verifiable record with an unverifiable one. The provable version is the devastating one: he beat Edison in court, twice, and died nearly penniless anyway.",
+      img: "img/ch09_03.jpg", cap: "The patent record" }
+  ];
+
+  var picks = {}, step = 0, reveals = 0;
+  var $ = function (s) { return document.querySelector(s); };
+
+  function setProgress(n) { $("#prog").style.width = n + "%"; }
+
+  function reveal(id) {
+    var el = document.getElementById(id);
+    if (!el || !el.hidden) return;
+    el.hidden = false;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  /* ---- [1] Baseline: render one question at a time, commitment required ---- */
+  function renderQ() {
+    var wrap = $("#quiz");
+    wrap.innerHTML = "";
+    Q.forEach(function (q, i) {
+      if (i > step) return;                       // only up to the current question
+      var box = document.createElement("div");
+      box.style.cssText = "animation:fadeup .6s both;margin:0 0 30px";
+      var answered = picks[q.id] !== undefined;
+
+      var head = '<p style="margin:0;font-family:\'Archivo\',sans-serif;font-weight:700;font-size:10px;letter-spacing:.26em;color:#C2A24A">' +
+                 q.file + " · " + q.who.toUpperCase() + " · " + (i + 1) + "/3</p>" +
+                 '<p style="margin:12px 0 4px;font-family:\'Playfair Display\',serif;font-weight:700;font-size:clamp(20px,2.8vw,26px);line-height:1.3;color:#f1e6cc">' + q.q + "</p>";
+      box.innerHTML = head;
+
+      q.opts.forEach(function (o, oi) {
+        var b = document.createElement("button");
+        b.className = "opt";
+        b.type = "button";
+        b.innerHTML = o.t;
+        if (answered) {
+          b.disabled = true;
+          b.classList.add(o.truth ? "isTruth" : "isMyth");
+          if (picks[q.id] === oi) b.classList.add("picked");
+          var tag = document.createElement("span");
+          tag.className = "tag";
+          tag.style.color = o.truth ? "#8fae76" : "#c07a68";
+          tag.textContent = (o.truth ? "THE RECORD" : "THE FOLKLORE") + (picks[q.id] === oi ? " — YOU PICKED THIS" : "");
+          b.appendChild(tag);
+        } else {
+          b.addEventListener("click", function () {
+            picks[q.id] = oi;
+            step = Math.min(step + 1, Q.length);
+            renderQ();
+            setProgress(20 + (Object.keys(picks).length / Q.length) * 30);
+            if (Object.keys(picks).length === Q.length) {
+              setTimeout(function () { reveal("core"); }, 700);
+            }
+          });
+        }
+        box.appendChild(b);
+      });
+
+      if (answered) {
+        var rv = document.createElement("div");
+        rv.style.cssText = "margin-top:18px;border-left:2px solid #C2A24A;padding:4px 0 4px 18px";
+        rv.innerHTML =
+          '<p style="margin:0;font-family:\'Archivo\',sans-serif;font-size:10px;letter-spacing:.24em;color:#8d7c5e">THE LEGEND</p>' +
+          '<p style="margin:6px 0 0;font-family:\'Playfair Display\',serif;font-size:22px;color:#8c6f3a;text-decoration:line-through">' + q.legend + "</p>" +
+          '<p style="margin:16px 0 0;font-family:\'Archivo\',sans-serif;font-size:10px;letter-spacing:.24em;color:#e7b24e">THE RECORD</p>' +
+          '<p style="margin:6px 0 0;font-family:\'Playfair Display\',serif;font-weight:700;font-size:22px;line-height:1.3;color:#f1e6cc">' + q.truth + "</p>" +
+          '<p style="margin:14px 0 0;font-size:16.5px;line-height:1.7;color:#c3b08a">' + q.after + "</p>" +
+          '<figure style="margin:18px 0 0"><img src="' + q.img + '" alt="" loading="lazy" style="width:100%;max-width:420px;aspect-ratio:3/2;object-fit:cover;border:1px solid rgba(231,178,78,.2)"/>' +
+          '<figcaption style="margin-top:8px;font-family:\'Archivo\',sans-serif;font-size:9.5px;letter-spacing:.18em;color:#8d7c5e">' + q.cap.toUpperCase() + "</figcaption></figure>" +
+          '<p style="margin:14px 0 0;font-family:\'Archivo\',sans-serif;font-size:10px;letter-spacing:.16em;color:#8d7c5e">SOURCE — ' + q.src.toUpperCase() + "</p>";
+        box.appendChild(rv);
+      }
+      wrap.appendChild(box);
+    });
+  }
+
+  /* ---- [3] Practice: the redaction check ---- */
+  document.querySelectorAll("[data-r]").forEach(function (el) {
+    function open() {
+      if (el.classList.contains("open")) return;
+      el.classList.add("open");
+      reveals++;
+      $("#rCount").textContent = String(reveals);
+      if (reveals >= 2) {
+        $("#practiceNote").textContent = "BOTH RESTORED — THE GAP WAS THE POINT.";
+        $("#practiceGo").hidden = false;
+        setProgress(80);
+      }
+    }
+    el.addEventListener("click", open);
+    el.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
+  });
+
+  /* ---- [4][5] Result + shareable artifact ---- */
+  function score() {
+    var right = 0;
+    Q.forEach(function (q) { if (q.opts[picks[q.id]] && q.opts[picks[q.id]].truth) right++; });
+    return right;
+  }
+  var RANKS = [
+    { n: "FULLY REDACTED", d: "You answered the way the textbook taught you to. That is not ignorance — it is the mechanism working exactly as designed." },
+    { n: "PARTIAL RECOVERY", d: "You caught one. The other two are the ones that were engineered hardest." },
+    { n: "ARCHIVE READER", d: "Two of three. You already read against the record — the book will be a fight you enjoy." },
+    { n: "CLEARANCE GRANTED", d: "Three of three. You are not the audience for the folklore. You are the audience for the sources." }
+  ];
+
+  function renderResult() {
+    var s = score(), r = RANKS[s];
+    $("#resultCard").innerHTML =
+      '<p style="margin:0;font-family:\'Archivo\',sans-serif;font-weight:700;font-size:10px;letter-spacing:.28em;color:#C2A24A">CLEARANCE ASSESSED</p>' +
+      '<p style="margin:14px 0 0;font-family:\'Playfair Display\',serif;font-weight:800;font-size:clamp(30px,5vw,46px);line-height:1.04;color:#f1e6cc">' + r.n + "</p>" +
+      '<p style="margin:10px 0 0;font-family:\'Archivo\',sans-serif;font-size:12px;letter-spacing:.2em;color:#e7b24e">' + s + " OF 3 MATCHED THE PRIMARY RECORD</p>" +
+      '<p style="margin:18px 0 0;font-size:17.5px;line-height:1.72;color:#c3b08a">' + r.d + "</p>" +
+      '<p style="margin:20px 0 0;padding-top:18px;border-top:1px solid #442216;font-size:16px;line-height:1.7;color:#c3b08a">' +
+      'Every correction you just read is footnoted in <em style="color:#f1e6cc">What History Buried</em> — al-ʿUmari in 1337, the Catalan Atlas of 1375, the patent record, the 1863 press account.</p>';
+    setProgress(100);
+    reveal("next");
+  }
+
+  $("#shareBtn").addEventListener("click", function () {
+    var s = score();
+    var txt = "I scored " + s + "/3 on The Erasure Mechanism. They taught us she held a lantern — they hid that she commanded a gunboat. See how you do:";
+    var url = location.origin + location.pathname;
+    var btn = this;
+    if (navigator.share) {
+      navigator.share({ title: "The Erasure Mechanism", text: txt, url: url }).catch(function () {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(txt + " " + url).then(function () {
+        btn.textContent = "Copied ✓";
+        setTimeout(function () { btn.textContent = "Share this result"; }, 1800);
+      }).catch(function () {});
+    }
+  });
+
+  $("#retakeBtn").addEventListener("click", function () {
+    picks = {}; step = 0; renderQ(); setProgress(20);
+    document.getElementById("q").scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  document.querySelectorAll("[data-go]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var t = b.getAttribute("data-go");
+      if (t === "result") { reveal("result"); renderResult(); }
+      else { reveal(t); if (t === "q") setProgress(20); if (t === "practice") setProgress(65); }
+    });
+  });
+
+  // A signup from this page is a lead like any other capture on the site.
+  document.querySelectorAll("form[data-capture]").forEach(function (f) {
+    f.addEventListener("submit", function () {
+      if (window.BGF_TRACK_LEAD) window.BGF_TRACK_LEAD("erasure_brief");
+    });
+  });
+
+  renderQ();
+})();
+</script>
+</body>
+</html>
