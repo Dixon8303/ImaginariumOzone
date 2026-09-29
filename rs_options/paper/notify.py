@@ -16,7 +16,7 @@ from __future__ import annotations
 import json
 import os
 import re
-from datetime import date, timedelta
+from datetime import datetime, timedelta, timezone
 
 REPORT = os.path.join("docs", "reports", "paper_trading.txt")
 GROWTH = os.path.join("docs", "reports", "paper_growth.jsonl")
@@ -41,13 +41,27 @@ def growth_rows() -> list:
     return rows
 
 
-def last_weekday(today: date) -> date:
-    """Most recent Mon-Fri on or before `today`. Market holidays are not
-    known here, so a stale flag says what it sees, never 'the job failed'."""
-    d = today
+CLOSE_HOUR_UTC = 21          # NYSE close, year-round upper bound
+
+
+def last_completed_session(now: datetime) -> str:
+    """The newest session that has FINISHED, as of `now` (UTC).
+
+    The hour test is the whole point. A session is not complete until the
+    21:00 UTC close, so before then the newest finished session is
+    yesterday's. Comparing against the runner's calendar date instead made
+    this cry wolf every single night: the 01:13 UTC run that correctly
+    reported Monday was measured against Tuesday and called stale. A
+    staleness warning that fires when nothing is wrong trains the operator
+    to ignore the one that matters.
+
+    Market holidays are not known here, so the flag reports what it sees
+    and never claims the job failed.
+    """
+    d = now.date() if now.hour >= CLOSE_HOUR_UTC else now.date() - timedelta(days=1)
     while d.weekday() > 4:
         d -= timedelta(days=1)
-    return d
+    return d.isoformat()
 
 
 def find(pattern: str, text: str, group: int = 1):
@@ -55,8 +69,8 @@ def find(pattern: str, text: str, group: int = 1):
     return m.group(group) if m else None
 
 
-def digest(today: date | None = None) -> str:
-    today = today or date.today()
+def digest(now: datetime | None = None) -> str:
+    now = now or datetime.now(timezone.utc)
     report = _read(REPORT)
     rows = growth_rows()
 
@@ -74,11 +88,11 @@ def digest(today: date | None = None) -> str:
 
     lines = [f"RS paper track — {generated}"]
 
-    expected = last_weekday(today).isoformat()
+    expected = last_completed_session(now)
     if generated != "unknown" and generated < expected:
         lines.append(
             f"STALE: newest report is {generated}, but {expected} has "
-            "already traded. A session may have been skipped — check the "
+            "already closed. A session may have been skipped — check the "
             "trader's run mode, not just its exit code.")
 
     lines += [
