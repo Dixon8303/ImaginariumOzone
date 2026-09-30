@@ -1,12 +1,12 @@
-generated: 2026-09-28
+generated: 2026-09-29
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-28
-paper equity: $96,712.89   cash: $75,288.03
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-29
+paper equity: $96,636.77   cash: $75,288.03
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-28  $96,719.48   (-3,280.52, -3.3%)
-  over 35 calendar days, 19 recorded sessions: 17 with a change, 1 flat.
-  range so far: $96,651.22 (low) to $100,196.58 (high).
+  2026-08-24  $100,000.00  ->  2026-09-29  $96,636.77   (-3,363.23, -3.4%)
+  over 36 calendar days, 20 recorded sessions: 18 with a change, 1 flat.
+  range so far: $96,636.77 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
@@ -19,14 +19,14 @@ PAPER ORDERS PLACED (0):
   none
 
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $-195.87  stop 541.53  target 891.43  since 2026-09-24
-  DAL  qty 59  unrealized $+126.36  stop 78.95  target 90.15  since 2026-09-23
-  DAL261016C00082500  qty 2  unrealized $-60.00  stop ?  target ?  since ?
-  GOOGL  qty 14  unrealized $-61.96  stop 327.79  target 414.41  since 2026-09-14
-  KO261016C00087500  qty 3  unrealized $-426.00  stop ?  target ?  since ?
-  PFE  qty 170  unrealized $+36.47  stop 27.34  target 31.7  since 2026-09-24
-  PFE261120C00028000  qty 5  unrealized $+100.00  stop ?  target ?  since ?
-  XOM261016C00160000  qty 1  unrealized $-170.00  stop ?  target ?  since ?
+  AMD  qty 7  unrealized $-183.20  stop 541.53  target 891.43  since 2026-09-24
+  DAL  qty 59  unrealized $+177.69  stop 78.95  target 90.15  since 2026-09-23
+  DAL261016C00082500  qty 2  unrealized $-10.00  stop ?  target ?  since ?
+  GOOGL  qty 14  unrealized $-76.38  stop 327.79  target 414.41  since 2026-09-14
+  KO261016C00087500  qty 3  unrealized $-495.00  stop ?  target ?  since ?
+  PFE  qty 170  unrealized $+34.77  stop 27.34  target 31.7  since 2026-09-24
+  PFE261120C00028000  qty 5  unrealized $+95.00  stop ?  target ?  since ?
+  XOM261016C00160000  qty 1  unrealized $-270.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
