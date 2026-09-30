@@ -9,11 +9,20 @@ No build step, no backend — ready for GitHub Pages.
 | URL | Purpose |
 |-----|---------|
 | `/` | The official site — case files, evidence room, timeline, excerpt, `#acquire` (alias `#buy`) = the format chooser, `#free-chapter` = the Recovery List signup box, deep links `#bgf-001`…`#bgf-012` |
-| `/links.html` | Link-in-bio hub: Book, Free Chapter, Archive, Genius Index, Podcast, Press Kit |
+| `/links.html` | Link-in-bio hub: Book, Free Chapter, the briefing, the challenge, Archive, Genius Index, Podcast, Press Kit |
 | `/press-kit.html` | One-page press kit for media & educators |
+| `/erasure.html` | The Erasure Mechanism — 4-minute interactive briefing. **Entry points: nav ("4-Min Briefing"), footer ("THE BRIEFING"), `links.html` row 02.** Day 5 of the launch campaign points here |
+| `/unlearn.html` | The 5-Day Unlearning Challenge. **Entry points: footer ("5-DAY CHALLENGE"), `links.html` row 03.** Day 8 of the launch campaign points here |
 | `/free-chapter.html` | Stable redirect → `/#free-chapter` (the Recovery List capture) |
 | `/privacy.html` | GA4 + email-capture disclosures |
 | `/404.html` | Not-found page (picked up automatically by GitHub Pages) |
+
+`erasure.html` and `unlearn.html` have no navigation of their own — they are
+reachable only through the entry points listed above. Both were orphaned once
+already when `index.html` and `links.html` were rebuilt and the links were not
+carried across: the pages stayed live and stayed in the campaign, but no visitor
+on the site could find them, and nothing failed loudly. **If you rebuild either
+file, re-check that those links survived.**
 
 ## Images
 
