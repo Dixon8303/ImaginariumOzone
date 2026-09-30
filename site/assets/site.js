@@ -24,6 +24,20 @@ window.BGF_CONFIG = {
   /* Back-compat alias: anything still reading AMAZON_URL gets the paperback. */
   AMAZON_URL: "https://www.amazon.com/dp/B0HKT1PV5Y",
 
+  /* Launch ribbon — a countdown bar across the top of every page.
+
+     It expires on its own. After LAUNCH_ENDS passes, the ribbon stops
+     rendering everywhere and nothing has to be committed, deployed or
+     remembered at the close; leaving this block untouched is the correct
+     end state. LAUNCH_RIBBON:false only hides it EARLY.
+
+     LAUNCH_ENDS carries an explicit UTC offset on purpose, so the deadline
+     means the same instant for every visitor regardless of their timezone.
+     -07:00 is Pacific Daylight Time; 8 Oct 2026 falls before DST ends on
+     1 Nov, so PT is -07:00 and not -08:00 on that date. */
+  LAUNCH_RIBBON: true,
+  LAUNCH_ENDS: "2026-10-08T19:00:00-07:00",
+
   /* Google Analytics 4 measurement ID. */
   GA4_MEASUREMENT_ID: "G-FXDJLKSKDG",
 
@@ -282,9 +296,66 @@ window.BGF_CONFIG = {
     });
   }
 
+  /* ---- Launch ribbon ------------------------------------------------------
+     Renders only while the launch is running, so it disappears by itself the
+     moment LAUNCH_ENDS passes — there is no off-switch to remember to throw
+     on the closing night. Everything is guarded: a missing, malformed or
+     already-past date renders nothing at all rather than a broken bar. */
+  function launchRibbon() {
+    if (cfg.LAUNCH_RIBBON === false) return;
+
+    var ends = Date.parse(cfg.LAUNCH_ENDS || "");
+    if (isNaN(ends)) return;                 // unset or malformed — stay silent
+    if (Date.now() >= ends) return;          // the launch is over; this is the end state
+
+    var bar = document.createElement("a");
+    bar.href = "./#acquire";
+    bar.id = "bgf-launch-ribbon";
+    bar.setAttribute("role", "status");
+    bar.style.cssText =
+      "display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;" +
+      "padding:9px 16px;text-align:center;text-decoration:none;" +
+      "background:linear-gradient(90deg,#9a6a18,#C2A24A 55%,#9a6a18);color:#0E0D0B;" +
+      "font-family:'Archivo',sans-serif;font-weight:700;" +
+      "font-size:clamp(10px,2.3vw,11.5px);letter-spacing:.14em;text-transform:uppercase";
+
+    var label = document.createElement("span");
+    var clock = document.createElement("span");
+    clock.style.cssText = "font-variant-numeric:tabular-nums;opacity:.82";
+    bar.appendChild(label);
+    bar.appendChild(clock);
+
+    function tick() {
+      var left = ends - Date.now();
+      if (left <= 0) {                       // crossed the deadline mid-visit
+        if (bar.parentNode) bar.parentNode.removeChild(bar);
+        clearInterval(timer);
+        return;
+      }
+      var mins = Math.floor(left / 60000);
+      var days = Math.floor(mins / 1440);
+      var hrs = Math.floor((mins % 1440) / 60);
+      label.textContent = "Launch week · What History Buried is out now";
+      clock.textContent = days > 0
+        ? "— " + days + (days === 1 ? " day" : " days") + " " + hrs + "h left"
+        : (hrs > 0 ? "— " + hrs + "h " + (mins % 60) + "m left"
+                   : "— " + (mins % 60) + "m left");
+    }
+    tick();
+    var timer = setInterval(tick, 30000);
+
+    /* index.html keeps its nav in a fixed flex-column wrapper, so the ribbon
+       stacks above the nav there with no overlap maths. Every other page has
+       no fixed chrome, so it simply sits at the top of the document. */
+    var chrome = document.getElementById("top-chrome");
+    if (chrome) chrome.insertBefore(bar, chrome.firstChild);
+    else document.body.insertBefore(bar, document.body.firstChild);
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", wire);
+    document.addEventListener("DOMContentLoaded", function () { wire(); launchRibbon(); });
   } else {
     wire();
+    launchRibbon();
   }
 })();
