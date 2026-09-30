@@ -17,18 +17,20 @@ Amazon button here. A post that links *straight to Amazon* never touches the
 site, so **no `amazon_click` is recorded and GA4 sees nothing.**
 
 The calendar currently sends Facebook and LinkedIn straight to Amazon on Day 1,
-and offers "bio / Amazon" on Day 6. Those variants are invisible in GA4. Two ways
-to handle it, and it is a genuine trade:
+and offers "bio / Amazon" on Day 6. Those variants would be invisible in GA4.
 
-| Option | Buyer's path | What you can measure |
+**Decided: every Amazon post routes through the site.** Post → `#acquire` →
+Amazon. It costs the buyer one extra tap and it is the only version that can be
+measured. Use the links below as written; there is nothing to choose per post.
+
+| | Buyer's path | What you can measure |
 |---|---|---|
-| **A — route through the site** (recommended for Days 1, 3, 6) | one extra tap: post → `#acquire` → Amazon | `amazon_click` with source, format and placement; plus anyone who buys the PDF or Companion instead |
-| **B — link straight to Amazon** | shortest path | nothing in GA4. Needs an **Amazon Attribution** tag from the Amazon Ads console to see anything at all |
+| **What we're doing** — route through the site | one extra tap: post → `#acquire` → Amazon | `amazon_click` with source, format and placement — plus anyone who buys the PDF or Companion instead of the paperback |
+| ~~Link straight to Amazon~~ | shortest path | nothing at all in GA4, unless an **Amazon Attribution** tag is created in the Amazon Ads console |
 
-Option A costs one tap and measures everything. Option B is one tap shorter and,
-without an Attribution tag, is unmeasurable. The links below use Option A; if you
-choose B for a given post, expect that day's `amazon_click` number to be empty
-and don't read it as the post failing.
+Worth knowing rather than acting on: the extra tap also puts the format chooser
+in front of every Amazon-bound buyer, so Days 1, 3 and 6 can produce PDF and
+Companion sales that a direct Amazon link would never have given you.
 
 ---
 
@@ -76,12 +78,12 @@ https://dixon8303.github.io/ImaginariumOzone/book/erasure.html?utm_source=instag
 ```
 Email 3 — swap `instagram&utm_medium=social` for `email&utm_medium=email`.
 
-**Why this destination and not `#free-chapter`:** that headline is question one of
-the briefing, word for word — the reader commits to the $400 billion figure, then
-sees it struck through against al-ʿUmari's 1337 account. The page still ends in the
-same free-chapter signup, so you keep the `lead`, and you additionally get the
-shareable score card. If you'd rather send straight to the signup, use
-`?utm_...` on `.../book/#free-chapter` with the same `utm_content`.
+**Send Day 5 to the briefing, not to `#free-chapter`** — decided, use the link
+above. That headline is question one of the briefing word for word: the reader
+commits to the $400 billion figure, then watches it struck through against
+al-ʿUmari's 1337 account. The page ends in the same free-chapter signup, so the
+`lead` is unchanged, and the shareable score card is added on the one spotlight
+day of the campaign.
 
 ## Day 6 · The physical book — "From the archive to your hands."
 
