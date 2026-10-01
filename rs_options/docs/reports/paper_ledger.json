@@ -62,6 +62,20 @@
     }
   ],
   "open": {
+    "AAPL": {
+      "entry": 333.21,
+      "entry_cap": 339.8742,
+      "entry_date": "2026-09-30",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "8d9c3b69-7cce-4423-84d9-c0d9bb786959",
+      "qty": 14,
+      "setup": "H-25",
+      "signal_close": 333.21,
+      "stop": 328.7,
+      "target": 346.74
+    },
     "AMD": {
       "entry": 635.461429,
       "entry_cap": 641.5851,

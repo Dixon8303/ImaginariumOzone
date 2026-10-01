@@ -1,38 +1,48 @@
-generated: 2026-09-29
+generated: 2026-09-30
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-29
-paper equity: $96,628.23   cash: $75,288.03
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-09-30
+paper equity: $96,463.40   cash: $75,288.03
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-09-29  $96,636.77   (-3,363.23, -3.4%)
-  over 36 calendar days, 20 recorded sessions: 18 with a change, 1 flat.
-  range so far: $96,636.77 (low) to $100,196.58 (high).
+  2026-08-24  $100,000.00  ->  2026-09-30  $96,463.40   (-3,536.60, -3.5%)
+  over 37 calendar days, 21 recorded sessions: 19 with a change, 1 flat.
+  range so far: $96,463.40 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (0):
-  none — no ticker passed breakout + regime + quality
+TODAY'S SIGNALS (2):
+  AAPL  [H-25]  close 333.21  stop 328.70  target 346.74  (1R = 4.51)  score 6/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 333.21 on 1.2x volume
+      volume profile: 20% of 60d volume sits ABOVE here, heaviest at 310.42  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 333, spread <= 10%; exit on stop/target/15 sessions
+  GOOGL  [H-25]  close 344.10  stop 336.24  target 367.68  (1R = 7.86)  score 6/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 344.10 on 1.3x volume
+      volume profile: 56% of 60d volume sits ABOVE here, heaviest at 343.45  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 344, spread <= 10%; exit on stop/target/15 sessions
 
 OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
-PAPER ORDERS PLACED (0):
-  none
+PAPER ORDERS PLACED (1):
+  BUY 14 AAPL @ next open, limit 339.87 (H15a cap, 2% over the 333.21 close), bracket stop 328.70 / target 346.74
+  skipped GOOGL: already held
 
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $-190.48  stop 541.53  target 891.43  since 2026-09-24
-  DAL  qty 59  unrealized $+177.69  stop 78.95  target 90.15  since 2026-09-23
-  DAL261016C00082500  qty 2  unrealized $-10.00  stop ?  target ?  since ?
-  GOOGL  qty 14  unrealized $-77.64  stop 327.79  target 414.41  since 2026-09-14
-  KO261016C00087500  qty 3  unrealized $-495.00  stop ?  target ?  since ?
-  PFE  qty 170  unrealized $+34.77  stop 27.34  target 31.7  since 2026-09-24
-  PFE261120C00028000  qty 5  unrealized $+95.00  stop ?  target ?  since ?
-  XOM261016C00160000  qty 1  unrealized $-270.00  stop ?  target ?  since ?
+  AMD  qty 7  unrealized $-165.98  stop 541.53  target 891.43  since 2026-09-24
+  DAL  qty 59  unrealized $+111.02  stop 78.95  target 90.15  since 2026-09-23
+  DAL261016C00082500  qty 2  unrealized $-150.00  stop ?  target ?  since ?
+  GOOGL  qty 14  unrealized $+61.80  stop 327.79  target 414.41  since 2026-09-14
+  KO261016C00087500  qty 3  unrealized $-600.00  stop ?  target ?  since ?
+  PFE  qty 170  unrealized $+12.67  stop 27.34  target 31.7  since 2026-09-24
+  PFE261120C00028000  qty 5  unrealized $+25.00  stop ?  target ?  since ?
+  XOM261016C00160000  qty 1  unrealized $-195.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
   holding 2:
     DAL261016C00082500  2x @ $4.83  since 2026-09-22  stop-if-underlying <= 76.91
     PFE261120C00028000  5x @ $1.32  since 2026-09-24  stop-if-underlying <= 27.34
+  note: AAPL: no contract met DTE/spread/delta
+  note: GOOGL: no contract met DTE/spread/delta
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
