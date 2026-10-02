@@ -1,7 +1,7 @@
 generated: 2026-10-01
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-01
-paper equity: $96,132.24   cash: $75,267.26
+paper equity: $96,115.09   cash: $75,267.26
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-10-01  $96,132.24   (-3,867.76, -3.9%)
@@ -18,14 +18,11 @@ OPTION COST RECORDER: no quotes today (no signals, or the account has no options
 PAPER ORDERS PLACED (0):
   none
 
-CLOSED SINCE LAST RUN:
-  AAPL  2026-09-30 -> 2026-10-01  -1.04R  (stop)
-
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $-105.92  stop 541.53  target 891.43  since 2026-09-24
+  AMD  qty 7  unrealized $-121.11  stop 541.53  target 891.43  since 2026-09-24
   DAL  qty 59  unrealized $+145.83  stop 78.95  target 90.15  since 2026-09-23
   DAL261016C00082500  qty 2  unrealized $-180.00  stop ?  target ?  since ?
-  GOOGL  qty 14  unrealized $-101.86  stop 327.79  target 414.41  since 2026-09-14
+  GOOGL  qty 14  unrealized $-103.82  stop 327.79  target 414.41  since 2026-09-14
   KO261016C00087500  qty 3  unrealized $-630.00  stop ?  target ?  since ?
   PFE  qty 170  unrealized $-68.93  stop 27.34  target 31.7  since 2026-09-24
   PFE261120C00028000  qty 5  unrealized $-115.00  stop ?  target ?  since ?
