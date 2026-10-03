@@ -120,8 +120,39 @@ jobs:
           python -m paper.daily ${{ steps.mode.outputs.flag }} \
             --session-date=${{ steps.mode.outputs.session }}
 
-      - name: Commit report and ledger
-        id: commit
+      # Gate on whether the DIGEST TEXT changed, which is the actual
+      # question — "is there anything new to tell the operator?" — and
+      # strictly better than the file tests that came before it. Gating on
+      # the whole reports directory pushed a digest from a read-only
+      # pre-open run (19:50, 2026-09-28); gating on paper_trading.txt fixed
+      # that but still sent a BYTE-IDENTICAL second digest on three of the
+      # four following sessions, because both evening fires rewrite the
+      # report. Two pings a night, one a verbatim repeat, is how a
+      # notification channel stops being read.
+      #
+      # Runs before the commit step so the marker it updates is committed
+      # with the report, in one commit, rather than needing a second.
+      - name: Build digest and decide whether it says anything new
+        id: digest
+        continue-on-error: true
+        env:
+          MARKER: rs_options/docs/reports/last_digest.txt
+        run: |
+          ( cd rs_options && python -m paper.notify ) > /tmp/digest.txt || true
+          if [ ! -s /tmp/digest.txt ]; then
+            echo "digest empty or build failed — not notifying"
+            echo "send=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ -f "$MARKER" ] && cmp -s /tmp/digest.txt "$MARKER"; then
+            echo "digest unchanged since the last one sent — not notifying"
+            echo "send=false" >> "$GITHUB_OUTPUT"
+          else
+            cp /tmp/digest.txt "$MARKER"
+            echo "send=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Commit report, ledger and digest marker
         # The scan step above writes report/ledger files into the working
         # tree, so `git pull --rebase` must run AFTER they are committed —
         # rebase refuses to run over unstaged changes (this order caused
@@ -131,37 +162,19 @@ jobs:
           git config user.name "rs-paper-bot"
           git config user.email "noreply@github.com"
           git add rs_options/docs/reports
-          # `changed` tracks paper_trading.txt ALONE, not the whole reports
-          # directory. A read-only pre-open run rewrites premarket_scan.txt,
-          # which made the earlier directory-wide test true and pushed a
-          # digest at 19:50 on 2026-09-28 — a notification the operator was
-          # told would not happen. The trading report is the only file whose
-          # change means there is something new to say.
-          if git diff --cached --quiet -- rs_options/docs/reports/paper_trading.txt; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-          fi
           git diff --cached --quiet || git commit -m "paper trading report"
           git pull --rebase origin main
           git push
 
-      # Every notification step below is gated on the TRADING report
-      # changing, and each is continue-on-error, because a notification
-      # must never take the trading job down with it.
-
-      - name: Build digest
-        if: steps.commit.outputs.changed == 'true'
-        continue-on-error: true
-        working-directory: rs_options
-        run: python -m paper.notify > /tmp/digest.txt
+      # Each notification step is continue-on-error, because a
+      # notification must never take the trading job down with it.
 
       - name: Post digest to the tracking issue
         # Needs no operator-supplied secret: GITHUB_TOKEN is built in, and
         # a comment on an issue the operator owns is what their GitHub
         # mobile app turns into a push notification. One issue, one
         # comment per session, so the thread reads chronologically.
-        if: steps.commit.outputs.changed == 'true'
+        if: steps.digest.outputs.send == 'true'
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -179,7 +192,7 @@ jobs:
       - name: Push digest to Telegram
         # Optional second channel. No-ops while the secrets are absent, so
         # the step is inert rather than red until they exist.
-        if: steps.commit.outputs.changed == 'true'
+        if: steps.digest.outputs.send == 'true'
         continue-on-error: true
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
