@@ -101,6 +101,7 @@
       "target": 90.15
     },
     "GOOGL": {
+      "closing": "2026-10-05",
       "entry": 346.625715,
       "entry_cap": 356.4339,
       "entry_date": "2026-09-14",
@@ -127,6 +128,20 @@
       "signal_close": 28.43,
       "stop": 27.34,
       "target": 31.7
+    },
+    "UNH": {
+      "entry": 378.625,
+      "entry_cap": 386.1975,
+      "entry_date": "2026-10-05",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "507af954-3e1e-4f7c-9fce-fbf09bef645c",
+      "qty": 12,
+      "setup": "H-25",
+      "signal_close": 378.625,
+      "stop": 362.66,
+      "target": 426.52
     }
   },
   "options": {
