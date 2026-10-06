@@ -1,7 +1,7 @@
 generated: 2026-10-05
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-05
-paper equity: $95,756.95   cash: $75,267.15
+paper equity: $95,755.55   cash: $75,267.15
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-10-05  $95,756.95   (-4,243.05, -4.2%)
@@ -21,15 +21,16 @@ OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
          costs $2,352.00 per contract; needs $47,040 equity to buy one inside the 5% position cap
 
   cheapest doctrine contract today: UNH at $2,352.00
-  at $95,756.95 equity you can buy 1 of 1 inside the position cap
+  at $95,755.55 equity you can buy 1 of 1 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-PAPER ORDERS PLACED (1):
-  BUY 12 UNH @ next open, limit 386.20 (H15a cap, 2% over the 378.62 close), bracket stop 362.66 / target 426.52
+PAPER ORDERS PLACED (0):
+  none
+  skipped UNH: already held
 TIME EXITS SUBMITTED: GOOGL
 
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $-24.23  stop 541.53  target 891.43  since 2026-09-24
+  AMD  qty 7  unrealized $-25.63  stop 541.53  target 891.43  since 2026-09-24
   DAL  qty 59  unrealized $+95.68  stop 78.95  target 90.15  since 2026-09-23
   DAL261016C00082500  qty 2  unrealized $-330.00  stop ?  target ?  since ?
   GOOGL  qty 14  unrealized $+4.12  stop 327.79  target 414.41  since 2026-09-14
