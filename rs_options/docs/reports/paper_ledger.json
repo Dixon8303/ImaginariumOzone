@@ -69,6 +69,16 @@
       "r": -1.042,
       "reason": "stop",
       "ticker": "AAPL"
+    },
+    {
+      "entry": 346.625715,
+      "entry_date": "2026-09-14",
+      "exit": 345.323571,
+      "exit_date": "2026-10-06",
+      "micro_override": false,
+      "r": -0.069,
+      "reason": "time/other",
+      "ticker": "GOOGL"
     }
   ],
   "open": {
@@ -100,21 +110,6 @@
       "stop": 78.95,
       "target": 90.15
     },
-    "GOOGL": {
-      "closing": "2026-10-05",
-      "entry": 346.625715,
-      "entry_cap": 356.4339,
-      "entry_date": "2026-09-14",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "ac239268-4a2b-4fb2-ab91-3905c3a3daf2",
-      "qty": 14,
-      "setup": "H-25",
-      "signal_close": 349.445,
-      "stop": 327.79,
-      "target": 414.41
-    },
     "PFE": {
       "entry": 28.495471,
       "entry_cap": 28.9986,
@@ -130,10 +125,10 @@
       "target": 31.7
     },
     "UNH": {
-      "entry": 378.625,
+      "entry": 379.1,
       "entry_cap": 386.1975,
       "entry_date": "2026-10-05",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "507af954-3e1e-4f7c-9fce-fbf09bef645c",

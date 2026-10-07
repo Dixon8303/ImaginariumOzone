@@ -1,55 +1,46 @@
-generated: 2026-10-05
+generated: 2026-10-06
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-05
-paper equity: $95,755.55   cash: $75,267.15
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-06
+paper equity: $95,904.78   cash: $75,552.48
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-10-05  $95,756.95   (-4,243.05, -4.2%)
-  over 42 calendar days, 24 recorded sessions: 22 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-10-06  $95,904.78   (-4,095.22, -4.1%)
+  over 43 calendar days, 25 recorded sessions: 23 with a change, 1 flat.
   range so far: $95,756.95 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (1):
-  UNH  [H-25]  close 378.62  stop 362.66  target 426.52  (1R = 15.96)  score 6/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 378.62 on 1.4x volume
-      volume profile: 81% of 60d volume sits ABOVE here, heaviest at 397.06  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 379, spread <= 10%; exit on stop/target/15 sessions
+TODAY'S SIGNALS (0):
+  none — no ticker passed breakout + regime + quality
 
-OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
-  UNH    UNH261106C00370000  delta 0.60  32d  mid 23.52  spread 8.9%
-         costs $2,352.00 per contract; needs $47,040 equity to buy one inside the 5% position cap
-
-  cheapest doctrine contract today: UNH at $2,352.00
-  at $95,755.55 equity you can buy 1 of 1 inside the position cap
-  (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
+OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
 PAPER ORDERS PLACED (0):
   none
-  skipped UNH: already held
-TIME EXITS SUBMITTED: GOOGL
+
+CLOSED SINCE LAST RUN:
+  GOOGL  2026-09-14 -> 2026-10-06  -0.07R  (time/other)
 
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $-25.63  stop 541.53  target 891.43  since 2026-09-24
-  DAL  qty 59  unrealized $+95.68  stop 78.95  target 90.15  since 2026-09-23
-  DAL261016C00082500  qty 2  unrealized $-330.00  stop ?  target ?  since ?
-  GOOGL  qty 14  unrealized $+4.12  stop 327.79  target 414.41  since 2026-09-14
-  KO261016C00087500  qty 3  unrealized $-654.00  stop ?  target ?  since ?
-  PFE  qty 170  unrealized $-172.63  stop 27.34  target 31.7  since 2026-09-24
-  PFE261120C00028000  qty 5  unrealized $-310.00  stop ?  target ?  since ?
-  XOM261016C00160000  qty 1  unrealized $-195.00  stop ?  target ?  since ?
+  AMD  qty 7  unrealized $+120.74  stop 541.53  target 891.43  since 2026-09-24
+  DAL  qty 59  unrealized $+111.61  stop 78.95  target 90.15  since 2026-09-23
+  DAL261016C00082500  qty 2  unrealized $-326.00  stop ?  target ?  since ?
+  KO261016C00087500  qty 3  unrealized $-669.00  stop ?  target ?  since ?
+  PFE  qty 170  unrealized $-155.63  stop 27.34  target 31.7  since 2026-09-24
+  PFE261120C00028000  qty 5  unrealized $-295.00  stop ?  target ?  since ?
+  UNH  qty 12  unrealized $-36.72  stop 362.66  target 426.52  since 2026-10-05
+  XOM261016C00160000  qty 1  unrealized $-170.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
   holding 2:
     DAL261016C00082500  2x @ $4.83  since 2026-09-22  stop-if-underlying <= 76.91
     PFE261120C00028000  5x @ $1.32  since 2026-09-24  stop-if-underlying <= 27.34
-  note: UNH: premium $2,352 exceeds the 1% risk budget
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
 
-CUMULATIVE RECORD: 7 closed | win rate 0% | expectancy -1.837R | total -12.86R
-  significance: n=7 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 0% wins, a 4-loss run has ~100% odds over 40 trades — variance, not breakage.
+CUMULATIVE RECORD: 8 closed | win rate 0% | expectancy -1.616R | total -12.93R
+  significance: n=8 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 0% wins, a 4-loss run has ~100% odds over 40 trades — variance, not breakage.
 
 Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.
