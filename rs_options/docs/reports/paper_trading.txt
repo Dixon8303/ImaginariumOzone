@@ -1,7 +1,7 @@
 generated: 2026-10-07
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-07
-paper equity: $95,852.76   cash: $75,552.37
+paper equity: $95,875.16   cash: $75,552.37
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-10-07  $95,852.76   (-4,147.24, -4.1%)
@@ -21,14 +21,15 @@ OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
          costs $4,721.50 per contract; needs $94,430 equity to buy one inside the 5% position cap
 
   cheapest doctrine contract today: AAPL at $4,721.50
-  at $95,852.76 equity you can buy 1 of 1 inside the position cap
+  at $95,875.16 equity you can buy 1 of 1 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-PAPER ORDERS PLACED (1):
-  BUY 14 AAPL @ next open, limit 343.31 (H15a cap, 2% over the 336.58 close), bracket stop 325.81 / target 368.89
+PAPER ORDERS PLACED (0):
+  none
+  skipped AAPL: already held
 
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $+66.77  stop 541.53  target 891.43  since 2026-09-24
+  AMD  qty 7  unrealized $+89.17  stop 541.53  target 891.43  since 2026-09-24
   DAL  qty 59  unrealized $+73.28  stop 78.95  target 90.15  since 2026-09-23
   DAL261016C00082500  qty 2  unrealized $-362.00  stop ?  target ?  since ?
   KO261016C00087500  qty 3  unrealized $-726.00  stop ?  target ?  since ?
