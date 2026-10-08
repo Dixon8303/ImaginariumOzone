@@ -1,38 +1,48 @@
-generated: 2026-10-06
+generated: 2026-10-07
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-06
-paper equity: $95,906.81   cash: $75,552.48
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-07
+paper equity: $95,852.76   cash: $75,552.37
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-10-06  $95,904.78   (-4,095.22, -4.1%)
-  over 43 calendar days, 25 recorded sessions: 23 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-10-07  $95,852.76   (-4,147.24, -4.1%)
+  over 44 calendar days, 26 recorded sessions: 24 with a change, 1 flat.
   range so far: $95,756.95 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (0):
-  none — no ticker passed breakout + regime + quality
+TODAY'S SIGNALS (1):
+  AAPL  [H-25]  close 336.58  stop 325.81  target 368.89  (1R = 10.77)  score 6/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 336.58 on 1.0x volume
+      volume profile: 12% of 60d volume sits ABOVE here, heaviest at 333.96  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 337, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
+OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
+  AAPL   AAPL261030C00290000  ~moneyness  23d  mid 47.22  spread 4.8%
+         costs $4,721.50 per contract; needs $94,430 equity to buy one inside the 5% position cap
 
-PAPER ORDERS PLACED (0):
-  none
+  cheapest doctrine contract today: AAPL at $4,721.50
+  at $95,852.76 equity you can buy 1 of 1 inside the position cap
+  (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
+
+PAPER ORDERS PLACED (1):
+  BUY 14 AAPL @ next open, limit 343.31 (H15a cap, 2% over the 336.58 close), bracket stop 325.81 / target 368.89
 
 OPEN POSITIONS (8) — 4 of 8 stock slots used, 4 option contracts:
-  AMD  qty 7  unrealized $+122.77  stop 541.53  target 891.43  since 2026-09-24
-  DAL  qty 59  unrealized $+111.61  stop 78.95  target 90.15  since 2026-09-23
-  DAL261016C00082500  qty 2  unrealized $-326.00  stop ?  target ?  since ?
-  KO261016C00087500  qty 3  unrealized $-669.00  stop ?  target ?  since ?
-  PFE  qty 170  unrealized $-155.63  stop 27.34  target 31.7  since 2026-09-24
-  PFE261120C00028000  qty 5  unrealized $-295.00  stop ?  target ?  since ?
-  UNH  qty 12  unrealized $-36.72  stop 362.66  target 426.52  since 2026-10-05
-  XOM261016C00160000  qty 1  unrealized $-170.00  stop ?  target ?  since ?
+  AMD  qty 7  unrealized $+66.77  stop 541.53  target 891.43  since 2026-09-24
+  DAL  qty 59  unrealized $+73.28  stop 78.95  target 90.15  since 2026-09-23
+  DAL261016C00082500  qty 2  unrealized $-362.00  stop ?  target ?  since ?
+  KO261016C00087500  qty 3  unrealized $-726.00  stop ?  target ?  since ?
+  PFE  qty 170  unrealized $-82.53  stop 27.34  target 31.7  since 2026-09-24
+  PFE261120C00028000  qty 5  unrealized $-195.00  stop ?  target ?  since ?
+  UNH  qty 12  unrealized $-41.43  stop 362.66  target 426.52  since 2026-10-05
+  XOM261016C00160000  qty 1  unrealized $-205.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
   holding 2:
     DAL261016C00082500  2x @ $4.83  since 2026-09-22  stop-if-underlying <= 76.91
     PFE261120C00028000  5x @ $1.32  since 2026-09-24  stop-if-underlying <= 27.34
+  note: AAPL: premium $4,722 exceeds the 1% risk budget
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
