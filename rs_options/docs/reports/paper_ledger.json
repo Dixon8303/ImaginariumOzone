@@ -83,10 +83,10 @@
   ],
   "open": {
     "AAPL": {
-      "entry": 336.58,
+      "entry": 336.937143,
       "entry_cap": 343.3116,
       "entry_date": "2026-10-07",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "293ed3a2-0fbe-4055-a5b7-72ca9b464d9d",
@@ -95,6 +95,20 @@
       "signal_close": 336.58,
       "stop": 325.81,
       "target": 368.89
+    },
+    "ABBV": {
+      "entry": 272.455,
+      "entry_cap": 277.90409999999997,
+      "entry_date": "2026-10-08",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "ad899300-bd1c-4bde-b1d3-f7bb612aa17f",
+      "qty": 17,
+      "setup": "H-25",
+      "signal_close": 272.455,
+      "stop": 258.24,
+      "target": 315.1
     },
     "AMD": {
       "entry": 635.461429,
@@ -109,6 +123,20 @@
       "signal_close": 629.005,
       "stop": 541.53,
       "target": 891.43
+    },
+    "AMZN": {
+      "entry": 254.1,
+      "entry_cap": 259.182,
+      "entry_date": "2026-10-08",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "776a8d3f-5166-4dc7-85c4-b3a90e780d65",
+      "qty": 18,
+      "setup": "H-25",
+      "signal_close": 254.1,
+      "stop": 250.02,
+      "target": 266.34
     },
     "DAL": {
       "entry": 81.858305,
