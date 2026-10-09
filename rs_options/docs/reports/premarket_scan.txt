@@ -1,24 +1,27 @@
-generated: 2026-10-08
+generated: 2026-10-09
 
-PRE-OPEN SCAN — 2026-10-08 (signals from the 2026-10-08 close)
-paper equity: $95,926.84
+PRE-OPEN SCAN — 2026-10-09 (signals from the 2026-10-09 close)
+paper equity: $96,101.46
 
 CANDIDATES FOR TODAY (0):
   none — nothing passed breakout + regime + quality
 
-ORDERS QUEUED FOR THE OPEN (1): AAPL
-  AAPL limit 343.31 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
+ORDERS QUEUED FOR THE OPEN (2): ABBV, AMZN
+  ABBV limit 277.90 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
+  AMZN limit 259.18 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
 
-OPEN POSITIONS (9):
-  AAPL  qty 14  unrealized $+62.48  stop 325.81 / target 368.89
-  AMD  qty 7  unrealized $-133.38  stop 541.53 / target 891.43
-  DAL  qty 59  unrealized $-15.24  stop 78.95 / target 90.15
-  DAL261016C00082500  qty 2  unrealized $-490.00  stop ? / target ?
-  KO261016C00087500  qty 3  unrealized $-492.00  stop ? / target ?
-  PFE  qty 170  unrealized $-116.53  stop 27.34 / target 31.7
-  PFE261120C00028000  qty 5  unrealized $-245.00  stop ? / target ?
-  UNH  qty 12  unrealized $-113.16  stop 362.66 / target 426.52
-  XOM261016C00160000  qty 1  unrealized $+145.00  stop ? / target ?
+OPEN POSITIONS (11):
+  AAPL  qty 14  unrealized $-8.71  stop 325.81 / target 368.89
+  ABBV  qty 17  unrealized $+52.11  stop 258.24 / target 315.1
+  AMD  qty 7  unrealized $-167.24  stop 541.53 / target 891.43
+  AMZN  qty 18  unrealized $+66.27  stop 250.02 / target 266.34
+  DAL  qty 59  unrealized $-35.89  stop 78.95 / target 90.15
+  DAL261016C00082500  qty 2  unrealized $-710.00  stop ? / target ?
+  KO261016C00087500  qty 3  unrealized $-435.00  stop ? / target ?
+  PFE  qty 170  unrealized $-52.78  stop 27.34 / target 31.7
+  PFE261120C00028000  qty 5  unrealized $-145.00  stop ? / target ?
+  UNH  qty 12  unrealized $+23.04  stop 362.66 / target 426.52
+  XOM261016C00160000  qty 1  unrealized $+190.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
