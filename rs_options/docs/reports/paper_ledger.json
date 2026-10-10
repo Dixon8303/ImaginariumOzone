@@ -97,10 +97,10 @@
       "target": 368.89
     },
     "ABBV": {
-      "entry": 272.455,
+      "entry": 273.304706,
       "entry_cap": 277.90409999999997,
       "entry_date": "2026-10-08",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "ad899300-bd1c-4bde-b1d3-f7bb612aa17f",
@@ -125,10 +125,10 @@
       "target": 891.43
     },
     "AMZN": {
-      "entry": 254.1,
+      "entry": 257.208333,
       "entry_cap": 259.182,
       "entry_date": "2026-10-08",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "776a8d3f-5166-4dc7-85c4-b3a90e780d65",

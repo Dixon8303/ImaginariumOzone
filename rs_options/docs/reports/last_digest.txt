@@ -1,9 +1,9 @@
-RS paper track — 2026-10-08
+RS paper track — 2026-10-09
 
-equity $95,974.05   (-4.0% from $100,000)
-last session +121.29
-open 9: 5/8 stock slots, 4 contracts
-signals 2, 0 order(s) placed
+equity $96,083.79   (-3.9% from $100,000)
+last session +109.74
+open 11: 7/8 stock slots, 4 contracts
+signals 0, 0 order(s) placed
 record: 8 closed | win rate 0% | expectancy -1.616R | total -12.93R
 
 https://github.com/Dixon8303/ImaginariumOzone/blob/main/rs_options/docs/reports/paper_trading.txt
