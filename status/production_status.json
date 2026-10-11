@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-11T11:05:13Z",
+  "last_synced": "2026-10-11T12:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2276,7 +2276,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -2320,7 +2320,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-11T11:05:13Z"
+      "updated_at": "2026-10-11T12:05:08Z"
     },
     {
       "id": "EP61",
@@ -2536,27 +2536,27 @@
       "id": "EP77",
       "number": 77,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -2572,11 +2572,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -2600,13 +2600,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-10-11T12:05:08Z"
     },
     {
       "id": "EP78",
       "number": 78,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2642,11 +2642,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "failed"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -2670,7 +2670,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-11T11:05:13Z"
+      "updated_at": "2026-10-11T12:05:08Z"
     },
     {
       "id": "EP79",
