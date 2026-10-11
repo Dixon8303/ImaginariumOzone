@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-11T08:05:13Z",
+  "last_synced": "2026-10-11T11:05:13Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2276,7 +2276,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -2284,11 +2284,11 @@
         },
         {
           "name": "generation",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -2320,7 +2320,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-10-11T11:05:13Z"
     },
     {
       "id": "EP61",
@@ -2634,7 +2634,7 @@
         },
         {
           "name": "generation",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "ken_burns",
@@ -2670,7 +2670,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-11T07:05:13Z"
+      "updated_at": "2026-10-11T11:05:13Z"
     },
     {
       "id": "EP79",
