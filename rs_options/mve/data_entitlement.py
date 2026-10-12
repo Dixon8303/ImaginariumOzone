@@ -45,7 +45,15 @@ TIMEOUT = 30
 PROBE_SYMBOL = "SPY"          # entitlement is plan-level, so the most
                               # liquid symbol isolates the plan from any
                               # per-symbol coverage question
-WINDOW_MINUTES = 5
+# One minute at a 10,000 ceiling, not five at 100. The 2026-10-12 census
+# ran limit=100 over five minutes, so every one of its eight cells came
+# back at exactly 100 — saturated, carrying no information. SIP is
+# consolidated across every venue and IEX is one venue with a small share
+# of it, so on an identical window SIP must return materially MORE
+# records. That gap is the only evidence distinguishing real entitlement
+# from a silent downgrade, and a saturated ceiling erases it.
+WINDOW_MINUTES = 1
+RECORD_LIMIT = 10_000
 MAX_ERROR_CHARS = 300
 
 
@@ -66,7 +74,7 @@ def probe(endpoint: str, feed: str, start: datetime, end: datetime,
     params = {
         "start": start.isoformat().replace("+00:00", "Z"),
         "end": end.isoformat().replace("+00:00", "Z"),
-        "limit": 100,
+        "limit": RECORD_LIMIT,
         "feed": feed,
     }
     url = (f"{DATA_HOST}/v2/stocks/{PROBE_SYMBOL}/{endpoint}"
@@ -163,6 +171,42 @@ def control_ok(results: list) -> bool:
     return _all_returned_records(results, "iex")
 
 
+def feeds_are_distinct(results: list) -> tuple:
+    """Is the SIP response actually a different tape, or the same one?
+
+    Returns (distinct, reason). A request for an unentitled feed does not
+    necessarily fail — a vendor may quietly serve what the plan does
+    permit. Counts alone cannot tell the two apart, which is why this
+    compares them: SIP is consolidated across every venue, IEX is one
+    venue holding a small share, so on an identical window SIP must come
+    back materially larger. Equal counts are the downgrade's signature,
+    not evidence of entitlement.
+
+    Saturation destroys the comparison, so it is reported rather than
+    read as a pass — the 2026-10-12 census saturated all eight cells at
+    limit=100 and concluded SIP was entitled on no evidence at all.
+    """
+    for window in ("recent (30d)", "deep (400d)"):
+        for endpoint in ("trades", "quotes"):
+            iex = next((r for r in results if r["feed"] == "iex"
+                        and r["window"] == window
+                        and r["endpoint"] == endpoint), None)
+            sip = next((r for r in results if r["feed"] == "sip"
+                        and r["window"] == window
+                        and r["endpoint"] == endpoint), None)
+            where = f"{window} {endpoint}"
+            if not iex or not sip:
+                return False, f"missing probe row for {where}"
+            if iex["count"] >= RECORD_LIMIT and sip["count"] >= RECORD_LIMIT:
+                return False, (f"both feeds hit the {RECORD_LIMIT} ceiling on "
+                               f"{where} — the comparison carries no signal")
+            if sip["count"] <= iex["count"]:
+                return False, (f"sip returned {sip['count']} vs iex "
+                               f"{iex['count']} on {where} — a consolidated "
+                               f"tape cannot be smaller than one venue's")
+    return True, ""
+
+
 def sip_is_usable(results: list) -> bool:
     """SIP counts as usable only when BOTH tapes return records at BOTH
     reaches. A 200 with zero records is not entitlement — and a tape that
@@ -221,15 +265,42 @@ def format_census(census: dict) -> str:
         ]
         return "\n".join(lines)
 
+    distinct, why_not = feeds_are_distinct(results)
+    if sip_is_usable(results) and not distinct:
+        lines += [
+            "NO VERDICT — SIP cannot be distinguished from IEX.",
+            "",
+            f"  {why_not}",
+            "",
+            "The SIP request returned records, but that is not by itself",
+            "entitlement: a vendor may serve what the plan permits rather",
+            "than refusing what it does not. SIP is consolidated across",
+            "every venue and IEX is one venue holding a small share of it,",
+            "so a genuine SIP tape comes back materially larger on the same",
+            "window. Without that gap the two responses are consistent with",
+            "a silent downgrade.",
+            "",
+            "This matters in the permissive direction. Reading it as",
+            "entitlement would send the operator to buy a tick tape and",
+            "build a study on a feed that cannot support Gate 1.",
+            "",
+            "H-27's disposition is unchanged. Re-run after widening the",
+            "window or raising the ceiling so neither feed saturates.",
+        ]
+        return "\n".join(lines)
+
     if sip_is_usable(results):
         lines += [
-            "SIP-class trades AND quotes returned records at both reaches.",
+            "SIP-class trades AND quotes returned records at both reaches,",
+            "and returned materially more than IEX on identical windows —",
+            "so this is a genuinely different tape, not a silent downgrade.",
             "",
             "Gate 1's data requirement is therefore NOT ruled out on",
             "entitlement grounds. It is not yet satisfied either: the tape",
             "must still cover every scanned candidate from one consistent",
             "pull (LAW 18), and coverage on $2-$20 low-float names at",
-            "RVOL >= 5 is a separate question this census does not answer.",
+            "RVOL >= 5 is a separate question this census does not answer —",
+            "SPY proves the plan, not the thin names the strategy trades.",
             "",
             "Gate 0's latency half stays UNMEASURED, deliberately. It must",
             "be measured on whichever execution path is actually chosen —",
