@@ -1,0 +1,66 @@
+# H-27 Gate 1 data census — one click, one answer, then it is done.
+#
+# Asks the single question that gates the whole H-27 entry: can these
+# credentials reach a SIP-class trades-and-quotes tape? Gate 1 rules
+# bar-only studies inadmissible, so if the answer is no, the entry closes
+# INCONCLUSIVE on data grounds and no further work on it is warranted.
+#
+# Deliberately NOT a latency probe. Gate 0's latency half only matters in
+# a world where Gate 1 is satisfiable, and the only path measurable from
+# here is paper-api.alpaca.markets, which performs no routing — an "order
+# round trip" taken there omits the PFOF leg the source itself calls
+# dangerous, biasing the envelope toward NOT rejecting. Gate 0's verdict
+# is terminal by frozen text, so it does not get fed a biased number.
+#
+# Manual dispatch only, and that is the point: it needs no market hours,
+# no cron (this repo has lost sessions to cron drift), and one run settles
+# it permanently. Read-only — it places no orders and needs no
+# RS_PAPER_ARMED interlock.
+#
+# Required repository secrets (already present, used by paper_trader.yml):
+#   APCA_API_KEY_ID / APCA_API_SECRET_KEY
+name: RS Data Entitlement Census
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rs-data-entitlement
+  cancel-in-progress: false
+
+jobs:
+  census:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # No pip install: the census is stdlib-only on purpose, so a
+      # dependency resolution failure cannot stand between the operator
+      # and the one answer they are waiting on.
+      - name: Run the census
+        working-directory: rs_options
+        env:
+          APCA_API_KEY_ID: ${{ secrets.APCA_API_KEY_ID }}
+          APCA_API_SECRET_KEY: ${{ secrets.APCA_API_SECRET_KEY }}
+        run: python -m mve.data_entitlement
+
+      - name: Commit the census report
+        # Stage and commit BEFORE rebasing: the step above writes the
+        # report into the working tree, and `git pull --rebase` refuses to
+        # run over unstaged changes. This ordering broke every scheduled
+        # paper-trader run from 2026-08-17 onward.
+        run: |
+          git config user.name "rs-paper-bot"
+          git config user.email "noreply@github.com"
+          git add rs_options/docs/reports/data_entitlement.txt
+          git diff --cached --quiet || git commit -m "H-27 Gate 1 data census"
+          git pull --rebase origin main
+          git push
