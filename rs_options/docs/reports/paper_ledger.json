@@ -138,6 +138,20 @@
       "stop": 250.02,
       "target": 266.34
     },
+    "CVX": {
+      "entry": 215.025,
+      "entry_cap": 219.3255,
+      "entry_date": "2026-10-12",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "761c17ee-5485-4a07-bb2e-b5481bc0d36e",
+      "qty": 22,
+      "setup": "H-25",
+      "signal_close": 215.025,
+      "stop": 204.87,
+      "target": 245.49
+    },
     "DAL": {
       "entry": 81.858305,
       "entry_cap": 83.385,
@@ -182,19 +196,19 @@
     }
   },
   "options": {
-    "DAL261016C00082500": {
+    "KO261106C00088000": {
       "basis": "delta",
-      "delta": 0.5886,
-      "entry_date": "2026-09-22",
-      "entry_price": 4.83,
-      "entry_underlying": 83.925,
-      "expiry": "2026-10-16",
+      "delta": 0.661,
+      "entry_date": "2026-10-12",
+      "entry_price": 3.125,
+      "entry_underlying": 89.78,
+      "expiry": "2026-11-06",
       "fundamental_net_income": null,
-      "invalidation_price": 76.91,
-      "qty": 2,
-      "spread_pct": 0.0455,
-      "strike": 82.5,
-      "ticker": "DAL"
+      "invalidation_price": 85.67,
+      "qty": 3,
+      "spread_pct": 0.0736,
+      "strike": 88.0,
+      "ticker": "KO"
     },
     "PFE261120C00028000": {
       "basis": "delta",
