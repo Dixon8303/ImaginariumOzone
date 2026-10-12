@@ -1,0 +1,51 @@
+generated: 2026-10-12
+
+H-27 GATE 1 DATA CENSUS — can this account reach a SIP-class tape?
+
+probe symbol: SPY   window: 5 minutes   stored: status codes and counts only
+
+window         feed  endpoint  status  records 
+------------------------------------------------------
+recent (30d)   iex   trades    200     0       
+recent (30d)   iex   quotes    200     0       
+recent (30d)   sip   trades    200     0       
+recent (30d)   sip   quotes    200     0       
+deep (400d)    iex   trades    200     0       
+deep (400d)    iex   quotes    200     0       
+deep (400d)    sip   trades    200     0       
+deep (400d)    sip   quotes    200     0       
+
+======================================================
+
+SIP-class tick data is NOT usable on this account.
+
+Gate 1 is unsatisfiable as written, and the shortfall is in the
+inputs the frozen text names, not in their quality:
+
+  - 'the prevailing offer' is the NBBO. A single-venue book
+    cannot supply it, so every modelled fill would be priced
+    against the wrong quote.
+  - 'intrabar sequencing taken from the actual tick sequence,
+    never assumed' is the entry's whole content. On a thin name
+    the trigger and stop prints may not exist on one venue at
+    all — unobservable, not merely noisy.
+  - LULD halts are SIP messages, and the entry requires they be
+    handled explicitly rather than skipped silently. Halts are
+    frequent on exactly these symbol-days.
+  - LAW 18 aborts a study on a partial symbol-day. A
+    single-venue tape on a thin name is partial by construction,
+    which makes this fatal rather than survivable.
+
+The honest disposition is to close H-27 INCONCLUSIVE on data
+grounds, citing this census. INCONCLUSIVE, not FAILED: an
+unmeasurable claim has not been disproven, and the registration
+reserves FAILED for a claim the data contradicted.
+
+Closing it this way costs nothing further. The alternative is to
+procure a SIP-class tape, which is the same decision as choosing
+a routing class — and the method's own author holds that
+direct-access routing is necessary for sub-minute execution.
+
+Either way this census does not close Gate 0 by itself, and no
+number here may be composed into one. Recording the verdict in
+docs/PREREGISTERED.md is the operator's decision.
