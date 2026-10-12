@@ -97,7 +97,10 @@ def test_control_passing_allows_a_real_denial_verdict():
 
 
 def test_control_passing_allows_a_usable_verdict():
-    rs = results(iex_count=50, sip_count=50)
+    # Counts must differ the way real feeds do: IEX is one venue, SIP is
+    # every venue. Equal counts are the silent-downgrade signature and are
+    # covered separately below.
+    rs = results(iex_count=50, sip_count=3000)
     assert control_ok(rs) is True
     assert sip_is_usable(rs) is True
     text = format_census({"probed_symbol": "SPY", "results": rs})
@@ -126,3 +129,77 @@ def test_a_missing_probe_row_is_not_treated_as_a_pass():
                                        and r["window"] == "deep (400d)"
                                        and r["endpoint"] == "quotes")]
     assert sip_is_usable(rs) is False
+
+
+# ── defect 3: a saturated probe cannot tell entitlement from fallback ──
+# The 2026-10-12 re-run returned exactly 100 on all eight cells, because
+# the probe asked for limit=100. Saturated everywhere, it compared nothing
+# — and reported SIP as entitled, which points at spending money.
+from mve.data_entitlement import RECORD_LIMIT, feeds_are_distinct
+
+
+def pair(iex_count, sip_count):
+    out = [row("iex", w, e, 200, iex_count) for w in WINDOWS for e in ENDPOINTS]
+    out += [row("sip", w, e, 200, sip_count) for w in WINDOWS for e in ENDPOINTS]
+    return out
+
+
+def test_both_feeds_saturated_is_not_evidence():
+    """The exact shape of the 2026-10-12 re-run."""
+    distinct, why = feeds_are_distinct(pair(RECORD_LIMIT, RECORD_LIMIT))
+    assert distinct is False
+    assert "ceiling" in why
+
+
+def test_equal_counts_are_the_downgrade_signature():
+    distinct, why = feeds_are_distinct(pair(100, 100))
+    assert distinct is False
+    assert "cannot be smaller than one venue" in why
+
+
+def test_sip_smaller_than_iex_is_impossible_for_a_real_tape():
+    distinct, _ = feeds_are_distinct(pair(500, 50))
+    assert distinct is False
+
+
+def test_sip_materially_larger_is_the_real_signal():
+    """IEX holds a small share of consolidated volume, so a genuine SIP
+    tape comes back many times larger on the same window."""
+    distinct, why = feeds_are_distinct(pair(80, 3000))
+    assert distinct is True
+    assert why == ""
+
+
+def test_sip_may_saturate_alone():
+    """Only SIP hitting the ceiling still discriminates — it is the larger
+    tape, which is the whole point."""
+    distinct, _ = feeds_are_distinct(pair(80, RECORD_LIMIT))
+    assert distinct is True
+
+
+def test_indistinguishable_feeds_render_no_verdict():
+    text = format_census({"probed_symbol": "SPY",
+                          "results": pair(RECORD_LIMIT, RECORD_LIMIT)})
+    assert "NO VERDICT" in text
+    assert "NOT ruled out" not in text, \
+        "must not read a saturated probe as entitlement"
+
+
+def test_the_permissive_failure_mode_is_named_in_the_report():
+    """The danger here runs toward spending, not toward stopping."""
+    text = format_census({"probed_symbol": "SPY", "results": pair(100, 100)})
+    assert "buy a tick tape" in text
+
+
+def test_a_distinct_sip_tape_still_reaches_the_usable_verdict():
+    """The fix must not make the affirmative finding unreachable."""
+    text = format_census({"probed_symbol": "SPY", "results": pair(80, 3000)})
+    assert "NO VERDICT" not in text
+    assert "NOT ruled out" in text
+    assert "not a silent downgrade" in text
+
+
+def test_window_is_short_enough_to_avoid_saturation():
+    from mve.data_entitlement import WINDOW_MINUTES
+    assert WINDOW_MINUTES == 1
+    assert RECORD_LIMIT >= 10_000
