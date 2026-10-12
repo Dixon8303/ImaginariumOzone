@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-12T07:05:13Z",
+  "last_synced": "2026-10-12T08:05:13Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1626,7 +1626,7 @@
       "id": "EP51",
       "number": 51,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -1678,7 +1678,7 @@
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "shorts",
@@ -1690,7 +1690,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-12T07:05:13Z"
+      "updated_at": "2026-10-12T08:05:13Z"
     },
     {
       "id": "EP52",
@@ -2428,11 +2428,11 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2460,7 +2460,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-12T07:05:13Z"
+      "updated_at": "2026-10-12T08:05:13Z"
     },
     {
       "id": "EP76",
@@ -2676,7 +2676,7 @@
       "id": "EP79",
       "number": 79,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2712,7 +2712,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2740,13 +2740,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-12T07:05:13Z"
+      "updated_at": "2026-10-12T08:05:13Z"
     },
     {
       "id": "EP80",
       "number": 80,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2782,7 +2782,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2810,7 +2810,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-12T07:05:13Z"
+      "updated_at": "2026-10-12T08:05:13Z"
     }
   ]
 }
