@@ -91,12 +91,33 @@ def probe(endpoint: str, feed: str, start: datetime, end: datetime,
         return {"status": None, "count": 0, "error": f"{type(e).__name__}: {e}"}
 
 
+def trading_day_back(today: date, days_back: int) -> date:
+    """`days_back` calendar days ago, walked back to a weekday.
+
+    The naive subtraction is what invalidated the 2026-10-12 census: 30 and
+    400 days before that Monday are a Saturday and a Sunday, so the probe
+    asked for five minutes of a closed market and every feed correctly
+    returned zero records. The report then read those zeros as an
+    entitlement finding and recommended closing H-27.
+
+    Market holidays are still unknown here, which is why the IEX control
+    exists — a holiday lands as a control failure, not a false verdict.
+    """
+    d = today - timedelta(days=days_back)
+    while d.weekday() > 4:
+        d -= timedelta(days=1)
+    return d
+
+
 def windows(today: date) -> list:
     """Two reaches. A plan can permit old SIP data and withhold recent, or
-    withhold both; the study needs years of history, so both are asked."""
+    withhold both; the study needs years of history, so both are asked.
+
+    15:00 UTC is 11:00 ET — inside regular hours in both DST regimes.
+    """
     def span(days_back: int) -> tuple:
-        anchor = datetime(today.year, today.month, today.day,
-                          15, 0, tzinfo=timezone.utc) - timedelta(days=days_back)
+        d = trading_day_back(today, days_back)
+        anchor = datetime(d.year, d.month, d.day, 15, 0, tzinfo=timezone.utc)
         return anchor, anchor + timedelta(minutes=WINDOW_MINUTES)
     return [("recent (30d)", *span(30)), ("deep (400d)", *span(400))]
 
@@ -114,19 +135,44 @@ def run_census(today: date | None = None) -> dict:
     return {"probed_symbol": PROBE_SYMBOL, "results": results}
 
 
-def sip_is_usable(results: list) -> bool:
-    """SIP counts as usable only when BOTH tapes return records at BOTH
-    reaches. A 200 with zero records is not entitlement — and a tape that
-    stops short of the study period cannot supply it either."""
+def _all_returned_records(results: list, feed: str) -> bool:
     need = [(w, e) for w in ("recent (30d)", "deep (400d)")
             for e in ("trades", "quotes")]
     for window, endpoint in need:
-        hit = next((r for r in results if r["feed"] == "sip"
+        hit = next((r for r in results if r["feed"] == feed
                     and r["window"] == window
                     and r["endpoint"] == endpoint), None)
         if not hit or hit["status"] != 200 or hit["count"] == 0:
             return False
     return True
+
+
+def control_ok(results: list) -> bool:
+    """Did the probe retrieve anything AT ALL?
+
+    IEX is the control, because it is the feed this repo has always used
+    and is entitled to. If IEX returns no records, the probe retrieved
+    nothing from anything and the SIP counts carry zero information about
+    entitlement.
+
+    The 2026-10-12 census had no such check: it read a weekend's empty
+    tape as proof SIP was denied and recommended closing H-27 on that
+    basis. A census that renders a verdict while its own control is
+    failing is worse than one that refuses to answer.
+    """
+    return _all_returned_records(results, "iex")
+
+
+def sip_is_usable(results: list) -> bool:
+    """SIP counts as usable only when BOTH tapes return records at BOTH
+    reaches. A 200 with zero records is not entitlement — and a tape that
+    stops short of the study period cannot supply it either.
+
+    Only meaningful when `control_ok` holds; callers must check that
+    first, because this cannot distinguish "SIP withheld" from "the probe
+    asked the wrong question".
+    """
+    return _all_returned_records(results, "sip")
 
 
 def format_census(census: dict) -> str:
@@ -152,9 +198,30 @@ def format_census(census: dict) -> str:
             lines.append(f"  {r['feed']}/{r['endpoint']} {r['window']}: "
                          f"{r['error']}")
 
-    usable = sip_is_usable(results)
     lines += ["", "=" * 54, ""]
-    if usable:
+    if not control_ok(results):
+        lines += [
+            "NO VERDICT — the control condition failed.",
+            "",
+            "The IEX feed returned no records either. IEX is the feed this",
+            "repo has always used and is entitled to, so its silence means",
+            "the probe retrieved nothing from anything: the SIP counts above",
+            "say nothing whatever about entitlement.",
+            "",
+            "Likely causes, in order: the probed window fell on a market",
+            "holiday; the credentials lack market-data access; the vendor",
+            "was unreachable. Check the status codes and any error text",
+            "above before re-running.",
+            "",
+            "This is exactly the state the 2026-10-12 census was in when it",
+            "reported SIP as unusable and recommended closing H-27. It had",
+            "asked for five minutes of a Saturday. No conclusion about the",
+            "data plan may be drawn from a run in this state, and H-27's",
+            "disposition is unchanged by it.",
+        ]
+        return "\n".join(lines)
+
+    if sip_is_usable(results):
         lines += [
             "SIP-class trades AND quotes returned records at both reaches.",
             "",
