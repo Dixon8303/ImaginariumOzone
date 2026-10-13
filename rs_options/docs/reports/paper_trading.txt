@@ -1,7 +1,7 @@
 generated: 2026-10-12
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-12
-paper equity: $96,367.20   cash: $61,559.30
+paper equity: $96,370.42   cash: $61,559.30
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-10-12  $96,433.08   (-3,566.92, -3.6%)
@@ -27,24 +27,25 @@ OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
          costs $1,040.00 per contract; needs $20,800 equity to buy one inside the 5% position cap
 
   cheapest doctrine contract today: KO at $312.50
-  at $96,367.20 equity you can buy 2 of 2 inside the position cap
+  at $96,370.42 equity you can buy 2 of 2 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-PAPER ORDERS PLACED (1):
-  BUY 53 KO @ next open, limit 91.58 (H15a cap, 2% over the 89.78 close), bracket stop 85.67 / target 102.11
+PAPER ORDERS PLACED (0):
+  none
   skipped CVX: already held
+  skipped KO: already held
 
 OPEN POSITIONS (11) — 7 of 8 stock slots used, 4 option contracts:
-  AAPL  qty 14  unrealized $+73.96  stop 325.81  target 368.89  since 2026-10-07
+  AAPL  qty 14  unrealized $+78.30  stop 325.81  target 368.89  since 2026-10-07
   ABBV  qty 17  unrealized $+130.82  stop 258.24  target 315.1  since 2026-10-08
-  AMD  qty 7  unrealized $-369.61  stop 541.53  target 891.43  since 2026-09-24
-  AMZN  qty 18  unrealized $+14.25  stop 250.02  target 266.34  since 2026-10-08
+  AMD  qty 7  unrealized $-370.73  stop 541.53  target 891.43  since 2026-09-24
+  AMZN  qty 18  unrealized $+17.85  stop 250.02  target 266.34  since 2026-10-08
   DAL  qty 59  unrealized $-109.64  stop 78.95  target 90.15  since 2026-09-23
   DAL261016C00082500  qty 2  unrealized $-842.00  stop ?  target ?  since ?
   KO261016C00087500  qty 3  unrealized $-183.00  stop ?  target ?  since ?
   PFE  qty 170  unrealized $-6.03  stop 27.34  target 31.7  since 2026-09-24
   PFE261120C00028000  qty 5  unrealized $-120.00  stop ?  target ?  since ?
-  UNH  qty 12  unrealized $+28.80  stop 362.66  target 426.52  since 2026-10-05
+  UNH  qty 12  unrealized $+25.20  stop 362.66  target 426.52  since 2026-10-05
   XOM261016C00160000  qty 1  unrealized $+425.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
