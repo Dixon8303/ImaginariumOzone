@@ -166,6 +166,20 @@
       "stop": 78.95,
       "target": 90.15
     },
+    "KO": {
+      "entry": 89.78,
+      "entry_cap": 91.57560000000001,
+      "entry_date": "2026-10-12",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "156dedf2-ed74-4601-9c2d-d939980fae3e",
+      "qty": 53,
+      "setup": "H-25",
+      "signal_close": 89.78,
+      "stop": 85.67,
+      "target": 102.11
+    },
     "PFE": {
       "entry": 28.495471,
       "entry_cap": 28.9986,
@@ -198,7 +212,7 @@
   "options": {
     "KO261106C00088000": {
       "basis": "delta",
-      "delta": 0.661,
+      "delta": 0.6671,
       "entry_date": "2026-10-12",
       "entry_price": 3.125,
       "entry_underlying": 89.78,
