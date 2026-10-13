@@ -160,6 +160,40 @@ domain applies to a whole Pages site, not a subfolder) — see below.
 Until that cutover happens, this page is safe to iterate on at the staging
 URL above with zero risk to the live GoDaddy site.
 
+**Update, Oct 13, 2026:** the cutover has happened. `eatmediatv.com` now
+resolves to GitHub Pages (A records 185.199.108–111.153, `www` CNAME
+`dixon8303.github.io`) and is served from the separate repo
+`Dixon8303/eat.media`, a hand-synced copy of this folder with production
+URLs. This folder stays the staging mirror.
+
+## Short links for What History Buried (Addendum A02, Oct 13, 2026)
+
+Say-able URLs on a domain D already owns, so Shorts end cards and the ABE
+podcast can name a link without buying a new domain. Each short link is a
+folder holding one `index.html` that forwards to the book site with tracking
+tags. Nothing on the site links to them, and they carry `noindex`.
+
+| Short link | Forwards to | Tags (all add `utm_campaign=whb_campaign`) |
+|---|---|---|
+| eatmediatv.com/book | the book site's home | `utm_source=eatmediatv`, `utm_medium=short_link`, `utm_content=book` |
+| eatmediatv.com/abe | the book site's home | `utm_source=abe_podcast`, `utm_medium=audio`, `utm_content=abe` |
+| eatmediatv.com/quiz | `erasure.html`, the 3-question test | `utm_source=eatmediatv`, `utm_medium=short_link`, `utm_content=quiz` |
+| eatmediatv.com/challenge | `unlearn.html`, the 5-Day Unlearning Challenge | `utm_source=eatmediatv`, `utm_medium=short_link`, `utm_content=challenge` |
+
+A visitor who arrives with their own `utm_` tags keeps them; any other query
+string and the `#anchor` pass through. Without JavaScript, a meta refresh
+forwards with the default tags. Tested in headless Chromium with JavaScript on
+and off (10 of 10 cases).
+
+They go live only when the same four folders sit at the root of
+`Dixon8303/eat.media`. To add a slug (the plan's `/gift`, `/class`, `/talk`
+and `/founding` arrive with their pages), copy `book/index.html` to
+`<slug>/index.html` and change the target URL and the tag string everywhere
+they appear: the canonical link, the two script variables, the meta refresh
+and the visible link. If the book site moves, or `erasure.html` or
+`unlearn.html` is renamed, update these targets in both repos in the same
+change.
+
 ## Positioning — media venture studio, not just production-for-hire
 
 The site now frames E.A.T. Media as the studio behind an independent
