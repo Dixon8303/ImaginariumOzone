@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-14T17:05:01Z",
+  "last_synced": "2026-10-14T18:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2746,7 +2746,7 @@
       "id": "EP80",
       "number": 80,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2774,7 +2774,7 @@
         },
         {
           "name": "generation",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "ken_burns",
@@ -2782,11 +2782,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "done"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "titles_seo",
@@ -2810,7 +2810,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-14T17:05:01Z"
+      "updated_at": "2026-10-14T18:05:01Z"
     }
   ]
 }
