@@ -212,7 +212,7 @@
   "options": {
     "CVX261120C00220000": {
       "basis": "delta",
-      "delta": 0.4809,
+      "delta": 0.4811,
       "entry_date": "2026-10-13",
       "entry_price": 6.949999999999999,
       "entry_underlying": 217.825,
@@ -226,7 +226,7 @@
     },
     "KO261120C00090000": {
       "basis": "delta",
-      "delta": 0.5372,
+      "delta": 0.537,
       "entry_date": "2026-10-13",
       "entry_price": 2.6849999999999996,
       "entry_underlying": 90.11,
