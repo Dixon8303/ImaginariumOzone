@@ -1,8 +1,8 @@
-RS paper track — 2026-10-12
+RS paper track — 2026-10-13
 
-equity $96,433.08   (-3.6% from $100,000)
-last session +349.29
-open 11: 7/8 stock slots, 4 contracts
+equity $96,664.63   (-3.3% from $100,000)
+last session +231.55
+open 13: 9/8 stock slots, 4 contracts
 signals 2, 0 order(s) placed
 record: 8 closed | win rate 0% | expectancy -1.616R | total -12.93R
 

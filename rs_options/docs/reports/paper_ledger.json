@@ -139,10 +139,10 @@
       "target": 266.34
     },
     "CVX": {
-      "entry": 215.025,
+      "entry": 216.810909,
       "entry_cap": 219.3255,
       "entry_date": "2026-10-12",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "761c17ee-5485-4a07-bb2e-b5481bc0d36e",
@@ -167,10 +167,10 @@
       "target": 90.15
     },
     "KO": {
-      "entry": 89.78,
+      "entry": 90.389623,
       "entry_cap": 91.57560000000001,
       "entry_date": "2026-10-12",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "156dedf2-ed74-4601-9c2d-d939980fae3e",
@@ -210,18 +210,32 @@
     }
   },
   "options": {
-    "KO261106C00088000": {
+    "CVX261120C00220000": {
       "basis": "delta",
-      "delta": 0.6671,
-      "entry_date": "2026-10-12",
-      "entry_price": 3.125,
-      "entry_underlying": 89.78,
-      "expiry": "2026-11-06",
+      "delta": 0.4809,
+      "entry_date": "2026-10-13",
+      "entry_price": 6.949999999999999,
+      "entry_underlying": 217.825,
+      "expiry": "2026-11-20",
+      "fundamental_net_income": null,
+      "invalidation_price": 204.87,
+      "qty": 1,
+      "spread_pct": 0.0518,
+      "strike": 220.0,
+      "ticker": "CVX"
+    },
+    "KO261120C00090000": {
+      "basis": "delta",
+      "delta": 0.5372,
+      "entry_date": "2026-10-13",
+      "entry_price": 2.6849999999999996,
+      "entry_underlying": 90.11,
+      "expiry": "2026-11-20",
       "fundamental_net_income": null,
       "invalidation_price": 85.67,
       "qty": 3,
-      "spread_pct": 0.0736,
-      "strike": 88.0,
+      "spread_pct": 0.0857,
+      "strike": 90.0,
       "ticker": "KO"
     },
     "PFE261120C00028000": {
