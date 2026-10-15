@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-15T02:05:01Z",
+  "last_synced": "2026-10-15T03:35:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1626,7 +1626,7 @@
       "id": "EP51",
       "number": 51,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -1690,7 +1690,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-12T08:05:13Z"
+      "updated_at": "2026-10-15T03:35:01Z"
     },
     {
       "id": "EP52",
