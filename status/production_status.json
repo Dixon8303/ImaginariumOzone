@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-15T17:05:01Z",
+  "last_synced": "2026-10-15T18:35:24Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2078,7 +2078,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -2110,7 +2110,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-15T11:05:01Z"
+      "updated_at": "2026-10-15T18:35:24Z"
     },
     {
       "id": "EP58",
