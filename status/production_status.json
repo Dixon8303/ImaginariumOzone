@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-15T11:05:01Z",
+  "last_synced": "2026-10-15T12:05:02Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2466,27 +2466,27 @@
       "id": "EP76",
       "number": 76,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -2498,11 +2498,11 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2530,7 +2530,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-10-15T12:05:02Z"
     },
     {
       "id": "EP77",
