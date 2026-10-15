@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-15T03:35:01Z",
+  "last_synced": "2026-10-15T04:35:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1728,7 +1728,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "voice_ssml",
@@ -1744,7 +1744,7 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
@@ -1752,7 +1752,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -1760,7 +1760,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-12T20:05:02Z"
+      "updated_at": "2026-10-15T04:35:01Z"
     },
     {
       "id": "EP53",
