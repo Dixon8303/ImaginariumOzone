@@ -1,27 +1,26 @@
-generated: 2026-10-14
+generated: 2026-10-15
 
-PRE-OPEN SCAN — 2026-10-14 (signals from the 2026-10-14 close)
-paper equity: $97,929.87
+PRE-OPEN SCAN — 2026-10-15 (signals from the 2026-10-15 close)
+paper equity: $97,780.41
 
 CANDIDATES FOR TODAY (0):
   none — nothing passed breakout + regime + quality
 
 ORDERS QUEUED FOR THE OPEN (0): none
 
-OPEN POSITIONS (13):
-  AAPL  qty 14  unrealized $+74.56  stop 325.81 / target 368.89
-  ABBV  qty 17  unrealized $+203.92  stop 258.24 / target 315.1
-  AMD  qty 7  unrealized $-444.44  stop 541.53 / target 891.43
-  AMZN  qty 18  unrealized $-61.17  stop 250.02 / target 266.34
-  CVX  qty 22  unrealized $+111.96  stop 204.87 / target 245.49
-  DAL  qty 59  unrealized $-329.71  stop 78.95 / target 90.15
-  DAL261016C00082500  qty 2  unrealized $-908.00  stop ? / target ?
-  KO  qty 53  unrealized $+77.93  stop 85.67 / target 102.11
-  KO261016C00087500  qty 3  unrealized $+384.00  stop ? / target ?
-  PFE  qty 170  unrealized $+164.82  stop 27.34 / target 31.7
-  PFE261120C00028000  qty 5  unrealized $+275.00  stop ? / target ?
-  UNH  qty 12  unrealized $+126.06  stop 362.66 / target 426.52
-  XOM261016C00160000  qty 1  unrealized $+930.00  stop ? / target ?
+OPEN POSITIONS (12):
+  AAPL  qty 14  unrealized $+97.06  stop 325.81 / target 368.89
+  ABBV  qty 17  unrealized $+244.04  stop 258.24 / target 315.1
+  AMD  qty 7  unrealized $-623.75  stop 541.53 / target 891.43
+  AMZN  qty 18  unrealized $-64.95  stop 250.02 / target 266.34
+  CVX  qty 22  unrealized $+60.26  stop 204.87 / target 245.49
+  CVX261120C00220000  qty 2  unrealized $-370.00  stop ? / target ?
+  DAL261016C00082500  qty 2  unrealized $-910.00  stop ? / target ?
+  KO  qty 53  unrealized $+110.26  stop 85.67 / target 102.11
+  KO261016C00087500  qty 3  unrealized $+609.00  stop ? / target ?
+  PFE261120C00028000  qty 5  unrealized $+355.00  stop ? / target ?
+  UNH  qty 12  unrealized $+384.90  stop 362.66 / target 426.52
+  XOM261016C00160000  qty 1  unrealized $+715.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
