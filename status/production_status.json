@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-15T15:05:01Z",
+  "last_synced": "2026-10-15T16:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1766,7 +1766,7 @@
       "id": "EP53",
       "number": 53,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -1798,7 +1798,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "halted"
         },
         {
           "name": "voice_ssml",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-12T20:05:02Z"
+      "updated_at": "2026-10-15T16:05:01Z"
     },
     {
       "id": "EP54",
