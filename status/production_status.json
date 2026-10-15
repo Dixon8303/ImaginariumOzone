@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-15T04:35:01Z",
+  "last_synced": "2026-10-15T05:35:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1696,7 +1696,7 @@
       "id": "EP52",
       "number": 52,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -1748,7 +1748,7 @@
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "shorts",
@@ -1760,7 +1760,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-15T04:35:01Z"
+      "updated_at": "2026-10-15T05:35:01Z"
     },
     {
       "id": "EP53",
