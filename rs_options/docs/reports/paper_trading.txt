@@ -1,65 +1,73 @@
-generated: 2026-10-13
+generated: 2026-10-14
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-13
-paper equity: $96,648.54   cash: $51,998.81
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-14
+paper equity: $97,880.22   cash: $51,998.80
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-10-13  $96,664.63   (-3,335.37, -3.3%)
-  over 50 calendar days, 30 recorded sessions: 28 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-10-14  $97,880.22   (-2,119.78, -2.1%)
+  over 51 calendar days, 31 recorded sessions: 29 with a change, 1 flat.
   range so far: $95,756.95 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (2):
-  CVX  [H-25]  close 217.82  stop 204.87  target 256.69  (1R = 12.95)  score 8/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 217.82 on 1.3x volume
-      volume profile: 1% of 60d volume sits ABOVE here, heaviest at 205.31  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 218, spread <= 10%; exit on stop/target/15 sessions
-  KO  [H-25]  close 90.11  stop 85.67  target 103.43  (1R = 4.44)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 90.11 on 1.1x volume
-      volume profile: 10% of 60d volume sits ABOVE here, heaviest at 87.96  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 90, spread <= 10%; exit on stop/target/15 sessions
+TODAY'S SIGNALS (3):
+  PFE  [H-25]  close 29.23  stop 27.48  target 34.48  (1R = 1.75)  score 8/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 29.23 on 1.5x volume
+      volume profile: 1% of 60d volume sits ABOVE here, heaviest at 27.82  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 29, spread <= 10%; exit on stop/target/15 sessions
+  CVX  [H-25]  close 222.09  stop 209.52  target 259.80  (1R = 12.57)  score 8/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 222.09 on 1.4x volume
+      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 205.34  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 222, spread <= 10%; exit on stop/target/15 sessions
+  KO  [H-25]  close 91.81  stop 86.13  target 108.85  (1R = 5.68)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 91.81 on 1.1x volume
+      volume profile: 2% of 60d volume sits ABOVE here, heaviest at 87.96  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 92, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
-  KO     KO261120C00090000  delta 0.54  38d  mid 2.69  spread 8.6%
-         costs $268.50 per contract; needs $5,370 equity to buy one inside the 5% position cap
-  CVX    CVX261120C00220000  delta 0.48  38d  mid 6.95  spread 5.2%
-         costs $695.00 per contract; needs $13,900 equity to buy one inside the 5% position cap
+OPTION COST RECORDER (3 contracts priced) — no orders, no buying power used:
+  PFE    PFE261120C00029000  delta 0.59  37d  mid 1.04  spread 5.8%
+         costs $104.00 per contract; needs $2,080 equity to buy one inside the 5% position cap
+  KO     KO261113C00091000  delta 0.62  30d  mid 2.94  spread 8.5%
+         costs $294.50 per contract; needs $5,890 equity to buy one inside the 5% position cap
+  CVX    CVX261120C00220000  delta 0.63  37d  mid 9.40  spread 5.9%
+         costs $940.50 per contract; needs $18,810 equity to buy one inside the 5% position cap
 
-  cheapest doctrine contract today: KO at $268.50
-  at $96,648.54 equity you can buy 2 of 2 inside the position cap
+  cheapest doctrine contract today: PFE at $104.00
+  at $97,880.22 equity you can buy 3 of 3 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
 PAPER ORDERS PLACED (0):
   none
+  skipped PFE: already held
   skipped CVX: already held
   skipped KO: already held
+TIME EXITS SUBMITTED: DAL
 
 OPEN POSITIONS (13) — 9 of 8 stock slots used, 4 option contracts:
-  AAPL  qty 14  unrealized $+49.46  stop 325.81  target 368.89  since 2026-10-07
-  ABBV  qty 17  unrealized $+27.12  stop 258.24  target 315.1  since 2026-10-08
-  AMD  qty 7  unrealized $-182.08  stop 541.53  target 891.43  since 2026-09-24
-  AMZN  qty 18  unrealized $+16.05  stop 250.02  target 266.34  since 2026-10-08
-  CVX  qty 22  unrealized $+23.08  stop 204.87  target 245.49  since 2026-10-12
-  DAL  qty 59  unrealized $-136.78  stop 78.95  target 90.15  since 2026-09-23
-  DAL261016C00082500  qty 2  unrealized $-876.00  stop ?  target ?  since ?
-  KO  qty 53  unrealized $-28.60  stop 85.67  target 102.11  since 2026-10-12
-  KO261016C00087500  qty 3  unrealized $-57.00  stop ?  target ?  since ?
-  PFE  qty 170  unrealized $-20.16  stop 27.34  target 31.7  since 2026-09-24
-  PFE261120C00028000  qty 5  unrealized $-140.00  stop ?  target ?  since ?
-  UNH  qty 12  unrealized $-16.20  stop 362.66  target 426.52  since 2026-10-05
-  XOM261016C00160000  qty 1  unrealized $+665.00  stop ?  target ?  since ?
+  AAPL  qty 14  unrealized $+109.38  stop 325.81  target 368.89  since 2026-10-07
+  ABBV  qty 17  unrealized $+206.60  stop 258.24  target 315.1  since 2026-10-08
+  AMD  qty 7  unrealized $-563.23  stop 541.53  target 891.43  since 2026-09-24
+  AMZN  qty 18  unrealized $-113.01  stop 250.02  target 266.34  since 2026-10-08
+  CVX  qty 22  unrealized $+160.80  stop 204.87  target 245.49  since 2026-10-12
+  DAL  qty 59  unrealized $-293.76  stop 78.95  target 90.15  since 2026-09-23
+  DAL261016C00082500  qty 2  unrealized $-908.00  stop ?  target ?  since ?
+  KO  qty 53  unrealized $+93.83  stop 85.67  target 102.11  since 2026-10-12
+  KO261016C00087500  qty 3  unrealized $+444.00  stop ?  target ?  since ?
+  PFE  qty 170  unrealized $+119.77  stop 27.34  target 31.7  since 2026-09-24
+  PFE261120C00028000  qty 5  unrealized $+180.00  stop ?  target ?  since ?
+  UNH  qty 12  unrealized $+199.20  stop 362.66  target 426.52  since 2026-10-05
+  XOM261016C00160000  qty 1  unrealized $+920.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  BOUGHT 1x CVX261120C00220000  @ $6.95 ($695)  38d  strike 220.00  [delta 0.48, spread 5.2%, OI 14517]
+  BOUGHT 1x CVX261120C00220000  @ $9.41 ($941)  37d  strike 220.00  [delta 0.63, spread 5.8%, OI 14503]
     FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  BOUGHT 3x KO261120C00090000  @ $2.68 ($805)  38d  strike 90.00  [delta 0.54, spread 8.6%, OI 9541]
+  BOUGHT 3x KO261113C00091000  @ $2.94 ($884)  30d  strike 91.00  [delta 0.62, spread 8.5%, OI 251]
     FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
   SOLD   1x CVX261120C00220000  (reconciled)
   SOLD   3x KO261120C00090000  (reconciled)
   holding 3:
-    CVX261120C00220000  1x @ $6.95  since 2026-10-13  stop-if-underlying <= 204.87
-    KO261120C00090000  3x @ $2.68  since 2026-10-13  stop-if-underlying <= 85.67
+    CVX261120C00220000  1x @ $9.41  since 2026-10-14  stop-if-underlying <= 209.52
+    KO261113C00091000  3x @ $2.94  since 2026-10-14  stop-if-underlying <= 86.13
     PFE261120C00028000  5x @ $1.32  since 2026-09-24  stop-if-underlying <= 27.34
 
 OPTION POSITIONS (Robinhood): none on file.
