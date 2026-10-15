@@ -79,6 +79,26 @@
       "r": -0.069,
       "reason": "time/other",
       "ticker": "GOOGL"
+    },
+    {
+      "entry": 81.858305,
+      "entry_date": "2026-09-23",
+      "exit": 76.03,
+      "exit_date": "2026-10-15",
+      "micro_override": false,
+      "r": -2.004,
+      "reason": "stop",
+      "ticker": "DAL"
+    },
+    {
+      "entry": 28.495471,
+      "entry_date": "2026-09-24",
+      "exit": 29.63,
+      "exit_date": "2026-10-15",
+      "micro_override": false,
+      "r": 0.982,
+      "reason": "time/other",
+      "ticker": "PFE"
     }
   ],
   "open": {
@@ -111,6 +131,7 @@
       "target": 315.1
     },
     "AMD": {
+      "closing": "2026-10-15",
       "entry": 635.461429,
       "entry_cap": 641.5851,
       "entry_date": "2026-09-24",
@@ -152,21 +173,6 @@
       "stop": 204.87,
       "target": 245.49
     },
-    "DAL": {
-      "closing": "2026-10-14",
-      "entry": 81.858305,
-      "entry_cap": 83.385,
-      "entry_date": "2026-09-23",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "1a7b608b-e917-40cd-9e69-57a1cf7e8e47",
-      "qty": 59,
-      "setup": "H-25",
-      "signal_close": 81.75,
-      "stop": 78.95,
-      "target": 90.15
-    },
     "KO": {
       "entry": 90.389623,
       "entry_cap": 91.57560000000001,
@@ -182,18 +188,18 @@
       "target": 102.11
     },
     "PFE": {
-      "entry": 28.495471,
-      "entry_cap": 28.9986,
-      "entry_date": "2026-09-24",
-      "entry_estimated": false,
+      "entry": 29.43,
+      "entry_cap": 30.0186,
+      "entry_date": "2026-10-15",
+      "entry_estimated": true,
       "fractional": false,
       "micro_override": false,
-      "order_id": "420a051d-8d1a-44c2-a9f3-f099de2b5426",
-      "qty": 170,
+      "order_id": "a5dcd6bb-d45a-4b2f-a786-e5b316cbdfec",
+      "qty": 165,
       "setup": "H-25",
-      "signal_close": 28.43,
-      "stop": 27.34,
-      "target": 31.7
+      "signal_close": 29.43,
+      "stop": 27.6,
+      "target": 34.92
     },
     "UNH": {
       "entry": 379.1,
@@ -225,32 +231,18 @@
       "strike": 220.0,
       "ticker": "CVX"
     },
-    "KO261113C00091000": {
+    "PFE261106C00028500": {
       "basis": "delta",
-      "delta": 0.6179,
-      "entry_date": "2026-10-14",
-      "entry_price": 2.945,
-      "entry_underlying": 91.81,
-      "expiry": "2026-11-13",
+      "delta": 0.6941,
+      "entry_date": "2026-10-15",
+      "entry_price": 1.42,
+      "entry_underlying": 29.43,
+      "expiry": "2026-11-06",
       "fundamental_net_income": null,
-      "invalidation_price": 86.13,
-      "qty": 3,
-      "spread_pct": 0.0849,
-      "strike": 91.0,
-      "ticker": "KO"
-    },
-    "PFE261120C00028000": {
-      "basis": "delta",
-      "delta": 0.613,
-      "entry_date": "2026-09-24",
-      "entry_price": 1.32,
-      "entry_underlying": 28.43,
-      "expiry": "2026-11-20",
-      "fundamental_net_income": null,
-      "invalidation_price": 27.34,
+      "invalidation_price": 27.6,
       "qty": 5,
-      "spread_pct": 0.0606,
-      "strike": 28.0,
+      "spread_pct": 0.0845,
+      "strike": 28.5,
       "ticker": "PFE"
     }
   }
