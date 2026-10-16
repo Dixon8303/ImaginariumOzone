@@ -15,6 +15,7 @@ git history and a Pages deploy, nothing else. Never wire one into another.
 | 8 | **RS Options Engine** | `rs_options/` | Risk engine + MVE for the RS Options spec. **Co-pilot mode:** autonomous trade selection via the scan playbook; execution requires the operator's explicit word per trade session. Unattended execution stays locked behind the spec §67 release gate. See `rs_options/robinhood_copilot_playbook.md`. |
 | 9 | **DEOS: Emergence** | `deos/` | Deterministic Emergence Operating Specification: the engineering spec for the game *Emergence: The Digital Rise*. Documentation-only subtree, self-contained so it can be extracted into its own repository. `python3 deos/tools/spec_lint.py` must pass before any change under `deos/` merges. |
 | 10 | **CinemaWin** | `cinemawin/` | Film development SaaS: guided story intake → 100-point Greenlight Scorecard → finance package (capital stack, 12-slide deck). Vite/React frontend + its **own** FastAPI backend (port 8002), provider-agnostic (Gemini/Groq/Ollama/Anthropic/OpenAI), driven by the five CinemaWin doctrine docs. Also builds as a static browser-only site deployed to Pages at `/cinemawin/`. Self-contained and extractable. See `cinemawin/README.md` and `cinemawin/COOPERATION.md`. |
+| 11 | **LaunchAI** | `LaunchAI/` | One-click launcher app for the operator's Mac: starts Ollama, ComfyUI and the BGF Production OS (through its own `start.sh`), opens Claude and Chrome. It only runs each tool's normal start command — it never imports, edits or reconfigures another component. See `LaunchAI/README.md`. |
 
 **Target platform:** macOS (Apple Silicon). `start.sh` uses BSD `sed -i ''`, narration
 falls back to the macOS `say` command, and ComfyUI is tuned for MPS. Linux/CI runs of
@@ -336,6 +337,28 @@ or `src/`.
 - **Verify before you claim:** `cd cinemawin && npm run build && npm run build:static`,
   then `cd backend && .venv/bin/python -c "import main" && .venv/bin/python -m pytest -q tests`
   (pytest comes from `requirements-dev.txt`).
+
+---
+
+## 11. LaunchAI
+
+Desktop launcher for the operator's Mac. `LaunchAI/install.sh` builds `LaunchAI.app`; the app is a
+copy of `launchai.sh`, which also answers `stop` and `diagnose`.
+
+- **Settings live outside the repo** — `~/.launchai/config.sh` (the operator's, never overwritten) and
+  `env.sh` (written by `install.sh`). Never hard-code a path, port or app name in `launchai.sh`: add a
+  default at the top and a commented line to `config.example.sh`.
+- **PATH.** A Finder-launched app gets a bare `PATH`, so `ollama`, `docker` and `node` look missing.
+  `install.sh` saves the Terminal's PATH; do not decide a tool is absent from the bare one.
+- **Readiness is checked over HTTP, never by port.** Docker, Vite and Open WebUI accept connections
+  before they can answer. The checks are `/api/health`, `/system_stats`, `/api/version` and `/health`.
+- **Secrets.** Only test that `ANTHROPIC_API_KEY` is non-empty and read `OLLAMA_MODEL`; never print
+  `backend/.env`. `diagnose` hides any log line that looks like a key.
+- **Open WebUI + Qwen is an opt-in extra** (`START_OPEN_WEBUI="yes"`). The BGF Production OS does not use it.
+- **bash 3.2** (the macOS system bash): no associative arrays, `mapfile` or `${var,,}`.
+- **Verify before you claim:** `bash LaunchAI/tests/run_tests.sh` and
+  `shellcheck LaunchAI/*.sh LaunchAI/tests/run_tests.sh`. The icon is drawn by `LaunchAI/make_icon.py`
+  and committed; the Mac never runs it.
 
 ---
 
