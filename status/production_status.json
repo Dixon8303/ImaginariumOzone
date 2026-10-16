@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-16T22:05:01Z",
+  "last_synced": "2026-10-16T23:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2256,7 +2256,7 @@
       "id": "EP60",
       "number": 60,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2320,7 +2320,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-16T22:05:01Z"
+      "updated_at": "2026-10-16T23:05:01Z"
     },
     {
       "id": "EP61",
@@ -2358,7 +2358,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -2390,7 +2390,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-16T00:05:05Z"
+      "updated_at": "2026-10-16T23:05:01Z"
     },
     {
       "id": "EP75",
