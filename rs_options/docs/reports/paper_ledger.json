@@ -99,6 +99,16 @@
       "r": 0.982,
       "reason": "time/other",
       "ticker": "PFE"
+    },
+    {
+      "entry": 635.461429,
+      "entry_date": "2026-09-24",
+      "exit": 548.164286,
+      "exit_date": "2026-10-16",
+      "micro_override": false,
+      "r": -0.929,
+      "reason": "stop",
+      "ticker": "AMD"
     }
   ],
   "open": {
@@ -129,21 +139,6 @@
       "signal_close": 272.455,
       "stop": 258.24,
       "target": 315.1
-    },
-    "AMD": {
-      "closing": "2026-10-15",
-      "entry": 635.461429,
-      "entry_cap": 641.5851,
-      "entry_date": "2026-09-24",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "28347540-16e3-4810-a7af-33bfcfa8521b",
-      "qty": 7,
-      "setup": "RS-02",
-      "signal_close": 629.005,
-      "stop": 541.53,
-      "target": 891.43
     },
     "AMZN": {
       "entry": 257.208333,
@@ -188,10 +183,10 @@
       "target": 102.11
     },
     "PFE": {
-      "entry": 29.43,
+      "entry": 29.69,
       "entry_cap": 30.0186,
       "entry_date": "2026-10-15",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "a5dcd6bb-d45a-4b2f-a786-e5b316cbdfec",
