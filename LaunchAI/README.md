@@ -80,7 +80,7 @@ you the `ollama pull` command; set `AUTO_PULL_CHAT_MODEL="yes"` to have it downl
 | `launchai.sh` | The launcher. The Desktop app is a copy of it; `stop` and `diagnose` are sub-commands |
 | `install.sh` | Builds the app, finds your folders, carries settings over from an older LaunchAI |
 | `config.example.sh` | Template for `~/.launchai/config.sh` — settings live outside the repo and survive updates |
-| `make_icon.py` | Draws `LaunchAI.png` and `LaunchAI.icns` (Pillow only) — the Mac never needs to run it |
+| `make_icon.py` | Draws `LaunchAI.png` and `LaunchAI.icns` in E.A.T. Media blue (needs Pillow and the Inter font). `--text BGF` gives a BGF version. The Mac never runs it |
 | `tests/run_tests.sh` | `bash LaunchAI/tests/run_tests.sh` — runs both scripts against stand-ins for `open`, `docker`, `ollama`, … |
 
 - **Why it keeps your Terminal's PATH.** An app started from Finder gets a bare `PATH`, so `ollama`,
