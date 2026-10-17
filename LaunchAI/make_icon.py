@@ -4,8 +4,8 @@
 A chrome-blue power button — a ring open at the top with the stem standing in the gap — and
 the lettering sitting inside it, on a macOS-style plate. The blue is E.A.T. Media's #0292EB.
 
-    python3 make_icon.py                  # "AI"  -> LaunchAI.png + LaunchAI.icns next to this file
-    python3 make_icon.py --text BGF       # any short capital-letter text
+    python3 make_icon.py                  # "BGF" -> LaunchAI.png + LaunchAI.icns next to this file
+    python3 make_icon.py --text AI        # any short capital-letter text, e.g. the earlier AI version
     python3 make_icon.py --out some/dir   # write the files somewhere else
 
 Needs Pillow and a heavy sans font (Inter Black if installed, else Arial Black or DejaVu Bold).
@@ -285,7 +285,7 @@ def write_icns(master, path):
 
 def main():
     ap = argparse.ArgumentParser(description="Render the LaunchAI icon.")
-    ap.add_argument("--text", default="AI", help="the lettering, capitals (default: AI)")
+    ap.add_argument("--text", default="BGF", help="the lettering, capitals (default: BGF)")
     ap.add_argument("--out", default=str(Path(__file__).resolve().parent), help="output folder")
     args = ap.parse_args()
     out = Path(args.out)
