@@ -342,18 +342,26 @@
 </main>
 
 <footer>
-  Generated from the repo's own docs and config — see <code>CLAUDE.md</code> for the project map. Each row's Copy button puts the URL on your clipboard for sharing.
+  Hand-curated from the repo's own docs and config — see <code>CLAUDE.md</code> for the project map. Each row's Copy button puts the URL on your clipboard for sharing.
 </footer>
 
 <script>
   const DATA = [
     {
       name: "E.A.T. Media — company site",
-      desc: "Everything, All That Media LLC — video production and photography studio (\"Capture Your Vision\"). Published from eatmedia/ via the same repo's Pages workflow, at /eatmedia/, and live at eatmediatv.com.",
+      desc: "Everything, All That Media LLC — video production and photography studio (\"Capture Your Vision\"). A staging copy is published from eatmedia/ via this repo's Pages workflow, at /eatmedia/. The eatmediatv.com domain is set up in the separate repo Dixon8303/eat.media (synced from eatmedia/); no file in either repo confirms that the DNS handover from the previous site has happened.",
       links: [
-        { title: "eatmediatv.com", kind: "external", url: "https://eatmediatv.com/", note: "primary link" },
+        { title: "eatmediatv.com", kind: "external", url: "https://eatmediatv.com/", note: "company domain; set up in the eat.media repo — repo files can't confirm the DNS handover from the previous site" },
         { title: "Company site (repo staging URL)", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/eatmedia/", note: "eatmedia/index.html" },
+        { title: "About — E.A.T. Media", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/eatmedia/about.html", note: "eatmedia/about.html — vision, team, experience" },
+        { title: "Pricing — photography & video rates", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/eatmedia/photoshoot-packages.html", note: "eatmedia/photoshoot-packages.html — rate card, booking terms, FAQ" },
+        { title: "Privacy policy — E.A.T. Media", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/eatmedia/privacy/", note: "eatmedia/privacy/index.html" },
         { title: "Book a call — Calendly", kind: "external", url: "https://calendly.com/o3photoshoot", note: "O3 Photoshoot" },
+        { title: "Instagram — @e.a.t.media", kind: "external", url: "https://www.instagram.com/e.a.t.media", note: "company social profile" },
+        { title: "Facebook — E.A.T. Media", kind: "external", url: "https://www.facebook.com/295112133868625", note: "company social profile (page ID URL)" },
+        { title: "TikTok — @eatmediatv", kind: "external", url: "https://www.tiktok.com/@eatmediatv", note: "company social profile" },
+        { title: "YouTube channel — E.A.T. Media", kind: "external", url: "https://www.youtube.com/channel/UC7l79AmZP0sYgdcuwjXlNDg", note: "company channel as linked from the site footer; separate from the Black Genius Files channel" },
+        { title: "Truth Seeker Truth Speaker — podcast", kind: "external", url: "https://podcasts.apple.com/us/podcast/truth-seeker-truth-speaker/id1625750426", note: "Apple Podcasts; listed under \"In Production\" on the company site" },
         { title: "Venmo", kind: "external", url: "https://venmo.com/code?user_id=3433935715435647930", note: "@EATMediaTV" },
         { title: "Cash App", kind: "external", url: "https://cash.app/$EATMediaTV", note: "" },
         { title: "PayPal", kind: "external", url: "https://www.paypal.me/OThreeProductions", note: "" },
@@ -361,7 +369,7 @@
     },
     {
       name: "GodFood — documentary",
-      desc: "Independent documentary produced by DeWayne Dixon, promoted via the E.A.T. Media Linktree.",
+      desc: "Independent documentary, promoted from the book site's link-in-bio hub (/book/links.html). The GoFundMe is organized by DeWayne Dixon.",
       links: [
         { title: "Donate — help it reach film festivals", kind: "external", url: "https://gofund.me/0662be7e", note: "GoFundMe" },
         { title: "Press release", kind: "external", url: "https://drive.google.com/file/d/1Oe35lVzeX7kpvHjG4pMkBZbTJBOwTLuU/view?usp=sharing", note: "Google Drive" },
@@ -377,29 +385,50 @@
     },
     {
       name: "Genius Index — Braid Constellations",
-      desc: "The public assessment site, published from docs/ via GitHub Pages.",
+      desc: "The Genius Index assessment and its book. The newer app and book site live in the separate genius-index-booksite repo. This repo's docs/ still publishes the original assessment build at the Pages root, unchanged, plus the companion PDF.",
       links: [
         { title: "Take the assessment", kind: "external", url: "https://dixon8303.github.io/genius-index-booksite/assessment", note: "canonical destination as of 2026-09 — docs/index.html (this repo) is the older build, kept live" },
+        { title: "Original assessment (this repo, kept live)", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/", note: "docs/index.html — the older single-page build; existing share links still resolve here" },
+        { title: "30-Day Amplification Protocol tracker", kind: "external", url: "https://dixon8303.github.io/genius-index-booksite/protocol", note: "daily check-ins and streaks; progress is saved in the browser" },
+        { title: "The 36 Braids explorer", kind: "external", url: "https://dixon8303.github.io/genius-index-booksite/braids", note: "browse all 36 braids; per-braid pages at /braids/<slug>" },
+        { title: "The 9 Domains explorer", kind: "external", url: "https://dixon8303.github.io/genius-index-booksite/domains", note: "browse the nine domains; per-domain pages at /domains/<id>" },
         { title: "Companion PDF", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/downloads/the-thirty-six-braids-companion.pdf", note: "The Thirty-Six Braids" },
-        { title: "Braid Constellations — the book", kind: "external", url: "https://dixon8303.github.io/genius-index-booksite/", note: "linked as \"Get the book\", tinyurl.com/TheGeniusIndex" },
-        { title: "Response collection (Apps Script)", kind: "external", url: "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9Lj6Cbi3HL_nhcLe2yPSvTOzutv35GJknxVh2wbqUXDDFcQ4/exec", note: "anonymous pilot data → private Google Sheet, see docs/data-collection-setup.md" },
+        { title: "The Genius Index — book site & app", kind: "external", url: "https://dixon8303.github.io/genius-index-booksite/", note: "book promo one-pager plus the software product (assessment, results, profile, protocol, braid and domain explorers); linked as \"Get the book\" from the assessment, tinyurl.com/TheGeniusIndex" },
+        { title: "Response collection (Apps Script)", kind: "external", url: "https://script.google.com/macros/s/AKfycbwIsDU2vvSmc6HRiRn9Lj6Cbi3HL_nhcLe2yPSvTOzutv35GJknxVh2wbqUXDDFcQ4/exec", note: "opening it only shows a status message; the assessment pages send anonymous results here — see docs/data-collection-setup.md" },
         { title: "Firebase console — the-genius-index", kind: "external", url: "https://console.firebase.google.com/project/the-genius-index/overview", note: "optional Google sign-in for result history, see docs/firebase-login-setup.md" },
       ],
     },
     {
       name: "What History Buried — official site",
-      desc: "The Black Genius Files, Vol. 1. Published from site/ via the same repo's Pages workflow, at /book/. Custom domain blackgeniusfiles.com is registered (site/CNAME) but not yet wired up — the workflow strips it until DNS is set up.",
+      desc: "The Black Genius Files, Vol. 1. Published from site/ via the same repo's Pages workflow, at /book/. Custom domain blackgeniusfiles.com is named in site/CNAME but not wired up — the workflow strips it until DNS is set up.",
       links: [
         { title: "Official site", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/", note: "site/index.html, tinyurl.com/BGFbook1" },
-        { title: "Read Chapter 1 free", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/free-chapter.html", note: "site/free-chapter.html" },
+        { title: "Free Chapter 1 (email signup)", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/free-chapter.html", note: "site/free-chapter.html redirects to the Recovery List signup at /book/#free-chapter; Chapter 1 arrives by email" },
+        { title: "The Erasure Mechanism — 4-minute briefing", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/erasure.html", note: "site/erasure.html, 4-minute interactive briefing, linked from the book site nav and footer" },
+        { title: "The 5-Day Unlearning Challenge", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/unlearn.html", note: "site/unlearn.html, five myths against five primary documents, one short lesson a day" },
         { title: "Link-in-bio hub", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/links.html", note: "site/links.html" },
         { title: "Press kit", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/press-kit.html", note: "site/press-kit.html" },
         { title: "Privacy policy", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/book/privacy.html", note: "site/privacy.html" },
-        { title: "Get the book — Payhip", kind: "external", url: "https://payhip.com/b/exquo", note: "first sell priority on every CTA" },
-        { title: "Get the book — Amazon", kind: "external", url: "https://a.co/d/0g29KbPj", note: "trade paperback" },
+        { title: "Get the book — PDF (Payhip)", kind: "external", url: "https://payhip.com/b/exquo", note: "direct PDF edition, straight from the author" },
+        { title: "Payhip storefront — Black Genius Files", kind: "external", url: "https://payhip.com/BlackGeniusFiles", note: "storefront root; set as PAYHIP_STORE_URL in site/assets/site.js" },
+        { title: "Get the book — Amazon (paperback)", kind: "external", url: "https://www.amazon.com/dp/B0HKT1PV5Y", note: "paperback edition (the old a.co short link opened the Kindle page)" },
+        { title: "Get the book — Amazon (hardcover)", kind: "external", url: "https://www.amazon.com/dp/B0HKW11PSZ", note: "hardcover edition" },
+        { title: "Get the book — Amazon (Kindle)", kind: "external", url: "https://www.amazon.com/dp/B0GX32RB25", note: "Kindle edition, in Kindle Unlimited" },
         { title: "Study & Trivia Companion", kind: "external", url: "https://payhip.com/b/R0jgn", note: "12 study sheets, 36 trivia questions" },
+        { title: "Kit (email list)", kind: "external", url: "https://app.kit.com/", note: "email list behind the Chapter 1 / Recovery List signup; operator console" },
+        { title: "Google Analytics (GA4)", kind: "external", url: "https://analytics.google.com/", note: "book-site traffic and buy/lead events; operator console" },
         { title: "All Black Everything Podcast", kind: "external", url: "https://podcasts.apple.com/us/podcast/the-all-black-everything-podcast/id1527013923", note: "heard in 22+ countries" },
-        { title: "Podcast — Linktree shortlink", kind: "external", url: "https://bit.ly/abepodcast", note: "redirects to Apple Podcasts" },
+        { title: "All Black Everything — about the show (short link)", kind: "external", url: "https://bit.ly/abepodcast", note: "short link used across the E.A.T. Media site; opens an Adobe Express about-the-show and guest-info page, not Apple Podcasts" },
+        { title: "Book a podcast guest interview — Calendly", kind: "external", url: "https://calendly.com/eatmediatv/all-black-everything-podcast-interview", note: "guest booking for the podcast, linked from the Black Genius Files hub" },
+      ],
+    },
+    {
+      name: "BGF Content Engine (Pinterest)",
+      desc: "Private single-user Pinterest Pin publisher for the books (its code is not in this repo). Only its public explainer and privacy pages are published, from docs/, and they exist for Pinterest API app review.",
+      links: [
+        { title: "About the Content Engine", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/bgf-content-engine.html", note: "docs/bgf-content-engine.html, app description and scopes for Pinterest review" },
+        { title: "Privacy policy — Content Engine", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/privacy.html", note: "docs/privacy.html, effective 13 August 2026; not the same page as book/privacy.html" },
+        { title: "Privacy policy — Pin Publisher", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/privacy-policy.html", note: "docs/privacy-policy.html, policy for the separately named E.A.T. Media Pin Publisher (updated 3 Oct 2026); not linked from any other page" },
       ],
     },
     {
@@ -411,6 +440,13 @@
       ],
     },
     {
+      name: "Young Owners — curriculum site",
+      desc: "Young Owners: a seven-volume, 36-chapter entrepreneurship, technology, creativity and ownership curriculum for 7th and 8th grade, published by E.A.T. Media. A single-page site for schools and afterschool sites, families, sponsors and press; separate repo (Dixon8303/KodiDixon).",
+      links: [
+        { title: "Young Owners — program site", kind: "external", url: "https://dixon8303.github.io/KodiDixon/", note: "pre-launch preview; contact form not live yet. GitHub Pages is not confirmed from the repo files, so check this opens" },
+      ],
+    },
+    {
       name: "Dixon Grant Studio",
       desc: "Grant-writing pipeline and sample site.",
       links: [
@@ -418,23 +454,48 @@
       ],
     },
     {
-      name: "Circle of Morality",
-      desc: "React virtue-wheel UI (src/). Dev-only, not deployed.",
+      name: "CinemaWin",
+      desc: "Film development workspace (cinemawin/): story intake, 100-point Greenlight Scorecard, finance package. A browser-only build is published from cinemawin/ by the same repo's Pages workflow at /cinemawin/; the full app (Vite frontend + its own FastAPI backend) runs locally with cinemawin/start.sh.",
       links: [
-        { title: "Vite dev server", kind: "local", url: "http://localhost:5173", note: "npm run dev" },
+        { title: "Browser-only app (Pages build)", kind: "live", url: "https://dixon8303.github.io/ImaginariumOzone/cinemawin/", note: "cinemawin/ static build; projects stay in this browser, sample AI output until a backend is connected" },
+        { title: "App (Vite dev server)", kind: "local", url: "http://localhost:5174", note: "./start.sh from cinemawin/; /api proxies to the backend, so start both together; port overridable with CINEMAWIN_FRONTEND_PORT" },
+        { title: "Backend API", kind: "local", url: "http://localhost:8002", note: "FastAPI + SQLite; the bare address returns 404 until cinemawin/ has been built (npm run build), so use /docs or /api/health; port set by CINEMAWIN_PORT" },
+        { title: "API docs (Swagger UI)", kind: "local", url: "http://localhost:8002/docs", note: "FastAPI's built-in interactive docs" },
+        { title: "API health check", kind: "local", url: "http://localhost:8002/api/health", note: "confirms the backend is running, whether it is in demo mode, and which AI provider it is using; never shows the key" },
+        { title: "Google AI Studio — Gemini API key", kind: "external", url: "https://aistudio.google.com/apikey", note: "free tier, no card; the default provider in backend/.env.example (CINEMAWIN_LLM_PROVIDER=gemini)" },
+        { title: "Groq Console — API keys", kind: "external", url: "https://console.groq.com/keys", note: "free tier, no card; fastest of the free options (~30 requests/min)" },
+        { title: "OpenRouter — API keys", kind: "external", url: "https://openrouter.ai/keys", note: "has :free models; set CINEMAWIN_LLM_PROVIDER=openrouter" },
+        { title: "Cerebras Cloud", kind: "external", url: "https://cloud.cerebras.ai/", note: "free tier; set CINEMAWIN_LLM_PROVIDER=cerebras" },
+        { title: "Render — host the backend", kind: "external", url: "https://render.com", note: "free-tier Blueprint deploy from cinemawin/render.yaml; sleeps after ~15 min idle, disk wiped on restart" },
+        { title: "OpenAI — API keys (paid)", kind: "external", url: "https://platform.openai.com/api-keys", note: "paid, optional; set CINEMAWIN_LLM_PROVIDER=openai" },
+        { title: "Together AI — API keys (paid)", kind: "external", url: "https://api.together.ai/settings/api-keys", note: "paid, optional; set CINEMAWIN_LLM_PROVIDER=together" },
+      ],
+    },
+    {
+      name: "Circle of Morality & Screenplay Tracker",
+      desc: "Earlier React features, preserved as the /circle and /tracker routes of the BGF frontend (src/CircleOfMorality.jsx, src/ScreenplayTracker.jsx). Dev-only, not deployed to Pages: start the frontend with npm run dev or ./start.sh.",
+      links: [
+        { title: "Circle of Morality", kind: "local", url: "http://localhost:5173/circle", note: "npm run dev — same Vite app as the BGF dashboard, route /circle" },
+        { title: "Screenplay Tracker", kind: "local", url: "http://localhost:5173/tracker", note: "npm run dev — same Vite app as the BGF dashboard, route /tracker" },
       ],
     },
     {
       name: "BGF Production OS",
-      desc: "Narrative production backend (backend/) — see BGF_USER_GUIDE.md.",
+      desc: "The Black Genius Files video-production pipeline (15 stages): React dashboard on port 5173 and FastAPI backend on port 8001. Run ./start.sh first for the dashboard and API links; ComfyUI and Ollama are separate local services. See BGF_USER_GUIDE.md.",
       links: [
         { title: "Production dashboard", kind: "local", url: "http://localhost:5173", note: "frontend" },
-        { title: "Backend API", kind: "local", url: "http://localhost:8001", note: "FastAPI" },
+        { title: "New episode", kind: "local", url: "http://localhost:5173/new", note: "start an episode (topic, notes, operating mode); needs ./start.sh" },
+        { title: "Discovery feed", kind: "local", url: "http://localhost:5173/discover", note: "topic ideas and breakout signals; needs ./start.sh" },
+        { title: "War Room analytics", kind: "local", url: "http://localhost:5173/war-room", note: "CTR and retention metrics, decision engine; needs ./start.sh" },
+        { title: "Backend API docs (Swagger UI)", kind: "local", url: "http://localhost:8001/docs", note: "FastAPI interactive docs; the bare root URL has no route and returns 404" },
         { title: "API health check", kind: "local", url: "http://localhost:8001/api/health", note: "" },
         { title: "ComfyUI", kind: "local", url: "http://localhost:8188", note: "image/video generation" },
         { title: "Ollama", kind: "local", url: "http://localhost:11434", note: "local LLM runtime" },
-        { title: "ElevenLabs", kind: "external", url: "https://elevenlabs.io", note: "speech enhancement" },
-        { title: "vidIQ", kind: "external", url: "https://vidiq.com", note: "channel + title/thumbnail scoring" },
+        { title: "Ollama — download", kind: "external", url: "https://ollama.com/download", note: "install, then run ollama pull mistral (the BGF default) or llama3.1 (CinemaWin)" },
+        { title: "ElevenLabs", kind: "external", url: "https://elevenlabs.io", note: "premium voiceover narration (text-to-speech); falls back to macOS say" },
+        { title: "vidIQ", kind: "external", url: "https://vidiq.com", note: "keyword research, title scoring/generation, trending/outliers, channel analytics" },
+        { title: "Anthropic Console — API keys", kind: "external", url: "https://console.anthropic.com/settings/keys", note: "the one required key (ANTHROPIC_API_KEY) for BGF; CinemaWin can also use it as an optional paid provider" },
+        { title: "Google Cloud Console — YouTube OAuth credentials", kind: "external", url: "https://console.cloud.google.com/apis/credentials", note: "create the OAuth client JSON for YouTube uploads (YouTube Data API v3); its file path goes in YOUTUBE_CLIENT_SECRETS" },
         { title: "YouTube Studio", kind: "external", url: "https://studio.youtube.com", note: "uploaded episodes land here" },
       ],
     },
@@ -443,15 +504,25 @@
       desc: "One-click local AI stack launcher for macOS.",
       links: [
         { title: "Open WebUI", kind: "local", url: "http://localhost:3000", note: "Qwen2.5 chat" },
-        { title: "ComfyUI", kind: "local", url: "http://localhost:8188", note: "" },
+        { title: "ComfyUI", kind: "local", url: "http://localhost:8188", note: "started by LaunchAI; the same server the BGF pipeline uses for image generation" },
       ],
     },
     {
       name: "HoneyDrip Bot",
-      desc: "Paper-trading methodology framework. PAPER = True, always.",
+      desc: "Trading methodology framework with two modes. Paper (the default) trades on Alpaca's paper endpoint; live_mcp hands risk-approved signals to Claude Code to execute through Robinhood's Trading MCP. Every run needs HONEYDRIP_ARMED=YES, with a 5% position cap and a 2% daily-loss stop.",
       links: [
-        { title: "Alpaca Paper Trading dashboard", kind: "external", url: "https://app.alpaca.markets", note: "toggle to Paper" },
+        { title: "Alpaca Paper Trading dashboard", kind: "external", url: "https://app.alpaca.markets", note: "toggle to Paper; also used by the RS Options paper trader" },
         { title: "Alpaca API docs", kind: "external", url: "https://docs.alpaca.markets", note: "" },
+      ],
+    },
+    {
+      name: "RS Options Engine",
+      desc: "Risk engine and minimum viable engine (MVE) for the RS Options research spec. Co-pilot mode: the engine picks the trades, but nothing executes without the operator's explicit word, and unattended execution stays locked behind the spec §67 release gate. A scheduled paper track runs weekdays on Alpaca's paper account.",
+      links: [
+        { title: "Paper shadow-track report", kind: "external", url: "https://github.com/Dixon8303/ImaginariumOzone/blob/main/rs_options/docs/reports/paper_trading.txt", note: "daily scan, signals, paper orders and equity; rewritten after each paper run" },
+        { title: "RS Paper Trader — GitHub Actions", kind: "external", url: "https://github.com/Dixon8303/ImaginariumOzone/actions/workflows/paper_trader.yml", note: "weekdays: pre-open briefing 12:45 UTC (no orders), trading run after the close 21:35 UTC; Run workflow button for a manual run. Paper account only" },
+        { title: "Daily digest thread (GitHub issue)", kind: "external", url: "https://github.com/Dixon8303/ImaginariumOzone/issues?q=is%3Aissue+%22RS+paper+track%22", note: "one comment per paper session; the GitHub mobile app turns each into a push. Search link, so it still works if the issue is ever recreated" },
+        { title: "Alpha Vantage", kind: "external", url: "https://www.alphavantage.co", note: "optional free API key for the earnings-dates study (python -m mve.earnings); free tier is about 25 requests a day" },
       ],
     },
     {
@@ -462,13 +533,26 @@
         { title: "ntfy", kind: "external", url: "https://ntfy.sh", note: "push notifications" },
         { title: "Apple ID", kind: "external", url: "https://appleid.apple.com", note: "app-specific password for CalDAV" },
         { title: "Google App Passwords", kind: "external", url: "https://myaccount.google.com/apppasswords", note: "SMS relay via Gmail" },
+        { title: "Tracker workflow — GitHub Actions", kind: "external", url: "https://github.com/Dixon8303/ImaginariumOzone/actions/workflows/marvel_tracker.yml", note: "daily at 13:00 UTC; Run workflow button for a manual test. Saves state.json when releases change" },
+      ],
+    },
+    {
+      name: "Netlify",
+      desc: "Sites deployed on Netlify.",
+      links: [
+        { title: "retained-concept", kind: "external", url: "https://retained-concept.netlify.app", note: "uploaded to Netlify 2026-08-14, public; what it contains is not documented in any repo, so add a description here once you decide" },
       ],
     },
     {
       name: "Repository",
-      desc: "The monorepo itself.",
+      desc: "The monorepo, plus its separate sibling site repos.",
       links: [
         { title: "GitHub repository", kind: "external", url: "https://github.com/dixon8303/imaginariumozone", note: "" },
+        { title: "Pages deploy workflow runs", kind: "external", url: "https://github.com/Dixon8303/ImaginariumOzone/actions/workflows/pages.yml", note: "Deploy sites to GitHub Pages; check here after a push to docs/, site/, eatmedia/ or cinemawin/" },
+        { title: "eat.media — company site source", kind: "external", url: "https://github.com/Dixon8303/eat.media", note: "separate repo with its own Pages workflow and the eatmediatv.com CNAME; content is synced from eatmedia/ in this repo" },
+        { title: "KodiDixon — Young Owners site source", kind: "external", url: "https://github.com/Dixon8303/KodiDixon", note: "separate repo; single-page Young Owners curriculum site (pre-launch preview)" },
+        { title: "black-genius-files — video hub source", kind: "external", url: "https://github.com/Dixon8303/black-genius-files", note: "separate repo behind the Black Genius Files video hub site" },
+        { title: "genius-index-booksite — book site and app source", kind: "external", url: "https://github.com/Dixon8303/genius-index-booksite", note: "separate repo behind the Genius Index book site and assessment app" },
         { title: "Bolt.new project", kind: "external", url: "https://bolt.new/~/sb1-nctvxxxv", note: "" },
       ],
     },
