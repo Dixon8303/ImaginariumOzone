@@ -1,7 +1,7 @@
 generated: 2026-10-16
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-16
-paper equity: $98,925.22   cash: $58,144.29
+paper equity: $98,926.10   cash: $58,144.29
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-10-16  $98,925.22   (-1,074.78, -1.1%)
@@ -18,21 +18,18 @@ OPTION COST RECORDER: no quotes today (no signals, or the account has no options
 PAPER ORDERS PLACED (0):
   none
 
-CLOSED SINCE LAST RUN:
-  AMD  2026-09-24 -> 2026-10-16  -0.93R  (stop)
-
 OPEN POSITIONS (12) — 7 of 8 stock slots used, 5 option contracts:
-  AAPL  qty 14  unrealized $+79.98  stop 325.81  target 368.89  since 2026-10-07
+  AAPL  qty 14  unrealized $+79.56  stop 325.81  target 368.89  since 2026-10-07
   ABBV  qty 17  unrealized $+230.83  stop 258.24  target 315.1  since 2026-10-08
-  AMZN  qty 18  unrealized $-149.55  stop 250.02  target 266.34  since 2026-10-08
+  AMZN  qty 18  unrealized $-148.11  stop 250.02  target 266.34  since 2026-10-08
   CVX  qty 22  unrealized $+179.94  stop 204.87  target 245.49  since 2026-10-12
   CVX261120C00220000  qty 2  unrealized $+180.00  stop ?  target ?  since ?
   DAL261016C00082500  qty 2  unrealized $-910.00  stop ?  target ?  since ?
-  KO  qty 53  unrealized $+178.10  stop 85.67  target 102.11  since 2026-10-12
+  KO  qty 53  unrealized $+180.75  stop 85.67  target 102.11  since 2026-10-12
   KO261016C00087500  qty 3  unrealized $+939.00  stop ?  target ?  since ?
-  PFE  qty 165  unrealized $-17.64  stop 27.6  target 34.92  since 2026-10-15
+  PFE  qty 165  unrealized $-18.15  stop 27.6  target 34.92  since 2026-10-15
   PFE261106C00028500  qty 10  unrealized $-50.00  stop ?  target ?  since ?
-  UNH  qty 12  unrealized $+262.68  stop 362.66  target 426.52  since 2026-10-05
+  UNH  qty 12  unrealized $+260.40  stop 362.66  target 426.52  since 2026-10-05
   XOM261016C00160000  qty 1  unrealized $+1,120.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
