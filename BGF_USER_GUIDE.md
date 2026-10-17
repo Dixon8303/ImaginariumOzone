@@ -101,6 +101,25 @@ Press `Ctrl+C` in the terminal to stop everything.
 
 > **Troubleshooting:** If the backend fails to start, check that `ANTHROPIC_API_KEY` is set in `backend/.env`. The key must begin with `sk-ant-`.
 
+### One-click start (optional)
+
+Prefer an icon to a command? **LaunchAI** puts a button on your Desktop that starts Ollama, ComfyUI and
+this app, opens the Claude app, and opens the dashboard and ComfyUI in Chrome. Install it once by pasting
+this into Terminal:
+
+```bash
+mkdir -p ~/launchai-install/LaunchAI && cd ~/launchai-install/LaunchAI
+for f in install.sh launchai.sh config.example.sh LaunchAI.icns; do
+  curl -fsSLO "https://raw.githubusercontent.com/Dixon8303/ImaginariumOzone/main/LaunchAI/$f"
+done
+bash install.sh
+```
+
+Then click **LaunchAI** on the Desktop. The first time, macOS asks whether it may read your Documents
+folder — click **Allow**. To stop everything it started, run `~/.launchai/launchai stop`. If something
+doesn't start, run `~/.launchai/launchai diagnose | pbcopy` and paste the result to Claude. Details are in
+`LaunchAI/README.md`.
+
 ---
 
 ## 3. The Production Dashboard

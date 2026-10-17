@@ -501,10 +501,11 @@
     },
     {
       name: "LaunchAI",
-      desc: "One-click local AI stack launcher for macOS.",
+      desc: "One-click Desktop launcher for the BGF stack: Ollama, ComfyUI, the production dashboard and Claude. Settings and logs live outside the repo, in ~/.launchai and ~/Library/Logs/LaunchAI. See LaunchAI/README.md.",
       links: [
-        { title: "Open WebUI", kind: "local", url: "http://localhost:3000", note: "Qwen2.5 chat" },
-        { title: "ComfyUI", kind: "local", url: "http://localhost:8188", note: "started by LaunchAI; the same server the BGF pipeline uses for image generation" },
+        { title: "Production dashboard", kind: "local", url: "http://localhost:5173", note: "opens in Chrome with LaunchAI; LaunchAI runs the project's own ./start.sh" },
+        { title: "ComfyUI", kind: "local", url: "http://localhost:8188", note: "started and opened by LaunchAI; the same server the BGF pipeline uses for image generation" },
+        { title: "Open WebUI", kind: "local", url: "http://localhost:3000", note: "optional Qwen2.5 chat, off by default — set START_OPEN_WEBUI=\"yes\" in ~/.launchai/config.sh" },
       ],
     },
     {
