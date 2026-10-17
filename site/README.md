@@ -17,6 +17,13 @@ No build step, no backend — ready for GitHub Pages.
 | `/privacy.html` | GA4 + email-capture disclosures |
 | `/404.html` | Not-found page (picked up automatically by GitHub Pages) |
 
+**Short links that land here (Addendum A02).** `eatmediatv.com/book` and
+`/abe` forward to `/`, `/quiz` to `/erasure.html` and `/challenge` to
+`/unlearn.html`, adding tracking tags (redirect pages in the `Dixon8303/eat.media`
+repo, mirrored in [`eatmedia/`](../eatmedia/README.md)). Those URLs are spoken
+in Shorts and on the podcast, so renaming either funnel page means updating the
+redirects in the same change.
+
 `erasure.html` and `unlearn.html` have no navigation of their own — they are
 reachable only through the entry points listed above. Both were orphaned once
 already when `index.html` and `links.html` were rebuilt and the links were not
@@ -110,6 +117,10 @@ All internal paths are relative, so the site works at any mount point. The
 canonical/OG/sitemap URLs point at the repo URL above.
 
 ### Later: going live on blackgeniusfiles.com
+
+Parked by Addendum A02 (Oct 13, 2026): no domain is bought until the book's
+profit covers it. Until then the say-able links run on `eatmediatv.com`
+(above), which D already owns.
 
 When the domain is ready:
 

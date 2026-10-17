@@ -216,6 +216,12 @@ One workflow, `.github/workflows/pages.yml`, triggered by pushes to `docs/**`,
 
 `site/404.html` is copied to the artifact root; it is the only 404.
 
+`eatmediatv.com` itself is served by the separate repo `Dixon8303/eat.media`, a
+hand-synced copy of `eatmedia/` with production URLs; this repo's `eatmedia/` is the
+staging mirror at `/eatmedia/`. The book's say-able short links (eatmediatv.com/book,
+/abe, /quiz, /challenge; Addendum A02) live there and forward to `site/` pages, so a
+renamed funnel page needs its redirect updated in both repos.
+
 ---
 
 ## 4. HoneyDrip Bot
