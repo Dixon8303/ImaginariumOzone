@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-18T21:35:02Z",
+  "last_synced": "2026-10-18T23:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2416,7 +2416,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -2432,7 +2432,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2460,7 +2460,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-18T14:05:01Z"
+      "updated_at": "2026-10-18T23:05:01Z"
     },
     {
       "id": "EP76",
