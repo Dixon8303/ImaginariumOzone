@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-19T08:36:03Z",
+  "last_synced": "2026-10-19T09:35:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2078,7 +2078,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -2110,7 +2110,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-18T12:05:01Z"
+      "updated_at": "2026-10-19T09:35:01Z"
     },
     {
       "id": "EP58",
@@ -2642,7 +2642,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2670,13 +2670,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-19T07:05:01Z"
+      "updated_at": "2026-10-19T09:35:01Z"
     },
     {
       "id": "EP79",
       "number": 79,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2696,7 +2696,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -2704,7 +2704,7 @@
         },
         {
           "name": "generation",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "ken_burns",
@@ -2712,11 +2712,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "audio_prod",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "titles_seo",
@@ -2740,13 +2740,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-19T08:36:03Z"
+      "updated_at": "2026-10-19T09:35:01Z"
     },
     {
       "id": "EP80",
       "number": 80,
       "topic": "Unreleased episode",
-      "status": "halted",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2782,7 +2782,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2810,7 +2810,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-19T08:05:01Z"
+      "updated_at": "2026-10-19T09:35:01Z"
     }
   ]
 }
