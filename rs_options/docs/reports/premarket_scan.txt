@@ -1,27 +1,27 @@
-generated: 2026-10-16
+generated: 2026-10-19
 
-PRE-OPEN SCAN — 2026-10-16 (signals from the 2026-10-16 close)
-paper equity: $98,595.45
+PRE-OPEN SCAN — 2026-10-19 (signals from the 2026-10-19 close)
+paper equity: $99,270.20
 
-CANDIDATES FOR TODAY (0):
-  none — nothing passed breakout + regime + quality
+CANDIDATES FOR TODAY (1):
+  AMZN  ref close 262.19  stop 248.60  target 302.96  (1R = 13.59)  score 8/10 [already held]
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 262.19 on 1.2x volume
+      volume profile: 32% of 60d volume sits ABOVE here, heaviest at 253.62  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 262, spread <= 10%
 
-ORDERS QUEUED FOR THE OPEN (1): PFE
-  PFE limit 30.02 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
+ORDERS QUEUED FOR THE OPEN (0): none
 
-OPEN POSITIONS (12):
-  AAPL  qty 14  unrealized $+106.72  stop 325.81 / target 368.89
-  ABBV  qty 17  unrealized $+201.38  stop 258.24 / target 315.1
-  AMZN  qty 18  unrealized $-112.47  stop 250.02 / target 266.34
-  CVX  qty 22  unrealized $+149.36  stop 204.87 / target 245.49
-  CVX261120C00220000  qty 2  unrealized $+40.00  stop ? / target ?
-  DAL261016C00082500  qty 2  unrealized $-910.00  stop ? / target ?
-  KO  qty 53  unrealized $+153.98  stop 85.67 / target 102.11
-  KO261016C00087500  qty 3  unrealized $+879.00  stop ? / target ?
-  PFE  qty 165  unrealized $-19.80  stop 27.6 / target 34.92
-  PFE261106C00028500  qty 10  unrealized $+10.00  stop ? / target ?
-  UNH  qty 12  unrealized $+260.40  stop 362.66 / target 426.52
-  XOM261016C00160000  qty 1  unrealized $+955.00  stop ? / target ?
+OPEN POSITIONS (10):
+  AAPL  qty 14  unrealized $+85.44  stop 325.81 / target 368.89
+  ABBV  qty 17  unrealized $+183.86  stop 258.24 / target 315.1
+  AMZN  qty 18  unrealized $+89.31  stop 250.02 / target 266.34
+  CVX  qty 22  unrealized $+180.93  stop 204.87 / target 245.49
+  CVX261120C00220000  qty 2  unrealized $+160.00  stop ? / target ?
+  KO  qty 353  unrealized $+1,223.87  stop 85.67 / target 102.11
+  PFE  qty 165  unrealized $-28.88  stop 27.6 / target 34.92
+  PFE261106C00028500  qty 10  unrealized $-50.00  stop ? / target ?
+  UNH  qty 12  unrealized $+314.16  stop 362.66 / target 426.52
+  XOM  qty 100  unrealized $+1,140.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
