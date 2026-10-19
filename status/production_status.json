@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-19T07:05:01Z",
+  "last_synced": "2026-10-19T08:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2326,7 +2326,7 @@
       "id": "EP61",
       "number": 61,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2362,7 +2362,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "audio_prod",
@@ -2390,7 +2390,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-19T07:05:01Z"
+      "updated_at": "2026-10-19T08:05:01Z"
     },
     {
       "id": "EP75",
@@ -2466,7 +2466,7 @@
       "id": "EP76",
       "number": 76,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2502,7 +2502,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -2530,7 +2530,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-18T16:35:01Z"
+      "updated_at": "2026-10-19T08:05:01Z"
     },
     {
       "id": "EP77",
@@ -2766,7 +2766,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -2782,7 +2782,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -2810,7 +2810,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-18T14:05:01Z"
+      "updated_at": "2026-10-19T08:05:01Z"
     }
   ]
 }
