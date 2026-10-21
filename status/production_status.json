@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-21T18:05:02Z",
+  "last_synced": "2026-10-21T21:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2606,76 +2606,6 @@
       "id": "EP78",
       "number": 78,
       "topic": "Unreleased episode",
-      "status": "review",
-      "stages": [
-        {
-          "name": "batch_primer",
-          "status": "done"
-        },
-        {
-          "name": "topic_scoring",
-          "status": "done"
-        },
-        {
-          "name": "research",
-          "status": "done"
-        },
-        {
-          "name": "outline",
-          "status": "done"
-        },
-        {
-          "name": "script",
-          "status": "done"
-        },
-        {
-          "name": "storyboard",
-          "status": "done"
-        },
-        {
-          "name": "generation",
-          "status": "running"
-        },
-        {
-          "name": "ken_burns",
-          "status": "running"
-        },
-        {
-          "name": "voice_ssml",
-          "status": "done"
-        },
-        {
-          "name": "audio_prod",
-          "status": "done"
-        },
-        {
-          "name": "titles_seo",
-          "status": "done"
-        },
-        {
-          "name": "assembly",
-          "status": "pending"
-        },
-        {
-          "name": "qa_gates",
-          "status": "pending"
-        },
-        {
-          "name": "shorts",
-          "status": "pending"
-        },
-        {
-          "name": "upload",
-          "status": "pending"
-        }
-      ],
-      "gates": {},
-      "updated_at": "2026-10-21T18:05:02Z"
-    },
-    {
-      "id": "EP79",
-      "number": 79,
-      "topic": "Unreleased episode",
       "status": "failed",
       "stages": [
         {
@@ -2704,7 +2634,7 @@
         },
         {
           "name": "generation",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "ken_burns",
@@ -2740,7 +2670,77 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-21T12:35:01Z"
+      "updated_at": "2026-10-21T21:05:01Z"
+    },
+    {
+      "id": "EP79",
+      "number": 79,
+      "topic": "Unreleased episode",
+      "status": "running",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "running"
+        },
+        {
+          "name": "ken_burns",
+          "status": "running"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-10-21T21:05:01Z"
     },
     {
       "id": "EP80",
