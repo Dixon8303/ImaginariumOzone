@@ -1,58 +1,40 @@
-generated: 2026-10-20
+generated: 2026-10-21
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-20
-paper equity: $99,633.73   cash: $15,893.92
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-21
+paper equity: $99,515.89   cash: $15,893.92
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-10-20  $99,641.45   (-358.55, -0.4%)
-  over 57 calendar days, 35 recorded sessions: 33 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-10-21  $99,515.89   (-484.11, -0.5%)
+  over 58 calendar days, 36 recorded sessions: 34 with a change, 1 flat.
   range so far: $95,756.95 (low) to $100,196.58 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (2):
-  AMZN  [H-25]  close 262.78  stop 248.60  target 305.32  (1R = 14.18)  score 9/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 262.78 on 1.4x volume
-      volume profile: 31% of 60d volume sits ABOVE here, heaviest at 253.62  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 263, spread <= 10%; exit on stop/target/15 sessions
-  PFE  [RS-02]  close 30.14  stop 28.62  target 34.70  (1R = 1.52)  score 9/10
-      RS persistence 70%, close 30.14 > 20d high 29.88, rel volume 1.4x
-      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 27.69  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 30, spread <= 10%; exit on stop/target/15 sessions
+TODAY'S SIGNALS (0):
+  none — no ticker passed breakout + regime + quality
 
-OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
-  PFE    PFE261218C00029000  delta 0.65  59d  mid 1.75  spread 4.0%
-         costs $174.50 per contract; needs $3,490 equity to buy one inside the 5% position cap
-  AMZN   AMZN261113C00260000  delta 0.58  24d  mid 13.06  spread 9.9%
-         costs $1,306.50 per contract; needs $26,130 equity to buy one inside the 5% position cap
-
-  cheapest doctrine contract today: PFE at $174.50
-  at $99,633.73 equity you can buy 2 of 2 inside the position cap
-  (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
+OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
 PAPER ORDERS PLACED (0):
   none
-  skipped AMZN: already held
-  skipped PFE: already held
 
 OPEN POSITIONS (10) — 8 of 8 stock slots used, 2 option contracts:
-  AAPL  qty 14  unrealized $+7.04  stop 325.81  target 368.89  since 2026-10-07
-  ABBV  qty 17  unrealized $+268.18  stop 258.24  target 315.1  since 2026-10-08
-  AMZN  qty 18  unrealized $+115.59  stop 250.02  target 266.34  since 2026-10-08
-  CVX  qty 22  unrealized $+187.86  stop 204.87  target 245.49  since 2026-10-12
-  CVX261120C00220000  qty 2  unrealized $+230.00  stop ?  target ?  since ?
-  KO  qty 353  unrealized $+943.23  stop 85.67  target 102.11  since 2026-10-12
-  PFE  qty 165  unrealized $+36.30  stop 27.6  target 34.92  since 2026-10-15
-  PFE261106C00028500  qty 10  unrealized $+430.00  stop ?  target ?  since ?
-  UNH  qty 12  unrealized $+450.12  stop 362.66  target 426.52  since 2026-10-05
-  XOM  qty 100  unrealized $+993.90  stop ?  target ?  since ?
+  AAPL  qty 14  unrealized $+92.02  stop 325.81  target 368.89  since 2026-10-07
+  ABBV  qty 17  unrealized $+194.57  stop 258.24  target 315.1  since 2026-10-08
+  AMZN  qty 18  unrealized $+74.37  stop 250.02  target 266.34  since 2026-10-08
+  CVX  qty 22  unrealized $+235.16  stop 204.87  target 245.49  since 2026-10-12
+  CVX261120C00220000  qty 2  unrealized $+280.00  stop ?  target ?  since ?
+  KO  qty 353  unrealized $+893.81  stop 85.67  target 102.11  since 2026-10-12
+  PFE  qty 165  unrealized $+34.65  stop 27.6  target 34.92  since 2026-10-15
+  PFE261106C00028500  qty 10  unrealized $+170.00  stop ?  target ?  since ?
+  UNH  qty 12  unrealized $+454.80  stop 362.66  target 426.52  since 2026-10-05
+  XOM  qty 100  unrealized $+1,115.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
   holding 2:
     CVX261120C00220000  1x @ $9.41  since 2026-10-14  stop-if-underlying <= 209.52
     PFE261106C00028500  5x @ $1.42  since 2026-10-15  stop-if-underlying <= 27.60
-  note: AMZN: premium $1,307 exceeds the 1% risk budget
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
