@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-21T23:35:01Z",
+  "last_synced": "2026-10-22T00:35:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2676,7 +2676,7 @@
       "id": "EP79",
       "number": 79,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2712,11 +2712,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "failed"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -2740,7 +2740,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-21T23:35:01Z"
+      "updated_at": "2026-10-22T00:35:01Z"
     },
     {
       "id": "EP80",
