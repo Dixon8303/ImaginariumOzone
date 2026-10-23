@@ -24,6 +24,26 @@ window.BGF_CONFIG = {
   /* Back-compat alias: anything still reading AMAZON_URL gets the paperback. */
   AMAZON_URL: "https://www.amazon.com/dp/B0HKT1PV5Y",
 
+  /* Amazon Attribution (WHB-039 / WHB-054). Campaign "WHB Campaign 2026",
+     one ad group per channel, created 2026-10-22, click-through target the
+     PAPERBACK. When a visitor arrived with one of these utm_source values,
+     the site's paperback links carry that channel's tag, so Amazon Ads >
+     Amazon Attribution reports detail-page views and purchases per channel.
+     Measurement only, no ad spend. These are public tracking parameters,
+     not secrets. Unknown or missing utm_source = the plain paperback URL.
+     Hardcover and Kindle links stay plain: the tags were issued for the
+     paperback click-through. */
+  AMAZON_ATTRIBUTION: {
+    pinterest:   "maas_adg_1BCCBD217151F6BCE60DF46B9D9941AB_afap_abs",
+    instagram:   "maas_adg_8A862B7C474FAB8A5A149CC4593769C6_afap_abs",
+    tiktok:      "maas_adg_7F284328DD236A84A63A5810E5A9D925_afap_abs",
+    youtube:     "maas_adg_3257A3D1C44FBDC7C11A042E83AF12BA_afap_abs",
+    facebook:    "maas_adg_E448BA0408B6839C23FE7D855C2E29CB_afap_abs",
+    kit:         "maas_adg_F2CC4DCA07AA18E2CF812237F09B1BEE_afap_abs",
+    email:       "maas_adg_F2CC4DCA07AA18E2CF812237F09B1BEE_afap_abs",
+    abe_podcast: "maas_adg_6F7A2C295F5CF2120768852F5A80A90D_afap_abs",
+  },
+
   /* Launch ribbon — a countdown bar across the top of every page.
 
      It expires on its own. After LAUNCH_ENDS passes, the ribbon stops
@@ -224,6 +244,27 @@ window.BGF_CONFIG = {
       return url;
     }
   }
+  /* Amazon Attribution tag for this visit's channel, or "" when the visit
+     carries no known utm_source. Own-property lookup only, so a crafted
+     utm_source such as "constructor" can never select a value. */
+  function attributionTag() {
+    var table = cfg.AMAZON_ATTRIBUTION || {};
+    var src = String(utms().utm_source || "").toLowerCase();
+    if (!src || !Object.prototype.hasOwnProperty.call(table, src)) return "";
+    var tag = table[src];
+    return /^maas_adg_[A-F0-9]{32}_afap_abs$/.test(tag) ? tag : "";
+  }
+  function withAttribution(url, tag) {
+    try {
+      var u = new URL(url);
+      u.searchParams.set("maas", tag);
+      u.searchParams.set("ref_", "aa_maas");
+      u.searchParams.set("tag", "maas");
+      return u.toString();
+    } catch (e) {
+      return url;
+    }
+  }
   var OUTBOUND = /(^|\.)(payhip\.com|amazon\.[a-z.]+|amzn\.to|a\.co)$/i;
   // For links rendered after page load (e.g. the case-file modal).
   window.BGF_WITH_UTMS = withUtms;
@@ -247,9 +288,12 @@ window.BGF_CONFIG = {
       hardcover: cfg.AMAZON_HARDCOVER_URL,
       kindle: cfg.AMAZON_KINDLE_URL,
     };
+    var maas = attributionTag();
     document.querySelectorAll("a[data-amazon]").forEach(function (a) {
-      var url = AMAZON[a.getAttribute("data-amazon") || "paperback"];
-      if (isUrl(url)) a.href = url;
+      var format = a.getAttribute("data-amazon") || "paperback";
+      var url = AMAZON[format];
+      if (!isUrl(url)) return;
+      a.href = format === "paperback" && maas ? withAttribution(url, maas) : url;
     });
 
     // links.html hub destinations + contact.
