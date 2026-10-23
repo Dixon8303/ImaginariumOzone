@@ -148,6 +148,22 @@
     #7f1d1d 3px,#7f1d1d 6px);border-color:var(--failed)}
   .chip.halted{background:var(--halted);border-color:var(--halted)}
 
+  /* ── Up Next (backlog) ── */
+  /* Deliberately lighter-weight than .card: no stage bar, no gates, no
+     YouTube link — nothing has been produced yet, so the row shouldn't look
+     like a finished episode. The number reuses .epnum's language at a
+     smaller size so it still reads as "the same kind of thing, earlier in
+     its life" rather than a different, unrelated UI. */
+  .backlog-item{display:flex;gap:18px;align-items:flex-start;
+    border:1px solid var(--line);background:var(--bg-deep);
+    padding:16px 22px;margin-bottom:10px}
+  .backlog-item .epnum{font-size:38px}
+  .backlog-body{flex:1;min-width:0}
+  .backlog-body .topic{font-size:18px}
+  .backlog-note{font-family:'EB Garamond',Georgia,serif;font-style:italic;
+    color:var(--muted);margin-top:6px;line-height:1.45}
+  .badge.planned{color:var(--muted);border-color:var(--faint)}
+
   /* ── Archive accordion ── */
   .archive{border:1px solid var(--line);background:var(--bg-deep)}
   .archive summary{
@@ -284,6 +300,7 @@
        it to its own full-width row here is what lets its existing
        flex-wrap:wrap actually engage. */
     .badges{width:100%}
+    .backlog-item{gap:14px;padding:14px 18px}
     .archive summary{padding:16px 18px;gap:10px;flex-wrap:wrap}
     .archive-sub{padding:0 18px}
     .archive #archiveEpisodes{padding:4px 18px 18px}
@@ -319,6 +336,12 @@
       <span><i class="chip halted"></i>❚❚ Halted at gate</span>
       <span><i class="chip failed"></i>Failed (striped)</span>
     </div>
+  </section>
+
+  <section id="backlogWrap" hidden>
+    <h2>UP NEXT</h2>
+    <p class="sub">Planned episodes after the current production queue</p>
+    <div id="backlogList"></div>
   </section>
 
   <section id="archiveWrap" hidden>
@@ -616,6 +639,55 @@ function bindEpisodeCardLinks(container){
   });
 }
 
+/**
+ * "UP NEXT" — planned episodes beyond the current production queue.
+ *
+ * Optional top-level field, sibling to "episodes":
+ *   "backlog": [
+ *     {"topic": "...", "notes": "...", "number": 41, "status": "planned"}
+ *   ]
+ * Only "topic" is required. "number" defaults to one past the highest
+ * episode number already seen, counting up by position — so the backlog
+ * doesn't need to know the episode sequence itself, just its own order.
+ * "status" is free text (planned/researching/scripting/...); rendered as-is
+ * in a single neutral badge style rather than mapped to specific colors,
+ * since this dashboard doesn't own that vocabulary.
+ *
+ * Absent or empty → the section stays hidden, same as every other optional
+ * field here (shorts, publish_at, score). Nothing is inferred or fabricated
+ * to fill the space.
+ */
+function renderBacklog(data){
+  const wrap = document.getElementById('backlogWrap');
+  const list = document.getElementById('backlogList');
+  const backlog = (data && Array.isArray(data.backlog)) ? data.backlog : [];
+  if (!backlog.length){
+    wrap.hidden = true;
+    list.innerHTML = '';
+    return;
+  }
+  wrap.hidden = false;
+
+  const episodes = (data && data.episodes) || [];
+  const maxEpNum = episodes.reduce((max, ep) => {
+    const n = Number(epNumOf(ep));
+    return Number.isFinite(n) ? Math.max(max, n) : max;
+  }, 0);
+
+  list.innerHTML = backlog.map((item, i) => {
+    const num = item && item.number != null ? item.number : maxEpNum + i + 1;
+    const topic = (item && item.topic) || 'Untitled';
+    return `<div class="backlog-item">
+      <div class="epnum" aria-hidden="true">${String(num).padStart(2,'0')}<small>EP</small></div>
+      <div class="backlog-body">
+        <p class="topic">${esc(topic)}</p>
+        ${item && item.status ? `<span class="badge planned">${esc(item.status)}</span>` : ''}
+        ${item && item.notes ? `<p class="backlog-note">${esc(item.notes)}</p>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // ── Release calendar ────────────────────────────────────────────────────────
 // Eight hues, fixed order, validated against this surface (OKLCH L .48–.67,
 // all >=3:1, worst adjacent CVD dE 8.4). There are more episodes than hues, and
@@ -784,6 +856,7 @@ async function refresh(){
   _lastStatus = status;
   renderSync(status);
   renderEpisodes(status);
+  renderBacklog(status);
   renderCalendar(status);
   renderFeed(commits);
 }
