@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-27T14:05:01Z",
+  "last_synced": "2026-10-27T18:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2751,8 +2751,9 @@
     {
       "id": "EP78",
       "number": 78,
-      "topic": "Unreleased episode",
-      "status": "approved",
+      "topic": "Shirley Chisholm — Unbought and Unbossed",
+      "mode": "standalone",
+      "status": "published",
       "stages": [
         {
           "name": "batch_primer",
@@ -2816,7 +2817,9 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-24T23:35:01Z"
+      "video_id": "DQV95PmFxAo",
+      "publish_at": "2026-10-27T18:00:00Z",
+      "updated_at": "2026-10-27T18:05:01Z"
     },
     {
       "id": "EP79",
