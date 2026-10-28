@@ -1,57 +1,58 @@
-generated: 2026-10-26
+generated: 2026-10-27
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-26
-paper equity: $100,350.34   cash: $15,893.92
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-27
+paper equity: $98,855.32   cash: $20,826.48
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-10-26  $100,355.46   (+355.46, +0.4%)
-  over 63 calendar days, 39 recorded sessions: 37 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-10-27  $98,855.32   (-1,144.68, -1.1%)
+  over 64 calendar days, 40 recorded sessions: 38 with a change, 1 flat.
   range so far: $95,756.95 (low) to $101,074.91 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
 TODAY'S SIGNALS (1):
-  XOM  [RS-02]  close 184.54  stop 174.64  target 214.24  (1R = 9.90)  score 10/10
-      RS persistence 85%, close 184.54 > 20d high 183.70, rel volume 1.4x
-      volume profile: 0% of 60d volume sits ABOVE here, heaviest at 163.08  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 185, spread <= 10%; exit on stop/target/15 sessions
+  DAL  [H-25]  close 81.45  stop 75.34  target 99.80  (1R = 6.11)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 81.45 on 1.1x volume
+      volume profile: 48% of 60d volume sits ABOVE here, heaviest at 78.94  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 81, spread <= 10%; exit on stop/target/15 sessions
 
 OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
-  XOM    XOM261218C00180000  delta 0.64  53d  mid 10.43  spread 5.8%
-         costs $1,043.00 per contract; needs $20,860 equity to buy one inside the 5% position cap
+  DAL    DAL261120C00080000  delta 0.60  24d  mid 4.37  spread 4.1%
+         costs $437.00 per contract; needs $8,740 equity to buy one inside the 5% position cap
 
-  cheapest doctrine contract today: XOM at $1,043.00
-  at $100,350.34 equity you can buy 1 of 1 inside the position cap
+  cheapest doctrine contract today: DAL at $437.00
+  at $98,855.32 equity you can buy 1 of 1 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-PAPER ORDERS PLACED (0):
-  none
-  skipped XOM: already held
-TIME EXITS SUBMITTED: UNH
+PAPER ORDERS PLACED (1):
+  BUY 60 DAL @ next open, limit 83.08 (H15a cap, 2% over the 81.45 close), bracket stop 75.34 / target 99.80
 
-OPEN POSITIONS (10) — 8 of 8 stock slots used, 2 option contracts:
-  AAPL  qty 14  unrealized $+88.38  stop 325.81  target 368.89  since 2026-10-07
-  ABBV  qty 17  unrealized $+219.22  stop 258.24  target 315.1  since 2026-10-08
-  AMZN  qty 18  unrealized $-144.15  stop 250.02  target 266.34  since 2026-10-08
-  CVX  qty 22  unrealized $+326.72  stop 204.87  target 245.49  since 2026-10-12
-  CVX261120C00220000  qty 2  unrealized $+990.00  stop ?  target ?  since ?
-  KO  qty 353  unrealized $+823.21  stop 85.67  target 102.11  since 2026-10-12
-  PFE  qty 165  unrealized $+14.85  stop 27.6  target 34.92  since 2026-10-15
-  PFE261106C00028500  qty 10  unrealized $+20.00  stop ?  target ?  since ?
-  UNH  qty 12  unrealized $+369.60  stop 362.66  target 426.52  since 2026-10-05
-  XOM  qty 100  unrealized $+1,671.00  stop ?  target ?  since ?
+CLOSED SINCE LAST RUN:
+  UNH  2026-10-05 -> 2026-10-27  +1.94R  (time/other)
+
+OPEN POSITIONS (9) — 7 of 8 stock slots used, 2 option contracts:
+  AAPL  qty 14  unrealized $+138.22  stop 325.81  target 368.89  since 2026-10-07
+  ABBV  qty 17  unrealized $+222.45  stop 258.24  target 315.1  since 2026-10-08
+  AMZN  qty 18  unrealized $-61.35  stop 250.02  target 266.34  since 2026-10-08
+  CVX  qty 22  unrealized $+252.76  stop 204.87  target 245.49  since 2026-10-12
+  CVX261120C00220000  qty 2  unrealized $+340.00  stop ?  target ?  since ?
+  KO  qty 353  unrealized $+396.08  stop 85.67  target 102.11  since 2026-10-12
+  PFE  qty 165  unrealized $+15.74  stop 27.6  target 34.92  since 2026-10-15
+  PFE261106C00028500  qty 10  unrealized $-50.00  stop ?  target ?  since ?
+  XOM  qty 100  unrealized $+1,246.55  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  no option trades today
-  holding 2:
+  BOUGHT 2x DAL261120C00080000  @ $4.37 ($874)  24d  strike 80.00  [delta 0.60, spread 4.1%, OI 2234]
+    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
+  holding 3:
     CVX261120C00220000  1x @ $9.41  since 2026-10-14  stop-if-underlying <= 209.52
+    DAL261120C00080000  2x @ $4.37  since 2026-10-27  stop-if-underlying <= 75.34
     PFE261106C00028500  5x @ $1.42  since 2026-10-15  stop-if-underlying <= 27.60
-  note: XOM: premium $1,043 exceeds the 1% risk budget
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
 
-CUMULATIVE RECORD: 11 closed | win rate 9% | expectancy -1.352R | total -14.88R
-  significance: n=11 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 9% wins, a 4-loss run has ~100% odds over 40 trades — variance, not breakage.
+CUMULATIVE RECORD: 12 closed | win rate 17% | expectancy -1.078R | total -12.93R
+  significance: n=12 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 17% wins, a 4-loss run has ~100% odds over 40 trades — variance, not breakage.
 
 Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.
