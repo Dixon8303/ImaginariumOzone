@@ -1,23 +1,26 @@
-generated: 2026-10-27
+generated: 2026-10-28
 
-PRE-OPEN SCAN — 2026-10-27 (signals from the 2026-10-27 close)
-paper equity: $99,398.05
+PRE-OPEN SCAN — 2026-10-28 (signals from the 2026-10-28 close)
+paper equity: $98,693.37
 
 CANDIDATES FOR TODAY (0):
   none — nothing passed breakout + regime + quality
 
-ORDERS QUEUED FOR THE OPEN (0): none
+ORDERS QUEUED FOR THE OPEN (1): DAL
+  DAL limit 83.08 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
 
-OPEN POSITIONS (9):
-  AAPL  qty 14  unrealized $+120.58  stop 325.81 / target 368.89
-  ABBV  qty 17  unrealized $+228.40  stop 258.24 / target 315.1
-  AMZN  qty 18  unrealized $-55.05  stop 250.02 / target 266.34
-  CVX  qty 22  unrealized $+270.58  stop 204.87 / target 245.49
-  CVX261120C00220000  qty 2  unrealized $+590.00  stop ? / target ?
-  KO  qty 353  unrealized $+486.10  stop 85.67 / target 102.11
-  PFE  qty 165  unrealized $+9.07  stop 27.6 / target 34.92
-  PFE261106C00028500  qty 10  unrealized $+20.00  stop ? / target ?
-  XOM  qty 100  unrealized $+1,373.50  stop ? / target ?
+OPEN POSITIONS (11):
+  AAPL  qty 14  unrealized $+108.89  stop 325.81 / target 368.89
+  ABBV  qty 17  unrealized $+240.38  stop 258.24 / target 315.1
+  AMZN  qty 18  unrealized $-76.11  stop 250.02 / target 266.34
+  CVX  qty 22  unrealized $+304.02  stop 204.87 / target 245.49
+  CVX261120C00220000  qty 2  unrealized $+620.00  stop ? / target ?
+  DAL  qty 60  unrealized $-68.18  stop 75.34 / target 99.8
+  DAL261120C00080000  qty 4  unrealized $-300.00  stop ? / target ?
+  KO  qty 353  unrealized $+480.80  stop 85.67 / target 102.11
+  PFE  qty 165  unrealized $-70.95  stop 27.6 / target 34.92
+  PFE261106C00028500  qty 10  unrealized $-400.00  stop ? / target ?
+  XOM  qty 100  unrealized $+1,500.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
