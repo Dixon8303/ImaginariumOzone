@@ -123,6 +123,7 @@
   ],
   "open": {
     "AAPL": {
+      "closing": "2026-10-28",
       "entry": 336.937143,
       "entry_cap": 343.3116,
       "entry_date": "2026-10-07",
@@ -179,10 +180,10 @@
       "target": 245.49
     },
     "DAL": {
-      "entry": 81.455,
+      "entry": 81.671333,
       "entry_cap": 83.0841,
       "entry_date": "2026-10-27",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "b428c9d3-3291-4253-997d-aec7f5d4140b",
