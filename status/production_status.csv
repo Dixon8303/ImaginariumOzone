@@ -23,7 +23,7 @@ EP50,50,Unreleased episode,approved,complete,15,15,,,2026-10-11T08:05:13Z
 EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2026-10-13T18:00:16Z,wpMLL0m9dN8,2026-10-24T23:35:01Z
 EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,complete,15,15,2026-10-16T18:00:18Z,E4fVKp5NEB0,2026-10-24T23:35:01Z
 EP53,53,Unreleased episode,approved,complete,15,15,,,2026-10-24T23:35:01Z
-EP54,54,Unreleased episode,halted,generation,9,15,,,2026-10-24T23:35:01Z
+EP54,54,Unreleased episode,halted,generation,9,15,,,2026-10-30T05:05:01Z
 EP55,55,Unreleased episode,review,upload,14,15,,,2026-10-24T23:35:01Z
 EP57,57,Unreleased episode,running,ken_burns,10,15,,,2026-10-24T23:35:01Z
 EP58,58,Unreleased episode,running,generation,9,15,,,2026-10-24T23:35:01Z
@@ -35,7 +35,7 @@ EP67,67,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP74,74,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP75,75,Unreleased episode,approved,complete,15,15,,,2026-10-24T23:35:01Z
 EP76,76,Unreleased episode,running,ken_burns,10,15,,,2026-10-29T06:05:01Z
-EP77,77,Unreleased episode,running,ken_burns,10,15,,,2026-10-30T04:05:01Z
+EP77,77,Unreleased episode,failed,assembly,11,15,,,2026-10-30T05:05:01Z
 EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026-10-27T18:00:00Z,DQV95PmFxAo,2026-10-27T18:05:01Z
 EP79,79,Unreleased episode,failed,assembly,11,15,,,2026-10-25T08:35:01Z
 EP80,80,Unreleased episode,halted,ken_burns,10,15,,,2026-10-26T15:35:01Z
@@ -45,4 +45,4 @@ EP83,83,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP84,84,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP85,85,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP86,86,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
-_last_synced,,2026-10-30T04:05:01Z,,,,,,,
+_last_synced,,2026-10-30T05:05:01Z,,,,,,,
