@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-10-30T14:05:01Z",
+  "last_synced": "2026-10-30T18:05:01Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2541,8 +2541,9 @@
     {
       "id": "EP75",
       "number": 75,
-      "topic": "Unreleased episode",
-      "status": "approved",
+      "topic": "Joseph Bologne — The Classical Composer They Erased",
+      "mode": "standalone",
+      "status": "published",
       "stages": [
         {
           "name": "batch_primer",
@@ -2606,7 +2607,9 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-24T23:35:01Z"
+      "video_id": "4JqOIPam1WY",
+      "publish_at": "2026-10-30T18:00:00Z",
+      "updated_at": "2026-10-30T18:05:01Z"
     },
     {
       "id": "EP76",
