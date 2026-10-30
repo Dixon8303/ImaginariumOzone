@@ -35,7 +35,7 @@ EP67,67,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP74,74,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP75,75,Unreleased episode,approved,complete,15,15,,,2026-10-24T23:35:01Z
 EP76,76,Unreleased episode,running,ken_burns,10,15,,,2026-10-29T06:05:01Z
-EP77,77,Unreleased episode,running,generation,9,15,,,2026-10-29T06:05:01Z
+EP77,77,Unreleased episode,running,ken_burns,10,15,,,2026-10-30T04:05:01Z
 EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026-10-27T18:00:00Z,DQV95PmFxAo,2026-10-27T18:05:01Z
 EP79,79,Unreleased episode,failed,assembly,11,15,,,2026-10-25T08:35:01Z
 EP80,80,Unreleased episode,halted,ken_burns,10,15,,,2026-10-26T15:35:01Z
@@ -45,4 +45,4 @@ EP83,83,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP84,84,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP85,85,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
 EP86,86,Unreleased episode,draft,batch_primer,0,15,,,2026-10-24T23:35:01Z
-_last_synced,,2026-10-30T00:05:02Z,,,,,,,
+_last_synced,,2026-10-30T04:05:01Z,,,,,,,
