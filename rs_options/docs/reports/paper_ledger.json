@@ -119,25 +119,21 @@
       "r": 1.943,
       "reason": "time/other",
       "ticker": "UNH"
+    },
+    {
+      "entry": 336.937143,
+      "entry_date": "2026-10-07",
+      "exit": 350.8,
+      "exit_date": "2026-10-29",
+      "micro_override": false,
+      "r": 1.246,
+      "reason": "time/other",
+      "ticker": "AAPL"
     }
   ],
   "open": {
-    "AAPL": {
-      "closing": "2026-10-28",
-      "entry": 336.937143,
-      "entry_cap": 343.3116,
-      "entry_date": "2026-10-07",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "293ed3a2-0fbe-4055-a5b7-72ca9b464d9d",
-      "qty": 14,
-      "setup": "H-25",
-      "signal_close": 336.58,
-      "stop": 325.81,
-      "target": 368.89
-    },
     "ABBV": {
+      "closing": "2026-10-29",
       "entry": 273.304706,
       "entry_cap": 277.90409999999997,
       "entry_date": "2026-10-08",
@@ -152,6 +148,7 @@
       "target": 315.1
     },
     "AMZN": {
+      "closing": "2026-10-29",
       "entry": 257.208333,
       "entry_cap": 259.182,
       "entry_date": "2026-10-08",
