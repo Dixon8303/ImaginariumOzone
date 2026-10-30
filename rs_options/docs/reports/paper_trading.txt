@@ -1,7 +1,7 @@
 generated: 2026-10-29
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-29
-paper equity: $100,551.94   cash: $19,097.11
+paper equity: $100,901.63   cash: $19,097.11
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-10-29  $100,551.94   (+551.94, +0.6%)
@@ -19,20 +19,17 @@ PAPER ORDERS PLACED (0):
   none
 TIME EXITS SUBMITTED: ABBV, AMZN
 
-CLOSED SINCE LAST RUN:
-  AAPL  2026-10-07 -> 2026-10-29  +1.25R  (time/other)
-
 OPEN POSITIONS (10) — 7 of 8 stock slots used, 3 option contracts:
-  ABBV  qty 17  unrealized $+342.98  stop 258.24  target 315.1  since 2026-10-08
-  AMZN  qty 18  unrealized $-590.55  stop 250.02  target 266.34  since 2026-10-08
+  ABBV  qty 17  unrealized $+436.82  stop 258.24  target 315.1  since 2026-10-08
+  AMZN  qty 18  unrealized $-593.25  stop 250.02  target 266.34  since 2026-10-08
   CVX  qty 22  unrealized $+384.54  stop 204.87  target 245.49  since 2026-10-12
   CVX261120C00220000  qty 2  unrealized $+760.00  stop ?  target ?  since ?
-  DAL  qty 60  unrealized $-39.68  stop 75.34  target 99.8  since 2026-10-27
+  DAL  qty 60  unrealized $-54.08  stop 75.34  target 99.8  since 2026-10-27
   DAL261120C00080000  qty 4  unrealized $-320.00  stop ?  target ?  since ?
-  KO  qty 353  unrealized $+1,409.19  stop 85.67  target 102.11  since 2026-10-12
-  PFE  qty 165  unrealized $+85.80  stop 27.6  target 34.92  since 2026-10-15
+  KO  qty 353  unrealized $+1,479.79  stop 85.67  target 102.11  since 2026-10-12
+  PFE  qty 165  unrealized $+84.15  stop 27.6  target 34.92  since 2026-10-15
   PFE261106C00028500  qty 10  unrealized $+140.00  stop ?  target ?  since ?
-  XOM  qty 100  unrealized $+1,831.00  stop ?  target ?  since ?
+  XOM  qty 100  unrealized $+2,035.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
