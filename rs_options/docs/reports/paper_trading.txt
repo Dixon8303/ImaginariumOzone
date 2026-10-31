@@ -28,13 +28,10 @@ OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
   at $101,858.65 equity you can buy 1 of 1 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
-PAPER ORDERS PLACED (1):
-  BUY 18 IWM @ next open, limit 284.96 (H15a cap, 2% over the 279.37 close), bracket stop 276.00 / target 289.48
+PAPER ORDERS PLACED (0):
+  none
   skipped XOM: already held
-
-CLOSED SINCE LAST RUN:
-  ABBV  2026-10-08 -> 2026-10-30  +1.17R  (time/other)
-  AMZN  2026-10-08 -> 2026-10-30  -3.63R  (stop)
+  skipped IWM: already held
 
 OPEN POSITIONS (8) — 5 of 8 stock slots used, 3 option contracts:
   CVX  qty 22  unrealized $+419.64  stop 204.87  target 245.49  since 2026-10-12
@@ -49,6 +46,7 @@ OPEN POSITIONS (8) — 5 of 8 stock slots used, 3 option contracts:
 PAPER OPTIONS (Alpaca, autonomous):
   BOUGHT 1x XOM261120C00185000  @ $6.34 ($634)  21d  strike 185.00  [delta 0.59, spread 5.2%, OI 6159]
     FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
+  SOLD   1x XOM261120C00185000  (reconciled)
   holding 4:
     CVX261120C00220000  1x @ $9.41  since 2026-10-14  stop-if-underlying <= 209.52
     DAL261120C00080000  2x @ $4.37  since 2026-10-27  stop-if-underlying <= 75.34
