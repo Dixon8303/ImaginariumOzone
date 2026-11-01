@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-01T15:05:02Z",
+  "last_synced": "2026-11-01T19:35:03Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2609,10 +2609,10 @@
       "updated_at": "2026-10-28T01:35:01Z"
     },
     {
-      "id": "EP65",
-      "number": 65,
+      "id": "EP62",
+      "number": 62,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2676,13 +2676,223 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP63",
+      "number": 63,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP64",
+      "number": 64,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP65",
+      "number": 65,
+      "topic": "Unreleased episode",
+      "status": "running",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "running"
+        },
+        {
+          "name": "storyboard",
+          "status": "running"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP67",
       "number": 67,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2703,6 +2913,76 @@
         {
           "name": "script",
           "status": "running"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "running"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP68",
+      "number": 68,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
         },
         {
           "name": "storyboard",
@@ -2746,13 +3026,293 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP69",
+      "number": 69,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP70",
+      "number": 70,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP71",
+      "number": 71,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP72",
+      "number": 72,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP74",
       "number": 74,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2816,7 +3376,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP75",
@@ -3318,7 +3878,7 @@
       "id": "EP82",
       "number": 82,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3382,13 +3942,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP83",
       "number": 83,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3452,13 +4012,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP84",
       "number": 84,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3522,13 +4082,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP85",
       "number": 85,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3592,13 +4152,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP86",
       "number": 86,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3662,7 +4222,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T05:05:02Z"
+      "updated_at": "2026-11-01T19:35:03Z"
     },
     {
       "id": "EP87",
@@ -3735,6 +4295,426 @@
       "updated_at": "2026-11-01T14:05:17Z"
     },
     {
+      "id": "EP88",
+      "number": 88,
+      "topic": "Unreleased episode",
+      "status": "running",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "running"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP89",
+      "number": 89,
+      "topic": "Unreleased episode",
+      "status": "running",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "running"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP90",
+      "number": 90,
+      "topic": "Unreleased episode",
+      "status": "running",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "running"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP91",
+      "number": 91,
+      "topic": "Unreleased episode",
+      "status": "failed",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "failed"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP92",
+      "number": 92,
+      "topic": "Unreleased episode",
+      "status": "failed",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "failed"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP93",
+      "number": 93,
+      "topic": "Unreleased episode",
+      "status": "running",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "running"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
       "id": "EP94",
       "number": 94,
       "topic": "Unreleased episode",
@@ -3803,6 +4783,846 @@
       ],
       "gates": {},
       "updated_at": "2026-11-01T14:05:17Z"
+    },
+    {
+      "id": "EP95",
+      "number": 95,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP96",
+      "number": 96,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP97",
+      "number": 97,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP98",
+      "number": 98,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP99",
+      "number": 99,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP100",
+      "number": 100,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP101",
+      "number": 101,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP102",
+      "number": 102,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP103",
+      "number": 103,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP104",
+      "number": 104,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP105",
+      "number": 105,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
+    },
+    {
+      "id": "EP106",
+      "number": 106,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-01T19:35:03Z"
     }
   ]
 }
