@@ -34,7 +34,7 @@ EP58,58,Unreleased episode,running,ken_burns,10,15,,,2026-11-01T07:05:02Z
 EP59,59,Unreleased episode,failed,generation,9,15,,,2026-11-01T21:35:03Z
 EP60,60,Unreleased episode,halted,ken_burns,10,15,,,2026-10-22T23:05:01Z
 EP61,61,Unreleased episode,running,ken_burns,10,15,,,2026-10-28T01:35:01Z
-EP62,62,Unreleased episode,running,script,6,15,,,2026-11-01T21:35:03Z
+EP62,62,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP64,64,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP65,65,Unreleased episode,running,script,6,15,,,2026-11-01T19:35:03Z
@@ -44,7 +44,7 @@ EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP70,70,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP71,71,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP72,72,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP74,74,Unreleased episode,running,script,4,15,,,2026-11-01T19:35:03Z
+EP74,74,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
 EP75,75,Joseph Bologne — The Classical Composer They Erased,published,complete,15,15,2026-10-30T18:00:00Z,4JqOIPam1WY,2026-10-30T18:05:01Z
 EP76,76,Unreleased episode,running,ken_burns,10,15,,,2026-10-29T06:05:01Z
 EP77,77,Unreleased episode,review,upload,14,15,,,2026-11-01T14:05:16Z
@@ -52,7 +52,7 @@ EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026
 EP79,79,Unreleased episode,review,upload,14,15,,,2026-11-01T15:05:02Z
 EP80,80,Unreleased episode,halted,ken_burns,10,15,,,2026-10-26T15:35:01Z
 EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-01T13:35:02Z
-EP82,82,Unreleased episode,running,script,4,15,,,2026-11-01T19:35:03Z
+EP82,82,Unreleased episode,running,storyboard,6,15,,,2026-11-01T23:35:03Z
 EP83,83,Unreleased episode,running,script,4,15,,,2026-11-01T19:35:03Z
 EP84,84,Unreleased episode,running,script,4,15,,,2026-11-01T19:35:03Z
 EP85,85,Unreleased episode,running,script,4,15,,,2026-11-01T19:35:03Z
@@ -78,4 +78,4 @@ EP104,104,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP105,105,Unreleased episode,failed,script,4,15,,,2026-11-01T20:35:03Z
 EP106,106,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
-_last_synced,,2026-11-01T22:35:03Z,,,,,,,
+_last_synced,,2026-11-01T23:35:03Z,,,,,,,
