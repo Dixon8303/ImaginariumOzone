@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-01T19:35:03Z",
+  "last_synced": "2026-11-01T20:35:03Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2402,7 +2402,7 @@
       "id": "EP59",
       "number": 59,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -2430,7 +2430,7 @@
         },
         {
           "name": "generation",
-          "status": "failed"
+          "status": "pending"
         },
         {
           "name": "ken_burns",
@@ -2466,7 +2466,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T14:05:16Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP60",
@@ -2916,7 +2916,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -2928,11 +2928,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -2956,7 +2956,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP68",
@@ -4928,27 +4928,27 @@
       "id": "EP97",
       "number": 97,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4992,33 +4992,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP98",
       "number": 98,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5062,33 +5062,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP99",
       "number": 99,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5132,33 +5132,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP100",
       "number": 100,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5202,33 +5202,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP101",
       "number": 101,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5272,33 +5272,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP102",
       "number": 102,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5342,33 +5342,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP103",
       "number": 103,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5412,33 +5412,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP104",
       "number": 104,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5482,33 +5482,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP105",
       "number": 105,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "storyboard",
@@ -5552,33 +5552,33 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     },
     {
       "id": "EP106",
       "number": 106,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5622,7 +5622,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-01T20:35:03Z"
     }
   ]
 }
