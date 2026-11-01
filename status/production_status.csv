@@ -31,14 +31,14 @@ EP54,54,Unreleased episode,halted,ken_burns,10,15,,,2026-10-31T00:05:01Z
 EP55,55,Unreleased episode,review,upload,14,15,,,2026-10-24T23:35:01Z
 EP57,57,Unreleased episode,running,ken_burns,10,15,,,2026-10-24T23:35:01Z
 EP58,58,Unreleased episode,running,ken_burns,10,15,,,2026-11-01T07:05:02Z
-EP59,59,Unreleased episode,halted,generation,9,15,,,2026-11-01T20:35:03Z
+EP59,59,Unreleased episode,failed,generation,9,15,,,2026-11-01T21:35:03Z
 EP60,60,Unreleased episode,halted,ken_burns,10,15,,,2026-10-22T23:05:01Z
 EP61,61,Unreleased episode,running,ken_burns,10,15,,,2026-10-28T01:35:01Z
-EP62,62,Unreleased episode,running,script,4,15,,,2026-11-01T19:35:03Z
+EP62,62,Unreleased episode,running,script,6,15,,,2026-11-01T21:35:03Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP64,64,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP65,65,Unreleased episode,running,script,6,15,,,2026-11-01T19:35:03Z
-EP67,67,Unreleased episode,running,script,6,15,,,2026-11-01T20:35:03Z
+EP67,67,Unreleased episode,running,script,5,15,,,2026-11-01T21:35:03Z
 EP68,68,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP70,70,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
@@ -77,4 +77,5 @@ EP103,103,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP104,104,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP105,105,Unreleased episode,failed,script,4,15,,,2026-11-01T20:35:03Z
 EP106,106,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
-_last_synced,,2026-11-01T20:35:03Z,,,,,,,
+EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
+_last_synced,,2026-11-01T21:35:03Z,,,,,,,
