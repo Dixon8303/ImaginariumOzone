@@ -19,8 +19,8 @@ EP38,38,Who Owns the Sound?,published,complete,15,15,2026-09-15T14:00:00Z,GgN8ch
 EP39,39,La Russell,published,complete,15,15,2026-09-25T14:00:00Z,c8zGB85ZvF4,2026-10-11T08:05:13Z
 EP40,40,Michael Jackson's Foreclosure: The ATV Catalog,published,complete,15,15,2026-09-29T14:00:00Z,HelFIbVhsIk,2026-10-10T17:08:31Z
 EP41,41,The Patent Machine: How American Corporations Monopolized a Century of Black Invention,published,complete,15,15,2026-10-02T18:00:00Z,B-_WpB2iO0o,2026-10-10T17:08:31Z
-EP44,44,Unreleased episode,running,ken_burns,9,15,,,2026-11-01T13:35:02Z
-EP45,45,Unreleased episode,running,ken_burns,9,15,,,2026-11-01T13:35:02Z
+EP44,44,Unreleased episode,failed,ken_burns,9,15,,,2026-11-01T14:05:16Z
+EP45,45,Unreleased episode,failed,ken_burns,9,15,,,2026-11-01T14:05:16Z
 EP46,46,Unreleased episode,running,ken_burns,9,15,,,2026-11-01T13:35:02Z
 EP47,47,Unreleased episode,running,ken_burns,9,15,,,2026-11-01T13:35:02Z
 EP50,50,Unreleased episode,approved,complete,15,15,,,2026-10-11T08:05:13Z
@@ -31,7 +31,7 @@ EP54,54,Unreleased episode,halted,ken_burns,10,15,,,2026-10-31T00:05:01Z
 EP55,55,Unreleased episode,review,upload,14,15,,,2026-10-24T23:35:01Z
 EP57,57,Unreleased episode,running,ken_burns,10,15,,,2026-10-24T23:35:01Z
 EP58,58,Unreleased episode,running,ken_burns,10,15,,,2026-11-01T07:05:02Z
-EP59,59,Unreleased episode,halted,generation,9,15,,,2026-11-01T07:05:02Z
+EP59,59,Unreleased episode,failed,generation,9,15,,,2026-11-01T14:05:16Z
 EP60,60,Unreleased episode,halted,ken_burns,10,15,,,2026-10-22T23:05:01Z
 EP61,61,Unreleased episode,running,ken_burns,10,15,,,2026-10-28T01:35:01Z
 EP65,65,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
@@ -39,9 +39,9 @@ EP67,67,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
 EP74,74,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
 EP75,75,Joseph Bologne — The Classical Composer They Erased,published,complete,15,15,2026-10-30T18:00:00Z,4JqOIPam1WY,2026-10-30T18:05:01Z
 EP76,76,Unreleased episode,running,ken_burns,10,15,,,2026-10-29T06:05:01Z
-EP77,77,Unreleased episode,review,shorts,13,15,,,2026-11-01T13:35:02Z
+EP77,77,Unreleased episode,review,upload,14,15,,,2026-11-01T14:05:16Z
 EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026-10-27T18:00:00Z,DQV95PmFxAo,2026-10-27T18:05:01Z
-EP79,79,Unreleased episode,running,assembly,11,15,,,2026-11-01T13:35:02Z
+EP79,79,Unreleased episode,review,shorts,13,15,,,2026-11-01T14:05:16Z
 EP80,80,Unreleased episode,halted,ken_burns,10,15,,,2026-10-26T15:35:01Z
 EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-01T13:35:02Z
 EP82,82,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
@@ -49,4 +49,6 @@ EP83,83,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
 EP84,84,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
 EP85,85,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
 EP86,86,Unreleased episode,review,script,4,15,,,2026-11-01T05:05:02Z
-_last_synced,,2026-11-01T13:35:02Z,,,,,,,
+EP87,87,Unreleased episode,failed,script,4,15,,,2026-11-01T14:05:17Z
+EP94,94,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T14:05:17Z
+_last_synced,,2026-11-01T14:05:17Z,,,,,,,
