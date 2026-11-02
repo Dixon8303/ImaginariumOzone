@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-02T05:35:03Z",
+  "last_synced": "2026-11-02T06:35:03Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -5368,11 +5368,11 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -5384,11 +5384,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5412,7 +5412,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-02T04:35:03Z"
+      "updated_at": "2026-11-02T06:35:03Z"
     },
     {
       "id": "EP104",
