@@ -1,58 +1,62 @@
-generated: 2026-10-30
+generated: 2026-11-02
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-10-30
-paper equity: $101,858.65   cash: $28,204.02
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-02
+paper equity: $101,232.64   cash: $22,095.51
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-10-30  $101,858.65   (+1,858.65, +1.9%)
-  over 67 calendar days, 43 recorded sessions: 41 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-11-02  $101,232.64   (+1,232.64, +1.2%)
+  over 70 calendar days, 44 recorded sessions: 42 with a change, 1 flat.
   range so far: $95,756.95 (low) to $101,858.65 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
 TODAY'S SIGNALS (2):
-  XOM  [RS-02]  close 187.26  stop 179.78  target 209.70  (1R = 7.48)  score 10/10
-      RS persistence 85%, close 187.26 > 20d high 184.84, rel volume 1.6x
-      volume profile: 1% of 60d volume sits ABOVE here, heaviest at 161.52  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 187, spread <= 10%; exit on stop/target/15 sessions
-  IWM  [H-25]  close 279.37  stop 276.00  target 289.48  (1R = 3.37)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 279.37 on 1.0x volume
-      volume profile: 70% of 60d volume sits ABOVE here, heaviest at 278.71  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 279, spread <= 10%; exit on stop/target/15 sessions
+  PFE  [RS-02]  close 30.71  stop 29.23  target 35.15  (1R = 1.48)  score 9/10
+      RS persistence 70%, close 30.71 > 20d high 30.66, rel volume 1.7x
+      volume profile: 1% of 60d volume sits ABOVE here, heaviest at 27.69  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 31, spread <= 10%; exit on stop/target/15 sessions
+  DAL  [H-25]  close 83.44  stop 78.53  target 98.17  (1R = 4.91)  score 7/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 83.44 on 1.2x volume
+      volume profile: 23% of 60d volume sits ABOVE here, heaviest at 82.96  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 83, spread <= 10%; exit on stop/target/15 sessions
 
-OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
-  XOM    XOM261120C00185000  delta 0.59  21d  mid 6.34  spread 5.2%
-         costs $634.50 per contract; needs $12,690 equity to buy one inside the 5% position cap
+OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
+  PFE    PFE261218C00031000  delta 0.56  46d  mid 0.99  spread 5.0%
+         costs $99.50 per contract; needs $1,990 equity to buy one inside the 5% position cap
+  DAL    DAL261218C00082500  delta 0.57  46d  mid 5.61  spread 7.3%
+         costs $560.50 per contract; needs $11,210 equity to buy one inside the 5% position cap
 
-  cheapest doctrine contract today: XOM at $634.50
-  at $101,858.65 equity you can buy 1 of 1 inside the position cap
+  cheapest doctrine contract today: PFE at $99.50
+  at $101,232.64 equity you can buy 2 of 2 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
 PAPER ORDERS PLACED (0):
   none
-  skipped XOM: already held
-  skipped IWM: already held
+  skipped PFE: already held
+  skipped DAL: already held
+TIME EXITS SUBMITTED: CVX, KO
 
-OPEN POSITIONS (8) — 5 of 8 stock slots used, 3 option contracts:
-  CVX  qty 22  unrealized $+419.64  stop 204.87  target 245.49  since 2026-10-12
-  CVX261120C00220000  qty 2  unrealized $+1,500.00  stop ?  target ?  since ?
-  DAL  qty 60  unrealized $-92.48  stop 75.34  target 99.8  since 2026-10-27
-  DAL261120C00080000  qty 4  unrealized $-420.00  stop ?  target ?  since ?
-  KO  qty 353  unrealized $+1,409.19  stop 85.67  target 102.11  since 2026-10-12
-  PFE  qty 165  unrealized $+125.65  stop 27.6  target 34.92  since 2026-10-15
-  PFE261106C00028500  qty 10  unrealized $+570.00  stop ?  target ?  since ?
-  XOM  qty 100  unrealized $+1,967.01  stop ?  target ?  since ?
+OPEN POSITIONS (10) — 6 of 8 stock slots used, 4 option contracts:
+  CVX  qty 22  unrealized $+252.32  stop 204.87  target 245.49  since 2026-10-12
+  CVX261120C00220000  qty 2  unrealized $+390.00  stop ?  target ?  since ?
+  DAL  qty 60  unrealized $+104.92  stop 75.34  target 99.8  since 2026-10-27
+  DAL261120C00080000  qty 4  unrealized $+360.00  stop ?  target ?  since ?
+  IWM  qty 18  unrealized $-43.91  stop 276.0  target 289.48  since 2026-10-30
+  KO  qty 353  unrealized $+1,913.98  stop 85.67  target 102.11  since 2026-10-12
+  PFE  qty 165  unrealized $+235.95  stop 27.6  target 34.92  since 2026-10-15
+  PFE261106C00028500  qty 10  unrealized $+800.00  stop ?  target ?  since ?
+  XOM  qty 100  unrealized $+1,250.00  stop ?  target ?  since ?
+  XOM261120C00185000  qty 2  unrealized $-410.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  BOUGHT 1x XOM261120C00185000  @ $6.34 ($634)  21d  strike 185.00  [delta 0.59, spread 5.2%, OI 6159]
+  BOUGHT 5x PFE261218C00031000  @ $0.99 ($498)  46d  strike 31.00  [delta 0.56, spread 5.0%, OI 10699]
     FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  SOLD   1x XOM261120C00185000  (reconciled)
-  holding 4:
+  SOLD   5x PFE261106C00028500  P&L $+800.00  (DTE_FLOOR: 4d remaining <= 5d floor)
+  SOLD   1x XOM261120C00185000  P&L $-410.00  (INVALIDATION: underlying 179.77 <= 179.78)
+  holding 3:
     CVX261120C00220000  1x @ $9.41  since 2026-10-14  stop-if-underlying <= 209.52
     DAL261120C00080000  2x @ $4.37  since 2026-10-27  stop-if-underlying <= 75.34
-    PFE261106C00028500  5x @ $1.42  since 2026-10-15  stop-if-underlying <= 27.60
-    XOM261120C00185000  1x @ $6.34  since 2026-10-30  stop-if-underlying <= 179.78
-  note: IWM: no contract met DTE/spread/delta
+    PFE261218C00031000  5x @ $0.99  since 2026-11-02  stop-if-underlying <= 29.23
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.

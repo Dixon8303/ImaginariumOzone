@@ -153,6 +153,7 @@
   ],
   "open": {
     "CVX": {
+      "closing": "2026-11-02",
       "entry": 216.810909,
       "entry_cap": 219.3255,
       "entry_date": "2026-10-12",
@@ -181,10 +182,10 @@
       "target": 99.8
     },
     "IWM": {
-      "entry": 279.37,
+      "entry": 281.569444,
       "entry_cap": 284.9574,
       "entry_date": "2026-10-30",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "4fd14ffc-6ac6-4ca7-93e1-36dbef9d61b1",
@@ -195,6 +196,7 @@
       "target": 289.48
     },
     "KO": {
+      "closing": "2026-11-02",
       "entry": 90.389623,
       "entry_cap": 91.57560000000001,
       "entry_date": "2026-10-12",
@@ -252,33 +254,19 @@
       "strike": 80.0,
       "ticker": "DAL"
     },
-    "PFE261106C00028500": {
+    "PFE261218C00031000": {
       "basis": "delta",
-      "delta": 0.6911,
-      "entry_date": "2026-10-15",
-      "entry_price": 1.42,
-      "entry_underlying": 29.43,
-      "expiry": "2026-11-06",
+      "delta": 0.5645,
+      "entry_date": "2026-11-02",
+      "entry_price": 0.995,
+      "entry_underlying": 30.71,
+      "expiry": "2026-12-18",
       "fundamental_net_income": null,
-      "invalidation_price": 27.6,
+      "invalidation_price": 29.23,
       "qty": 5,
-      "spread_pct": 0.0845,
-      "strike": 28.5,
+      "spread_pct": 0.0503,
+      "strike": 31.0,
       "ticker": "PFE"
-    },
-    "XOM261120C00185000": {
-      "basis": "delta",
-      "delta": 0.5896,
-      "entry_date": "2026-10-30",
-      "entry_price": 6.345,
-      "entry_underlying": 187.26,
-      "expiry": "2026-11-20",
-      "fundamental_net_income": null,
-      "invalidation_price": 179.78,
-      "qty": 1,
-      "spread_pct": 0.052,
-      "strike": 185.0,
-      "ticker": "XOM"
     }
   }
 }
