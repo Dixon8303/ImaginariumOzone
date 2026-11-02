@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-01T23:35:03Z",
+  "last_synced": "2026-11-02T00:35:03Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2912,7 +2912,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -2956,7 +2956,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T22:35:03Z"
+      "updated_at": "2026-11-02T00:35:03Z"
     },
     {
       "id": "EP68",
@@ -3902,7 +3902,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -3918,7 +3918,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -3942,7 +3942,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T23:35:03Z"
+      "updated_at": "2026-11-02T00:35:03Z"
     },
     {
       "id": "EP83",
@@ -3968,7 +3968,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -3984,11 +3984,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -4012,7 +4012,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-02T00:35:03Z"
     },
     {
       "id": "EP84",
@@ -4038,7 +4038,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -4054,7 +4054,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -4082,7 +4082,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-02T00:35:03Z"
     },
     {
       "id": "EP85",
@@ -4178,7 +4178,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -4194,7 +4194,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -4222,7 +4222,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-02T00:35:03Z"
     },
     {
       "id": "EP87",
