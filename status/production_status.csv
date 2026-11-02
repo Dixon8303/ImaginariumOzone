@@ -51,7 +51,7 @@ EP77,77,Unreleased episode,review,upload,14,15,,,2026-11-01T14:05:16Z
 EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026-10-27T18:00:00Z,DQV95PmFxAo,2026-10-27T18:05:01Z
 EP79,79,Unreleased episode,review,upload,14,15,,,2026-11-01T15:05:02Z
 EP80,80,Unreleased episode,halted,ken_burns,10,15,,,2026-10-26T15:35:01Z
-EP81,81,Unreleased episode,running,storyboard,5,15,,,2026-11-02T14:05:03Z
+EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-02T15:05:03Z
 EP82,82,Unreleased episode,running,storyboard,7,15,,,2026-11-02T00:35:03Z
 EP83,83,Unreleased episode,running,storyboard,7,15,,,2026-11-02T01:35:03Z
 EP84,84,Unreleased episode,running,storyboard,7,15,,,2026-11-02T02:35:03Z
@@ -78,4 +78,4 @@ EP104,104,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP105,105,Unreleased episode,failed,script,4,15,,,2026-11-01T20:35:03Z
 EP106,106,Unreleased episode,halted,script,4,15,,,2026-11-02T04:35:03Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
-_last_synced,,2026-11-02T14:05:03Z,,,,,,,
+_last_synced,,2026-11-02T15:05:03Z,,,,,,,
