@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-02T04:35:03Z",
+  "last_synced": "2026-11-02T05:35:03Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4112,7 +4112,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -4128,7 +4128,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -4152,7 +4152,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-02T04:35:03Z"
+      "updated_at": "2026-11-02T05:35:03Z"
     },
     {
       "id": "EP86",
