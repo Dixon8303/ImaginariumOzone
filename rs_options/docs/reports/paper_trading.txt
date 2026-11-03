@@ -1,7 +1,7 @@
 generated: 2026-11-02
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-02
-paper equity: $101,232.64   cash: $22,095.51
+paper equity: $101,096.36   cash: $22,095.51
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-11-02  $101,232.64   (+1,232.64, +1.2%)
@@ -21,13 +21,13 @@ TODAY'S SIGNALS (2):
       option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 83, spread <= 10%; exit on stop/target/15 sessions
 
 OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
-  PFE    PFE261218C00031000  delta 0.56  46d  mid 0.99  spread 5.0%
+  PFE    PFE261218C00031000  delta 0.55  46d  mid 0.99  spread 5.0%
          costs $99.50 per contract; needs $1,990 equity to buy one inside the 5% position cap
   DAL    DAL261218C00082500  delta 0.57  46d  mid 5.61  spread 7.3%
          costs $560.50 per contract; needs $11,210 equity to buy one inside the 5% position cap
 
   cheapest doctrine contract today: PFE at $99.50
-  at $101,232.64 equity you can buy 2 of 2 inside the position cap
+  at $101,096.36 equity you can buy 2 of 2 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
 PAPER ORDERS PLACED (0):
@@ -37,22 +37,21 @@ PAPER ORDERS PLACED (0):
 TIME EXITS SUBMITTED: CVX, KO
 
 OPEN POSITIONS (10) — 6 of 8 stock slots used, 4 option contracts:
-  CVX  qty 22  unrealized $+252.32  stop 204.87  target 245.49  since 2026-10-12
+  CVX  qty 22  unrealized $+250.78  stop 204.87  target 245.49  since 2026-10-12
   CVX261120C00220000  qty 2  unrealized $+390.00  stop ?  target ?  since ?
-  DAL  qty 60  unrealized $+104.92  stop 75.34  target 99.8  since 2026-10-27
+  DAL  qty 60  unrealized $+109.72  stop 75.34  target 99.8  since 2026-10-27
   DAL261120C00080000  qty 4  unrealized $+360.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $-43.91  stop 276.0  target 289.48  since 2026-10-30
-  KO  qty 353  unrealized $+1,913.98  stop 85.67  target 102.11  since 2026-10-12
-  PFE  qty 165  unrealized $+235.95  stop 27.6  target 34.92  since 2026-10-15
+  IWM  qty 18  unrealized $-44.81  stop 276.0  target 289.48  since 2026-10-30
+  KO  qty 353  unrealized $+1,850.44  stop 85.67  target 102.11  since 2026-10-12
+  PFE  qty 165  unrealized $+179.85  stop 27.6  target 34.92  since 2026-10-15
   PFE261106C00028500  qty 10  unrealized $+800.00  stop ?  target ?  since ?
-  XOM  qty 100  unrealized $+1,250.00  stop ?  target ?  since ?
+  XOM  qty 100  unrealized $+1,231.00  stop ?  target ?  since ?
   XOM261120C00185000  qty 2  unrealized $-410.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  BOUGHT 5x PFE261218C00031000  @ $0.99 ($498)  46d  strike 31.00  [delta 0.56, spread 5.0%, OI 10699]
+  BOUGHT 5x PFE261218C00031000  @ $0.99 ($498)  46d  strike 31.00  [delta 0.55, spread 5.0%, OI 10699]
     FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  SOLD   5x PFE261106C00028500  P&L $+800.00  (DTE_FLOOR: 4d remaining <= 5d floor)
-  SOLD   1x XOM261120C00185000  P&L $-410.00  (INVALIDATION: underlying 179.77 <= 179.78)
+  SOLD   5x PFE261218C00031000  (reconciled)
   holding 3:
     CVX261120C00220000  1x @ $9.41  since 2026-10-14  stop-if-underlying <= 209.52
     DAL261120C00080000  2x @ $4.37  since 2026-10-27  stop-if-underlying <= 75.34
