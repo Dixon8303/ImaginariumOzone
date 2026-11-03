@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-03T08:35:03Z",
+  "last_synced": "2026-11-03T13:05:03Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4718,27 +4718,27 @@
       "id": "EP94",
       "number": 94,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4782,7 +4782,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T14:05:17Z"
+      "updated_at": "2026-11-03T13:05:03Z"
     },
     {
       "id": "EP95",
