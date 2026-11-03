@@ -23,7 +23,7 @@ EP44,44,Unreleased episode,failed,ken_burns,9,15,,,2026-11-01T14:05:16Z
 EP45,45,Unreleased episode,failed,ken_burns,9,15,,,2026-11-01T14:05:16Z
 EP46,46,Unreleased episode,failed,ken_burns,9,15,,,2026-11-02T22:05:03Z
 EP47,47,Unreleased episode,failed,ken_burns,9,15,,,2026-11-02T22:05:03Z
-EP50,50,Unreleased episode,approved,complete,15,15,,,2026-10-11T08:05:13Z
+EP50,50,In Living Color: Fox Arbitrage,published,complete,15,15,2026-11-03T19:00:00Z,OxjVlvBgT9A,2026-11-03T19:05:04Z
 EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2026-10-13T18:00:16Z,wpMLL0m9dN8,2026-10-24T23:35:01Z
 EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,complete,15,15,2026-10-16T18:00:18Z,E4fVKp5NEB0,2026-10-24T23:35:01Z
 EP53,53,Unreleased episode,approved,complete,15,15,,,2026-10-24T23:35:01Z
@@ -64,7 +64,7 @@ EP90,90,Unreleased episode,running,storyboard,7,15,,,2026-11-02T04:35:03Z
 EP91,91,Unreleased episode,failed,script,4,15,,,2026-11-01T19:35:03Z
 EP92,92,Unreleased episode,failed,script,4,15,,,2026-11-01T19:35:03Z
 EP93,93,Unreleased episode,running,storyboard,7,15,,,2026-11-02T04:35:03Z
-EP94,94,Unreleased episode,review,script,4,15,,,2026-11-03T13:05:03Z
+EP94,94,Unreleased episode,failed,script,4,15,,,2026-11-03T19:05:05Z
 EP95,95,Unreleased episode,review,script,4,15,,,2026-11-02T19:05:03Z
 EP96,96,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP97,97,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:22Z
@@ -78,4 +78,4 @@ EP104,104,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP105,105,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:23Z
 EP106,106,Unreleased episode,halted,script,4,15,,,2026-11-02T04:35:03Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
-_last_synced,,2026-11-03T15:35:03Z,,,,,,,
+_last_synced,,2026-11-03T19:05:05Z,,,,,,,
