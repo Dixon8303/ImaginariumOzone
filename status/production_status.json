@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-03T21:05:08Z",
+  "last_synced": "2026-11-03T22:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1626,7 +1626,7 @@
       "id": "EP45",
       "number": 45,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -1658,7 +1658,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -1690,7 +1690,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-03T21:05:07Z"
+      "updated_at": "2026-11-03T22:05:06Z"
     },
     {
       "id": "EP46",
