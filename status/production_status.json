@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-03T15:35:03Z",
+  "last_synced": "2026-11-03T19:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1835,8 +1835,9 @@
     {
       "id": "EP50",
       "number": 50,
-      "topic": "Unreleased episode",
-      "status": "approved",
+      "topic": "In Living Color: Fox Arbitrage",
+      "mode": "standalone",
+      "status": "published",
       "stages": [
         {
           "name": "batch_primer",
@@ -1900,7 +1901,9 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-10-11T08:05:13Z"
+      "video_id": "OxjVlvBgT9A",
+      "publish_at": "2026-11-03T19:00:00Z",
+      "updated_at": "2026-11-03T19:05:04Z"
     },
     {
       "id": "EP51",
@@ -4718,7 +4721,7 @@
       "id": "EP94",
       "number": 94,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4782,7 +4785,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-03T13:05:03Z"
+      "updated_at": "2026-11-03T19:05:05Z"
     },
     {
       "id": "EP95",
