@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-03T13:05:03Z",
+  "last_synced": "2026-11-03T15:35:03Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2402,7 +2402,7 @@
       "id": "EP59",
       "number": 59,
       "topic": "Unreleased episode",
-      "status": "halted",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2430,7 +2430,7 @@
         },
         {
           "name": "generation",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "ken_burns",
@@ -2466,7 +2466,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-03T08:35:03Z"
+      "updated_at": "2026-11-03T15:35:03Z"
     },
     {
       "id": "EP60",
