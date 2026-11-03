@@ -179,6 +179,7 @@ tags. Nothing on the site links to them, and they carry `noindex`.
 | eatmediatv.com/abe | the book site's home | `utm_source=abe_podcast`, `utm_medium=audio`, `utm_content=abe` |
 | eatmediatv.com/quiz | `erasure.html`, the 3-question test | `utm_source=eatmediatv`, `utm_medium=short_link`, `utm_content=quiz` |
 | eatmediatv.com/challenge | `unlearn.html`, the 5-Day Unlearning Challenge | `utm_source=eatmediatv`, `utm_medium=short_link`, `utm_content=challenge` |
+| eatmediatv.com/talk | `talk.html`, talks and briefings (WHB-019) | `utm_source=eatmediatv`, `utm_medium=short_link`, `utm_content=talk` |
 
 A visitor who arrives with their own `utm_` tags keeps them; any other query
 string and the `#anchor` pass through. Without JavaScript, a meta refresh

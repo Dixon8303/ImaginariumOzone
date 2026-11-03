@@ -11,6 +11,7 @@ No build step, no backend — ready for GitHub Pages.
 | `/` | The official site — case files, evidence room, timeline, excerpt, `#acquire` (alias `#buy`) = the format chooser, `#free-chapter` = the Recovery List signup box, deep links `#bgf-001`…`#bgf-012` |
 | `/links.html` | Link-in-bio hub: Book, Free Chapter, the briefing, the challenge, Archive, Genius Index, Podcast, Press Kit |
 | `/press-kit.html` | One-page press kit for media & educators |
+| `/talk.html` | Talks and briefings: four case-file talks, three formats, email inquiry (no fees on the page). **Entry points: home footer ("TALKS"), press-kit footer, short link `eatmediatv.com/talk`** |
 | `/erasure.html` | The Erasure Mechanism — 4-minute interactive briefing. **Entry points: nav ("4-Min Briefing"), footer ("THE BRIEFING"), `links.html` row 02.** Day 5 of the launch campaign points here |
 | `/unlearn.html` | The 5-Day Unlearning Challenge. **Entry points: footer ("5-DAY CHALLENGE"), `links.html` row 03.** Day 8 of the launch campaign points here |
 | `/free-chapter.html` | Stable redirect → `/#free-chapter` (the Recovery List capture) |
