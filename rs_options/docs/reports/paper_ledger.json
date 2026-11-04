@@ -149,24 +149,29 @@
       "r": -3.626,
       "reason": "stop",
       "ticker": "AMZN"
+    },
+    {
+      "entry": 216.810909,
+      "entry_date": "2026-10-12",
+      "exit": 225.148182,
+      "exit_date": "2026-11-03",
+      "micro_override": false,
+      "r": 0.698,
+      "reason": "time/other",
+      "ticker": "CVX"
+    },
+    {
+      "entry": 90.389623,
+      "entry_date": "2026-10-12",
+      "exit": 94.77,
+      "exit_date": "2026-11-03",
+      "micro_override": false,
+      "r": 0.928,
+      "reason": "time/other",
+      "ticker": "KO"
     }
   ],
   "open": {
-    "CVX": {
-      "closing": "2026-11-02",
-      "entry": 216.810909,
-      "entry_cap": 219.3255,
-      "entry_date": "2026-10-12",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "761c17ee-5485-4a07-bb2e-b5481bc0d36e",
-      "qty": 22,
-      "setup": "H-25",
-      "signal_close": 215.025,
-      "stop": 204.87,
-      "target": 245.49
-    },
     "DAL": {
       "entry": 81.671333,
       "entry_cap": 83.0841,
@@ -194,21 +199,6 @@
       "signal_close": 279.37,
       "stop": 276.0,
       "target": 289.48
-    },
-    "KO": {
-      "closing": "2026-11-02",
-      "entry": 90.389623,
-      "entry_cap": 91.57560000000001,
-      "entry_date": "2026-10-12",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "156dedf2-ed74-4601-9c2d-d939980fae3e",
-      "qty": 53,
-      "setup": "H-25",
-      "signal_close": 89.78,
-      "stop": 85.67,
-      "target": 102.11
     },
     "PFE": {
       "entry": 29.69,

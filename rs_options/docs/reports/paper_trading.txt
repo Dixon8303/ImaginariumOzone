@@ -1,57 +1,40 @@
-generated: 2026-11-02
+generated: 2026-11-03
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-02
-paper equity: $101,100.79   cash: $22,095.51
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-03
+paper equity: $98,714.28   cash: $60,272.03
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-11-02  $101,232.64   (+1,232.64, +1.2%)
-  over 70 calendar days, 44 recorded sessions: 42 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-11-03  $98,714.28   (-1,285.72, -1.3%)
+  over 71 calendar days, 45 recorded sessions: 43 with a change, 1 flat.
   range so far: $95,756.95 (low) to $101,858.65 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
-TODAY'S SIGNALS (2):
-  PFE  [RS-02]  close 30.71  stop 29.23  target 35.15  (1R = 1.48)  score 9/10
-      RS persistence 70%, close 30.71 > 20d high 30.66, rel volume 1.7x
-      volume profile: 1% of 60d volume sits ABOVE here, heaviest at 27.69  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 31, spread <= 10%; exit on stop/target/15 sessions
-  DAL  [H-25]  close 83.44  stop 78.53  target 98.17  (1R = 4.91)  score 7/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 83.44 on 1.2x volume
-      volume profile: 23% of 60d volume sits ABOVE here, heaviest at 82.96  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 83, spread <= 10%; exit on stop/target/15 sessions
+TODAY'S SIGNALS (0):
+  none — no ticker passed breakout + regime + quality
 
-OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
-  PFE    PFE261218C00031000  delta 0.55  46d  mid 0.99  spread 5.0%
-         costs $99.50 per contract; needs $1,990 equity to buy one inside the 5% position cap
-  DAL    DAL261218C00082500  delta 0.57  46d  mid 5.61  spread 7.3%
-         costs $560.50 per contract; needs $11,210 equity to buy one inside the 5% position cap
-
-  cheapest doctrine contract today: PFE at $99.50
-  at $101,100.79 equity you can buy 2 of 2 inside the position cap
-  (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
+OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
 PAPER ORDERS PLACED (0):
   none
-  skipped PFE: already held
-  skipped DAL: already held
-TIME EXITS SUBMITTED: CVX, KO
 
-OPEN POSITIONS (10) — 6 of 8 stock slots used, 4 option contracts:
-  CVX  qty 22  unrealized $+250.78  stop 204.87  target 245.49  since 2026-10-12
-  CVX261120C00220000  qty 2  unrealized $+390.00  stop ?  target ?  since ?
-  DAL  qty 60  unrealized $+109.72  stop 75.34  target 99.8  since 2026-10-27
-  DAL261120C00080000  qty 4  unrealized $+360.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $-43.91  stop 276.0  target 289.48  since 2026-10-30
-  KO  qty 353  unrealized $+1,853.97  stop 85.67  target 102.11  since 2026-10-12
-  PFE  qty 165  unrealized $+179.85  stop 27.6  target 34.92  since 2026-10-15
-  PFE261106C00028500  qty 10  unrealized $+800.00  stop ?  target ?  since ?
-  XOM  qty 100  unrealized $+1,231.00  stop ?  target ?  since ?
-  XOM261120C00185000  qty 2  unrealized $-410.00  stop ?  target ?  since ?
+CLOSED SINCE LAST RUN:
+  CVX  2026-10-12 -> 2026-11-03  +0.70R  (time/other)
+  KO  2026-10-12 -> 2026-11-03  +0.93R  (time/other)
+
+OPEN POSITIONS (9) — 4 of 8 stock slots used, 5 option contracts:
+  CVX261120C00220000  qty 2  unrealized $-90.00  stop ?  target ?  since ?
+  DAL  qty 60  unrealized $+75.94  stop 75.34  target 99.8  since 2026-10-27
+  DAL261120C00080000  qty 4  unrealized $+180.00  stop ?  target ?  since ?
+  IWM  qty 18  unrealized $-48.77  stop 276.0  target 289.48  since 2026-10-30
+  PFE  qty 165  unrealized $+62.70  stop 27.6  target 34.92  since 2026-10-15
+  PFE261106C00028500  qty 5  unrealized $+10.00  stop ?  target ?  since ?
+  PFE261218C00031000  qty 15  unrealized $-570.00  stop ?  target ?  since ?
+  XOM  qty 100  unrealized $+1,053.00  stop ?  target ?  since ?
+  XOM261120C00185000  qty 2  unrealized $-608.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  BOUGHT 5x PFE261218C00031000  @ $0.99 ($498)  46d  strike 31.00  [delta 0.55, spread 5.0%, OI 10699]
-    FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  SOLD   5x PFE261218C00031000  (reconciled)
+  no option trades today
   holding 3:
     CVX261120C00220000  1x @ $9.41  since 2026-10-14  stop-if-underlying <= 209.52
     DAL261120C00080000  2x @ $4.37  since 2026-10-27  stop-if-underlying <= 75.34
@@ -60,7 +43,7 @@ PAPER OPTIONS (Alpaca, autonomous):
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
 
-CUMULATIVE RECORD: 15 closed | win rate 27% | expectancy -0.943R | total -14.14R
-  significance: n=15 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 27% wins, a 4-loss run has ~100% odds over 40 trades — variance, not breakage.
+CUMULATIVE RECORD: 17 closed | win rate 35% | expectancy -0.736R | total -12.52R
+  significance: n=17 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 35% wins, a 4-loss run has ~97% odds over 40 trades — variance, not breakage.
 
 Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.
