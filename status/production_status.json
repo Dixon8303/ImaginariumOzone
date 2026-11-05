@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T08:05:09Z",
+  "last_synced": "2026-11-05T11:05:04Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2615,7 +2615,7 @@
       "id": "EP62",
       "number": 62,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -2647,7 +2647,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -2679,7 +2679,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T23:35:03Z"
+      "updated_at": "2026-11-05T11:05:04Z"
     },
     {
       "id": "EP63",
@@ -3315,7 +3315,7 @@
       "id": "EP74",
       "number": 74,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3339,7 +3339,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -3379,7 +3379,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T23:35:03Z"
+      "updated_at": "2026-11-05T11:05:04Z"
     },
     {
       "id": "EP75",
