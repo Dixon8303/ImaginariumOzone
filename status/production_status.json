@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T02:05:07Z",
+  "last_synced": "2026-11-05T03:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1720,7 +1720,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "halted"
         },
         {
           "name": "generation",
@@ -1760,7 +1760,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T00:05:14Z"
+      "updated_at": "2026-11-05T03:05:07Z"
     },
     {
       "id": "EP47",
@@ -1790,7 +1790,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "halted"
         },
         {
           "name": "generation",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T00:05:14Z"
+      "updated_at": "2026-11-05T03:05:07Z"
     },
     {
       "id": "EP50",
@@ -4511,7 +4511,7 @@
       "id": "EP91",
       "number": 91,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4531,7 +4531,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "storyboard",
@@ -4575,13 +4575,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T02:05:07Z"
+      "updated_at": "2026-11-05T03:05:07Z"
     },
     {
       "id": "EP92",
       "number": 92,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4601,7 +4601,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "storyboard",
@@ -4645,7 +4645,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T02:05:07Z"
+      "updated_at": "2026-11-05T03:05:07Z"
     },
     {
       "id": "EP93",
