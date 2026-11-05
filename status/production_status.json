@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T12:05:06Z",
+  "last_synced": "2026-11-05T13:05:04Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3315,7 +3315,7 @@
       "id": "EP74",
       "number": 74,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3379,7 +3379,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T12:05:06Z"
+      "updated_at": "2026-11-05T13:05:04Z"
     },
     {
       "id": "EP75",
@@ -3881,7 +3881,7 @@
       "id": "EP82",
       "number": 82,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3905,7 +3905,7 @@
         },
         {
           "name": "storyboard",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -3945,13 +3945,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T12:05:06Z"
+      "updated_at": "2026-11-05T13:05:04Z"
     },
     {
       "id": "EP83",
       "number": 83,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3975,7 +3975,7 @@
         },
         {
           "name": "storyboard",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -4015,7 +4015,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T12:05:06Z"
+      "updated_at": "2026-11-05T13:05:04Z"
     },
     {
       "id": "EP84",
@@ -4161,7 +4161,7 @@
       "id": "EP86",
       "number": 86,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4185,7 +4185,7 @@
         },
         {
           "name": "storyboard",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -4225,7 +4225,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T12:05:06Z"
+      "updated_at": "2026-11-05T13:05:04Z"
     },
     {
       "id": "EP87",
@@ -4301,76 +4301,6 @@
       "id": "EP88",
       "number": 88,
       "topic": "Unreleased episode",
-      "status": "failed",
-      "stages": [
-        {
-          "name": "batch_primer",
-          "status": "done"
-        },
-        {
-          "name": "topic_scoring",
-          "status": "done"
-        },
-        {
-          "name": "research",
-          "status": "done"
-        },
-        {
-          "name": "outline",
-          "status": "done"
-        },
-        {
-          "name": "script",
-          "status": "done"
-        },
-        {
-          "name": "storyboard",
-          "status": "failed"
-        },
-        {
-          "name": "generation",
-          "status": "pending"
-        },
-        {
-          "name": "ken_burns",
-          "status": "pending"
-        },
-        {
-          "name": "voice_ssml",
-          "status": "done"
-        },
-        {
-          "name": "audio_prod",
-          "status": "done"
-        },
-        {
-          "name": "titles_seo",
-          "status": "pending"
-        },
-        {
-          "name": "assembly",
-          "status": "pending"
-        },
-        {
-          "name": "qa_gates",
-          "status": "pending"
-        },
-        {
-          "name": "shorts",
-          "status": "pending"
-        },
-        {
-          "name": "upload",
-          "status": "pending"
-        }
-      ],
-      "gates": {},
-      "updated_at": "2026-11-05T12:05:06Z"
-    },
-    {
-      "id": "EP89",
-      "number": 89,
-      "topic": "Unreleased episode",
       "status": "running",
       "stages": [
         {
@@ -4435,7 +4365,77 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-02T03:35:03Z"
+      "updated_at": "2026-11-05T13:05:04Z"
+    },
+    {
+      "id": "EP89",
+      "number": 89,
+      "topic": "Unreleased episode",
+      "status": "review",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "running"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-05T13:05:04Z"
     },
     {
       "id": "EP90",
@@ -4651,7 +4651,7 @@
       "id": "EP93",
       "number": 93,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4715,7 +4715,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-02T04:35:03Z"
+      "updated_at": "2026-11-05T13:05:04Z"
     },
     {
       "id": "EP94",
