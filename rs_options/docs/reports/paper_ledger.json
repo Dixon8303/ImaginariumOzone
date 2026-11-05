@@ -172,6 +172,20 @@
     }
   ],
   "open": {
+    "AAPL": {
+      "entry": 349.555,
+      "entry_cap": 356.5461,
+      "entry_date": "2026-11-04",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "7b406b2b-de3d-4fcd-ae48-6d2049915e19",
+      "qty": 14,
+      "setup": "H-25",
+      "signal_close": 349.555,
+      "stop": 325.6,
+      "target": 421.42
+    },
     "DAL": {
       "entry": 81.671333,
       "entry_cap": 83.0841,
@@ -216,20 +230,6 @@
     }
   },
   "options": {
-    "CVX261120C00220000": {
-      "basis": "delta",
-      "delta": 0.6325,
-      "entry_date": "2026-10-14",
-      "entry_price": 9.405000000000001,
-      "entry_underlying": 222.09,
-      "expiry": "2026-11-20",
-      "fundamental_net_income": null,
-      "invalidation_price": 209.52,
-      "qty": 1,
-      "spread_pct": 0.0585,
-      "strike": 220.0,
-      "ticker": "CVX"
-    },
     "DAL261120C00080000": {
       "basis": "delta",
       "delta": 0.5989,
