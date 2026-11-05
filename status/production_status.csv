@@ -37,7 +37,7 @@ EP61,61,Unreleased episode,running,ken_burns,10,15,,,2026-10-28T01:35:01Z
 EP62,62,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T14:05:04Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP64,64,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP65,65,Unreleased episode,running,storyboard,7,15,,,2026-11-02T02:35:03Z
+EP65,65,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
 EP67,67,Unreleased episode,review,storyboard,7,15,,,2026-11-05T14:05:04Z
 EP68,68,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
@@ -54,8 +54,8 @@ EP80,80,Unreleased episode,review,upload,14,15,,,2026-11-05T02:05:07Z
 EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-05T05:05:06Z
 EP82,82,Unreleased episode,review,storyboard,7,15,,,2026-11-05T14:05:04Z
 EP83,83,Unreleased episode,review,storyboard,7,15,,,2026-11-05T14:05:04Z
-EP84,84,Unreleased episode,running,storyboard,7,15,,,2026-11-02T02:35:03Z
-EP85,85,Unreleased episode,running,storyboard,7,15,,,2026-11-02T05:35:03Z
+EP84,84,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
+EP85,85,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
 EP86,86,Unreleased episode,review,storyboard,7,15,,,2026-11-05T13:05:04Z
 EP87,87,Unreleased episode,failed,script,4,15,,,2026-11-05T05:05:06Z
 EP88,88,Unreleased episode,review,storyboard,7,15,,,2026-11-05T14:05:04Z
@@ -73,10 +73,10 @@ EP99,99,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP100,100,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP101,101,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP102,102,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:23Z
-EP103,103,Unreleased episode,running,storyboard,7,15,,,2026-11-02T06:35:03Z
+EP103,103,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
 EP104,104,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP105,105,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:23Z
-EP106,106,Unreleased episode,running,storyboard,7,15,,,2026-11-05T08:05:09Z
+EP106,106,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-05T14:05:04Z,,,,,,,
+_last_synced,,2026-11-05T15:05:04Z,,,,,,,
