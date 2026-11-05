@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T16:35:04Z",
+  "last_synced": "2026-11-05T17:35:04Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3843,7 +3843,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -3875,13 +3875,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T05:05:06Z"
+      "updated_at": "2026-11-05T17:35:04Z"
     },
     {
       "id": "EP82",
       "number": 82,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3913,7 +3913,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -3945,13 +3945,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T14:05:04Z"
+      "updated_at": "2026-11-05T17:35:04Z"
     },
     {
       "id": "EP83",
       "number": 83,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3983,7 +3983,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4015,7 +4015,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T14:05:04Z"
+      "updated_at": "2026-11-05T17:35:04Z"
     },
     {
       "id": "EP84",
@@ -4263,7 +4263,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4295,13 +4295,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T05:05:06Z"
+      "updated_at": "2026-11-05T17:35:04Z"
     },
     {
       "id": "EP88",
       "number": 88,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4333,7 +4333,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4365,13 +4365,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T14:05:04Z"
+      "updated_at": "2026-11-05T17:35:04Z"
     },
     {
       "id": "EP89",
       "number": 89,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4403,7 +4403,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4435,7 +4435,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T13:05:04Z"
+      "updated_at": "2026-11-05T17:35:04Z"
     },
     {
       "id": "EP90",
