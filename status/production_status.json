@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T13:05:04Z",
+  "last_synced": "2026-11-05T14:05:04Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2615,7 +2615,7 @@
       "id": "EP62",
       "number": 62,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2639,7 +2639,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -2679,7 +2679,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T12:05:06Z"
+      "updated_at": "2026-11-05T14:05:04Z"
     },
     {
       "id": "EP63",
@@ -2895,7 +2895,7 @@
       "id": "EP67",
       "number": 67,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -2959,7 +2959,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-02T00:35:03Z"
+      "updated_at": "2026-11-05T14:05:04Z"
     },
     {
       "id": "EP68",
@@ -3881,7 +3881,7 @@
       "id": "EP82",
       "number": 82,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3945,13 +3945,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T13:05:04Z"
+      "updated_at": "2026-11-05T14:05:04Z"
     },
     {
       "id": "EP83",
       "number": 83,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4015,7 +4015,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T13:05:04Z"
+      "updated_at": "2026-11-05T14:05:04Z"
     },
     {
       "id": "EP84",
@@ -4301,7 +4301,7 @@
       "id": "EP88",
       "number": 88,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4365,7 +4365,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T13:05:04Z"
+      "updated_at": "2026-11-05T14:05:04Z"
     },
     {
       "id": "EP89",
@@ -4441,7 +4441,7 @@
       "id": "EP90",
       "number": 90,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4505,7 +4505,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-02T04:35:03Z"
+      "updated_at": "2026-11-05T14:05:04Z"
     },
     {
       "id": "EP91",
