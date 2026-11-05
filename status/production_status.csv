@@ -27,12 +27,12 @@ EP50,50,In Living Color: Fox Arbitrage,published,complete,15,15,2026-11-03T19:00
 EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2026-10-13T18:00:16Z,wpMLL0m9dN8,2026-10-24T23:35:01Z
 EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,complete,15,15,2026-10-16T18:00:18Z,E4fVKp5NEB0,2026-10-24T23:35:01Z
 EP53,53,Unreleased episode,approved,upload,14,15,,,2026-11-05T00:05:14Z
-EP54,54,Unreleased episode,running,assembly,11,15,,,2026-11-05T00:05:14Z
+EP54,54,Unreleased episode,halted,ken_burns,10,15,,,2026-11-05T01:05:30Z
 EP55,55,Unreleased episode,approved,complete,15,15,,,2026-11-02T08:05:03Z
 EP57,57,Unreleased episode,running,ken_burns,10,15,,,2026-10-24T23:35:01Z
 EP58,58,Unreleased episode,running,ken_burns,10,15,,,2026-11-03T04:05:03Z
-EP59,59,Unreleased episode,running,assembly,11,15,,,2026-11-05T00:05:14Z
-EP60,60,Unreleased episode,review,shorts,13,15,,,2026-11-05T00:05:14Z
+EP59,59,Unreleased episode,halted,ken_burns,10,15,,,2026-11-05T01:05:30Z
+EP60,60,Unreleased episode,review,shorts,13,15,,,2026-11-05T01:05:30Z
 EP61,61,Unreleased episode,running,ken_burns,10,15,,,2026-10-28T01:35:01Z
 EP62,62,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
@@ -43,14 +43,14 @@ EP68,68,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP70,70,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP71,71,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP72,72,Unreleased episode,running,storyboard,5,15,,,2026-11-05T00:05:14Z
+EP72,72,Unreleased episode,failed,storyboard,6,15,,,2026-11-05T01:05:31Z
 EP74,74,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
 EP75,75,Joseph Bologne — The Classical Composer They Erased,published,complete,15,15,2026-10-30T18:00:00Z,4JqOIPam1WY,2026-10-30T18:05:01Z
 EP76,76,Unreleased episode,running,ken_burns,10,15,,,2026-10-29T06:05:01Z
 EP77,77,Unreleased episode,halted,upload,14,15,,,2026-11-05T00:05:14Z
 EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026-10-27T18:00:00Z,DQV95PmFxAo,2026-10-27T18:05:01Z
 EP79,79,Unreleased episode,review,upload,14,15,,,2026-11-01T15:05:02Z
-EP80,80,Unreleased episode,running,assembly,11,15,,,2026-11-05T00:05:14Z
+EP80,80,Unreleased episode,review,shorts,13,15,,,2026-11-05T01:05:31Z
 EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-02T15:05:03Z
 EP82,82,Unreleased episode,running,storyboard,7,15,,,2026-11-02T00:35:03Z
 EP83,83,Unreleased episode,running,storyboard,7,15,,,2026-11-02T01:35:03Z
@@ -64,7 +64,7 @@ EP90,90,Unreleased episode,running,storyboard,7,15,,,2026-11-02T04:35:03Z
 EP91,91,Unreleased episode,failed,script,4,15,,,2026-11-01T19:35:03Z
 EP92,92,Unreleased episode,failed,script,4,15,,,2026-11-01T19:35:03Z
 EP93,93,Unreleased episode,running,storyboard,7,15,,,2026-11-02T04:35:03Z
-EP94,94,Unreleased episode,failed,script,4,15,,,2026-11-03T19:05:05Z
+EP94,94,Unreleased episode,review,script,4,15,,,2026-11-05T01:05:32Z
 EP95,95,Unreleased episode,review,script,4,15,,,2026-11-02T19:05:03Z
 EP96,96,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP97,97,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:22Z
@@ -79,4 +79,4 @@ EP105,105,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:23Z
 EP106,106,Unreleased episode,halted,script,4,15,,,2026-11-02T04:35:03Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-05T00:05:15Z,,,,,,,
+_last_synced,,2026-11-05T01:05:33Z,,,,,,,
