@@ -1,7 +1,7 @@
 generated: 2026-11-04
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-04
-paper equity: $99,725.60   cash: $60,270.86
+paper equity: $99,730.82   cash: $60,270.86
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-11-04  $99,725.60   (-274.40, -0.3%)
@@ -18,22 +18,23 @@ TODAY'S SIGNALS (1):
 
 OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
-PAPER ORDERS PLACED (1):
-  BUY 14 AAPL @ next open, limit 356.55 (H15a cap, 2% over the 349.56 close), bracket stop 325.60 / target 421.42
+PAPER ORDERS PLACED (0):
+  none
+  skipped AAPL: already held
 
 OPEN POSITIONS (9) — 4 of 8 stock slots used, 5 option contracts:
   CVX261120C00220000  qty 2  unrealized $-1,070.00  stop ?  target ?  since ?
-  DAL  qty 60  unrealized $+439.72  stop 75.34  target 99.8  since 2026-10-27
+  DAL  qty 60  unrealized $+451.72  stop 75.34  target 99.8  since 2026-10-27
   DAL261120C00080000  qty 4  unrealized $+2,060.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $+50.59  stop 276.0  target 289.48  since 2026-10-30
-  PFE  qty 165  unrealized $+193.05  stop 27.6  target 34.92  since 2026-10-15
+  IWM  qty 18  unrealized $+50.41  stop 276.0  target 289.48  since 2026-10-30
+  PFE  qty 165  unrealized $+186.45  stop 27.6  target 34.92  since 2026-10-15
   PFE261106C00028500  qty 5  unrealized $+350.00  stop ?  target ?  since ?
   PFE261218C00031000  qty 15  unrealized $-195.00  stop ?  target ?  since ?
   XOM  qty 100  unrealized $+197.00  stop ?  target ?  since ?
   XOM261120C00185000  qty 2  unrealized $-948.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  SOLD   1x CVX261120C00220000  P&L $-1,070.00  (TIME_EXIT: 15 trading days held >= 15)
+  no option trades today
   holding 2:
     DAL261120C00080000  2x @ $4.37  since 2026-10-27  stop-if-underlying <= 75.34
     PFE261218C00031000  5x @ $0.99  since 2026-11-02  stop-if-underlying <= 29.23
