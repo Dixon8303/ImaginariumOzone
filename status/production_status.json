@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T01:05:33Z",
+  "last_synced": "2026-11-05T02:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1580,7 +1580,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "halted"
         },
         {
           "name": "generation",
@@ -1620,7 +1620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T00:05:14Z"
+      "updated_at": "2026-11-05T02:05:07Z"
     },
     {
       "id": "EP45",
@@ -1650,7 +1650,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "halted"
         },
         {
           "name": "generation",
@@ -1690,7 +1690,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T00:05:14Z"
+      "updated_at": "2026-11-05T02:05:07Z"
     },
     {
       "id": "EP46",
@@ -2531,7 +2531,7 @@
         },
         {
           "name": "shorts",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -2539,7 +2539,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T01:05:30Z"
+      "updated_at": "2026-11-05T02:05:07Z"
     },
     {
       "id": "EP61",
@@ -3797,7 +3797,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -3805,7 +3805,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T01:05:31Z"
+      "updated_at": "2026-11-05T02:05:07Z"
     },
     {
       "id": "EP81",
@@ -4511,7 +4511,7 @@
       "id": "EP91",
       "number": 91,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -4531,7 +4531,7 @@
         },
         {
           "name": "script",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4575,13 +4575,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-05T02:05:07Z"
     },
     {
       "id": "EP92",
       "number": 92,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -4601,7 +4601,7 @@
         },
         {
           "name": "script",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4645,7 +4645,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-05T02:05:07Z"
     },
     {
       "id": "EP93",
@@ -4721,7 +4721,7 @@
       "id": "EP94",
       "number": 94,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4785,7 +4785,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T01:05:32Z"
+      "updated_at": "2026-11-05T02:05:07Z"
     },
     {
       "id": "EP95",
