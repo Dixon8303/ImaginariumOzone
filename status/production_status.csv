@@ -19,20 +19,20 @@ EP38,38,Who Owns the Sound?,published,complete,15,15,2026-09-15T14:00:00Z,GgN8ch
 EP39,39,La Russell,published,complete,15,15,2026-09-25T14:00:00Z,c8zGB85ZvF4,2026-10-11T08:05:13Z
 EP40,40,Michael Jackson's Foreclosure: The ATV Catalog,published,complete,15,15,2026-09-29T14:00:00Z,HelFIbVhsIk,2026-10-10T17:08:31Z
 EP41,41,The Patent Machine: How American Corporations Monopolized a Century of Black Invention,published,complete,15,15,2026-10-02T18:00:00Z,B-_WpB2iO0o,2026-10-10T17:08:31Z
-EP44,44,Unreleased episode,failed,ken_burns,9,15,,,2026-11-01T14:05:16Z
-EP45,45,Unreleased episode,failed,ken_burns,9,15,,,2026-11-04T22:05:05Z
-EP46,46,Unreleased episode,failed,ken_burns,9,15,,,2026-11-04T22:05:05Z
-EP47,47,Unreleased episode,failed,ken_burns,9,15,,,2026-11-02T22:05:03Z
+EP44,44,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T00:05:14Z
+EP45,45,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T00:05:14Z
+EP46,46,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T00:05:14Z
+EP47,47,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T00:05:14Z
 EP50,50,In Living Color: Fox Arbitrage,published,complete,15,15,2026-11-03T19:00:00Z,OxjVlvBgT9A,2026-11-03T19:05:04Z
 EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2026-10-13T18:00:16Z,wpMLL0m9dN8,2026-10-24T23:35:01Z
 EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,complete,15,15,2026-10-16T18:00:18Z,E4fVKp5NEB0,2026-10-24T23:35:01Z
-EP53,53,Unreleased episode,approved,complete,15,15,,,2026-10-24T23:35:01Z
-EP54,54,Unreleased episode,halted,ken_burns,10,15,,,2026-11-03T03:05:22Z
+EP53,53,Unreleased episode,approved,upload,14,15,,,2026-11-05T00:05:14Z
+EP54,54,Unreleased episode,running,assembly,11,15,,,2026-11-05T00:05:14Z
 EP55,55,Unreleased episode,approved,complete,15,15,,,2026-11-02T08:05:03Z
 EP57,57,Unreleased episode,running,ken_burns,10,15,,,2026-10-24T23:35:01Z
 EP58,58,Unreleased episode,running,ken_burns,10,15,,,2026-11-03T04:05:03Z
-EP59,59,Unreleased episode,halted,ken_burns,10,15,,,2026-11-04T06:05:08Z
-EP60,60,Unreleased episode,halted,ken_burns,10,15,,,2026-10-22T23:05:01Z
+EP59,59,Unreleased episode,running,assembly,11,15,,,2026-11-05T00:05:14Z
+EP60,60,Unreleased episode,review,shorts,13,15,,,2026-11-05T00:05:14Z
 EP61,61,Unreleased episode,running,ken_burns,10,15,,,2026-10-28T01:35:01Z
 EP62,62,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
@@ -43,14 +43,14 @@ EP68,68,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP70,70,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP71,71,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP72,72,Unreleased episode,review,script,4,15,,,2026-11-03T20:05:03Z
+EP72,72,Unreleased episode,running,storyboard,5,15,,,2026-11-05T00:05:14Z
 EP74,74,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
 EP75,75,Joseph Bologne — The Classical Composer They Erased,published,complete,15,15,2026-10-30T18:00:00Z,4JqOIPam1WY,2026-10-30T18:05:01Z
 EP76,76,Unreleased episode,running,ken_burns,10,15,,,2026-10-29T06:05:01Z
-EP77,77,Unreleased episode,review,upload,14,15,,,2026-11-01T14:05:16Z
+EP77,77,Unreleased episode,halted,upload,14,15,,,2026-11-05T00:05:14Z
 EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026-10-27T18:00:00Z,DQV95PmFxAo,2026-10-27T18:05:01Z
 EP79,79,Unreleased episode,review,upload,14,15,,,2026-11-01T15:05:02Z
-EP80,80,Unreleased episode,halted,ken_burns,10,15,,,2026-10-26T15:35:01Z
+EP80,80,Unreleased episode,running,assembly,11,15,,,2026-11-05T00:05:14Z
 EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-02T15:05:03Z
 EP82,82,Unreleased episode,running,storyboard,7,15,,,2026-11-02T00:35:03Z
 EP83,83,Unreleased episode,running,storyboard,7,15,,,2026-11-02T01:35:03Z
@@ -78,4 +78,5 @@ EP104,104,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP105,105,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:23Z
 EP106,106,Unreleased episode,halted,script,4,15,,,2026-11-02T04:35:03Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
-_last_synced,,2026-11-04T22:05:06Z,,,,,,,
+EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
+_last_synced,,2026-11-05T00:05:15Z,,,,,,,
