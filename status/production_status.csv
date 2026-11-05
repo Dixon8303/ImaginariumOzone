@@ -34,7 +34,7 @@ EP58,58,Unreleased episode,running,ken_burns,10,15,,,2026-11-03T04:05:03Z
 EP59,59,Unreleased episode,halted,ken_burns,10,15,,,2026-11-05T01:05:30Z
 EP60,60,Unreleased episode,review,upload,14,15,,,2026-11-05T02:05:07Z
 EP61,61,Unreleased episode,running,ken_burns,10,15,,,2026-10-28T01:35:01Z
-EP62,62,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
+EP62,62,Unreleased episode,review,storyboard,7,15,,,2026-11-05T11:05:04Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP64,64,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP65,65,Unreleased episode,running,storyboard,7,15,,,2026-11-02T02:35:03Z
@@ -44,7 +44,7 @@ EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP70,70,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP71,71,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP72,72,Unreleased episode,failed,storyboard,6,15,,,2026-11-05T01:05:31Z
-EP74,74,Unreleased episode,running,storyboard,7,15,,,2026-11-01T23:35:03Z
+EP74,74,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T11:05:04Z
 EP75,75,Joseph Bologne — The Classical Composer They Erased,published,complete,15,15,2026-10-30T18:00:00Z,4JqOIPam1WY,2026-10-30T18:05:01Z
 EP76,76,Unreleased episode,running,ken_burns,10,15,,,2026-10-29T06:05:01Z
 EP77,77,Unreleased episode,review,upload,14,15,,,2026-11-05T07:05:07Z
@@ -79,4 +79,4 @@ EP105,105,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:23Z
 EP106,106,Unreleased episode,running,storyboard,7,15,,,2026-11-05T08:05:09Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-05T08:05:09Z,,,,,,,
+_last_synced,,2026-11-05T11:05:04Z,,,,,,,
