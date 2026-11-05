@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T04:05:07Z",
+  "last_synced": "2026-11-05T05:05:06Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3811,7 +3811,7 @@
       "id": "EP81",
       "number": 81,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3875,7 +3875,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T04:05:07Z"
+      "updated_at": "2026-11-05T05:05:06Z"
     },
     {
       "id": "EP82",
@@ -4231,7 +4231,7 @@
       "id": "EP87",
       "number": 87,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4251,7 +4251,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "storyboard",
@@ -4295,7 +4295,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T04:05:07Z"
+      "updated_at": "2026-11-05T05:05:06Z"
     },
     {
       "id": "EP88",
