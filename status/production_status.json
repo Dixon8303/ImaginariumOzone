@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-05T17:35:04Z",
+  "last_synced": "2026-11-05T18:35:04Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -786,7 +786,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -820,7 +820,7 @@
       "gates": {},
       "video_id": "ECGD3w9GocU",
       "publish_at": "2026-08-22T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP32",
@@ -859,7 +859,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -893,7 +893,7 @@
       "gates": {},
       "video_id": "PzLVB8gCSLA",
       "publish_at": "2026-08-25T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP33",
@@ -932,7 +932,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -966,7 +966,7 @@
       "gates": {},
       "video_id": "qGvEBKFHJJM",
       "publish_at": "2026-08-28T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP34",
@@ -1005,7 +1005,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1039,7 +1039,7 @@
       "gates": {},
       "video_id": "2BfUsIHkbsw",
       "publish_at": "2026-09-01T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP35",
@@ -1078,7 +1078,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1112,7 +1112,7 @@
       "gates": {},
       "video_id": "4-ZckC04F50",
       "publish_at": "2026-09-04T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP36",
@@ -1151,7 +1151,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1185,7 +1185,7 @@
       "gates": {},
       "video_id": "P3rpqmm640I",
       "publish_at": "2026-09-08T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP37",
@@ -1224,7 +1224,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1258,7 +1258,7 @@
       "gates": {},
       "video_id": "vOEAqJJ_OEU",
       "publish_at": "2026-09-11T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP38",
@@ -1297,7 +1297,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1331,7 +1331,7 @@
       "gates": {},
       "video_id": "GgN8chUsYPM",
       "publish_at": "2026-09-15T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP39",
@@ -1370,7 +1370,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1404,7 +1404,7 @@
       "gates": {},
       "video_id": "c8zGB85ZvF4",
       "publish_at": "2026-09-25T14:00:00Z",
-      "updated_at": "2026-10-11T08:05:13Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP40",
@@ -1443,7 +1443,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1477,7 +1477,7 @@
       "gates": {},
       "video_id": "HelFIbVhsIk",
       "publish_at": "2026-09-29T14:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP41",
@@ -1516,7 +1516,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1550,7 +1550,7 @@
       "gates": {},
       "video_id": "B-_WpB2iO0o",
       "publish_at": "2026-10-02T18:00:00Z",
-      "updated_at": "2026-10-10T17:08:31Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP44",
@@ -1869,7 +1869,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1903,7 +1903,7 @@
       "gates": {},
       "video_id": "OxjVlvBgT9A",
       "publish_at": "2026-11-03T19:00:00Z",
-      "updated_at": "2026-11-03T19:05:04Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP51",
@@ -2647,7 +2647,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -2679,7 +2679,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T14:05:04Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP63",
@@ -4251,7 +4251,7 @@
         },
         {
           "name": "script",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4295,7 +4295,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T17:35:04Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP88",
@@ -4371,6 +4371,76 @@
       "id": "EP89",
       "number": 89,
       "topic": "Unreleased episode",
+      "status": "review",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "running"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "running"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-05T18:35:04Z"
+    },
+    {
+      "id": "EP90",
+      "number": 90,
+      "topic": "Unreleased episode",
       "status": "failed",
       "stages": [
         {
@@ -4435,77 +4505,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T17:35:04Z"
-    },
-    {
-      "id": "EP90",
-      "number": 90,
-      "topic": "Unreleased episode",
-      "status": "review",
-      "stages": [
-        {
-          "name": "batch_primer",
-          "status": "done"
-        },
-        {
-          "name": "topic_scoring",
-          "status": "done"
-        },
-        {
-          "name": "research",
-          "status": "done"
-        },
-        {
-          "name": "outline",
-          "status": "done"
-        },
-        {
-          "name": "script",
-          "status": "done"
-        },
-        {
-          "name": "storyboard",
-          "status": "running"
-        },
-        {
-          "name": "generation",
-          "status": "pending"
-        },
-        {
-          "name": "ken_burns",
-          "status": "pending"
-        },
-        {
-          "name": "voice_ssml",
-          "status": "done"
-        },
-        {
-          "name": "audio_prod",
-          "status": "done"
-        },
-        {
-          "name": "titles_seo",
-          "status": "pending"
-        },
-        {
-          "name": "assembly",
-          "status": "pending"
-        },
-        {
-          "name": "qa_gates",
-          "status": "pending"
-        },
-        {
-          "name": "shorts",
-          "status": "pending"
-        },
-        {
-          "name": "upload",
-          "status": "pending"
-        }
-      ],
-      "gates": {},
-      "updated_at": "2026-11-05T14:05:04Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP91",
@@ -4531,7 +4531,7 @@
         },
         {
           "name": "script",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4543,7 +4543,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4575,7 +4575,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T03:05:07Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP92",
@@ -4601,7 +4601,7 @@
         },
         {
           "name": "script",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4613,7 +4613,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4645,13 +4645,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T03:05:07Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP93",
       "number": 93,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4683,7 +4683,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4715,7 +4715,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T13:05:04Z"
+      "updated_at": "2026-11-05T18:35:04Z"
     },
     {
       "id": "EP94",
