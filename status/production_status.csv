@@ -37,13 +37,13 @@ EP61,61,Unreleased episode,failed,ken_burns,10,15,,,2026-11-05T16:35:04Z
 EP62,62,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T18:35:04Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP64,64,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP65,65,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
-EP67,67,Unreleased episode,review,storyboard,7,15,,,2026-11-05T14:05:04Z
+EP65,65,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T19:35:04Z
+EP67,67,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T19:35:04Z
 EP68,68,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP70,70,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP71,71,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP72,72,Unreleased episode,failed,storyboard,6,15,,,2026-11-05T01:05:31Z
+EP72,72,Unreleased episode,failed,storyboard,6,15,,,2026-11-05T19:35:04Z
 EP74,74,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T16:35:04Z
 EP75,75,Joseph Bologne — The Classical Composer They Erased,published,complete,15,15,2026-10-30T18:00:00Z,4JqOIPam1WY,2026-10-30T18:05:01Z
 EP76,76,Unreleased episode,review,ken_burns,10,15,,,2026-11-05T16:35:04Z
@@ -54,8 +54,8 @@ EP80,80,Unreleased episode,review,upload,14,15,,,2026-11-05T02:05:07Z
 EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-05T17:35:04Z
 EP82,82,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T17:35:04Z
 EP83,83,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T17:35:04Z
-EP84,84,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
-EP85,85,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
+EP84,84,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T19:35:04Z
+EP85,85,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T19:35:04Z
 EP86,86,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T16:35:04Z
 EP87,87,Unreleased episode,failed,script,4,15,,,2026-11-05T18:35:04Z
 EP88,88,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T17:35:04Z
@@ -67,7 +67,7 @@ EP93,93,Unreleased episode,failed,storyboard,7,15,,,2026-11-05T18:35:04Z
 EP94,94,Unreleased episode,failed,script,4,15,,,2026-11-05T02:05:07Z
 EP95,95,Unreleased episode,review,script,4,15,,,2026-11-02T19:05:03Z
 EP96,96,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP97,97,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:22Z
+EP97,97,Unreleased episode,failed,generation,8,15,,,2026-11-05T19:35:04Z
 EP98,98,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP99,99,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
 EP100,100,Unreleased episode,review,script,4,15,,,2026-11-01T20:35:03Z
@@ -79,4 +79,4 @@ EP105,105,Unreleased episode,running,generation,8,15,,,2026-11-03T03:05:23Z
 EP106,106,Unreleased episode,review,storyboard,7,15,,,2026-11-05T15:05:04Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-05T18:35:04Z,,,,,,,
+_last_synced,,2026-11-05T19:35:04Z,,,,,,,
