@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T16:05:05Z",
+  "last_synced": "2026-11-06T18:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -5585,7 +5585,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -5625,7 +5625,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T16:05:05Z"
+      "updated_at": "2026-11-06T18:05:05Z"
     },
     {
       "id": "EP107",
