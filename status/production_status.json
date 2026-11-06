@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T22:35:05Z",
+  "last_synced": "2026-11-06T23:35:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3858,7 +3858,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -3878,7 +3878,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T08:05:05Z"
+      "updated_at": "2026-11-06T23:35:05Z"
     },
     {
       "id": "EP82",
@@ -3928,7 +3928,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -3948,7 +3948,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T11:05:04Z"
+      "updated_at": "2026-11-06T23:35:05Z"
     },
     {
       "id": "EP83",
@@ -3998,7 +3998,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -4018,7 +4018,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T11:05:04Z"
+      "updated_at": "2026-11-06T23:35:05Z"
     },
     {
       "id": "EP84",
@@ -4278,7 +4278,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -4298,7 +4298,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T21:35:06Z"
+      "updated_at": "2026-11-06T23:35:05Z"
     },
     {
       "id": "EP88",
@@ -4348,7 +4348,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -4368,7 +4368,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T09:05:09Z"
+      "updated_at": "2026-11-06T23:35:05Z"
     },
     {
       "id": "EP89",
