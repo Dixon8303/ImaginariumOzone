@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T00:35:07Z",
+  "last_synced": "2026-11-06T01:35:04Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3913,7 +3913,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -3945,7 +3945,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T22:35:09Z"
+      "updated_at": "2026-11-06T01:35:04Z"
     },
     {
       "id": "EP83",
@@ -3983,7 +3983,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -4015,7 +4015,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T22:35:09Z"
+      "updated_at": "2026-11-06T01:35:04Z"
     },
     {
       "id": "EP84",
@@ -4263,7 +4263,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -4295,13 +4295,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T23:35:07Z"
+      "updated_at": "2026-11-06T01:35:04Z"
     },
     {
       "id": "EP88",
       "number": 88,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4333,7 +4333,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4365,7 +4365,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T22:35:09Z"
+      "updated_at": "2026-11-06T01:35:04Z"
     },
     {
       "id": "EP89",
@@ -4473,7 +4473,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -4505,7 +4505,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T22:35:09Z"
+      "updated_at": "2026-11-06T01:35:04Z"
     },
     {
       "id": "EP91",
@@ -4543,7 +4543,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -4575,7 +4575,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T00:35:06Z"
+      "updated_at": "2026-11-06T01:35:04Z"
     },
     {
       "id": "EP92",
@@ -5597,11 +5597,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5625,7 +5625,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T00:35:07Z"
+      "updated_at": "2026-11-06T01:35:04Z"
     },
     {
       "id": "EP107",
