@@ -26,7 +26,7 @@ EP47,47,Unreleased episode,halted,storyboard,7,15,,,2026-11-06T10:05:05Z
 EP50,50,In Living Color: Fox Arbitrage,published,ken_burns,14,15,2026-11-03T19:00:00Z,OxjVlvBgT9A,2026-11-05T18:35:04Z
 EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2026-10-13T18:00:16Z,wpMLL0m9dN8,2026-10-24T23:35:01Z
 EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,complete,15,15,2026-10-16T18:00:18Z,E4fVKp5NEB0,2026-10-24T23:35:01Z
-EP53,53,Unreleased episode,approved,upload,14,15,,,2026-11-05T00:05:14Z
+EP53,53,Matthew Henson — The Man Who Reached the Pole First,published,complete,15,15,2026-11-06T19:00:00Z,Vxfvo54H9Uw,2026-11-06T19:05:05Z
 EP54,54,Unreleased episode,halted,ken_burns,10,15,,,2026-11-05T01:05:30Z
 EP55,55,Unreleased episode,approved,complete,15,15,,,2026-11-02T08:05:03Z
 EP57,57,Unreleased episode,failed,ken_burns,10,15,,,2026-11-05T23:35:07Z
@@ -34,7 +34,7 @@ EP58,58,Unreleased episode,review,ken_burns,10,15,,,2026-11-06T10:05:05Z
 EP59,59,Unreleased episode,halted,ken_burns,10,15,,,2026-11-05T01:05:30Z
 EP60,60,Unreleased episode,review,upload,14,15,,,2026-11-05T02:05:07Z
 EP61,61,Unreleased episode,review,ken_burns,10,15,,,2026-11-06T10:05:05Z
-EP62,62,Unreleased episode,review,storyboard,7,15,,,2026-11-06T11:05:04Z
+EP62,62,Unreleased episode,review,generation,8,15,,,2026-11-06T19:05:05Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP64,64,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP65,65,Unreleased episode,review,generation,8,15,,,2026-11-06T16:05:05Z
@@ -43,7 +43,7 @@ EP68,68,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP69,69,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP70,70,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP71,71,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP72,72,Unreleased episode,review,generation,8,15,,,2026-11-06T12:05:05Z
+EP72,72,Unreleased episode,failed,script,6,15,,,2026-11-06T19:05:05Z
 EP74,74,Unreleased episode,review,generation,8,15,,,2026-11-06T08:05:05Z
 EP75,75,Joseph Bologne — The Classical Composer They Erased,published,complete,15,15,2026-10-30T18:00:00Z,4JqOIPam1WY,2026-10-30T18:05:01Z
 EP76,76,Unreleased episode,review,ken_burns,10,15,,,2026-11-06T10:05:05Z
@@ -79,4 +79,4 @@ EP105,105,Unreleased episode,failed,generation,8,15,,,2026-11-06T15:05:05Z
 EP106,106,Unreleased episode,review,generation,8,15,,,2026-11-06T18:05:05Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-06T18:05:05Z,,,,,,,
+_last_synced,,2026-11-06T19:05:05Z,,,,,,,
