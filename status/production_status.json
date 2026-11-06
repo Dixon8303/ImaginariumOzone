@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T14:05:05Z",
+  "last_synced": "2026-11-06T15:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1728,7 +1728,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "pending"
         },
         {
           "name": "voice_ssml",
@@ -1760,7 +1760,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T07:05:04Z"
+      "updated_at": "2026-11-06T15:05:04Z"
     },
     {
       "id": "EP47",
@@ -5375,7 +5375,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -5395,7 +5395,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5415,7 +5415,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T04:35:04Z"
+      "updated_at": "2026-11-06T15:05:05Z"
     },
     {
       "id": "EP104",
@@ -5465,7 +5465,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5485,7 +5485,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T09:05:09Z"
+      "updated_at": "2026-11-06T15:05:05Z"
     },
     {
       "id": "EP105",
@@ -5535,7 +5535,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5555,7 +5555,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T05:35:04Z"
+      "updated_at": "2026-11-06T15:05:05Z"
     },
     {
       "id": "EP106",
