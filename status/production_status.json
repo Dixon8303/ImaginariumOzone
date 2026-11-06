@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T13:05:05Z",
+  "last_synced": "2026-11-06T14:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2869,7 +2869,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -2889,7 +2889,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T04:35:04Z"
+      "updated_at": "2026-11-06T14:05:04Z"
     },
     {
       "id": "EP67",
@@ -4091,7 +4091,7 @@
       "id": "EP85",
       "number": 85,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4135,7 +4135,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -4155,7 +4155,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T13:05:04Z"
+      "updated_at": "2026-11-06T14:05:04Z"
     },
     {
       "id": "EP86",
@@ -5185,7 +5185,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5205,7 +5205,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T08:05:05Z"
+      "updated_at": "2026-11-06T14:05:04Z"
     },
     {
       "id": "EP101",
@@ -5281,7 +5281,7 @@
       "id": "EP102",
       "number": 102,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5325,7 +5325,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5345,7 +5345,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T04:35:04Z"
+      "updated_at": "2026-11-06T14:05:05Z"
     },
     {
       "id": "EP103",
