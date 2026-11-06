@@ -19,8 +19,8 @@ EP38,38,Who Owns the Sound?,published,ken_burns,14,15,2026-09-15T14:00:00Z,GgN8c
 EP39,39,La Russell,published,ken_burns,14,15,2026-09-25T14:00:00Z,c8zGB85ZvF4,2026-11-05T18:35:04Z
 EP40,40,Michael Jackson's Foreclosure: The ATV Catalog,published,ken_burns,14,15,2026-09-29T14:00:00Z,HelFIbVhsIk,2026-11-05T18:35:04Z
 EP41,41,The Patent Machine: How American Corporations Monopolized a Century of Black Invention,published,ken_burns,14,15,2026-10-02T18:00:00Z,B-_WpB2iO0o,2026-11-05T18:35:04Z
-EP44,44,Unreleased episode,halted,storyboard,7,15,,,2026-11-05T22:35:09Z
-EP45,45,Unreleased episode,halted,storyboard,7,15,,,2026-11-05T22:35:09Z
+EP44,44,Unreleased episode,halted,storyboard,7,15,,,2026-11-06T03:35:05Z
+EP45,45,Unreleased episode,halted,storyboard,7,15,,,2026-11-06T03:35:05Z
 EP46,46,Unreleased episode,halted,storyboard,7,15,,,2026-11-05T23:35:07Z
 EP47,47,Unreleased episode,halted,storyboard,7,15,,,2026-11-05T23:35:07Z
 EP50,50,In Living Color: Fox Arbitrage,published,ken_burns,14,15,2026-11-03T19:00:00Z,OxjVlvBgT9A,2026-11-05T18:35:04Z
@@ -52,9 +52,9 @@ EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026
 EP79,79,Unreleased episode,review,upload,14,15,,,2026-11-01T15:05:02Z
 EP80,80,Unreleased episode,review,upload,14,15,,,2026-11-05T02:05:07Z
 EP81,81,Unreleased episode,failed,storyboard,5,15,,,2026-11-06T00:35:06Z
-EP82,82,Unreleased episode,review,storyboard,7,15,,,2026-11-06T01:35:04Z
-EP83,83,Unreleased episode,review,storyboard,7,15,,,2026-11-06T01:35:04Z
-EP84,84,Unreleased episode,review,storyboard,7,15,,,2026-11-05T22:35:09Z
+EP82,82,Unreleased episode,running,generation,8,15,,,2026-11-06T03:35:06Z
+EP83,83,Unreleased episode,running,generation,8,15,,,2026-11-06T03:35:06Z
+EP84,84,Unreleased episode,review,storyboard,7,15,,,2026-11-06T03:35:06Z
 EP85,85,Unreleased episode,review,storyboard,7,15,,,2026-11-05T22:35:09Z
 EP86,86,Unreleased episode,running,generation,8,15,,,2026-11-06T00:35:06Z
 EP87,87,Unreleased episode,review,storyboard,7,15,,,2026-11-06T01:35:04Z
@@ -65,11 +65,11 @@ EP91,91,Unreleased episode,review,storyboard,7,15,,,2026-11-06T01:35:04Z
 EP92,92,Unreleased episode,failed,storyboard,5,15,,,2026-11-05T21:35:09Z
 EP93,93,Unreleased episode,running,generation,8,15,,,2026-11-06T02:35:06Z
 EP94,94,Unreleased episode,failed,script,4,15,,,2026-11-05T02:05:07Z
-EP95,95,Unreleased episode,failed,storyboard,5,15,,,2026-11-06T02:35:06Z
+EP95,95,Unreleased episode,failed,storyboard,7,15,,,2026-11-06T03:35:06Z
 EP96,96,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP97,97,Unreleased episode,running,generation,8,15,,,2026-11-05T22:35:09Z
-EP98,98,Unreleased episode,running,storyboard,5,15,,,2026-11-06T02:35:06Z
-EP99,99,Unreleased episode,running,storyboard,5,15,,,2026-11-06T02:35:06Z
+EP97,97,Unreleased episode,running,generation,8,15,,,2026-11-06T03:35:06Z
+EP98,98,Unreleased episode,running,storyboard,5,15,,,2026-11-06T03:35:06Z
+EP99,99,Unreleased episode,running,storyboard,5,15,,,2026-11-06T03:35:06Z
 EP100,100,Unreleased episode,running,storyboard,5,15,,,2026-11-06T02:35:06Z
 EP101,101,Unreleased episode,running,storyboard,5,15,,,2026-11-06T02:35:06Z
 EP102,102,Unreleased episode,running,generation,8,15,,,2026-11-06T00:35:07Z
@@ -79,4 +79,4 @@ EP105,105,Unreleased episode,running,generation,8,15,,,2026-11-05T22:35:09Z
 EP106,106,Unreleased episode,review,storyboard,7,15,,,2026-11-06T01:35:04Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-06T02:35:06Z,,,,,,,
+_last_synced,,2026-11-06T03:35:06Z,,,,,,,
