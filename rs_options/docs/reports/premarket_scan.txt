@@ -1,25 +1,23 @@
-generated: 2026-11-05
+generated: 2026-11-06
 
-PRE-OPEN SCAN — 2026-11-05 (signals from the 2026-11-05 close)
-paper equity: $97,012.73
+PRE-OPEN SCAN — 2026-11-06 (signals from the 2026-11-06 close)
+paper equity: $96,465.30
 
 CANDIDATES FOR TODAY (0):
   none — nothing passed breakout + regime + quality
 
-ORDERS QUEUED FOR THE OPEN (1): AAPL
-  AAPL limit 356.55 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
+ORDERS QUEUED FOR THE OPEN (0): none
 
-OPEN POSITIONS (10):
-  AAPL  qty 14  unrealized $-113.81  stop 325.6 / target 421.42
-  CVX261120C00220000  qty 1  unrealized $-575.00  stop ? / target ?
-  DAL  qty 60  unrealized $+214.42  stop 75.34 / target 99.8
-  DAL261120C00080000  qty 4  unrealized $+860.00  stop ? / target ?
-  IWM  qty 18  unrealized $-181.16  stop 276.0 / target 289.48
-  PFE  qty 165  unrealized $+66.83  stop 27.6 / target 34.92
-  PFE261106C00028500  qty 5  unrealized $+65.00  stop ? / target ?
-  PFE261218C00031000  qty 15  unrealized $-525.00  stop ? / target ?
-  XOM  qty 100  unrealized $+21.50  stop ? / target ?
-  XOM261120C00185000  qty 2  unrealized $-968.00  stop ? / target ?
+OPEN POSITIONS (9):
+  AAPL  qty 14  unrealized $-121.37  stop 325.6 / target 421.42
+  CVX261120C00220000  qty 1  unrealized $-715.00  stop ? / target ?
+  DAL  qty 60  unrealized $+320.92  stop 75.34 / target 99.8
+  DAL261120C00080000  qty 4  unrealized $+1,420.00  stop ? / target ?
+  IWM  qty 18  unrealized $-137.15  stop 276.0 / target 289.48
+  PFE261106C00028500  qty 5  unrealized $-385.00  stop ? / target ?
+  PFE261218C00031000  qty 15  unrealized $-780.00  stop ? / target ?
+  XOM  qty 100  unrealized $-124.00  stop ? / target ?
+  XOM261120C00185000  qty 2  unrealized $-1,004.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
