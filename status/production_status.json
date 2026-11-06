@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T11:05:05Z",
+  "last_synced": "2026-11-06T12:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2895,7 +2895,7 @@
       "id": "EP67",
       "number": 67,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -2939,7 +2939,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -2959,7 +2959,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T09:05:09Z"
+      "updated_at": "2026-11-06T12:05:04Z"
     },
     {
       "id": "EP68",
@@ -3245,7 +3245,7 @@
       "id": "EP72",
       "number": 72,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3289,7 +3289,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -3309,7 +3309,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T10:05:05Z"
+      "updated_at": "2026-11-06T12:05:05Z"
     },
     {
       "id": "EP74",
@@ -4045,7 +4045,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -4065,7 +4065,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -4085,7 +4085,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T03:35:06Z"
+      "updated_at": "2026-11-06T12:05:05Z"
     },
     {
       "id": "EP85",
@@ -4651,7 +4651,7 @@
       "id": "EP93",
       "number": 93,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4715,7 +4715,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T11:05:05Z"
+      "updated_at": "2026-11-06T12:05:05Z"
     },
     {
       "id": "EP94",
@@ -4931,7 +4931,7 @@
       "id": "EP97",
       "number": 97,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4975,7 +4975,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -4995,7 +4995,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T03:35:06Z"
+      "updated_at": "2026-11-06T12:05:05Z"
     },
     {
       "id": "EP98",
