@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T04:35:04Z",
+  "last_synced": "2026-11-06T05:35:04Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1588,7 +1588,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1620,7 +1620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T03:35:05Z"
+      "updated_at": "2026-11-06T05:35:04Z"
     },
     {
       "id": "EP45",
@@ -1658,7 +1658,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1690,7 +1690,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T03:35:05Z"
+      "updated_at": "2026-11-06T05:35:04Z"
     },
     {
       "id": "EP46",
@@ -5001,7 +5001,7 @@
       "id": "EP98",
       "number": 98,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5065,7 +5065,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T04:35:04Z"
+      "updated_at": "2026-11-06T05:35:04Z"
     },
     {
       "id": "EP99",
@@ -5107,11 +5107,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -5135,7 +5135,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T03:35:06Z"
+      "updated_at": "2026-11-06T05:35:04Z"
     },
     {
       "id": "EP100",
@@ -5453,7 +5453,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -5485,13 +5485,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T02:35:06Z"
+      "updated_at": "2026-11-06T05:35:04Z"
     },
     {
       "id": "EP105",
       "number": 105,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -5523,7 +5523,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -5555,7 +5555,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T22:35:09Z"
+      "updated_at": "2026-11-06T05:35:04Z"
     },
     {
       "id": "EP106",
