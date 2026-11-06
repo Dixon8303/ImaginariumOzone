@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T08:05:05Z",
+  "last_synced": "2026-11-06T09:05:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1798,7 +1798,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "pending"
         },
         {
           "name": "voice_ssml",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T07:05:04Z"
+      "updated_at": "2026-11-06T09:05:09Z"
     },
     {
       "id": "EP50",
@@ -2895,7 +2895,7 @@
       "id": "EP67",
       "number": 67,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2919,7 +2919,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -2959,7 +2959,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T21:35:09Z"
+      "updated_at": "2026-11-06T09:05:09Z"
     },
     {
       "id": "EP68",
@@ -3458,7 +3458,7 @@
       "id": "EP76",
       "number": 76,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -3522,7 +3522,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T02:35:06Z"
+      "updated_at": "2026-11-06T09:05:09Z"
     },
     {
       "id": "EP77",
@@ -4275,7 +4275,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -4295,7 +4295,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T01:35:04Z"
+      "updated_at": "2026-11-06T09:05:09Z"
     },
     {
       "id": "EP88",
@@ -4345,7 +4345,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -4365,7 +4365,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T07:05:04Z"
+      "updated_at": "2026-11-06T09:05:09Z"
     },
     {
       "id": "EP89",
@@ -5421,7 +5421,7 @@
       "id": "EP104",
       "number": 104,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5445,7 +5445,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -5457,11 +5457,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5485,7 +5485,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T05:35:04Z"
+      "updated_at": "2026-11-06T09:05:09Z"
     },
     {
       "id": "EP105",
