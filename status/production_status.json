@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T12:05:05Z",
+  "last_synced": "2026-11-06T13:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4091,7 +4091,7 @@
       "id": "EP85",
       "number": 85,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -4115,7 +4115,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -4155,7 +4155,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T04:35:04Z"
+      "updated_at": "2026-11-06T13:05:04Z"
     },
     {
       "id": "EP86",
@@ -5045,7 +5045,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5065,7 +5065,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T05:35:04Z"
+      "updated_at": "2026-11-06T13:05:04Z"
     },
     {
       "id": "EP99",
@@ -5115,7 +5115,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5135,7 +5135,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T06:05:11Z"
+      "updated_at": "2026-11-06T13:05:04Z"
     },
     {
       "id": "EP100",
@@ -5255,7 +5255,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -5275,7 +5275,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T07:05:04Z"
+      "updated_at": "2026-11-06T13:05:05Z"
     },
     {
       "id": "EP102",
