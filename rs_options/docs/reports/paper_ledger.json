@@ -173,10 +173,10 @@
   ],
   "open": {
     "AAPL": {
-      "entry": 349.555,
+      "entry": 353.029286,
       "entry_cap": 356.5461,
       "entry_date": "2026-11-04",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "7b406b2b-de3d-4fcd-ae48-6d2049915e19",
@@ -215,6 +215,7 @@
       "target": 289.48
     },
     "PFE": {
+      "closing": "2026-11-05",
       "entry": 29.69,
       "entry_cap": 30.0186,
       "entry_date": "2026-10-15",
