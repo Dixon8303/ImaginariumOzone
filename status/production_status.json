@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T05:35:04Z",
+  "last_synced": "2026-11-06T06:05:11Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1600,7 +1600,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -1620,7 +1620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T05:35:04Z"
+      "updated_at": "2026-11-06T06:05:10Z"
     },
     {
       "id": "EP45",
@@ -1670,7 +1670,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "assembly",
@@ -1690,7 +1690,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T05:35:04Z"
+      "updated_at": "2026-11-06T06:05:10Z"
     },
     {
       "id": "EP46",
@@ -5071,7 +5071,7 @@
       "id": "EP99",
       "number": 99,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5095,7 +5095,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -5111,7 +5111,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5135,7 +5135,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T05:35:04Z"
+      "updated_at": "2026-11-06T06:05:11Z"
     },
     {
       "id": "EP100",
@@ -5593,7 +5593,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -5625,7 +5625,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T01:35:04Z"
+      "updated_at": "2026-11-06T06:05:11Z"
     },
     {
       "id": "EP107",
