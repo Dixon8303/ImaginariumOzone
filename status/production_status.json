@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T18:05:05Z",
+  "last_synced": "2026-11-06T19:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2054,8 +2054,9 @@
     {
       "id": "EP53",
       "number": 53,
-      "topic": "Unreleased episode",
-      "status": "approved",
+      "topic": "Matthew Henson — The Man Who Reached the Pole First",
+      "mode": "standalone",
+      "status": "published",
       "stages": [
         {
           "name": "batch_primer",
@@ -2115,11 +2116,13 @@
         },
         {
           "name": "upload",
-          "status": "halted"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-05T00:05:14Z"
+      "video_id": "Vxfvo54H9Uw",
+      "publish_at": "2026-11-06T19:00:00Z",
+      "updated_at": "2026-11-06T19:05:05Z"
     },
     {
       "id": "EP54",
@@ -2639,7 +2642,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -2679,7 +2682,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T11:05:04Z"
+      "updated_at": "2026-11-06T19:05:05Z"
     },
     {
       "id": "EP63",
@@ -3245,7 +3248,7 @@
       "id": "EP72",
       "number": 72,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3265,7 +3268,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "halted"
         },
         {
           "name": "storyboard",
@@ -3285,7 +3288,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "done"
+          "status": "failed"
         },
         {
           "name": "titles_seo",
@@ -3309,7 +3312,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T12:05:05Z"
+      "updated_at": "2026-11-06T19:05:05Z"
     },
     {
       "id": "EP74",
