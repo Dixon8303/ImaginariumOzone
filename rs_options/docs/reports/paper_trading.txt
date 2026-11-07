@@ -1,11 +1,11 @@
-generated: 2026-11-05
+generated: 2026-11-06
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-05
-paper equity: $96,254.61   cash: $55,768.43
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-06
+paper equity: $96,479.14   cash: $60,509.96
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-11-05  $96,253.51   (-3,746.49, -3.7%)
-  over 73 calendar days, 47 recorded sessions: 45 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-11-06  $96,479.14   (-3,520.86, -3.5%)
+  over 74 calendar days, 48 recorded sessions: 46 with a change, 1 flat.
   range so far: $95,756.95 (low) to $101,858.65 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
@@ -17,19 +17,20 @@ OPTION COST RECORDER: no quotes today (no signals, or the account has no options
 
 PAPER ORDERS PLACED (0):
   none
-TIME EXITS SUBMITTED: PFE
 
-OPEN POSITIONS (10) — 5 of 8 stock slots used, 5 option contracts:
-  AAPL  qty 14  unrealized $-134.67  stop 325.6  target 421.42  since 2026-11-04
-  CVX261120C00220000  qty 1  unrealized $-661.00  stop ?  target ?  since ?
-  DAL  qty 60  unrealized $+216.52  stop 75.34  target 99.8  since 2026-10-27
-  DAL261120C00080000  qty 4  unrealized $+820.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $-190.61  stop 276.0  target 289.48  since 2026-10-30
-  PFE  qty 165  unrealized $-47.85  stop 27.6  target 34.92  since 2026-10-15
-  PFE261106C00028500  qty 5  unrealized $-70.00  stop ?  target ?  since ?
-  PFE261218C00031000  qty 15  unrealized $-660.00  stop ?  target ?  since ?
-  XOM  qty 100  unrealized $-180.00  stop ?  target ?  since ?
-  XOM261120C00185000  qty 2  unrealized $-986.00  stop ?  target ?  since ?
+CLOSED SINCE LAST RUN:
+  PFE  2026-10-15 -> 2026-11-06  -0.49R  (time/other)
+
+OPEN POSITIONS (9) — 4 of 8 stock slots used, 5 option contracts:
+  AAPL  qty 14  unrealized $-145.31  stop 325.6  target 421.42  since 2026-11-04
+  CVX261120C00220000  qty 1  unrealized $-713.00  stop ?  target ?  since ?
+  DAL  qty 60  unrealized $+335.32  stop 75.34  target 99.8  since 2026-10-27
+  DAL261120C00080000  qty 4  unrealized $+1,440.00  stop ?  target ?  since ?
+  IWM  qty 18  unrealized $-142.19  stop 276.0  target 289.48  since 2026-10-30
+  PFE261106C00028500  qty 5  unrealized $-330.00  stop ?  target ?  since ?
+  PFE261218C00031000  qty 15  unrealized $-840.00  stop ?  target ?  since ?
+  XOM  qty 100  unrealized $-114.58  stop ?  target ?  since ?
+  XOM261120C00185000  qty 2  unrealized $-1,002.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
@@ -40,7 +41,7 @@ PAPER OPTIONS (Alpaca, autonomous):
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
 
-CUMULATIVE RECORD: 17 closed | win rate 35% | expectancy -0.736R | total -12.52R
-  significance: n=17 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 35% wins, a 4-loss run has ~97% odds over 40 trades — variance, not breakage.
+CUMULATIVE RECORD: 18 closed | win rate 33% | expectancy -0.723R | total -13.01R
+  significance: n=18 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 33% wins, a 4-loss run has ~98% odds over 40 trades — variance, not breakage.
 
 Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.
