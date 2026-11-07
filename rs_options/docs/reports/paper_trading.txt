@@ -18,9 +18,6 @@ OPTION COST RECORDER: no quotes today (no signals, or the account has no options
 PAPER ORDERS PLACED (0):
   none
 
-CLOSED SINCE LAST RUN:
-  PFE  2026-10-15 -> 2026-11-06  -0.49R  (time/other)
-
 OPEN POSITIONS (9) — 4 of 8 stock slots used, 5 option contracts:
   AAPL  qty 14  unrealized $-145.31  stop 325.6  target 421.42  since 2026-11-04
   CVX261120C00220000  qty 1  unrealized $-713.00  stop ?  target ?  since ?
