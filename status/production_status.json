@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-06T23:35:05Z",
+  "last_synced": "2026-11-07T00:35:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4418,7 +4418,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -4438,7 +4438,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T11:05:05Z"
+      "updated_at": "2026-11-07T00:35:05Z"
     },
     {
       "id": "EP90",
@@ -4488,7 +4488,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -4508,7 +4508,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T11:05:05Z"
+      "updated_at": "2026-11-07T00:35:05Z"
     },
     {
       "id": "EP91",
@@ -4558,7 +4558,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -4578,7 +4578,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T21:35:06Z"
+      "updated_at": "2026-11-07T00:35:05Z"
     },
     {
       "id": "EP92",
@@ -4628,7 +4628,7 @@
         },
         {
           "name": "titles_seo",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -4648,7 +4648,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T11:05:05Z"
+      "updated_at": "2026-11-07T00:35:05Z"
     },
     {
       "id": "EP93",
