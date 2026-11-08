@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-08T20:35:14Z",
+  "last_synced": "2026-11-08T21:35:12Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1786,7 +1786,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -1802,7 +1802,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T12:05:12Z"
+      "updated_at": "2026-11-08T21:35:11Z"
     },
     {
       "id": "EP50",
@@ -2618,7 +2618,7 @@
       "id": "EP62",
       "number": 62,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2682,7 +2682,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-07T01:35:05Z"
+      "updated_at": "2026-11-08T21:35:11Z"
     },
     {
       "id": "EP63",
@@ -4608,7 +4608,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -4620,11 +4620,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -4648,13 +4648,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T20:05:08Z"
+      "updated_at": "2026-11-08T21:35:12Z"
     },
     {
       "id": "EP93",
       "number": 93,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -4718,7 +4718,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-07T01:35:05Z"
+      "updated_at": "2026-11-08T21:35:12Z"
     },
     {
       "id": "EP94",
