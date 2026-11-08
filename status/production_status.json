@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-08T20:05:08Z",
+  "last_synced": "2026-11-08T20:35:14Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1556,7 +1556,7 @@
       "id": "EP44",
       "number": 44,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -1580,7 +1580,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -1596,7 +1596,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -1620,7 +1620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T20:05:08Z"
+      "updated_at": "2026-11-08T20:35:13Z"
     },
     {
       "id": "EP45",
