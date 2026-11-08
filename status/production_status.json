@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-08T12:05:12Z",
+  "last_synced": "2026-11-08T13:05:10Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2254,7 +2254,7 @@
         },
         {
           "name": "shorts",
-          "status": "done"
+          "status": "failed"
         },
         {
           "name": "upload",
@@ -2262,7 +2262,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-02T08:05:03Z"
+      "updated_at": "2026-11-08T13:05:10Z"
     },
     {
       "id": "EP57",
@@ -2758,27 +2758,27 @@
       "id": "EP64",
       "number": 64,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -2822,7 +2822,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-08T13:05:10Z"
     },
     {
       "id": "EP65",
@@ -5494,7 +5494,7 @@
       "id": "EP105",
       "number": 105,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -5526,7 +5526,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -5558,7 +5558,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T12:05:12Z"
+      "updated_at": "2026-11-08T13:05:10Z"
     },
     {
       "id": "EP106",
