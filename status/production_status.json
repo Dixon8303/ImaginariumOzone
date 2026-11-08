@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-08T02:05:14Z",
+  "last_synced": "2026-11-08T03:05:06Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2268,7 +2268,7 @@
       "id": "EP57",
       "number": 57,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2332,7 +2332,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T02:05:13Z"
+      "updated_at": "2026-11-08T03:05:06Z"
     },
     {
       "id": "EP58",
@@ -3814,7 +3814,7 @@
       "id": "EP81",
       "number": 81,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3878,7 +3878,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-07T11:05:05Z"
+      "updated_at": "2026-11-08T03:05:06Z"
     },
     {
       "id": "EP82",
@@ -4584,7 +4584,7 @@
       "id": "EP92",
       "number": 92,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -4604,7 +4604,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4616,7 +4616,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "failed"
+          "status": "pending"
         },
         {
           "name": "voice_ssml",
@@ -4648,7 +4648,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-07T11:05:05Z"
+      "updated_at": "2026-11-08T03:05:06Z"
     },
     {
       "id": "EP93",
