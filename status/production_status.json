@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-08T03:05:06Z",
+  "last_synced": "2026-11-08T04:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2128,7 +2128,7 @@
       "id": "EP54",
       "number": 54,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -2192,7 +2192,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T02:05:13Z"
+      "updated_at": "2026-11-08T04:05:07Z"
     },
     {
       "id": "EP55",
@@ -2268,7 +2268,7 @@
       "id": "EP57",
       "number": 57,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -2332,7 +2332,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T03:05:06Z"
+      "updated_at": "2026-11-08T04:05:07Z"
     },
     {
       "id": "EP58",
@@ -2408,7 +2408,7 @@
       "id": "EP59",
       "number": 59,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -2440,7 +2440,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -2472,7 +2472,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T02:05:13Z"
+      "updated_at": "2026-11-08T04:05:07Z"
     },
     {
       "id": "EP60",
@@ -4234,7 +4234,7 @@
       "id": "EP87",
       "number": 87,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4266,7 +4266,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -4298,13 +4298,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-07T13:35:05Z"
+      "updated_at": "2026-11-08T04:05:08Z"
     },
     {
       "id": "EP88",
       "number": 88,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4336,7 +4336,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4368,7 +4368,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T02:05:13Z"
+      "updated_at": "2026-11-08T04:05:08Z"
     },
     {
       "id": "EP89",
