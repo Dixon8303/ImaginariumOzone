@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-08T21:35:12Z",
+  "last_synced": "2026-11-08T22:35:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1790,7 +1790,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -1802,11 +1802,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T21:35:11Z"
+      "updated_at": "2026-11-08T22:35:08Z"
     },
     {
       "id": "EP50",
@@ -4514,7 +4514,7 @@
       "id": "EP91",
       "number": 91,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4578,7 +4578,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T20:05:08Z"
+      "updated_at": "2026-11-08T22:35:08Z"
     },
     {
       "id": "EP92",
@@ -4608,7 +4608,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -4648,7 +4648,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T21:35:12Z"
+      "updated_at": "2026-11-08T22:35:08Z"
     },
     {
       "id": "EP93",
