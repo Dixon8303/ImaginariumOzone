@@ -28,7 +28,7 @@ EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2
 EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,complete,15,15,2026-10-16T18:00:18Z,E4fVKp5NEB0,2026-10-24T23:35:01Z
 EP53,53,Matthew Henson — The Man Who Reached the Pole First,published,complete,15,15,2026-11-06T19:00:00Z,Vxfvo54H9Uw,2026-11-06T19:05:05Z
 EP54,54,Unreleased episode,review,ken_burns,10,15,,,2026-11-08T04:05:07Z
-EP55,55,Unreleased episode,approved,complete,15,15,,,2026-11-02T08:05:03Z
+EP55,55,Unreleased episode,approved,shorts,14,15,,,2026-11-08T13:05:10Z
 EP57,57,Unreleased episode,review,ken_burns,10,15,,,2026-11-08T04:05:07Z
 EP58,58,Unreleased episode,review,ken_burns,10,15,,,2026-11-06T10:05:05Z
 EP59,59,Unreleased episode,failed,ken_burns,10,15,,,2026-11-08T04:05:07Z
@@ -36,7 +36,7 @@ EP60,60,Unreleased episode,review,upload,14,15,,,2026-11-05T02:05:07Z
 EP61,61,Unreleased episode,review,ken_burns,10,15,,,2026-11-06T10:05:05Z
 EP62,62,Unreleased episode,review,generation,9,15,,,2026-11-07T01:35:05Z
 EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
-EP64,64,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
+EP64,64,Unreleased episode,review,script,4,15,,,2026-11-08T13:05:10Z
 EP65,65,Unreleased episode,review,generation,9,15,,,2026-11-07T03:35:05Z
 EP67,67,Unreleased episode,review,generation,9,15,,,2026-11-07T01:35:05Z
 EP68,68,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
@@ -75,8 +75,8 @@ EP101,101,Unreleased episode,review,generation,9,15,,,2026-11-07T13:35:05Z
 EP102,102,Unreleased episode,review,generation,9,15,,,2026-11-07T03:35:05Z
 EP103,103,Unreleased episode,review,generation,9,15,,,2026-11-07T03:35:05Z
 EP104,104,Unreleased episode,review,storyboard,8,15,,,2026-11-07T03:35:05Z
-EP105,105,Unreleased episode,running,generation,9,15,,,2026-11-08T12:05:12Z
+EP105,105,Unreleased episode,failed,generation,9,15,,,2026-11-08T13:05:10Z
 EP106,106,Unreleased episode,review,generation,9,15,,,2026-11-07T04:35:05Z
 EP107,107,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T21:35:03Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-08T12:05:12Z,,,,,,,
+_last_synced,,2026-11-08T13:05:10Z,,,,,,,
