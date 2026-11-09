@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-08T23:35:08Z",
+  "last_synced": "2026-11-09T01:35:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1790,7 +1790,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T22:35:08Z"
+      "updated_at": "2026-11-09T01:35:08Z"
     },
     {
       "id": "EP50",
