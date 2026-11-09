@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-09T17:35:09Z",
+  "last_synced": "2026-11-09T18:35:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4024,7 +4024,7 @@
       "id": "EP84",
       "number": 84,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4088,7 +4088,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-09T17:35:09Z"
+      "updated_at": "2026-11-09T18:35:08Z"
     },
     {
       "id": "EP85",
@@ -4934,7 +4934,7 @@
       "id": "EP97",
       "number": 97,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4966,7 +4966,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -4998,7 +4998,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-09T17:35:09Z"
+      "updated_at": "2026-11-09T18:35:08Z"
     },
     {
       "id": "EP98",
