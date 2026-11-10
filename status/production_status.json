@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-10T10:35:05Z",
+  "last_synced": "2026-11-10T11:35:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1626,7 +1626,7 @@
       "id": "EP45",
       "number": 45,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -1650,7 +1650,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -1690,13 +1690,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-10T10:35:05Z"
+      "updated_at": "2026-11-10T11:35:07Z"
     },
     {
       "id": "EP46",
       "number": 46,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -1720,7 +1720,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -1732,11 +1732,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -1760,7 +1760,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-10T09:35:05Z"
+      "updated_at": "2026-11-10T11:35:07Z"
     },
     {
       "id": "EP47",
@@ -1794,7 +1794,7 @@
         },
         {
           "name": "generation",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "ken_burns",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-09T12:35:08Z"
+      "updated_at": "2026-11-10T11:35:07Z"
     },
     {
       "id": "EP50",
@@ -4192,7 +4192,7 @@
         },
         {
           "name": "generation",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "ken_burns",
@@ -4228,7 +4228,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-06T22:35:05Z"
+      "updated_at": "2026-11-10T11:35:07Z"
     },
     {
       "id": "EP87",
