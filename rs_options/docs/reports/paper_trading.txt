@@ -1,7 +1,7 @@
 generated: 2026-11-09
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-09
-paper equity: $98,355.79   cash: $46,259.85
+paper equity: $98,361.03   cash: $46,259.85
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-11-09  $98,284.47   (-1,715.53, -1.7%)
@@ -25,7 +25,7 @@ OPTION COST RECORDER (1 contracts priced) — no orders, no buying power used:
          costs $1,256.50 per contract; needs $25,130 equity to buy one inside the 5% position cap
 
   cheapest doctrine contract today: AAPL at $1,256.50
-  at $98,355.79 equity you can buy 1 of 1 inside the position cap
+  at $98,361.03 equity you can buy 1 of 1 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
 PAPER ORDERS PLACED (0):
@@ -34,11 +34,11 @@ PAPER ORDERS PLACED (0):
   skipped AAPL: already held
 
 OPEN POSITIONS (9) — 5 of 8 stock slots used, 4 option contracts:
-  AAPL  qty 14  unrealized $-24.21  stop 325.6  target 421.42  since 2026-11-04
+  AAPL  qty 14  unrealized $-24.91  stop 325.6  target 421.42  since 2026-11-04
   CVX261120C00220000  qty 1  unrealized $-831.00  stop ?  target ?  since ?
   DAL  qty 60  unrealized $+615.52  stop 75.34  target 99.8  since 2026-10-27
   DAL261120C00080000  qty 4  unrealized $+3,060.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $+13.69  stop 276.0  target 289.48  since 2026-10-30
+  IWM  qty 18  unrealized $+19.63  stop 276.0  target 289.48  since 2026-10-30
   PFE  qty 500  unrealized $-275.00  stop ?  target ?  since ?
   PFE261218C00031000  qty 15  unrealized $-885.00  stop ?  target ?  since ?
   XOM  qty 100  unrealized $-285.00  stop ?  target ?  since ?
