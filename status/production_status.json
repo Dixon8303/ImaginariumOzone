@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-10T17:05:05Z",
+  "last_synced": "2026-11-10T19:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2197,8 +2197,9 @@
     {
       "id": "EP55",
       "number": 55,
-      "topic": "Unreleased episode",
-      "status": "approved",
+      "topic": "Mamie Smith — The Record That Changed Everything",
+      "mode": "standalone",
+      "status": "published",
       "stages": [
         {
           "name": "batch_primer",
@@ -2262,7 +2263,9 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T13:05:10Z"
+      "video_id": "POESADFo_eQ",
+      "publish_at": "2026-11-10T19:00:00Z",
+      "updated_at": "2026-11-10T19:05:05Z"
     },
     {
       "id": "EP57",
