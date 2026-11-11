@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-11T18:35:06Z",
+  "last_synced": "2026-11-11T23:05:14Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3582,7 +3582,7 @@
         },
         {
           "name": "assembly",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "qa_gates",
@@ -3590,15 +3590,15 @@
         },
         {
           "name": "shorts",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "upload",
-          "status": "done"
+          "status": "halted"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T02:05:13Z"
+      "updated_at": "2026-11-11T23:05:14Z"
     },
     {
       "id": "EP78",
@@ -3817,7 +3817,7 @@
       "id": "EP81",
       "number": 81,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3881,7 +3881,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-10T17:05:05Z"
+      "updated_at": "2026-11-11T23:05:14Z"
     },
     {
       "id": "EP82",
@@ -5357,7 +5357,7 @@
       "id": "EP103",
       "number": 103,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -5421,13 +5421,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-11T17:35:05Z"
+      "updated_at": "2026-11-11T23:05:14Z"
     },
     {
       "id": "EP104",
       "number": 104,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -5491,7 +5491,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T19:05:08Z"
+      "updated_at": "2026-11-11T23:05:14Z"
     },
     {
       "id": "EP105",
