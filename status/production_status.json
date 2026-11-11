@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-11T17:35:05Z",
+  "last_synced": "2026-11-11T18:35:06Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2971,27 +2971,27 @@
       "id": "EP68",
       "number": 68,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -3035,7 +3035,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-01T19:35:03Z"
+      "updated_at": "2026-11-11T18:35:06Z"
     },
     {
       "id": "EP69",
