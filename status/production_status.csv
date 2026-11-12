@@ -27,7 +27,7 @@ EP50,50,In Living Color: Fox Arbitrage,published,ken_burns,14,15,2026-11-03T19:0
 EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2026-10-13T18:00:16Z,wpMLL0m9dN8,2026-10-24T23:35:01Z
 EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,complete,15,15,2026-10-16T18:00:18Z,E4fVKp5NEB0,2026-10-24T23:35:01Z
 EP53,53,Matthew Henson — The Man Who Reached the Pole First,published,complete,15,15,2026-11-06T19:00:00Z,Vxfvo54H9Uw,2026-11-06T19:05:05Z
-EP54,54,Unreleased episode,review,ken_burns,10,15,,,2026-11-08T04:05:07Z
+EP54,54,Unreleased episode,failed,ken_burns,10,15,,,2026-11-12T21:05:05Z
 EP55,55,Mamie Smith — The Record That Changed Everything,published,shorts,14,15,2026-11-10T19:00:00Z,POESADFo_eQ,2026-11-10T19:05:05Z
 EP57,57,Unreleased episode,review,ken_burns,10,15,,,2026-11-08T04:05:07Z
 EP58,58,Unreleased episode,review,ken_burns,10,15,,,2026-11-12T10:05:05Z
@@ -57,7 +57,7 @@ EP83,83,Unreleased episode,running,generation,10,15,,,2026-11-12T19:05:05Z
 EP84,84,Unreleased episode,review,generation,9,15,,,2026-11-09T18:35:08Z
 EP85,85,Unreleased episode,review,generation,9,15,,,2026-11-11T03:05:06Z
 EP86,86,Unreleased episode,review,ken_burns,10,15,,,2026-11-12T10:05:05Z
-EP87,87,Unreleased episode,review,generation,9,15,,,2026-11-12T16:05:05Z
+EP87,87,Unreleased episode,running,generation,9,15,,,2026-11-12T21:05:05Z
 EP88,88,Unreleased episode,failed,generation,9,15,,,2026-11-08T04:05:08Z
 EP89,89,Unreleased episode,review,ken_burns,10,15,,,2026-11-08T05:05:07Z
 EP90,90,Unreleased episode,review,generation,9,15,,,2026-11-08T20:05:08Z
@@ -79,4 +79,4 @@ EP105,105,Unreleased episode,failed,generation,9,15,,,2026-11-08T13:05:10Z
 EP106,106,Unreleased episode,failed,generation,9,15,,,2026-11-12T16:05:05Z
 EP107,107,Unreleased episode,failed,script,4,15,,,2026-11-09T19:35:08Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-12T19:05:06Z,,,,,,,
+_last_synced,,2026-11-12T21:05:05Z,,,,,,,
