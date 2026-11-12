@@ -1,7 +1,7 @@
 generated: 2026-11-11
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-11
-paper equity: $97,834.98   cash: $46,259.85
+paper equity: $97,824.94   cash: $46,259.85
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-11-11  $97,834.98   (-2,165.02, -2.2%)
@@ -18,15 +18,16 @@ TODAY'S SIGNALS (1):
 
 OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
-PAPER ORDERS PLACED (1):
-  BUY 6 AMD @ next open, limit 563.88 (H15a cap, 2% over the 552.82 close), bracket stop 402.10 / target 1004.98
+PAPER ORDERS PLACED (0):
+  none
+  skipped AMD: already held
 
 OPEN POSITIONS (9) — 5 of 8 stock slots used, 4 option contracts:
-  AAPL  qty 14  unrealized $+41.17  stop 325.6  target 421.42  since 2026-11-04
+  AAPL  qty 14  unrealized $+28.43  stop 325.6  target 421.42  since 2026-11-04
   CVX261120C00220000  qty 1  unrealized $-858.00  stop ?  target ?  since ?
   DAL  qty 60  unrealized $+578.92  stop 75.34  target 99.8  since 2026-10-27
   DAL261120C00080000  qty 4  unrealized $+2,140.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $+27.19  stop 276.0  target 289.48  since 2026-10-30
+  IWM  qty 18  unrealized $+29.89  stop 276.0  target 289.48  since 2026-10-30
   PFE  qty 500  unrealized $-170.00  stop ?  target ?  since ?
   PFE261218C00031000  qty 15  unrealized $-885.00  stop ?  target ?  since ?
   XOM  qty 100  unrealized $+1.91  stop ?  target ?  since ?
