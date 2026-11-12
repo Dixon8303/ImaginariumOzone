@@ -1,26 +1,28 @@
-generated: 2026-11-11
+generated: 2026-11-12
 
-PRE-OPEN SCAN — 2026-11-11 (signals from the 2026-11-11 close)
-paper equity: $98,440.16
+PRE-OPEN SCAN — 2026-11-12 (signals from the 2026-11-12 close)
+paper equity: $96,471.93
 
 CANDIDATES FOR TODAY (1):
-  AMD  ref close 559.81  stop 402.10  target 1032.94  (1R = 157.71)  score 6/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 559.81 on 1.1x volume
-      volume profile: 29% of 60d volume sits ABOVE here, heaviest at 512.33  (context only, gates nothing)
-      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 560, spread <= 10%
+  AMD  ref close 582.59  stop 433.43  target 1030.07  (1R = 149.16)  score 8/10 [already held]
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 582.59 on 1.7x volume
+      volume profile: 24% of 60d volume sits ABOVE here, heaviest at 512.33  (context only, gates nothing)
+      option guidance: CALL, 21-60 DTE, delta ~0.6, strike near 583, spread <= 10%
 
-ORDERS QUEUED FOR THE OPEN (0): none
+ORDERS QUEUED FOR THE OPEN (1): AMD
+  AMD limit 563.88 — H15a cap (2% over the signal close). If the open gaps past it the order does not fill and is cancelled.
 
-OPEN POSITIONS (9):
-  AAPL  qty 14  unrealized $+23.88  stop 325.6 / target 421.42
-  CVX261120C00220000  qty 1  unrealized $-875.00  stop ? / target ?
-  DAL  qty 60  unrealized $+609.52  stop 75.34 / target 99.8
-  DAL261120C00080000  qty 4  unrealized $+3,020.00  stop ? / target ?
-  IWM  qty 18  unrealized $+26.47  stop 276.0 / target 289.48
-  PFE  qty 500  unrealized $-262.50  stop ? / target ?
-  PFE261218C00031000  qty 15  unrealized $-915.00  stop ? / target ?
-  XOM  qty 100  unrealized $-140.00  stop ? / target ?
-  XOM261120C00185000  qty 2  unrealized $-1,038.00  stop ? / target ?
+OPEN POSITIONS (10):
+  AAPL  qty 14  unrealized $+35.99  stop 325.6 / target 421.42
+  AMD  qty 6  unrealized $+142.07  stop 402.1 / target 1004.98
+  CVX261120C00220000  qty 1  unrealized $-742.00  stop ? / target ?
+  DAL  qty 60  unrealized $+302.32  stop 75.34 / target 99.8
+  DAL261120C00080000  qty 4  unrealized $+960.00  stop ? / target ?
+  IWM  qty 18  unrealized $-48.95  stop 276.0 / target 289.48
+  PFE  qty 500  unrealized $-437.50  stop ? / target ?
+  PFE261218C00031000  qty 15  unrealized $-1,020.00  stop ? / target ?
+  XOM  qty 100  unrealized $+307.00  stop ? / target ?
+  XOM261120C00185000  qty 2  unrealized $-1,018.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
