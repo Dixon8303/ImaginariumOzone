@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-12T06:35:19Z",
+  "last_synced": "2026-11-12T07:35:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2607,7 +2607,7 @@
         },
         {
           "name": "shorts",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -2615,7 +2615,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-12T06:35:19Z"
+      "updated_at": "2026-11-12T07:35:05Z"
     },
     {
       "id": "EP62",
@@ -3590,7 +3590,7 @@
         },
         {
           "name": "shorts",
-          "status": "done"
+          "status": "failed"
         },
         {
           "name": "upload",
@@ -3598,7 +3598,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-12T00:05:07Z"
+      "updated_at": "2026-11-12T07:35:05Z"
     },
     {
       "id": "EP78",
