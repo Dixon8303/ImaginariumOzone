@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-11T23:05:14Z",
+  "last_synced": "2026-11-12T00:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3582,7 +3582,7 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
@@ -3590,7 +3590,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -3598,7 +3598,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-11T23:05:14Z"
+      "updated_at": "2026-11-12T00:05:07Z"
     },
     {
       "id": "EP78",
@@ -3817,7 +3817,7 @@
       "id": "EP81",
       "number": 81,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3881,7 +3881,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-11T23:05:14Z"
+      "updated_at": "2026-11-12T00:05:07Z"
     },
     {
       "id": "EP82",
@@ -5357,7 +5357,7 @@
       "id": "EP103",
       "number": 103,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5421,13 +5421,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-11T23:05:14Z"
+      "updated_at": "2026-11-12T00:05:07Z"
     },
     {
       "id": "EP104",
       "number": 104,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5491,7 +5491,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-11T23:05:14Z"
+      "updated_at": "2026-11-12T00:05:07Z"
     },
     {
       "id": "EP105",
@@ -5567,7 +5567,7 @@
       "id": "EP106",
       "number": 106,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -5631,7 +5631,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-07T04:35:05Z"
+      "updated_at": "2026-11-12T00:05:07Z"
     },
     {
       "id": "EP107",
