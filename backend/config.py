@@ -42,6 +42,10 @@ YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID", "")
 GITHUB_SYNC_TOKEN = os.getenv("GITHUB_SYNC_TOKEN", "")
 GITHUB_SYNC_REPO = os.getenv("GITHUB_SYNC_REPO", "Dixon8303/ImaginariumOzone")
 
+# ── Local Mac notifications (CHECKPOINT gates, HardHalts; no-op if
+# terminal-notifier isn't installed — see services/mac_notify.py) ─────────
+BGF_FRONTEND_URL = os.getenv("BGF_FRONTEND_URL", "http://localhost:5173")
+
 # ── Pacing Constitution constants (BGF_PACING_CONSTITUTION.md §14, §3) ───
 # Single source of truth for the G0.25/G0.5 math. Changing the doctrine means
 # changing it here, not in a stage function.

@@ -157,6 +157,7 @@ backend/
   pipeline/          orchestrator.py — stages, routing, gates, SSE events
   services/          claude_client · ollama_client · comfyui_client
                      elevenlabs_client · vidiq_client · status_sync
+                     mac_notify
   routers/           episodes · pipeline · assets · analytics · discovery
   prompts/           production_bible.txt + per-stage prompt templates
   ffmpeg/            assembler.py — narration, Ken Burns, xfade, shorts
