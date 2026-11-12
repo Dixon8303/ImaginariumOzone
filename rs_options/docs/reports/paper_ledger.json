@@ -196,6 +196,20 @@
       "stop": 325.6,
       "target": 421.42
     },
+    "AMD": {
+      "entry": 552.82,
+      "entry_cap": 563.8764000000001,
+      "entry_date": "2026-11-11",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "560483ad-42b8-425b-b703-b30fd1772fba",
+      "qty": 6,
+      "setup": "H-25",
+      "signal_close": 552.82,
+      "stop": 402.1,
+      "target": 1004.98
+    },
     "DAL": {
       "entry": 81.671333,
       "entry_cap": 83.0841,
