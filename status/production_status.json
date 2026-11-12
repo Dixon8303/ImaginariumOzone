@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-12T12:05:19Z",
+  "last_synced": "2026-11-12T13:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1766,7 +1766,7 @@
       "id": "EP47",
       "number": 47,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -1814,15 +1814,15 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-12T12:05:18Z"
+      "updated_at": "2026-11-12T13:05:05Z"
     },
     {
       "id": "EP50",
@@ -3464,7 +3464,7 @@
       "id": "EP76",
       "number": 76,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3512,15 +3512,15 @@
         },
         {
           "name": "assembly",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -3528,7 +3528,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-12T12:05:19Z"
+      "updated_at": "2026-11-12T13:05:05Z"
     },
     {
       "id": "EP77",
