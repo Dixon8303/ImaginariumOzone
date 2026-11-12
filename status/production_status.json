@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-12T21:05:05Z",
+  "last_synced": "2026-11-12T22:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4237,7 +4237,7 @@
       "id": "EP87",
       "number": 87,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4269,7 +4269,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4301,7 +4301,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-12T21:05:05Z"
+      "updated_at": "2026-11-12T22:05:05Z"
     },
     {
       "id": "EP88",
