@@ -27,6 +27,11 @@ Gates:
   Any FAIL -> HardHalt, remediation row, pipeline stops.
 
 Upload is a CHECKPOINT in every mode. There is no unattended-publish path.
+
+Every CHECKPOINT, HardHalt, and stage failure also fires a local macOS
+notification (services/mac_notify.py) that deep-links straight to that
+episode's Control Room, instead of relying on n8n/osascript's non-clickable
+"display notification" relay.
 """
 
 import asyncio
@@ -122,6 +127,12 @@ async def run_pipeline(episode_id: str, start_from: str | None = None):
         "SEMI_AUTO": ["assembly", "qa_gates", "upload"],
         "FULL_AUTO": ["qa_gates", "upload"],
     }
+    # Same screen BGF_USER_GUIDE.md §7 sends the operator to for that gate —
+    # the notification should land exactly where a click already would.
+    GATE_REVIEW_PATH = {
+        "script": "script", "generation": "assets", "assembly": "preview",
+        "qa_gates": "control-room", "upload": "upload",
+    }
     gate_stages = set(human_gates.get(mode, ["qa_gates"]))
 
     skip = start_from is not None
@@ -171,12 +182,16 @@ async def run_pipeline(episode_id: str, start_from: str | None = None):
                 "remediation": e.remediation_id,
                 "message": str(e),
             })
+            from services import mac_notify
+            await mac_notify.notify(episode_id, f"{episode_id} halted — Gate {e.gate_id}", str(e))
             return
         except Exception as e:
             await db.complete_stage_run(run_id, error=str(e))
             await db.upsert_stage(episode_id, stage_name, "failed", error_message=str(e))
             await db.update_episode(episode_id, status="failed")
             await emit(episode_id, {"type": "stage_failed", "stage": stage_name, "error": str(e)})
+            from services import mac_notify
+            await mac_notify.notify(episode_id, f"{episode_id} failed — {stage_name}", str(e)[:200])
             return
 
         if stage_name in gate_stages:
@@ -187,6 +202,12 @@ async def run_pipeline(episode_id: str, start_from: str | None = None):
                 "stage": stage_name,
                 "message": f"Awaiting human review of {stage_name}",
             })
+            from services import mac_notify
+            await mac_notify.notify(
+                episode_id, f"{episode_id} needs you",
+                f"{stage_name} is done — awaiting your review",
+                path=GATE_REVIEW_PATH.get(stage_name, "control-room"),
+            )
             return
 
     await db.update_episode(episode_id, status="review")

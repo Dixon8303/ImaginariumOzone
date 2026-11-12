@@ -311,6 +311,18 @@ appears in the episode's output folder showing the math.
 
 In ASSISTED mode, the pipeline pauses three times before QA and once after. Each pause presents you with a specific review task.
 
+### Getting notified away from the dashboard
+
+Every time the pipeline pauses for you — or hard-halts on a failed gate — the app fires a Mac notification that opens straight to the right review screen when you click it (Gate A → Script Editor, Gate B → Asset Gallery, Gate C → Video Preview, Gate D and any hard halt → Control Room).
+
+**One-time setup:**
+```bash
+brew install terminal-notifier
+```
+That's it — no config, no restart. If `terminal-notifier` isn't installed, you just don't get a notification; nothing else about the pipeline is affected.
+
+**If you were using an n8n flow to notify you about these pauses:** turn that step off now. It was almost certainly built on `osascript -e 'display notification'`, which always posts under Script Editor's identity and has no click target — that's the "says 'needs D' but clicking it just opens Script Editor" problem. The app now owns this notification directly, so the n8n step is redundant and will otherwise double-fire for the same pause.
+
 ---
 
 ### Gate A: Script Review
