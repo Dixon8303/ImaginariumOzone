@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-12T22:05:05Z",
+  "last_synced": "2026-11-13T00:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4265,7 +4265,7 @@
         },
         {
           "name": "generation",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "ken_burns",
@@ -4301,7 +4301,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-12T22:05:05Z"
+      "updated_at": "2026-11-13T00:05:05Z"
     },
     {
       "id": "EP88",
@@ -4335,7 +4335,7 @@
         },
         {
           "name": "generation",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "ken_burns",
@@ -4371,13 +4371,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T04:05:08Z"
+      "updated_at": "2026-11-13T00:05:05Z"
     },
     {
       "id": "EP89",
       "number": 89,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4409,7 +4409,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "voice_ssml",
@@ -4441,7 +4441,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T05:05:07Z"
+      "updated_at": "2026-11-13T00:05:05Z"
     },
     {
       "id": "EP90",
@@ -4587,7 +4587,7 @@
       "id": "EP92",
       "number": 92,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -4651,7 +4651,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-08T22:35:08Z"
+      "updated_at": "2026-11-13T00:05:05Z"
     },
     {
       "id": "EP93",
