@@ -39,7 +39,7 @@ EP63,63,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP64,64,Unreleased episode,review,script,4,15,,,2026-11-08T13:05:10Z
 EP65,65,Unreleased episode,review,generation,9,15,,,2026-11-11T05:35:05Z
 EP67,67,Unreleased episode,review,generation,9,15,,,2026-11-07T01:35:05Z
-EP68,68,Unreleased episode,running,storyboard,7,15,,,2026-11-13T02:05:05Z
+EP68,68,Unreleased episode,failed,storyboard,8,15,,,2026-11-13T03:05:05Z
 EP69,69,Unreleased episode,failed,script,4,15,,,2026-11-10T02:05:09Z
 EP70,70,Unreleased episode,review,script,4,15,,,2026-11-10T12:35:05Z
 EP71,71,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
@@ -60,12 +60,12 @@ EP86,86,Unreleased episode,review,ken_burns,10,15,,,2026-11-12T10:05:05Z
 EP87,87,Unreleased episode,failed,ken_burns,10,15,,,2026-11-13T00:05:05Z
 EP88,88,Unreleased episode,failed,generation,9,15,,,2026-11-13T00:05:05Z
 EP89,89,Unreleased episode,failed,ken_burns,10,15,,,2026-11-13T00:05:05Z
-EP90,90,Unreleased episode,review,generation,9,15,,,2026-11-08T20:05:08Z
+EP90,90,Unreleased episode,running,generation,9,15,,,2026-11-13T03:05:05Z
 EP91,91,Unreleased episode,review,generation,9,15,,,2026-11-08T22:35:08Z
 EP92,92,Unreleased episode,review,generation,9,15,,,2026-11-13T01:05:05Z
 EP93,93,Unreleased episode,review,generation,9,15,,,2026-11-08T23:35:08Z
 EP94,94,Unreleased episode,failed,script,4,15,,,2026-11-09T16:05:08Z
-EP95,95,Unreleased episode,review,generation,9,15,,,2026-11-08T06:05:08Z
+EP95,95,Unreleased episode,running,generation,9,15,,,2026-11-13T03:05:05Z
 EP96,96,Unreleased episode,draft,batch_primer,0,15,,,2026-11-01T19:35:03Z
 EP97,97,Unreleased episode,review,generation,9,15,,,2026-11-09T18:35:08Z
 EP98,98,Unreleased episode,review,generation,9,15,,,2026-11-07T04:35:05Z
@@ -79,4 +79,4 @@ EP105,105,Unreleased episode,failed,generation,9,15,,,2026-11-08T13:05:10Z
 EP106,106,Unreleased episode,failed,generation,9,15,,,2026-11-12T16:05:05Z
 EP107,107,Unreleased episode,failed,script,4,15,,,2026-11-09T19:35:08Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
-_last_synced,,2026-11-13T02:05:05Z,,,,,,,
+_last_synced,,2026-11-13T03:05:05Z,,,,,,,
