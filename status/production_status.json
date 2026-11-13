@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-13T03:05:05Z",
+  "last_synced": "2026-11-13T04:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4447,7 +4447,7 @@
       "id": "EP90",
       "number": 90,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4511,7 +4511,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T03:05:05Z"
+      "updated_at": "2026-11-13T04:05:05Z"
     },
     {
       "id": "EP91",
@@ -4797,7 +4797,7 @@
       "id": "EP95",
       "number": 95,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4861,7 +4861,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T03:05:05Z"
+      "updated_at": "2026-11-13T04:05:05Z"
     },
     {
       "id": "EP96",
