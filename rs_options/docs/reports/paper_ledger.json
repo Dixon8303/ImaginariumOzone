@@ -197,10 +197,10 @@
       "target": 421.42
     },
     "AMD": {
-      "entry": 552.82,
+      "entry": 559.265,
       "entry_cap": 563.8764000000001,
       "entry_date": "2026-11-11",
-      "entry_estimated": true,
+      "entry_estimated": false,
       "fractional": false,
       "micro_override": false,
       "order_id": "560483ad-42b8-425b-b703-b30fd1772fba",
@@ -253,20 +253,6 @@
       "spread_pct": 0.0412,
       "strike": 80.0,
       "ticker": "DAL"
-    },
-    "PFE261218C00031000": {
-      "basis": "delta",
-      "delta": 0.5468,
-      "entry_date": "2026-11-02",
-      "entry_price": 0.995,
-      "entry_underlying": 30.71,
-      "expiry": "2026-12-18",
-      "fundamental_net_income": null,
-      "invalidation_price": 29.23,
-      "qty": 5,
-      "spread_pct": 0.0503,
-      "strike": 31.0,
-      "ticker": "PFE"
     }
   }
 }
