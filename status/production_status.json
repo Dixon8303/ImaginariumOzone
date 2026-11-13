@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-13T01:05:05Z",
+  "last_synced": "2026-11-13T02:05:05Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2971,7 +2971,7 @@
       "id": "EP68",
       "number": 68,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2991,7 +2991,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -3003,19 +3003,19 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "assembly",
@@ -3035,7 +3035,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T01:05:05Z"
+      "updated_at": "2026-11-13T02:05:05Z"
     },
     {
       "id": "EP69",
