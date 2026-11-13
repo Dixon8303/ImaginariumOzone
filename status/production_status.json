@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-13T19:05:06Z",
+  "last_synced": "2026-11-13T20:35:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3533,9 +3533,8 @@
     {
       "id": "EP77",
       "number": 77,
-      "topic": "George Stinney Jr. — The Youngest Execution in the Modern Era",
-      "mode": "standalone",
-      "status": "published",
+      "topic": "Unreleased episode",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -3595,13 +3594,11 @@
         },
         {
           "name": "upload",
-          "status": "done"
+          "status": "halted"
         }
       ],
       "gates": {},
-      "video_id": "8ABHO7dtj-Q",
-      "publish_at": "2026-11-13T19:00:00Z",
-      "updated_at": "2026-11-13T19:05:06Z"
+      "updated_at": "2026-11-13T20:35:07Z"
     },
     {
       "id": "EP78",
