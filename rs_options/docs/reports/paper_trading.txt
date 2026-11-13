@@ -1,7 +1,7 @@
 generated: 2026-11-12
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-12
-paper equity: $96,286.12   cash: $42,904.26
+paper equity: $96,253.72   cash: $42,904.26
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-11-12  $96,286.12   (-3,713.88, -3.7%)
@@ -23,19 +23,19 @@ PAPER ORDERS PLACED (0):
   skipped AMD: already held
 
 OPEN POSITIONS (10) — 6 of 8 stock slots used, 4 option contracts:
-  AAPL  qty 14  unrealized $+34.87  stop 325.6  target 421.42  since 2026-11-04
-  AMD  qty 6  unrealized $+161.79  stop 402.1  target 1004.98  since 2026-11-11
+  AAPL  qty 14  unrealized $+38.65  stop 325.6  target 421.42  since 2026-11-04
+  AMD  qty 6  unrealized $+142.41  stop 402.1  target 1004.98  since 2026-11-11
   CVX261120C00220000  qty 1  unrealized $-781.00  stop ?  target ?  since ?
   DAL  qty 60  unrealized $+312.52  stop 75.34  target 99.8  since 2026-10-27
   DAL261120C00080000  qty 4  unrealized $+940.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $-40.85  stop 276.0  target 289.48  since 2026-10-30
-  PFE  qty 500  unrealized $-505.00  stop ?  target ?  since ?
+  IWM  qty 18  unrealized $-42.65  stop 276.0  target 289.48  since 2026-10-30
+  PFE  qty 500  unrealized $-520.00  stop ?  target ?  since ?
   PFE261218C00031000  qty 15  unrealized $-1,065.00  stop ?  target ?  since ?
   XOM  qty 100  unrealized $+256.00  stop ?  target ?  since ?
   XOM261120C00185000  qty 2  unrealized $-1,018.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
-  SOLD   5x PFE261218C00031000  P&L $-1,065.00  (INVALIDATION: underlying 28.83 <= 29.23)
+  no option trades today
   holding 1:
     DAL261120C00080000  2x @ $4.37  since 2026-10-27  stop-if-underlying <= 75.34
   note: AMD: no contract met DTE/spread/delta
