@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-14T17:05:07Z",
+  "last_synced": "2026-11-14T18:35:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2991,7 +2991,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -3035,7 +3035,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T03:05:05Z"
+      "updated_at": "2026-11-14T18:35:07Z"
     },
     {
       "id": "EP69",
@@ -4817,7 +4817,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4861,7 +4861,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T04:05:05Z"
+      "updated_at": "2026-11-14T18:35:07Z"
     },
     {
       "id": "EP96",
