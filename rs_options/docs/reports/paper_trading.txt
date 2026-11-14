@@ -1,20 +1,20 @@
-generated: 2026-11-12
+generated: 2026-11-13
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-12
-paper equity: $96,253.72   cash: $42,904.26
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-13
+paper equity: $95,637.78   cash: $42,904.25
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-11-12  $96,286.12   (-3,713.88, -3.7%)
-  over 80 calendar days, 52 recorded sessions: 50 with a change, 1 flat.
-  range so far: $95,756.95 (low) to $101,858.65 (high).
+  2026-08-24  $100,000.00  ->  2026-11-13  $95,637.78   (-4,362.22, -4.4%)
+  over 81 calendar days, 53 recorded sessions: 51 with a change, 1 flat.
+  range so far: $95,637.78 (low) to $101,858.65 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
 
 TODAY'S SIGNALS (1):
-  AMD  [H-25]  close 585.69  stop 433.43  target 1042.47  (1R = 152.26)  score 8/10
-      pullback closed under the 20d SMA within 5 bars, reclaimed at 585.69 on 1.9x volume
-      volume profile: 24% of 60d volume sits ABOVE here, heaviest at 512.33  (context only, gates nothing)
-      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 586, spread <= 10%; exit on stop/target/15 sessions
+  AMD  [H-25]  close 534.15  stop 468.49  target 731.13  (1R = 65.66)  score 8/10
+      pullback closed under the 20d SMA within 5 bars, reclaimed at 534.15 on 1.3x volume
+      volume profile: 46% of 60d volume sits ABOVE here, heaviest at 512.33  (context only, gates nothing)
+      option guidance (Robinhood, per playbook): CALL, 21-60 DTE, delta ~0.6, strike near 534, spread <= 10%; exit on stop/target/15 sessions
 
 OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
 
@@ -23,16 +23,16 @@ PAPER ORDERS PLACED (0):
   skipped AMD: already held
 
 OPEN POSITIONS (10) — 6 of 8 stock slots used, 4 option contracts:
-  AAPL  qty 14  unrealized $+38.65  stop 325.6  target 421.42  since 2026-11-04
-  AMD  qty 6  unrealized $+142.41  stop 402.1  target 1004.98  since 2026-11-11
-  CVX261120C00220000  qty 1  unrealized $-781.00  stop ?  target ?  since ?
-  DAL  qty 60  unrealized $+312.52  stop 75.34  target 99.8  since 2026-10-27
-  DAL261120C00080000  qty 4  unrealized $+940.00  stop ?  target ?  since ?
-  IWM  qty 18  unrealized $-42.65  stop 276.0  target 289.48  since 2026-10-30
-  PFE  qty 500  unrealized $-520.00  stop ?  target ?  since ?
+  AAPL  qty 14  unrealized $+33.19  stop 325.6  target 421.42  since 2026-11-04
+  AMD  qty 6  unrealized $-228.39  stop 402.1  target 1004.98  since 2026-11-11
+  CVX261120C00220000  qty 1  unrealized $-688.00  stop ?  target ?  since ?
+  DAL  qty 60  unrealized $+148.12  stop 75.34  target 99.8  since 2026-10-27
+  DAL261120C00080000  qty 4  unrealized $+700.00  stop ?  target ?  since ?
+  IWM  qty 18  unrealized $-72.53  stop 276.0  target 289.48  since 2026-10-30
+  PFE  qty 500  unrealized $-476.25  stop ?  target ?  since ?
   PFE261218C00031000  qty 15  unrealized $-1,065.00  stop ?  target ?  since ?
-  XOM  qty 100  unrealized $+256.00  stop ?  target ?  since ?
-  XOM261120C00185000  qty 2  unrealized $-1,018.00  stop ?  target ?  since ?
+  XOM  qty 100  unrealized $+319.86  stop ?  target ?  since ?
+  XOM261120C00185000  qty 2  unrealized $-1,024.00  stop ?  target ?  since ?
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
