@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-14T01:05:12Z",
+  "last_synced": "2026-11-14T02:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3747,7 +3747,7 @@
       "id": "EP80",
       "number": 80,
       "topic": "Unreleased episode",
-      "status": "halted",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -3807,11 +3807,11 @@
         },
         {
           "name": "upload",
-          "status": "halted"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T21:35:07Z"
+      "updated_at": "2026-11-14T02:05:08Z"
     },
     {
       "id": "EP81",
