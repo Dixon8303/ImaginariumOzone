@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-14T08:05:06Z",
+  "last_synced": "2026-11-14T09:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4587,7 +4587,7 @@
       "id": "EP92",
       "number": 92,
       "topic": "Unreleased episode",
-      "status": "halted",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4611,7 +4611,7 @@
         },
         {
           "name": "storyboard",
-          "status": "halted"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -4651,7 +4651,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-14T08:05:06Z"
+      "updated_at": "2026-11-14T09:05:07Z"
     },
     {
       "id": "EP93",
