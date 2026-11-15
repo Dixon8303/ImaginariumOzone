@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-15T00:35:09Z",
+  "last_synced": "2026-11-15T01:35:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2551,7 +2551,7 @@
       "id": "EP61",
       "number": 61,
       "topic": "Unreleased episode",
-      "status": "approved",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -2611,11 +2611,11 @@
         },
         {
           "name": "upload",
-          "status": "done"
+          "status": "halted"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T21:35:07Z"
+      "updated_at": "2026-11-15T01:35:09Z"
     },
     {
       "id": "EP62",
