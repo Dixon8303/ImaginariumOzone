@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-15T13:05:07Z",
+  "last_synced": "2026-11-15T15:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2341,7 +2341,7 @@
       "id": "EP58",
       "number": 58,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2405,7 +2405,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-12T10:05:05Z"
+      "updated_at": "2026-11-15T15:05:07Z"
     },
     {
       "id": "EP59",
@@ -3837,7 +3837,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -3881,7 +3881,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-15T13:05:07Z"
+      "updated_at": "2026-11-15T15:05:08Z"
     },
     {
       "id": "EP82",
