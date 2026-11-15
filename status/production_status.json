@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-15T16:05:07Z",
+  "last_synced": "2026-11-15T17:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4817,7 +4817,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -4861,7 +4861,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-15T16:05:07Z"
+      "updated_at": "2026-11-15T17:05:07Z"
     },
     {
       "id": "EP96",
