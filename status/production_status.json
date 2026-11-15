@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-15T12:05:07Z",
+  "last_synced": "2026-11-15T13:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3837,7 +3837,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -3881,7 +3881,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-14T14:05:06Z"
+      "updated_at": "2026-11-15T13:05:07Z"
     },
     {
       "id": "EP82",
@@ -5427,7 +5427,7 @@
       "id": "EP104",
       "number": 104,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5491,7 +5491,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-15T12:05:07Z"
+      "updated_at": "2026-11-15T13:05:07Z"
     },
     {
       "id": "EP105",
