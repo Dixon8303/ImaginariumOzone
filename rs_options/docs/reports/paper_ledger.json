@@ -237,22 +237,50 @@
       "signal_close": 279.37,
       "stop": 276.0,
       "target": 289.48
+    },
+    "KO": {
+      "entry": 99.605,
+      "entry_cap": 101.59710000000001,
+      "entry_date": "2026-11-16",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "cbc396cf-1fc4-4d1e-aaee-050b2893c500",
+      "qty": 47,
+      "setup": "RS-02",
+      "signal_close": 99.605,
+      "stop": 95.67,
+      "target": 111.41
+    },
+    "UNH": {
+      "entry": 412.07,
+      "entry_cap": 420.3114,
+      "entry_date": "2026-11-16",
+      "entry_estimated": true,
+      "fractional": false,
+      "micro_override": false,
+      "order_id": "58d160c5-97bc-44c4-9b6f-535734230f67",
+      "qty": 11,
+      "setup": "H-25",
+      "signal_close": 412.07,
+      "stop": 396.95,
+      "target": 457.43
     }
   },
   "options": {
-    "DAL261120C00080000": {
+    "KO270115C00097500": {
       "basis": "delta",
-      "delta": 0.5989,
-      "entry_date": "2026-10-27",
-      "entry_price": 4.37,
-      "entry_underlying": 81.455,
-      "expiry": "2026-11-20",
+      "delta": 0.6563,
+      "entry_date": "2026-11-16",
+      "entry_price": 4.54,
+      "entry_underlying": 99.605,
+      "expiry": "2027-01-15",
       "fundamental_net_income": null,
-      "invalidation_price": 75.34,
+      "invalidation_price": 95.67,
       "qty": 2,
-      "spread_pct": 0.0412,
-      "strike": 80.0,
-      "ticker": "DAL"
+      "spread_pct": 0.0925,
+      "strike": 97.5,
+      "ticker": "KO"
     }
   }
 }
