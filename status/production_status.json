@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-16T17:35:13Z",
+  "last_synced": "2026-11-16T18:35:15Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1790,7 +1790,7 @@
         },
         {
           "name": "storyboard",
-          "status": "done"
+          "status": "halted"
         },
         {
           "name": "generation",
@@ -1798,7 +1798,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-13T22:35:07Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP50",
@@ -2271,7 +2271,7 @@
       "id": "EP57",
       "number": 57,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -2291,7 +2291,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -2303,7 +2303,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "halted"
         },
         {
           "name": "voice_ssml",
@@ -2335,13 +2335,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T09:05:09Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP58",
       "number": 58,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -2361,7 +2361,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -2373,7 +2373,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "halted"
         },
         {
           "name": "voice_ssml",
@@ -2405,7 +2405,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T08:05:11Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP59",
@@ -3779,7 +3779,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "halted"
         },
         {
           "name": "voice_ssml",
@@ -3811,7 +3811,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T07:05:09Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP81",
@@ -4257,7 +4257,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4301,7 +4301,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T12:05:12Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP88",
@@ -4327,7 +4327,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4371,7 +4371,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T13:05:09Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP89",
@@ -4397,7 +4397,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4441,13 +4441,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T15:05:09Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP90",
       "number": 90,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -4467,7 +4467,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -4479,7 +4479,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "done"
+          "status": "halted"
         },
         {
           "name": "voice_ssml",
@@ -4511,7 +4511,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T16:05:10Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP91",
@@ -4553,11 +4553,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -4581,13 +4581,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-15T23:05:12Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP92",
       "number": 92,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -4607,11 +4607,11 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
-          "status": "done"
+          "status": "halted"
         },
         {
           "name": "generation",
@@ -4651,7 +4651,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T17:35:12Z"
+      "updated_at": "2026-11-16T18:35:14Z"
     },
     {
       "id": "EP93",
@@ -4833,11 +4833,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "audio_prod",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "titles_seo",
@@ -4861,7 +4861,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T02:35:09Z"
+      "updated_at": "2026-11-16T18:35:15Z"
     },
     {
       "id": "EP96",
