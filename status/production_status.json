@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-16T14:05:10Z",
+  "last_synced": "2026-11-16T15:05:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2657,11 +2657,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -2685,7 +2685,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T14:05:09Z"
+      "updated_at": "2026-11-16T15:05:09Z"
     },
     {
       "id": "EP63",
@@ -4417,7 +4417,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -4441,7 +4441,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T14:05:10Z"
+      "updated_at": "2026-11-16T15:05:09Z"
     },
     {
       "id": "EP90",
