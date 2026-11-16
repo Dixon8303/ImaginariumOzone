@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-16T07:05:09Z",
+  "last_synced": "2026-11-16T08:05:12Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2377,11 +2377,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -2405,7 +2405,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-15T23:05:12Z"
+      "updated_at": "2026-11-16T08:05:11Z"
     },
     {
       "id": "EP59",
