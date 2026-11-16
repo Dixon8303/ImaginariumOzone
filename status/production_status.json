@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-16T22:35:08Z",
+  "last_synced": "2026-11-16T23:05:13Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4063,11 +4063,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "audio_prod",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "titles_seo",
@@ -4091,7 +4091,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T20:35:10Z"
+      "updated_at": "2026-11-16T23:05:13Z"
     },
     {
       "id": "EP85",
