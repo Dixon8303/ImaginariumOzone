@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T05:05:16Z",
+  "last_synced": "2026-11-17T06:05:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -5287,7 +5287,7 @@
       "id": "EP102",
       "number": 102,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -5311,7 +5311,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -5327,7 +5327,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5351,7 +5351,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T05:05:16Z"
+      "updated_at": "2026-11-17T06:05:09Z"
     },
     {
       "id": "EP103",
