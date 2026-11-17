@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T02:06:00Z",
+  "last_synced": "2026-11-17T03:05:10Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2611,11 +2611,11 @@
         },
         {
           "name": "upload",
-          "status": "halted"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:05:58Z"
+      "updated_at": "2026-11-17T03:05:10Z"
     },
     {
       "id": "EP62",
@@ -3524,11 +3524,11 @@
         },
         {
           "name": "upload",
-          "status": "halted"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:05:59Z"
+      "updated_at": "2026-11-17T03:05:10Z"
     },
     {
       "id": "EP77",
@@ -3747,7 +3747,7 @@
       "id": "EP80",
       "number": 80,
       "topic": "Unreleased episode",
-      "status": "approved",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -3807,11 +3807,11 @@
         },
         {
           "name": "upload",
-          "status": "done"
+          "status": "halted"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:05:59Z"
+      "updated_at": "2026-11-17T03:05:10Z"
     },
     {
       "id": "EP81",
@@ -5357,7 +5357,7 @@
       "id": "EP103",
       "number": 103,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5405,11 +5405,11 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
@@ -5421,7 +5421,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:06:00Z"
+      "updated_at": "2026-11-17T03:05:10Z"
     },
     {
       "id": "EP104",
@@ -5497,7 +5497,7 @@
       "id": "EP105",
       "number": 105,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -5517,7 +5517,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "storyboard",
@@ -5561,7 +5561,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:06:00Z"
+      "updated_at": "2026-11-17T03:05:10Z"
     },
     {
       "id": "EP106",
@@ -5772,6 +5772,76 @@
       ],
       "gates": {},
       "updated_at": "2026-11-05T00:05:15Z"
+    },
+    {
+      "id": "EP110",
+      "number": 110,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-17T03:05:10Z"
     }
   ]
 }
