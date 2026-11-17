@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T16:35:22Z",
+  "last_synced": "2026-11-17T17:35:12Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2411,7 +2411,7 @@
       "id": "EP59",
       "number": 59,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2443,7 +2443,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
@@ -2475,7 +2475,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP60",
@@ -2971,7 +2971,7 @@
       "id": "EP68",
       "number": 68,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -2995,7 +2995,7 @@
         },
         {
           "name": "storyboard",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -3035,7 +3035,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP69",
@@ -3817,7 +3817,7 @@
       "id": "EP81",
       "number": 81,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3841,7 +3841,7 @@
         },
         {
           "name": "storyboard",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -3881,7 +3881,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP82",
@@ -4237,7 +4237,7 @@
       "id": "EP87",
       "number": 87,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4273,7 +4273,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "failed"
+          "status": "done"
         },
         {
           "name": "audio_prod",
@@ -4285,11 +4285,11 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
@@ -4301,7 +4301,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP88",
@@ -4377,7 +4377,7 @@
       "id": "EP89",
       "number": 89,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "halted",
       "stages": [
         {
           "name": "batch_primer",
@@ -4433,15 +4433,15 @@
         },
         {
           "name": "shorts",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "halted"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP90",
@@ -4623,11 +4623,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -4651,13 +4651,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP93",
       "number": 93,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4693,11 +4693,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "failed"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -4705,11 +4705,11 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
@@ -4721,7 +4721,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T14:36:36Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP94",
@@ -5257,7 +5257,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5281,13 +5281,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP102",
       "number": 102,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -5311,7 +5311,7 @@
         },
         {
           "name": "storyboard",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -5351,7 +5351,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP103",
@@ -5463,7 +5463,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -5491,13 +5491,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T15:36:13Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP105",
       "number": 105,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5529,7 +5529,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "failed"
+          "status": "pending"
         },
         {
           "name": "voice_ssml",
@@ -5561,7 +5561,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T16:35:22Z"
+      "updated_at": "2026-11-17T17:35:12Z"
     },
     {
       "id": "EP106",
