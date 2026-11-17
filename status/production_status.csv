@@ -19,9 +19,9 @@ EP38,38,Who Owns the Sound?,published,ken_burns,14,15,2026-09-15T14:00:00Z,GgN8c
 EP39,39,La Russell,published,ken_burns,14,15,2026-09-25T14:00:00Z,c8zGB85ZvF4,2026-11-05T18:35:04Z
 EP40,40,Michael Jackson's Foreclosure: The ATV Catalog,published,ken_burns,14,15,2026-09-29T14:00:00Z,HelFIbVhsIk,2026-11-05T18:35:04Z
 EP41,41,The Patent Machine: How American Corporations Monopolized a Century of Black Invention,published,ken_burns,14,15,2026-10-02T18:00:00Z,B-_WpB2iO0o,2026-11-05T18:35:04Z
-EP44,44,Unreleased episode,running,storyboard,8,15,,,2026-11-17T15:36:10Z
-EP45,45,Unreleased episode,running,storyboard,8,15,,,2026-11-17T15:36:10Z
-EP46,46,Unreleased episode,running,storyboard,8,15,,,2026-11-17T15:36:10Z
+EP44,44,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T16:35:21Z
+EP45,45,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T16:35:21Z
+EP46,46,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T16:35:21Z
 EP47,47,Unreleased episode,approved,complete,15,15,,,2026-11-17T09:05:13Z
 EP50,50,In Living Color: Fox Arbitrage,published,ken_burns,14,15,2026-11-03T19:00:00Z,OxjVlvBgT9A,2026-11-05T18:35:04Z
 EP51,51,Booker T. Washington — The Tuskegee Machine,published,complete,15,15,2026-10-13T18:00:16Z,wpMLL0m9dN8,2026-10-24T23:35:01Z
@@ -29,9 +29,9 @@ EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,comple
 EP53,53,Matthew Henson — The Man Who Reached the Pole First,published,complete,15,15,2026-11-06T19:00:00Z,Vxfvo54H9Uw,2026-11-06T19:05:05Z
 EP54,54,Unreleased episode,running,ken_burns,8,15,,,2026-11-17T15:36:12Z
 EP55,55,Mamie Smith — The Record That Changed Everything,published,complete,15,15,2026-11-10T19:00:00Z,POESADFo_eQ,2026-11-17T14:36:35Z
-EP57,57,Unreleased episode,running,voice_ssml,9,15,,,2026-11-17T14:36:35Z
+EP57,57,Unreleased episode,review,shorts,13,15,,,2026-11-17T16:35:22Z
 EP58,58,Unreleased episode,approved,complete,15,15,,,2026-11-17T10:35:10Z
-EP59,59,Unreleased episode,failed,ken_burns,10,15,,,2026-11-08T04:05:07Z
+EP59,59,Unreleased episode,failed,script,9,15,,,2026-11-17T16:35:22Z
 EP60,60,Unreleased episode,approved,complete,15,15,,,2026-11-17T02:05:58Z
 EP61,61,Unreleased episode,approved,complete,15,15,,,2026-11-17T03:05:10Z
 EP62,62,Unreleased episode,approved,complete,15,15,,,2026-11-17T15:36:12Z
@@ -39,7 +39,7 @@ EP63,63,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
 EP64,64,Unreleased episode,review,script,4,15,,,2026-11-08T13:05:10Z
 EP65,65,Unreleased episode,running,generation,8,15,,,2026-11-15T23:05:12Z
 EP67,67,Unreleased episode,review,generation,7,15,,,2026-11-17T15:36:13Z
-EP68,68,Unreleased episode,running,script,5,15,,,2026-11-17T15:36:13Z
+EP68,68,Unreleased episode,failed,script,5,15,,,2026-11-17T16:35:22Z
 EP69,69,Unreleased episode,failed,script,4,15,,,2026-11-15T23:05:12Z
 EP70,70,Unreleased episode,review,script,4,15,,,2026-11-10T12:35:05Z
 EP71,71,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
@@ -51,18 +51,18 @@ EP77,77,Unreleased episode,approved,upload,14,15,,,2026-11-17T14:36:35Z
 EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026-10-27T18:00:00Z,DQV95PmFxAo,2026-10-27T18:05:01Z
 EP79,79,Unreleased episode,approved,complete,15,15,,,2026-11-07T06:05:05Z
 EP80,80,Unreleased episode,approved,complete,15,15,,,2026-11-17T05:05:16Z
-EP81,81,Unreleased episode,running,storyboard,8,15,,,2026-11-17T15:36:13Z
+EP81,81,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T16:35:22Z
 EP82,82,Unreleased episode,running,generation,8,15,,,2026-11-15T23:05:12Z
 EP83,83,Unreleased episode,running,generation,10,15,,,2026-11-17T01:05:08Z
 EP84,84,Unreleased episode,running,voice_ssml,9,15,,,2026-11-17T15:36:13Z
 EP85,85,Unreleased episode,running,generation,8,15,,,2026-11-16T09:05:09Z
 EP86,86,Unreleased episode,running,voice_ssml,9,15,,,2026-11-16T09:05:09Z
-EP87,87,Unreleased episode,running,assembly,11,15,,,2026-11-17T14:36:36Z
-EP88,88,Unreleased episode,review,ken_burns,10,15,,,2026-11-17T14:36:36Z
-EP89,89,Unreleased episode,review,shorts,13,15,,,2026-11-17T15:36:13Z
+EP87,87,Unreleased episode,failed,voice_ssml,10,15,,,2026-11-17T16:35:22Z
+EP88,88,Unreleased episode,running,ken_burns,10,15,,,2026-11-17T16:35:22Z
+EP89,89,Unreleased episode,review,upload,14,15,,,2026-11-17T16:35:22Z
 EP90,90,Unreleased episode,approved,complete,15,15,,,2026-11-17T12:35:13Z
-EP91,91,Unreleased episode,review,shorts,13,15,,,2026-11-17T15:36:13Z
-EP92,92,Unreleased episode,review,ken_burns,10,15,,,2026-11-17T14:36:36Z
+EP91,91,Unreleased episode,review,upload,14,15,,,2026-11-17T16:35:22Z
+EP92,92,Unreleased episode,review,ken_burns,8,15,,,2026-11-17T16:35:22Z
 EP93,93,Unreleased episode,failed,voice_ssml,9,15,,,2026-11-17T14:36:36Z
 EP94,94,Unreleased episode,review,script,4,15,,,2026-11-15T19:05:07Z
 EP95,95,Unreleased episode,approved,complete,15,15,,,2026-11-17T09:05:14Z
@@ -71,13 +71,13 @@ EP97,97,Unreleased episode,review,script,5,15,,,2026-11-17T02:05:59Z
 EP98,98,Unreleased episode,running,generation,10,15,,,2026-11-17T12:35:13Z
 EP99,99,Unreleased episode,running,generation,10,15,,,2026-11-17T00:05:08Z
 EP100,100,Unreleased episode,running,generation,8,15,,,2026-11-15T23:05:12Z
-EP101,101,Unreleased episode,running,generation,9,15,,,2026-11-17T15:36:13Z
-EP102,102,Unreleased episode,running,storyboard,8,15,,,2026-11-17T15:36:13Z
+EP101,101,Unreleased episode,review,generation,8,15,,,2026-11-17T16:35:22Z
+EP102,102,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T16:35:22Z
 EP103,103,Unreleased episode,review,upload,14,15,,,2026-11-17T14:36:38Z
 EP104,104,Unreleased episode,review,upload,14,15,,,2026-11-17T15:36:13Z
-EP105,105,Unreleased episode,failed,script,5,15,,,2026-11-17T15:36:13Z
+EP105,105,Unreleased episode,failed,script,5,15,,,2026-11-17T16:35:22Z
 EP106,106,Unreleased episode,review,upload,14,15,,,2026-11-17T15:36:13Z
 EP107,107,Unreleased episode,review,script,4,15,,,2026-11-14T08:05:06Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
 EP110,110,Unreleased episode,draft,batch_primer,0,15,,,2026-11-17T03:05:10Z
-_last_synced,,2026-11-17T15:36:13Z,,,,,,,
+_last_synced,,2026-11-17T16:35:22Z,,,,,,,
