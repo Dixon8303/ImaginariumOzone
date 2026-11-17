@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T04:05:13Z",
+  "last_synced": "2026-11-17T05:05:16Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3747,7 +3747,7 @@
       "id": "EP80",
       "number": 80,
       "topic": "Unreleased episode",
-      "status": "halted",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -3807,11 +3807,11 @@
         },
         {
           "name": "upload",
-          "status": "halted"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T03:05:10Z"
+      "updated_at": "2026-11-17T05:05:16Z"
     },
     {
       "id": "EP81",
@@ -5323,11 +5323,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -5351,7 +5351,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:06:00Z"
+      "updated_at": "2026-11-17T05:05:16Z"
     },
     {
       "id": "EP103",
