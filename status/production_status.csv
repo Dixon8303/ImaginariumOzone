@@ -29,7 +29,7 @@ EP52,52,Ethel Waters — The Woman Who Proved Television Worked,published,comple
 EP53,53,Matthew Henson — The Man Who Reached the Pole First,published,complete,15,15,2026-11-06T19:00:00Z,Vxfvo54H9Uw,2026-11-06T19:05:05Z
 EP54,54,Unreleased episode,running,script,9,15,,,2026-11-17T04:05:13Z
 EP55,55,Mamie Smith — The Record That Changed Everything,published,shorts,14,15,2026-11-10T19:00:00Z,POESADFo_eQ,2026-11-10T19:05:05Z
-EP57,57,Unreleased episode,running,voice_ssml,9,15,,,2026-11-17T02:05:58Z
+EP57,57,Unreleased episode,running,audio_prod,10,15,,,2026-11-17T07:35:08Z
 EP58,58,Unreleased episode,review,shorts,13,15,,,2026-11-16T19:35:09Z
 EP59,59,Unreleased episode,failed,ken_burns,10,15,,,2026-11-08T04:05:07Z
 EP60,60,Unreleased episode,approved,complete,15,15,,,2026-11-17T02:05:58Z
@@ -65,7 +65,7 @@ EP91,91,Unreleased episode,running,voice_ssml,9,15,,,2026-11-17T02:05:59Z
 EP92,92,Unreleased episode,running,ken_burns,10,15,,,2026-11-17T02:05:59Z
 EP93,93,Unreleased episode,running,voice_ssml,9,15,,,2026-11-17T02:05:59Z
 EP94,94,Unreleased episode,review,script,4,15,,,2026-11-15T19:05:07Z
-EP95,95,Unreleased episode,review,ken_burns,10,15,,,2026-11-17T06:35:12Z
+EP95,95,Unreleased episode,review,shorts,13,15,,,2026-11-17T07:35:09Z
 EP96,96,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
 EP97,97,Unreleased episode,review,script,5,15,,,2026-11-17T02:05:59Z
 EP98,98,Unreleased episode,running,generation,10,15,,,2026-11-16T22:35:08Z
@@ -80,4 +80,4 @@ EP106,106,Unreleased episode,running,generation,10,15,,,2026-11-17T02:06:00Z
 EP107,107,Unreleased episode,review,script,4,15,,,2026-11-14T08:05:06Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
 EP110,110,Unreleased episode,draft,batch_primer,0,15,,,2026-11-17T03:05:10Z
-_last_synced,,2026-11-17T06:35:12Z,,,,,,,
+_last_synced,,2026-11-17T07:35:09Z,,,,,,,
