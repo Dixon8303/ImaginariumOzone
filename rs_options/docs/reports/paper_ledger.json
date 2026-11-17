@@ -268,18 +268,18 @@
     }
   },
   "options": {
-    "KO270115C00097500": {
+    "KO270115C00100000": {
       "basis": "delta",
-      "delta": 0.6563,
+      "delta": 0.5364,
       "entry_date": "2026-11-16",
-      "entry_price": 4.54,
+      "entry_price": 3.175,
       "entry_underlying": 99.605,
       "expiry": "2027-01-15",
       "fundamental_net_income": null,
       "invalidation_price": 95.67,
       "qty": 2,
-      "spread_pct": 0.0925,
-      "strike": 97.5,
+      "spread_pct": 0.0535,
+      "strike": 100.0,
       "ticker": "KO"
     }
   }
