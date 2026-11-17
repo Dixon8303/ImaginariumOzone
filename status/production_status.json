@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T12:35:13Z",
+  "last_synced": "2026-11-17T13:35:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -4063,11 +4063,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -4091,7 +4091,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T12:35:12Z"
+      "updated_at": "2026-11-17T13:35:09Z"
     },
     {
       "id": "EP85",
@@ -4657,7 +4657,7 @@
       "id": "EP93",
       "number": 93,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -4697,7 +4697,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "titles_seo",
@@ -4721,7 +4721,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T12:35:13Z"
+      "updated_at": "2026-11-17T13:35:09Z"
     },
     {
       "id": "EP94",
