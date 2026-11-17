@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T06:35:12Z",
+  "last_synced": "2026-11-17T07:35:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2307,11 +2307,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -2335,7 +2335,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:05:58Z"
+      "updated_at": "2026-11-17T07:35:08Z"
     },
     {
       "id": "EP58",
@@ -4829,7 +4829,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "voice_ssml",
@@ -4845,11 +4845,11 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
@@ -4861,7 +4861,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T06:35:12Z"
+      "updated_at": "2026-11-17T07:35:09Z"
     },
     {
       "id": "EP96",
