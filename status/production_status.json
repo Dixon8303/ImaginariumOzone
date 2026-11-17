@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T18:35:11Z",
+  "last_synced": "2026-11-17T19:35:36Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1556,7 +1556,7 @@
       "id": "EP44",
       "number": 44,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -1580,7 +1580,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -1620,7 +1620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T18:35:10Z"
+      "updated_at": "2026-11-17T19:35:35Z"
     },
     {
       "id": "EP45",
@@ -2164,11 +2164,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -2192,7 +2192,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T15:36:12Z"
+      "updated_at": "2026-11-17T19:35:35Z"
     },
     {
       "id": "EP55",
@@ -3676,8 +3676,9 @@
     {
       "id": "EP79",
       "number": 79,
-      "topic": "Unreleased episode",
-      "status": "approved",
+      "topic": "Dred Scott — The Jurisdiction That Unmade a Man",
+      "mode": "standalone",
+      "status": "published",
       "stages": [
         {
           "name": "batch_primer",
@@ -3741,7 +3742,9 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-07T06:05:05Z"
+      "video_id": "FRTy4WmXsIY",
+      "publish_at": "2026-11-17T19:00:00Z",
+      "updated_at": "2026-11-17T19:35:35Z"
     },
     {
       "id": "EP80",
@@ -3817,7 +3820,7 @@
       "id": "EP81",
       "number": 81,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -3841,7 +3844,7 @@
         },
         {
           "name": "storyboard",
-          "status": "running"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -3881,7 +3884,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T18:35:11Z"
+      "updated_at": "2026-11-17T19:35:35Z"
     },
     {
       "id": "EP82",
@@ -4433,7 +4436,7 @@
         },
         {
           "name": "shorts",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "upload",
@@ -4441,7 +4444,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T18:35:11Z"
+      "updated_at": "2026-11-17T19:35:36Z"
     },
     {
       "id": "EP90",
