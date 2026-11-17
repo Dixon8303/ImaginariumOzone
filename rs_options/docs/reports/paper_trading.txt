@@ -1,7 +1,7 @@
 generated: 2026-11-16
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-16
-paper equity: $95,012.80   cash: $42,904.25
+paper equity: $95,000.48   cash: $42,904.25
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-11-16  $95,051.77   (-4,948.23, -4.9%)
@@ -27,7 +27,7 @@ OPTION COST RECORDER (2 contracts priced) — no orders, no buying power used:
          costs $2,303.00 per contract; needs $46,060 equity to buy one inside the 5% position cap
 
   cheapest doctrine contract today: KO at $317.50
-  at $95,012.80 equity you can buy 2 of 2 inside the position cap
+  at $95,000.48 equity you can buy 2 of 2 inside the position cap
   (doctrine contract: delta ~0.6, 21-60 DTE, spread <= 10%)
 
 PAPER ORDERS PLACED (0):
@@ -36,8 +36,8 @@ PAPER ORDERS PLACED (0):
   skipped UNH: already held
 
 OPEN POSITIONS (10) — 6 of 8 stock slots used, 4 option contracts:
-  AAPL  qty 14  unrealized $+3.79  stop 325.6  target 421.42  since 2026-11-04
-  AMD  qty 6  unrealized $-276.39  stop 402.1  target 1004.98  since 2026-11-11
+  AAPL  qty 14  unrealized $-1.81  stop 325.6  target 421.42  since 2026-11-04
+  AMD  qty 6  unrealized $-283.11  stop 402.1  target 1004.98  since 2026-11-11
   CVX261120C00220000  qty 1  unrealized $-804.00  stop ?  target ?  since ?
   DAL  qty 60  unrealized $+311.87  stop 75.34  target 99.8  since 2026-10-27
   DAL261120C00080000  qty 4  unrealized $+820.00  stop ?  target ?  since ?
@@ -50,7 +50,7 @@ OPEN POSITIONS (10) — 6 of 8 stock slots used, 4 option contracts:
 PAPER OPTIONS (Alpaca, autonomous):
   BOUGHT 2x KO270115C00100000  @ $3.17 ($635)  60d  strike 100.00  [delta 0.54, spread 5.4%, OI 7006]
     FWD-3 tag: fundamentals unknown (run python -m mve.fundamentals) — recorded only, does not gate or size this trade
-  SOLD   2x KO270115C00097500  (reconciled)
+  SOLD   2x KO270115C00100000  (reconciled)
   holding 1:
     KO270115C00100000  2x @ $3.17  since 2026-11-16  stop-if-underlying <= 95.67
   note: UNH: premium $2,303 exceeds the 1% risk budget
