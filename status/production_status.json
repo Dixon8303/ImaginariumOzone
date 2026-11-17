@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T20:35:12Z",
+  "last_synced": "2026-11-17T21:05:49Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3251,7 +3251,7 @@
       "id": "EP72",
       "number": 72,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3283,7 +3283,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "pending"
         },
         {
           "name": "voice_ssml",
@@ -3291,7 +3291,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "failed"
+          "status": "pending"
         },
         {
           "name": "titles_seo",
@@ -3315,7 +3315,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-10T20:35:06Z"
+      "updated_at": "2026-11-17T21:05:48Z"
     },
     {
       "id": "EP74",
@@ -4486,7 +4486,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
@@ -4514,7 +4514,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T18:35:11Z"
+      "updated_at": "2026-11-17T21:05:48Z"
     },
     {
       "id": "EP91",
