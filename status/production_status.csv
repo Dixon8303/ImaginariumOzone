@@ -65,7 +65,7 @@ EP91,91,Unreleased episode,running,voice_ssml,9,15,,,2026-11-17T02:05:59Z
 EP92,92,Unreleased episode,running,ken_burns,10,15,,,2026-11-17T02:05:59Z
 EP93,93,Unreleased episode,running,voice_ssml,9,15,,,2026-11-17T02:05:59Z
 EP94,94,Unreleased episode,review,script,4,15,,,2026-11-15T19:05:07Z
-EP95,95,Unreleased episode,running,ken_burns,8,15,,,2026-11-17T02:05:59Z
+EP95,95,Unreleased episode,review,ken_burns,10,15,,,2026-11-17T06:35:12Z
 EP96,96,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
 EP97,97,Unreleased episode,review,script,5,15,,,2026-11-17T02:05:59Z
 EP98,98,Unreleased episode,running,generation,10,15,,,2026-11-16T22:35:08Z
@@ -80,4 +80,4 @@ EP106,106,Unreleased episode,running,generation,10,15,,,2026-11-17T02:06:00Z
 EP107,107,Unreleased episode,review,script,4,15,,,2026-11-14T08:05:06Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
 EP110,110,Unreleased episode,draft,batch_primer,0,15,,,2026-11-17T03:05:10Z
-_last_synced,,2026-11-17T06:05:09Z,,,,,,,
+_last_synced,,2026-11-17T06:35:12Z,,,,,,,
