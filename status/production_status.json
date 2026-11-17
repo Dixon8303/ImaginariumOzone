@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T08:05:36Z",
+  "last_synced": "2026-11-17T09:05:14Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1790,7 +1790,7 @@
         },
         {
           "name": "storyboard",
-          "status": "failed"
+          "status": "done"
         },
         {
           "name": "generation",
@@ -1798,7 +1798,7 @@
         },
         {
           "name": "ken_burns",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "voice_ssml",
@@ -1822,7 +1822,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T08:05:33Z"
+      "updated_at": "2026-11-17T09:05:13Z"
     },
     {
       "id": "EP50",
@@ -4343,11 +4343,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -4371,7 +4371,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:05:59Z"
+      "updated_at": "2026-11-17T09:05:14Z"
     },
     {
       "id": "EP89",
@@ -4797,7 +4797,7 @@
       "id": "EP95",
       "number": 95,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -4853,15 +4853,15 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T07:35:09Z"
+      "updated_at": "2026-11-17T09:05:14Z"
     },
     {
       "id": "EP96",
