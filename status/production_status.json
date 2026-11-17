@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T03:05:10Z",
+  "last_synced": "2026-11-17T04:05:13Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2148,7 +2148,7 @@
         },
         {
           "name": "script",
-          "status": "done"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -2192,7 +2192,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T02:05:57Z"
+      "updated_at": "2026-11-17T04:05:13Z"
     },
     {
       "id": "EP55",
