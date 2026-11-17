@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-17T07:35:09Z",
+  "last_synced": "2026-11-17T08:05:36Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1822,7 +1822,7 @@
         },
         {
           "name": "shorts",
-          "status": "done"
+          "status": "pending"
         },
         {
           "name": "upload",
@@ -1830,7 +1830,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-16T19:35:09Z"
+      "updated_at": "2026-11-17T08:05:33Z"
     },
     {
       "id": "EP50",
@@ -2311,7 +2311,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -2335,7 +2335,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T07:35:08Z"
+      "updated_at": "2026-11-17T08:05:33Z"
     },
     {
       "id": "EP58",
