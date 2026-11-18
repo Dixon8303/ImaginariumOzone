@@ -305,6 +305,167 @@ accrual begins when it is, and the start date is recorded here then.
 
 ---
 
+## H-29 — Opening-range breakout on single stocks, 5-minute trigger, 2R
+
+**Registered:** 2026-11-18, BEFORE any detector, harness, data pull or
+backtest for this variant exists. The commit carrying this entry
+precedes any implementation commit; git history is the timestamp.
+
+**Provenance.** The operator supplied a dossier, "Claude Code Day Trader
+Dossier: The 11-Skill Integration Guide", summarising a video about the
+third-party `day-trader-skill` pack. Its Entry Timer builds "the high and
+low of the first 15 minutes" and "waits for a trigger event — such as a
+5-minute bar closing above the range high"; its scanner looks for
+opening-range breakouts; the operator's own sequence asked for a minimum
+reward-to-risk of 2.0. The operator approved registering it the same
+day. Registration is the pack's "Time Machine" idea done on this
+program's terms: decide whether the setup has an edge before anything
+trades it.
+
+**Relationship to H7, stated so the result cannot be misread.** H7
+(RESEARCH_LOG 2026-08-15) tested a 15-minute ORB on SPY and QQQ with a
+1-minute-close trigger, both directions, the stop at the opposite bound
+and the exit at stop or session close, with no target. Both tickers
+scored NOISE: slightly positive in-sample, negative out of sample, with
+a breakout almost every session. H-29 changes exactly four things: a
+**5-minute** trigger, **long only**, a **fixed 2R target**, and **single
+stocks** instead of index ETFs. H7 is the prior. Nothing here reopens
+H7, and SPY/QQQ results cannot be imported into this verdict in either
+direction.
+
+**Claim.** On liquid single stocks, the first 5-minute close above the
+15-minute opening range, held to a 2R target or the opposite-bound
+stop, has positive expectancy net of friction.
+
+### Frozen rules
+
+**Opening range.** High and low of the RTH bars from 09:30:00 to
+09:44:59 ET. A session with any missing minute in that window is
+skipped, not interpolated.
+
+**Trigger.** The first 5-minute bar from 09:45 ET onward (bars aligned
+to :45, :50, :55 …) whose CLOSE is strictly above the range high. One
+trigger per ticker per session; later breakouts that session are
+ignored, whatever happens to the first.
+
+**Entry.** The open of the next 1-minute bar after the trigger bar
+closes. Never the trigger bar's own close, which nobody can trade at.
+
+**Stop.** The range LOW, the opposite bound, as in H7. Keeping H7's stop
+means the variant differs from H7 only in the four stated ways. A gap
+through the stop fills at that bar's open.
+
+**Target.** Entry + 2.0 x (entry − stop). The 2.0 is the operator's
+stated minimum reward-to-risk, taken as given and not tuned.
+
+**Direction.** Long only. The source describes only the upside trigger,
+and this program trades long only. A short-side mirror is reported as
+context and cannot change the verdict.
+
+**Session completion.** No entries after 15:00 ET. A position still open
+at 16:00 ET closes at the session's last price and is booked at that R.
+
+**Intrabar resolution.** Exits are resolved on 1-minute bars. If one
+bar contains both stop and target, the **stop** fills first, the same
+conservative rule as H7 and H-28. Ties never resolve in the strategy's
+favour.
+
+**No ranking.** The source ranks setups "by likelihood of
+profitability" but gives no formula for it, and this program's last
+ranking score failed its holdout (FWD-1). Inventing a ranking now would
+be a free parameter chosen blind. The study therefore takes **every**
+qualifying trigger. A "top 3 per session" variant, ranked by trigger-bar
+relative volume, is reported as context only.
+
+**Instruments: the 36 single stocks in `UNIVERSE` at this commit.**
+AAL AAPL ABBV AMD AMZN BA BAC COIN CRM CVX DAL DIS F GOOGL HOOD JPM KO
+META MSFT MU NFLX NVDA ORCL PFE PLTR PYPL RTX SBUX SOFI T TSLA UNH V VZ
+WMT XOM. IWM, QQQ, SPY and the sector ETFs are excluded: index products
+are H7's ground. The dossier's "nearly 6,000 tickers" is out of scope.
+A universe that wide cannot be pulled from one consistent source here,
+and the scan would choose its own winners after the fact.
+
+**Window, fixed now.** The 500 complete RTH sessions ending
+**2026-11-13**, the last full week before registration. Later sessions
+are not added if the study runs late. Half-days are skipped by the
+existing `MIN_SESSION_BARS` rule.
+
+**Friction.** A **5 bp round trip** per trade (CALIBRATE), charged in R
+as `0.0005 x entry / (entry − stop)`. Large-cap single stocks are
+costlier to trade than the index ETFs H7 charged 2 bp for. A narrow
+range makes 1R small and the friction large in R, and that is real, so
+it is charged in full.
+
+**Data requirement.** Consolidated (SIP) 1-minute bars for every ticker,
+from one consistent vendor and one pull. A missing ticker-day aborts the
+study rather than silently shrinking the sample (LAW 18). The free IEX
+feed carries a small share of each stock's volume. Its bar highs and
+lows are not the consolidated tape, and the direction of the resulting
+bias is unknown. **A run on IEX bars may report numbers but returns
+INCONCLUSIVE (data), whatever they show.** The 2026-10-12 census cannot
+settle SIP access: both of its runs were invalid.
+
+**Nothing in this registration is fitted.** Every rule comes from the
+source, from H7's conventions, or from the operator's 2.0. No parameter
+is chosen on this data, so every trade is out of sample.
+
+### Success criterion, fixed now
+
+Same-day trades across tickers are not independent: one market move
+lifts or sinks all 36 together. The unit of inference is therefore the
+**session**. Each session's trades are averaged into one session mean,
+and the statistics run over session means.
+
+- **CONFIRMED (study-eligible)** requires ALL of:
+  - net expectancy (per trade, after friction) **>= +0.10R**;
+  - over session means, a one-sided 95% lower bound **> 0** (t > 1.645,
+    sessions as the unit);
+  - **>= 250 sessions** containing at least one trade;
+  - positive net expectancy in **>= half of judged calendar quarters**
+    (a quarter is judged at >= 100 trades);
+  - **no single ticker contributing more than 20%** of total net R;
+  - **break-even friction >= 10 bp** round trip, twice the baseline.
+- **FAILED** if the sample is reached on SIP data and any clause is
+  missed.
+- **INCONCLUSIVE** below 250 trading sessions, or on IEX-only data.
+
+**Why +0.10R and not "> 0".** At a 2R target the break-even win rate is
+33%. A strategy sitting at +0.02R loses money once real costs drift above
+the 5 bp assumption. The live doctrine this would sit beside measured
++0.18R to +0.32R out of sample. A day-trading setup that cannot clear
++0.10R net is not worth the slot, the PDT exposure or the operator's
+attention.
+
+**Why session clustering.** About 36 tickers can fire on each of 500
+sessions, and H7's ORB fired almost every day, so the trade count will
+run to thousands. Counted as independent trades, they would manufacture
+significance out of correlation. Session means cannot.
+
+Per-ticker, per-quarter, per-hour-of-trigger, short-mirror and top-3
+splits are computed and reported as **context, never criteria** (LAW 20).
+
+**What CONFIRMED does NOT license.** It makes H-29 eligible for a
+decision, nothing more. Before any execution path exists:
+- the §38 edge half-life must be measured on the actual execution path,
+  as for H-27;
+- the macro calendar must be current, because 8:30 ET releases land just
+  before the opening range;
+- the one-new-setup-at-a-time rule applies, and H-24 and H-28 are queued
+  ahead.
+
+The real small account cannot run it at all: a cash account under
+$25,000 hits good-faith-violation and pattern-day-trader limits on daily
+round trips (RESEARCH_LOG 2026-08-28).
+
+**What may NOT be done before the verdict.** No execution path, no
+capital, no paper or live wiring, no entry into the live scan or into a
+chat "RUN SEQUENCE". The work exists as study code and nothing else.
+Partial results do not license a test position.
+
+**Status:** OPEN — registered, implementation and study to follow.
+
+---
+
 ## H-28 — Liquidity rejection at range extremes, ATR-gated
 
 **Registered:** 2026-09-25, BEFORE any detector, harness or backtest for
