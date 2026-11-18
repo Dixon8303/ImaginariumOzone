@@ -113,6 +113,8 @@ recent data). For every open options position from `data/executions.jsonl`:
 | Volatility ETPs (VXX, UVXY, and kin) | **NO long premium, ever** — these products decay structurally (contango roll), so long calls fight a built-in downward drift on top of theta. Mechanism-based rule, adopted 2026-08-16 after broker-history forensics (18 VXX trades, 67% win rate, −$857). |
 | Order type | Limit at mid, day only |
 
+**Enforced on the paper track since 2026-11-18.** Until then the 3% daily halt and the 10% drawdown freeze above lived only in the risk engine; the evening paper run checked neither. It now stops NEW entries (stock and options) at either limit and keeps every exit running. A halt clears the next session on its own. A freeze holds until you re-arm it: open `paper/risk_rearm.json` on github.com, set `"rearmed_on"` to today's date in quotes, and commit. That restarts the peak from that date.
+
 **The one deliberate exception: micro-account override (paper only).**
 At paper equity under $500 — the size where 1%/5% sizing returns zero
 shares for nearly the whole universe — set `RS_MICRO_ACCOUNT_OVERRIDE=YES`

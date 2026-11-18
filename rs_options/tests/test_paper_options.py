@@ -195,8 +195,14 @@ def test_cycle_buys_a_contract_and_records_it():
     assert rec["entry_underlying"] == SPOT
 
 
-def test_cycle_exits_on_doctrine_and_frees_the_name():
-    """A held contract whose underlying broke invalidation must be sold."""
+def test_cycle_exits_on_doctrine_and_keeps_watching_until_filled():
+    """A held contract whose underlying broke invalidation must be sold —
+    and must stay in the book until the broker confirms it is gone.
+
+    This test used to assert the opposite (`symbol not in book` right
+    after the sell was sent). That was the bug: a day-only limit that
+    never filled left the contract in the account with nothing watching
+    it. Seven positions were stranded that way by 2026-11-17."""
     import pandas as pd
     symbol = contract(194)["symbol"]
     ledger = {"open": {}, "closed": [], "options": {symbol: dict(
@@ -209,6 +215,17 @@ def test_cycle_exits_on_doctrine_and_frees_the_name():
     opened, closed, notes = daily.run_option_cycle(
         broker, [], bars, str(AS_OF), ledger)
     assert broker.sold == [(symbol, 2, 2.5)]      # limit at the mid, not market
+    assert closed == [], "a sell that was only SENT is not a close"
+    pending = ledger["options"][symbol]["sell_pending"]
+    assert pending["kind"] == "exit" and pending["date"] == str(AS_OF)
+    assert any("INVALIDATION" in r for r in pending["reasons"])
+    assert any("SELL SENT" in n for n in notes)
+
+    # Next session the broker no longer holds it: NOW it is closed, with
+    # the reasons the exit was sent for.
+    gone = FakeOptionsBroker()
+    _, closed, _ = daily.run_option_cycle(gone, [], bars, "2026-08-17",
+                                          ledger)
     assert symbol not in ledger["options"]
     assert any("INVALIDATION" in r for r in closed[0][3])
 

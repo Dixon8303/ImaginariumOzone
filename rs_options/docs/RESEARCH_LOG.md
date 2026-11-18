@@ -2547,3 +2547,49 @@ Design notes worth recording:
 469 tests passing (14 new). The study runs where the bar vendors are
 reachable: Actions -> "RS H-26 Study" -> Run workflow, which appears
 once this merges.
+
+## 2026-11-18 — Option exits stranded seven positions; account limits enforced
+
+Found while checking the account for a risk step: the 2026-11-17 report
+listed seven positions with `stop ? target ?`. None was in the ledger,
+no rule watched them, and they carried **$3,921 of the account's $4,405
+open loss**. All seven were placed by `run_option_cycle` itself:
+
+- **A sent sell was booked as a close.** The exit loop called
+  `sell_to_close` (limit at the mid, day only) and deleted the contract
+  from the book in the same step. When the limit did not fill, the order
+  expired at the close and the contract stayed in the account,
+  forgotten. The report printed `SOLD` for sales that never happened.
+  CVX, DAL and XOM 2026-11-20 calls were stranded this way.
+- **The backup run dropped and re-bought pending entries.** The 22:10
+  UTC fire found the 21:35 buy not yet filled, recorded it as
+  "reconciled", deleted it, and — the name now looking free — bought it
+  again. Both orders filled at the next open: KO 100C shows 4 held
+  against 2 sized, double the 1% risk. The workflow comment calling a
+  duplicate evening run "safe" was true of stocks only.
+- **Exercise turned stranded calls into stock.** The 500 PFE and 100
+  XOM shares appeared right after bot-bought calls expired in the money
+  (inferred from report timing; no report records the exercise).
+
+Fix: a contract leaves the book only when the broker no longer holds
+it. Sent sells and pending buys are recorded with their session date, so
+a second run that session neither re-sends nor drops them; an unfilled
+sell is re-sent at the next session's mid; exits sell what the broker
+holds, not what the book says; a surplus from a double fill is sold and
+the sized trade kept. `closed` now means confirmed. The operator chose
+to close the seven (`ORPHAN_CLOSE`), options limit-at-mid and stock like
+the 2026-09-02 manual closes; none is booked as a doctrine trade. The
+cumulative R record is stock-only and was never affected.
+
+**Account limits (operator decision, same day).** The spec's 10%
+drawdown FREEZE and 3% daily-loss HALT (§4, `HardRiskConstants`) were
+enforced by the risk engine and the co-pilot scan, never by this
+trader, which stood 8.1% below its $101,858.65 peak. Both now gate new
+entries — stock and options — and read their numbers from the engine's
+constants so the two cannot drift. Exits always run. A freeze holds
+until the operator sets `rearmed_on` in `paper/risk_rearm.json`, which
+restarts the peak from that date (§60 Level 4).
+
+A dry run against the real 11/17 ledger and positions sent one close
+for each of the seven and a 2-contract surplus sale for KO 100C; the
+same-session backup run sent nothing further.

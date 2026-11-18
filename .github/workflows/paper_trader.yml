@@ -30,7 +30,9 @@ on:
     # arrived on time); mode selection is wall-clock-based, and a
     # duplicate evening run is safe — entries are already-held-skipped,
     # the equity snapshot is date-deduped, and the concurrency group
-    # serializes.
+    # serializes. Until 2026-11-18 that was NOT true of options: the
+    # backup run dropped a not-yet-filled buy and bought the name again.
+    # The book now keeps pending buys and sent sells by session date.
     - cron: "10 22 * * 1-5"
   workflow_dispatch:
     inputs:

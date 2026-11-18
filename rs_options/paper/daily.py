@@ -66,6 +66,7 @@ from mve.significance import forward_track_line
 from mve.universe import BENCHMARK, SECTOR_ETF, UNIVERSE, required_tickers
 from mve.vix_regime import load_term_structure, ratio_on, regime_label
 from mve.volume_profile import overhead_supply, point_of_control
+from rs_options_risk.config import HardRiskConstants
 
 from .growth_tracker import format_growth, growth_summary, load_equity_history
 from .growth_tracker import record_equity
@@ -76,9 +77,23 @@ from .micro_sizing import (count_open_micro_positions, micro_cooloff_active,
 from .option_costs import collect as collect_option_costs
 from .option_costs import format_costs
 from .option_costs import record as record_option_costs
-from .options_broker import contracts_to_buy, mid_price, select_contract
+from .options_broker import (contracts_to_buy, mid_price, parse_occ_symbol,
+                             select_contract)
 
 RISK_PCT = 0.01              # 1% of paper equity risked per trade
+# Spec §4 account limits, read from the risk engine's own constants so
+# this trader and the co-pilot gate cannot drift apart. Until 2026-11-18
+# neither was enforced here at standard equity — only the micro path
+# checked drawdown — while the account sat 8.1% below its peak. Both
+# stop NEW entries only: exits, reconciliation and cleanup always run,
+# because refusing to sell is not a way to reduce risk.
+_HARD_LIMITS = HardRiskConstants()
+DRAWDOWN_FREEZE_PCT = _HARD_LIMITS.max_portfolio_drawdown_pct   # → FREEZE
+DAILY_LOSS_HALT_PCT = _HARD_LIMITS.daily_loss_limit_pct         # → HALT
+# A FREEZE holds until the operator re-arms (spec §60 Level 4). Re-arming
+# means: set "rearmed_on" in this file to a date, which restarts the
+# peak-equity count from that date. Editable directly on github.com.
+REARM_PATH = os.path.join("paper", "risk_rearm.json")
 MAX_POSITION_PCT = 0.05      # 5% notional cap (mirrors HoneyDrip)
 MAX_OPEN = 8                 # concurrent-position cap
 # Same percentages the playbook's hard-limits table already states for
@@ -94,7 +109,29 @@ MAX_OPTIONS_CLUSTER_PCT = 0.10
 # closures change cash/equity but never the doctrine trade record.
 # Remove a ticker from this tuple to hold it manually again.
 MANUAL_CLOSE_TICKERS = ("IBM", "NVDA", "QQQ", "TGT")
-MIN_BARS = 260               # doctrine needs 253+ bars (12-1 momentum)
+# Operator decision 2026-11-18: close the positions the option cycle
+# orphaned before its exit fix. Until then it erased a contract from the
+# book the moment it SENT a sell, so a limit that never filled left the
+# position in the account with no rule watching it; and a second evening
+# run dropped a not-yet-filled buy as "reconciled", then bought it again.
+# The stock lots arrived when orphaned calls expired in the money
+# (inferred from report timing — no report records the exercise). None
+# of these is in the ledger, so closing them changes cash and equity but
+# never the doctrine trade record. Once a symbol is gone it is inert.
+ORPHAN_CLOSE = {
+    "CVX261120C00220000": "exit sell never filled, then forgotten",
+    "DAL261120C00080000": "exit sell never filled, then forgotten",
+    "XOM261120C00185000": "exit sell never filled, then forgotten",
+    "KO270115C00097500": "dropped from the book, still held",
+    "PFE261218C00031000": "dropped from the book, still held",
+    "PFE": "shares from an orphaned call expiring in the money",
+    "XOM": "shares from an orphaned call expiring in the money",
+}
+# Alpaca order states that mean "not finished yet".
+WORKING_ORDER_STATES = ("new", "accepted", "pending_new", "held",
+                        "partially_filled", "accepted_for_bidding",
+                        "pending_replace", "pending_cancel")
+MIN_BARS = 260              # doctrine needs 253+ bars (12-1 momentum)
 HISTORY_DAYS = 420           # calendar days of bars to fetch
 MAX_BAR_AGE_DAYS = 4         # pre-open: yesterday's close is
                              # correct; a week old is broken
@@ -188,6 +225,125 @@ def position_size(equity: float, close: float, stop: float) -> int:
     return max(0, min(qty, int(equity * MAX_POSITION_PCT / close)))
 
 
+# ── account-level limits (spec §4: drawdown FREEZE, daily-loss HALT) ──
+def load_rearm_date(path: str | None = None) -> str | None:
+    """The operator's re-arm date, or None. A malformed file raises: a
+    freeze that silently lifts because the file could not be read would
+    defeat the point of having one."""
+    path = path or REARM_PATH
+    if not os.path.exists(path):
+        return None
+    with open(path) as f:
+        value = json.load(f).get("rearmed_on")
+    if value:
+        date.fromisoformat(value)
+    return value or None
+
+
+def account_gate(history: list, equity: float, today: str,
+                 rearmed_on: str | None = None) -> dict:
+    """Whether NEW entries are allowed this session.
+
+    Peak is the highest recorded equity since inception (or since the
+    operator's re-arm date) including this run's. The daily loss is
+    measured against the last session recorded BEFORE today, so a
+    second run in the same evening reads the same baseline as the first.
+    """
+    since = [h for h in history
+             if (not rearmed_on or h["date"] >= rearmed_on)
+             and h["date"] <= today]
+    peak_row = max(since, key=lambda h: h["equity"], default=None)
+    peak, peak_date = equity, today
+    if peak_row and peak_row["equity"] > equity:
+        peak, peak_date = peak_row["equity"], peak_row["date"]
+    drawdown = (peak - equity) / peak if peak > 0 else 0.0
+
+    before = [h for h in history if h["date"] < today]
+    prev = before[-1]["equity"] if before else None
+    daily_loss = ((prev - equity) / prev) if prev else 0.0
+
+    # Rounded before comparing: equity is in cents, and float division
+    # puts an exact 10.00% drawdown at 0.09999…, which must still freeze.
+    frozen = round(drawdown, 6) >= DRAWDOWN_FREEZE_PCT
+    halted = round(daily_loss, 6) >= DAILY_LOSS_HALT_PCT
+    reason = None
+    if frozen:
+        reason = (f"FREEZE: equity is {drawdown:.1%} below its "
+                  f"${peak:,.2f} peak ({peak_date}), at or past the "
+                  f"{DRAWDOWN_FREEZE_PCT:.0%} limit — no new entries until "
+                  f"the operator re-arms in {REARM_PATH}")
+    elif halted:
+        reason = (f"HALT: down {daily_loss:.1%} on the session, at or past "
+                  f"the {DAILY_LOSS_HALT_PCT:.0%} daily limit — no new "
+                  "entries today")
+    return dict(blocked=bool(reason), frozen=frozen, halted=halted,
+                reason=reason, drawdown=drawdown, peak=peak,
+                peak_date=peak_date, daily_loss=daily_loss, prev=prev)
+
+
+def format_account_gate(gate: dict) -> str:
+    line = (f"RISK LIMITS: drawdown {gate['drawdown']:.1%} of the "
+            f"{DRAWDOWN_FREEZE_PCT:.0%} freeze (peak ${gate['peak']:,.2f} "
+            f"on {gate['peak_date']})")
+    if gate["prev"] is not None:
+        line += (f" | session {0.0 - gate['daily_loss'] + 0.0:+.1%} vs the "
+                 f"{DAILY_LOSS_HALT_PCT:.0%} daily halt")
+    if gate["blocked"]:
+        line += "\n  ENTRIES BLOCKED — " + gate["reason"]
+    return line
+
+
+# ── broker positions the doctrine does not manage ────────────────────
+def held_qty(position: dict, fallback: int) -> int:
+    """Contracts/shares the broker actually holds. Exits sell this, not
+    the book's number, so a duplicate fill can never be left behind."""
+    try:
+        return int(float(position["qty"]))
+    except (KeyError, TypeError, ValueError):
+        return fallback
+
+
+def close_orphans(broker, positions: dict, ledger: dict, today: str) -> tuple:
+    """Close the operator-listed ORPHAN_CLOSE positions. Options sell
+    limit-at-mid, day only (§38), exactly like a doctrine exit; stock
+    closes the way MANUAL_CLOSE_TICKERS does. A symbol already sent this
+    session is skipped, so a duplicate evening run cannot double-sell.
+    Anything that fails is retried next run and never stops the run."""
+    sent, notes = [], []
+    closing = ledger.setdefault("orphan_closing", {})
+    managed = set(ledger["open"]) | set(ledger.get("options", {}))
+    for sym, why in ORPHAN_CLOSE.items():
+        if sym not in positions:
+            closing.pop(sym, None)
+            continue
+        if sym in managed or closing.get(sym) == today:
+            continue
+        qty = held_qty(positions[sym], 0)
+        if qty < 1:
+            continue
+        try:
+            if is_option_symbol(sym):
+                underlying = parse_occ_symbol(sym)["ticker"]
+                mid = mid_price((broker.quotes(underlying) or {})
+                                .get(sym, {}))
+                if mid is None:
+                    notes.append(f"{sym}: no tradable quote — close "
+                                 "retried next run")
+                    continue
+                broker.sell_to_close(sym, qty, mid)
+                how = f"limit {mid:.2f}"
+            else:
+                broker.cancel_symbol_orders(sym)
+                broker.close_position(sym)
+                how = "market, at the next open"
+        except Exception as e:
+            notes.append(f"{sym}: close failed ({e}) — retried next run")
+            continue
+        closing[sym] = today
+        sent.append((sym, qty, how, why))
+    return sent, notes
+
+
 # ── daily cycle ──────────────────────────────────────────────────────
 def load_open_options(path: str | None = None) -> list:
     """Operator-maintained Robinhood option positions. Malformed entries
@@ -259,8 +415,30 @@ def exceeds_cluster_cap(cluster_exposure: float, equity: float) -> bool:
     return cluster_exposure > equity * MAX_OPTIONS_CLUSTER_PCT
 
 
+def _order_state(broker, order_id) -> dict | None:
+    """The broker's view of one order, or None when it cannot be read
+    (no id, a fake without order lookup, or an API error)."""
+    if not order_id or not hasattr(broker, "order"):
+        return None
+    try:
+        return broker.order(order_id) or None
+    except Exception:
+        return None
+
+
+def _realized_pl(rec: dict, sell: dict) -> float | None:
+    """P&L of a confirmed exit, from the sell order's own fill."""
+    o = sell.get("order") or {}
+    fill = o.get("filled_avg_price")
+    if fill is None:
+        return None
+    qty = float(o.get("filled_qty") or sell.get("qty") or rec["qty"])
+    return round((float(fill) - rec["entry_price"]) * qty * 100.0, 2)
+
+
 def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
-                     ledger: dict, fundamentals: dict | None = None) -> tuple:
+                     ledger: dict, fundamentals: dict | None = None,
+                     blocked_reason: str | None = None) -> tuple:
     """Autonomous PAPER options: exit held contracts the doctrine says to
     close, then open new ones for today's signals.
 
@@ -273,6 +451,17 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
     FWD-3 (docs/PREREGISTERED.md), recording only. It never gates or
     sizes a trade; omitting it (or an empty cache) tags every entry
     `None` and changes nothing else.
+
+    `blocked_reason` (the account FREEZE/HALT) suppresses new entries
+    only. Exits always run.
+
+    A contract stays in the book until the broker no longer holds it.
+    Sending a sell is not closing a position: a day-only limit that does
+    not fill expires at the close, and until 2026-11-18 the book forgot
+    the contract the moment the sell went out, leaving it in the account
+    with no rule watching it. `closed` now holds confirmed closes only;
+    a sell that was merely sent is reported in `notes` and retried each
+    session until the position is gone.
     """
     as_of = date.fromisoformat(today)
     book = ledger.setdefault("options", {})
@@ -282,10 +471,37 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
     # ── exits first ──────────────────────────────────────────────────
     for symbol in list(book):
         rec = book[symbol]
-        if symbol not in held:                      # already gone
-            closed.append((symbol, rec, None, "reconciled"))
+        sell = rec.get("sell_pending")
+        if symbol not in held:
+            if rec.get("entry_pending"):
+                if rec["entry_date"] == today:
+                    continue          # bought tonight; fills at the open
+                o = _order_state(broker, rec.get("entry_order_id"))
+                if o is None or not float(o.get("filled_qty") or 0):
+                    del book[symbol]
+                    notes.append(f"{symbol}: entry order "
+                                 + ("never filled" if o is not None
+                                    else "not held and unreadable")
+                                 + " — dropped, not a trade")
+                    continue
+            if sell and sell.get("kind") == "exit":
+                sell["order"] = _order_state(broker, sell.get("order_id"))
+                pl = _realized_pl(rec, sell)
+                closed.append((symbol, rec,
+                               {"realized_pl": pl} if pl is not None
+                               else None, tuple(sell["reasons"])))
+            else:                   # expired, assigned, or closed by hand
+                closed.append((symbol, rec, None, "reconciled"))
             del book[symbol]
             continue
+        rec.pop("entry_pending", None)                  # it filled
+        if sell and sell.get("date") == today:
+            continue          # a sell sent earlier this session still works
+        qty_held = held_qty(held[symbol], rec["qty"])
+        if qty_held < rec["qty"]:
+            notes.append(f"{symbol}: broker holds {qty_held}, book said "
+                         f"{rec['qty']} — book corrected")
+            rec["qty"] = qty_held
         bars = all_bars.get(rec["ticker"])
         if bars is None or bars.empty:
             notes.append(f"{symbol}: no underlying bars — NOT evaluated")
@@ -298,7 +514,14 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
             entry_date=date.fromisoformat(rec["entry_date"]),
             entry_underlying=rec["entry_underlying"])
         verdict = evaluate_exit(position, float(bars["close"].iloc[-1]), as_of)
-        if verdict.must_exit:
+        # More held than the book sized for is a duplicate fill (the
+        # second-run double buy). Sell the surplus; the trade the
+        # doctrine sized stays under its rules.
+        excess = qty_held - rec["qty"]
+        if verdict.must_exit or excess > 0:
+            what = ("EXIT due (" + ", ".join(verdict.reasons) + ")"
+                    if verdict.must_exit
+                    else f"{excess} contract(s) over the sized {rec['qty']}")
             # Exit sells the same way entries buy — limit at the mid, day
             # only (§38) — so a fresh quote is required here too. A stale
             # or missing quote means the sell is deferred to the next
@@ -308,20 +531,39 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
                 mid = mid_price((broker.quotes(rec["ticker"]) or {})
                                 .get(symbol, {}))
             except Exception as e:
-                notes.append(f"{symbol}: EXIT due ({', '.join(verdict.reasons)}) "
-                             f"but quote fetch failed ({e}) — retrying next run")
+                notes.append(f"{symbol}: {what} but quote fetch failed "
+                             f"({e}) — retrying next run")
                 continue
             if mid is None:
-                notes.append(f"{symbol}: EXIT due ({', '.join(verdict.reasons)}) "
-                             "but no tradable quote — retrying next run")
+                notes.append(f"{symbol}: {what} but no tradable quote — "
+                             "retrying next run")
                 continue
-            broker.sell_to_close(symbol, rec["qty"], mid)
-            closed.append((symbol, rec, held[symbol], verdict.reasons))
-            del book[symbol]
+            qty = qty_held if verdict.must_exit else excess
+            order = broker.sell_to_close(symbol, qty, mid) or {}
+            rec["sell_pending"] = dict(
+                kind="exit" if verdict.must_exit else "excess",
+                date=today, qty=qty, limit=round(mid, 4),
+                order_id=order.get("id"), reasons=list(verdict.reasons))
+            notes.append(f"{symbol}: SELL SENT {qty}x limit {mid:.2f} — "
+                         f"{what}. Booked when the broker confirms the "
+                         "position is gone; re-sent each session until "
+                         "then.")
+        elif sell:
+            rec.pop("sell_pending")       # surplus sold; nothing pending
 
     # ── entries ──────────────────────────────────────────────────────
+    if blocked_reason:
+        if signals:
+            notes.append(f"no option entries — {blocked_reason}")
+        return opened, closed, notes
     equity = float(broker.account()["equity"])
-    open_count = len(held) - len(closed)
+    # Slots: everything held, plus buys still waiting for the open, less
+    # contracts being sold out. Surplus sales free nothing.
+    waiting = [s for s, r in book.items()
+               if r.get("entry_pending") and s not in held]
+    exiting = [s for s, r in book.items() if s in held
+               and (r.get("sell_pending") or {}).get("kind") == "exit"]
+    open_count = len(held) + len(waiting) - len(exiting)
     for sig in signals:
         if open_count >= MAX_OPEN:
             break
@@ -384,12 +626,16 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
                     f"exposure would reach ${cluster_exposure:,.0f}, over "
                     f"the {MAX_OPTIONS_CLUSTER_PCT:.0%}-of-equity cluster cap")
                 continue
-        broker.buy_to_open(pick["symbol"], qty, pick["mid"])
+        order = broker.buy_to_open(pick["symbol"], qty, pick["mid"]) or {}
         net_income = (trailing_net_income(fundamentals, sig["ticker"], today)
                      if fundamentals else None)
         book[pick["symbol"]] = dict(
             ticker=sig["ticker"], qty=qty, entry_price=pick["mid"],
             expiry=pick["expiration_date"], strike=float(pick["strike_price"]),
+            # Not held until the open fills it. Kept in the book meanwhile
+            # so a second run this session neither drops it nor buys the
+            # name again (both happened before 2026-11-18).
+            entry_pending=True, entry_order_id=order.get("id"),
             entry_date=today, invalidation_price=sig["stop"],
             entry_underlying=sig["close"], basis=pick["basis"],
             delta=pick["delta"], spread_pct=round(pick["spread_pct"], 4),
@@ -423,20 +669,31 @@ def format_option_cycle(cycle, ledger: dict) -> str:
                      "gate or size this trade")
     for symbol, rec, position, reasons in closed:
         pnl = ""
-        if position:
+        if position and position.get("realized_pl") is not None:
+            pnl = f"  P&L ${float(position['realized_pl']):+,.2f}"
+        elif position:
             pnl = f"  P&L ${float(position.get('unrealized_pl', 0)):+,.2f}"
         why = (", ".join(reasons) if isinstance(reasons, tuple) else reasons)
-        lines.append(f"  SOLD   {rec['qty']}x {symbol}{pnl}  ({why})")
+        lines.append(f"  CLOSED {rec['qty']}x {symbol}{pnl}  ({why}) — "
+                     "confirmed: the broker no longer holds it")
     if not opened and not closed:
         lines.append("  no option trades today")
 
     if book:
         lines.append(f"  holding {len(book)}:")
         for symbol, rec in sorted(book.items()):
+            state = ""
+            if rec.get("entry_pending"):
+                state = "  [buy queued for the open]"
+            elif rec.get("sell_pending"):
+                s = rec["sell_pending"]
+                state = (f"  [{s['kind']} sell sent {s['date']}, "
+                         f"{s['qty']}x limit {s['limit']:.2f} — not yet "
+                         "filled]")
             lines.append(f"    {symbol}  {rec['qty']}x @ "
                          f"${rec['entry_price']:.2f}  since {rec['entry_date']}"
                          f"  stop-if-underlying <= "
-                         f"{rec['invalidation_price']:.2f}")
+                         f"{rec['invalidation_price']:.2f}{state}")
     for note in notes:
         lines.append(f"  note: {note}")
     return "\n".join(lines)
@@ -473,6 +730,10 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     # from the broker each run regardless (see paper/growth_tracker.py).
     record_equity(today, equity)
     growth = growth_summary(load_equity_history())
+    # Spec §4 account limits. Gates NEW entries only (step 4 and the
+    # options cycle); everything that reduces risk still runs.
+    gate = account_gate(load_equity_history(), equity, today,
+                        load_rearm_date())
 
     # 1. refine estimated entries with actual fills
     for sym, rec in ledger["open"].items():
@@ -597,6 +858,11 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
             except Exception:
                 pass                      # retried next run; never fatal
 
+    # 3d. positions the option cycle orphaned (ORPHAN_CLOSE, operator
+    # decision 2026-11-18). Never booked as trades.
+    orphan_sent, orphan_notes = close_orphans(broker, positions, ledger,
+                                              today)
+
     # 4. new entries
     signals = scan(all_bars)
     micro = micro_override_active(equity)
@@ -634,6 +900,9 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
         sym = sig["ticker"]
         if sym in positions or sym in ledger["open"]:
             skipped.append((sym, "already held"))
+            continue
+        if gate["blocked"]:
+            skipped.append((sym, gate["reason"]))
             continue
         if len(equity_open) + len(placed) >= MAX_OPEN:
             skipped.append((sym, "position cap"))
@@ -705,7 +974,8 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     if hasattr(broker, "option_positions"):
         try:
             opt = run_option_cycle(broker, signals, all_bars, today, ledger,
-                                   fundamentals=fundamentals)
+                                   fundamentals=fundamentals,
+                                   blocked_reason=gate["reason"])
         except Exception as e:                  # never lose the equity run
             opt = ([], [], [f"option cycle FAILED: {e}"])
 
@@ -726,7 +996,8 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
                         option_cycle=opt, gap_cancelled=gap_cancelled,
                         cost_rows=cost_rows, equity=equity,
                         micro_warnings=micro_warnings, growth=growth,
-                        manual_closes=manual_closes)
+                        manual_closes=manual_closes, risk_gate=gate,
+                        orphan_closes=(orphan_sent, orphan_notes))
 
 
 def build_report(today, acct, positions, signals, placed, skipped,
@@ -735,11 +1006,14 @@ def build_report(today, acct, positions, signals, placed, skipped,
                  gap_cancelled=None, cost_rows=None,
                  equity: float | None = None,
                  micro_warnings=None, growth=None,
-                 manual_closes=None) -> str:
+                 manual_closes=None, risk_gate=None,
+                 orphan_closes=None) -> str:
     lines = [f"PAPER SHADOW TRACK — {'/'.join(ACTIVE_SETUPS)} doctrine, "
              f"as of {today}",
              f"paper equity: ${float(acct['equity']):,.2f}   "
              f"cash: ${float(acct['cash']):,.2f}"]
+    if risk_gate:
+        lines.append(format_account_gate(risk_gate))
     if growth:
         lines += ["", format_growth(growth)]
     if micro_warnings:
@@ -804,6 +1078,16 @@ def build_report(today, acct, positions, signals, placed, skipped,
                      "operator decision 2026-09-02, hand-placed positions "
                      "outside the doctrine (not booked as trades): "
                      + ", ".join(manual_closes))
+    if orphan_closes and (orphan_closes[0] or orphan_closes[1]):
+        sent, notes = orphan_closes
+        lines.append(f"ORPHANED POSITIONS — CLOSE SENT ({len(sent)}), "
+                     "operator decision 2026-11-18. Left behind by the "
+                     "option cycle before its exit fix; not booked as "
+                     "trades:")
+        for sym, qty, how, why in sent:
+            lines.append(f"  {sym}  {qty}  {how}  ({why})")
+        for note in notes:
+            lines.append(f"  note: {note}")
     lines.append("")
 
     if closed_today:
@@ -821,15 +1105,35 @@ def build_report(today, acct, positions, signals, placed, skipped,
     lines.append(f"OPEN POSITIONS ({len(positions)}) — "
                  f"{len(stock_open)} of {MAX_OPEN} stock slots used, "
                  f"{len(positions) - len(stock_open)} option contracts:")
+    unmanaged = []
     for sym, p in sorted(positions.items()):
-        rec = ledger["open"].get(sym, {})
-        lines.append(f"  {sym}  qty {p['qty']}  "
-                     f"unrealized ${float(p.get('unrealized_pl', 0)):+,.2f}  "
-                     f"stop {rec.get('stop', '?')}  "
-                     f"target {rec.get('target', '?')}  "
-                     f"since {rec.get('entry_date', '?')}")
+        head = (f"  {sym}  qty {p['qty']}  "
+                f"unrealized ${float(p.get('unrealized_pl', 0)):+,.2f}  ")
+        rec = ledger["open"].get(sym)
+        opt = ledger.get("options", {}).get(sym)
+        if rec:
+            lines.append(head + f"stop {rec.get('stop', '?')}  "
+                         f"target {rec.get('target', '?')}  "
+                         f"since {rec.get('entry_date', '?')}")
+        elif opt:
+            lines.append(head + "option, stop-if-underlying <= "
+                         f"{opt['invalidation_price']:.2f}  "
+                         f"since {opt['entry_date']}")
+        elif sym in ORPHAN_CLOSE:
+            lines.append(head + "ORPHAN — being closed (operator "
+                         "decision 2026-11-18)")
+        else:
+            # A position no rule watches is a position nobody is
+            # watching. Say so instead of printing "stop ?".
+            unmanaged.append(sym)
+            lines.append(head + "UNMANAGED — not in the ledger; no stop, "
+                         "target or exit rule applies")
     if not positions:
         lines.append("  none")
+    if unmanaged:
+        lines.append(f"  WARNING: {len(unmanaged)} unmanaged position(s): "
+                     + ", ".join(unmanaged)
+                     + ". Nothing in this system will exit them.")
     lines.append("")
 
     if option_cycle:
