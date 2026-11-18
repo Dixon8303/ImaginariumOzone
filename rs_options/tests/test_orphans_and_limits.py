@@ -461,3 +461,72 @@ def test_digest_surfaces_freeze_orphans_and_unmanaged(tmp_path, monkeypatch):
     assert "risk: drawdown 10.2% of the 10% freeze" in text
     assert "close sent for 7" in text
     assert "WARNING: 1 position(s) no rule manages" in text
+
+
+# ── a far-dated contract missing from the 1,000-contract chain page ───
+def test_orphan_quote_falls_back_to_the_contract_by_name():
+    class DeepChain(CloseBroker):
+        def quotes(self, underlying):
+            return {}                      # first page ended before it
+
+        def contract_quote(self, symbol):
+            return {symbol: {"bid": 0.40, "ask": 0.50}}
+
+    ledger = {"open": {}, "closed": [], "options": {}}
+    broker = DeepChain()
+    sent, notes = close_orphans(
+        broker, {"KO270115C00097500": {"qty": "2"}}, ledger, SESSION)
+    assert broker.sold == [("KO270115C00097500", 2, pytest.approx(0.45))]
+    assert notes == []
+
+
+def test_doctrine_exit_uses_the_same_fallback():
+    class DeepChain(OptBroker):
+        def quotes(self, underlying):
+            return {}
+
+        def contract_quote(self, symbol):
+            return {symbol: {"bid": 2.0, "ask": 2.2}}
+
+    ledger = {"open": {}, "closed": [], "options": {SYMBOL: book_entry()}}
+    broker = DeepChain(positions=held(2))
+    daily.run_option_cycle(broker, [], ko_bars(95.0), SESSION, ledger)
+    assert broker.sold == [(SYMBOL, 2, pytest.approx(2.1))]
+
+
+def test_contract_quote_asks_for_the_symbol(monkeypatch):
+    import io
+
+    from paper import options_broker
+    monkeypatch.setenv("RS_PAPER_ARMED", "YES")
+    monkeypatch.setenv("APCA_API_KEY_ID", "k")
+    monkeypatch.setenv("APCA_API_SECRET_KEY", "s")
+    seen = {}
+
+    def fake_urlopen(req, timeout=30):
+        seen["url"] = req.full_url
+        body = {"snapshots": {SYMBOL: {"latestQuote": {"bp": 1.0,
+                                                       "ap": 1.2}}}}
+        return io.BytesIO(json.dumps(body).encode())
+
+    monkeypatch.setattr(options_broker.urllib.request, "urlopen",
+                        fake_urlopen)
+    got = options_broker.PaperOptionsBroker().contract_quote(SYMBOL)
+    assert seen["url"].endswith(f"/v1beta1/options/snapshots?symbols={SYMBOL}")
+    assert got[SYMBOL]["bid"] == 1.0 and got[SYMBOL]["ask"] == 1.2
+
+
+def test_unreadable_rearm_file_blocks_entries_but_the_run_completes(
+        files_in_tmp, tmp_path):
+    from tests.test_paper_daily import FakeBroker, TODAY, breakout_universe
+    pathlib_rearm = tmp_path / "rearm.json"
+    pathlib_rearm.write_text('{"rearmed_on": "not a date"}')
+    save_ledger({"open": {"OLD": dict(
+        entry_date="2026-07-01", entry=50.0, entry_estimated=False,
+        stop=45.0, target=65.0, qty=10, order_id="x", setup="RS-02")},
+        "closed": []}, daily.LEDGER_PATH)
+    broker = FakeBroker(positions={"OLD": {"qty": 10, "unrealized_pl": 0}})
+    report = run(broker, breakout_universe(), TODAY)
+    assert broker.brackets == []
+    assert "OLD" in broker.closed_syms, "exits still run"
+    assert "risk limits unreadable" in report

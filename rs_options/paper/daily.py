@@ -293,6 +293,22 @@ def format_account_gate(gate: dict) -> str:
     return line
 
 
+def contract_mid(broker, underlying: str, symbol: str) -> float | None:
+    """Mid for one held contract. The chain call returns one page of at
+    most 1,000 contracts, so a far-dated contract on a deep chain can be
+    absent from it; ask for it by name before giving up. Errors from the
+    chain call propagate (the caller reports them); the by-name lookup is
+    a fallback and fails quietly to None."""
+    mid = mid_price((broker.quotes(underlying) or {}).get(symbol, {}))
+    if mid is None and hasattr(broker, "contract_quote"):
+        try:
+            mid = mid_price((broker.contract_quote(symbol) or {})
+                            .get(symbol, {}))
+        except Exception:
+            mid = None
+    return mid
+
+
 # ── broker positions the doctrine does not manage ────────────────────
 def held_qty(position: dict, fallback: int) -> int:
     """Contracts/shares the broker actually holds. Exits sell this, not
@@ -323,9 +339,8 @@ def close_orphans(broker, positions: dict, ledger: dict, today: str) -> tuple:
             continue
         try:
             if is_option_symbol(sym):
-                underlying = parse_occ_symbol(sym)["ticker"]
-                mid = mid_price((broker.quotes(underlying) or {})
-                                .get(sym, {}))
+                mid = contract_mid(broker, parse_occ_symbol(sym)["ticker"],
+                                   sym)
                 if mid is None:
                     notes.append(f"{sym}: no tradable quote — close "
                                  "retried next run")
@@ -528,8 +543,7 @@ def run_option_cycle(broker, signals: list, all_bars: dict, today: str,
             # run rather than falling back to a market order, the exact
             # thing this rule exists to prevent.
             try:
-                mid = mid_price((broker.quotes(rec["ticker"]) or {})
-                                .get(symbol, {}))
+                mid = contract_mid(broker, rec["ticker"], symbol)
             except Exception as e:
                 notes.append(f"{symbol}: {what} but quote fetch failed "
                              f"({e}) — retrying next run")
@@ -732,8 +746,17 @@ def run(broker, all_bars: dict, today: str, require_fresh: bool = True) -> str:
     growth = growth_summary(load_equity_history())
     # Spec §4 account limits. Gates NEW entries only (step 4 and the
     # options cycle); everything that reduces risk still runs.
-    gate = account_gate(load_equity_history(), equity, today,
-                        load_rearm_date())
+    try:
+        gate = account_gate(load_equity_history(), equity, today,
+                            load_rearm_date())
+    except Exception as e:
+        # Fail closed on entries, never on exits: a limit that cannot be
+        # read must not stop the run that sells.
+        reason = (f"FREEZE: risk limits unreadable ({e}) — no new entries "
+                  f"until {REARM_PATH} and the growth log parse")
+        gate = dict(blocked=True, frozen=True, halted=False, reason=reason,
+                    drawdown=0.0, peak=equity, peak_date=today,
+                    daily_loss=0.0, prev=None)
 
     # 1. refine estimated entries with actual fills
     for sym, rec in ledger["open"].items():
