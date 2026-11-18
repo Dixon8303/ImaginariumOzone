@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-18T03:05:21Z",
+  "last_synced": "2026-11-18T04:05:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2871,7 +2871,7 @@
         },
         {
           "name": "audio_prod",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -2895,7 +2895,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-18T03:05:21Z"
+      "updated_at": "2026-11-18T04:05:09Z"
     },
     {
       "id": "EP67",
