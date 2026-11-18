@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-18T07:05:09Z",
+  "last_synced": "2026-11-18T08:05:10Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1584,7 +1584,7 @@
         },
         {
           "name": "generation",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "ken_burns",
@@ -1620,7 +1620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T19:35:35Z"
+      "updated_at": "2026-11-18T08:05:09Z"
     },
     {
       "id": "EP45",
@@ -2271,7 +2271,7 @@
       "id": "EP57",
       "number": 57,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -2331,11 +2331,11 @@
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T20:35:11Z"
+      "updated_at": "2026-11-18T08:05:09Z"
     },
     {
       "id": "EP58",
@@ -3926,11 +3926,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -3954,7 +3954,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-15T23:05:12Z"
+      "updated_at": "2026-11-18T08:05:10Z"
     },
     {
       "id": "EP83",
@@ -4240,7 +4240,7 @@
       "id": "EP87",
       "number": 87,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -4300,11 +4300,11 @@
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T22:05:09Z"
+      "updated_at": "2026-11-18T08:05:10Z"
     },
     {
       "id": "EP88",
@@ -5010,7 +5010,7 @@
       "id": "EP98",
       "number": 98,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5038,7 +5038,7 @@
         },
         {
           "name": "generation",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "ken_burns",
@@ -5058,11 +5058,11 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
@@ -5074,7 +5074,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T12:35:13Z"
+      "updated_at": "2026-11-18T08:05:10Z"
     },
     {
       "id": "EP99",
@@ -5360,7 +5360,7 @@
       "id": "EP103",
       "number": 103,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -5420,17 +5420,17 @@
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T14:36:38Z"
+      "updated_at": "2026-11-18T08:05:10Z"
     },
     {
       "id": "EP104",
       "number": 104,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -5490,11 +5490,11 @@
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T18:35:11Z"
+      "updated_at": "2026-11-18T08:05:10Z"
     },
     {
       "id": "EP105",
@@ -5570,7 +5570,7 @@
       "id": "EP106",
       "number": 106,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "approved",
       "stages": [
         {
           "name": "batch_primer",
@@ -5630,11 +5630,11 @@
         },
         {
           "name": "upload",
-          "status": "pending"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T15:36:13Z"
+      "updated_at": "2026-11-18T08:05:10Z"
     },
     {
       "id": "EP107",
