@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-18T14:05:12Z",
+  "last_synced": "2026-11-18T15:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3377,7 +3377,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -3385,7 +3385,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-18T12:05:10Z"
+      "updated_at": "2026-11-18T15:05:08Z"
     },
     {
       "id": "EP75",
@@ -4226,7 +4226,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -4234,7 +4234,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-18T07:05:09Z"
+      "updated_at": "2026-11-18T15:05:08Z"
     },
     {
       "id": "EP87",
