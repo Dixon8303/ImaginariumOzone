@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-18T13:05:08Z",
+  "last_synced": "2026-11-18T14:05:12Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2184,7 +2184,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -2192,7 +2192,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-18T11:05:08Z"
+      "updated_at": "2026-11-18T14:05:12Z"
     },
     {
       "id": "EP55",
@@ -4086,7 +4086,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -4094,7 +4094,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T23:35:10Z"
+      "updated_at": "2026-11-18T14:05:12Z"
     },
     {
       "id": "EP85",
@@ -4366,7 +4366,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -4374,7 +4374,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-18T13:05:07Z"
+      "updated_at": "2026-11-18T14:05:12Z"
     },
     {
       "id": "EP89",
@@ -4716,7 +4716,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -4724,7 +4724,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T17:35:12Z"
+      "updated_at": "2026-11-18T14:05:12Z"
     },
     {
       "id": "EP94",
@@ -5066,7 +5066,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -5074,7 +5074,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-18T08:05:10Z"
+      "updated_at": "2026-11-18T14:05:12Z"
     },
     {
       "id": "EP99",
