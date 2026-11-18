@@ -38,7 +38,7 @@ EP62,62,Unreleased episode,approved,complete,15,15,,,2026-11-17T15:36:12Z
 EP63,63,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
 EP64,64,Unreleased episode,review,script,4,15,,,2026-11-08T13:05:10Z
 EP65,65,Unreleased episode,running,generation,10,15,,,2026-11-18T04:05:09Z
-EP67,67,Unreleased episode,running,generation,8,15,,,2026-11-17T20:35:11Z
+EP67,67,Unreleased episode,running,generation,10,15,,,2026-11-18T10:05:13Z
 EP68,68,Unreleased episode,failed,script,7,15,,,2026-11-18T09:05:08Z
 EP69,69,Unreleased episode,failed,script,4,15,,,2026-11-18T06:05:10Z
 EP70,70,Unreleased episode,review,script,4,15,,,2026-11-10T12:35:05Z
@@ -80,4 +80,4 @@ EP106,106,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:10Z
 EP107,107,Unreleased episode,review,script,4,15,,,2026-11-14T08:05:06Z
 EP108,108,Unreleased episode,draft,batch_primer,0,15,,,2026-11-05T00:05:15Z
 EP110,110,Unreleased episode,draft,batch_primer,0,15,,,2026-11-17T03:05:10Z
-_last_synced,,2026-11-18T09:05:09Z,,,,,,,
+_last_synced,,2026-11-18T10:05:13Z,,,,,,,
