@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-18T21:05:09Z",
+  "last_synced": "2026-11-19T00:05:13Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -5845,6 +5845,146 @@
       ],
       "gates": {},
       "updated_at": "2026-11-17T03:05:10Z"
+    },
+    {
+      "id": "EP111",
+      "number": 111,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-19T00:05:13Z"
+    },
+    {
+      "id": "EP112",
+      "number": 112,
+      "topic": "Unreleased episode",
+      "status": "draft",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "pending"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "pending"
+        },
+        {
+          "name": "research",
+          "status": "pending"
+        },
+        {
+          "name": "outline",
+          "status": "pending"
+        },
+        {
+          "name": "script",
+          "status": "pending"
+        },
+        {
+          "name": "storyboard",
+          "status": "pending"
+        },
+        {
+          "name": "generation",
+          "status": "pending"
+        },
+        {
+          "name": "ken_burns",
+          "status": "pending"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "pending"
+        },
+        {
+          "name": "audio_prod",
+          "status": "pending"
+        },
+        {
+          "name": "titles_seo",
+          "status": "pending"
+        },
+        {
+          "name": "assembly",
+          "status": "pending"
+        },
+        {
+          "name": "qa_gates",
+          "status": "pending"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "pending"
+        }
+      ],
+      "gates": {},
+      "updated_at": "2026-11-19T00:05:13Z"
     }
   ]
 }
