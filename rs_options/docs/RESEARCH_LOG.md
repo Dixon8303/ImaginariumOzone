@@ -2547,3 +2547,75 @@ Design notes worth recording:
 469 tests passing (14 new). The study runs where the bar vendors are
 reachable: Actions -> "RS H-26 Study" -> Run workflow, which appears
 once this merges.
+
+## 2026-11-18 — Option exits stranded seven positions; account limits enforced
+
+Found while checking the account for a risk step: the 2026-11-17 report
+listed seven positions with `stop ? target ?`. None was in the ledger,
+no rule watched them, and they carried **$3,921 of the account's $4,405
+open loss**. All seven were placed by `run_option_cycle` itself:
+
+- **A sent sell was booked as a close.** The exit loop called
+  `sell_to_close` (limit at the mid, day only) and deleted the contract
+  from the book in the same step. When the limit did not fill, the order
+  expired at the close and the contract stayed in the account,
+  forgotten. The report printed `SOLD` for sales that never happened.
+  CVX, DAL and XOM 2026-11-20 calls were stranded this way.
+- **The backup run dropped and re-bought pending entries.** The 22:10
+  UTC fire found the 21:35 buy not yet filled, recorded it as
+  "reconciled", deleted it, and — the name now looking free — bought it
+  again. Both orders filled at the next open: KO 100C shows 4 held
+  against 2 sized, double the 1% risk. The workflow comment calling a
+  duplicate evening run "safe" was true of stocks only.
+- **Exercise turned stranded calls into stock.** The 500 PFE and 100
+  XOM shares appeared right after bot-bought calls expired in the money
+  (inferred from report timing; no report records the exercise).
+
+Fix: a contract leaves the book only when the broker no longer holds
+it. Sent sells and pending buys are recorded with their session date, so
+a second run that session neither re-sends nor drops them; an unfilled
+sell is re-sent at the next session's mid; exits sell what the broker
+holds, not what the book says; a surplus from a double fill is sold and
+the sized trade kept. `closed` now means confirmed. The operator chose
+to close the seven (`ORPHAN_CLOSE`), options limit-at-mid and stock like
+the 2026-09-02 manual closes; none is booked as a doctrine trade. The
+cumulative R record is stock-only and was never affected.
+
+**Account limits (operator decision, same day).** The spec's 10%
+drawdown FREEZE and 3% daily-loss HALT (§4, `HardRiskConstants`) were
+enforced by the risk engine and the co-pilot scan, never by this
+trader, which stood 8.1% below its $101,858.65 peak. Both now gate new
+entries — stock and options — and read their numbers from the engine's
+constants so the two cannot drift. Exits always run. A freeze holds
+until the operator sets `rearmed_on` in `paper/risk_rearm.json`, which
+restarts the peak from that date (§60 Level 4).
+
+A dry run against the real 11/17 ledger and positions sent one close
+for each of the seven and a 2-contract surplus sale for KO 100C; the
+same-session backup run sent nothing further.
+
+**Adversarial review before it traded (same change).** A four-lens
+review confirmed defects in the first version of this fix; all are
+fixed and pinned by tests before merge:
+
+- An exit is now **sticky**: a stop or target that fired and whose sell
+  did not fill is re-sent every session until the broker no longer holds
+  the contract, even if the next close no longer trips the rule or the
+  bars are missing. The first version silently dropped it.
+- The **freeze latches** (`ledger["risk_freeze"]`). Recovering to 9.97%
+  no longer lifts it; only a re-arm dated on or after the freeze does.
+  The re-arm date is normalised and a future date is refused
+  (fail-closed), because Python accepts "20261118" and compares wrongly
+  as text.
+- A rejected sell or buy is a note, not an exception that skipped every
+  later exit in the cycle.
+- The broker's **working orders** now gate re-sends and re-buys, and the
+  workflow pulls the branch tip before trading: a backup fire queued
+  behind the first run was checked out at the commit before that run's
+  ledger landed, so every ledger-based guard read stale state.
+- A contract that vanished while its exit sell sat unfilled is labelled
+  "gone without the exit sell filling", never as a doctrine close; P&L
+  and quantity add up every sell sent for it.
+- DAL and CVX stock join the orphan list (DAL's 11-20 call is in the
+  money; exercise would deliver ~400 unmanaged shares), and the whole
+  orphan decision ends 2026-12-31 so it cannot sell future lots.

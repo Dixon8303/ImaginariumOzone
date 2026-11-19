@@ -101,6 +101,22 @@ def digest(now: datetime | None = None) -> str:
         f"last session {day_delta:+,.2f}",
     ]
 
+    blocked = find(r"ENTRIES BLOCKED — (\w+)", report)
+    if blocked in ("FREEZE", "HALT"):
+        lines.append(f"NEW ENTRIES STOPPED: {blocked} (spec limit reached)")
+    elif blocked:
+        lines.append("NEW ENTRIES STOPPED: the re-arm file or growth log "
+                     "could not be read — see the report")
+    risk = find(r"RISK LIMITS: (.+)", report)
+    if risk:
+        lines.append(f"risk: {risk.strip()}")
+    orphans = find(r"ORPHANED POSITIONS \((\d+) held\)", report)
+    if orphans and orphans != "0":
+        lines.append(f"orphaned positions still held: {orphans} (closing)")
+    unmanaged = find(r"WARNING: (\d+) unmanaged position", report)
+    if unmanaged:
+        lines.append(f"WARNING: {unmanaged} position(s) no rule manages")
+
     slots = re.search(
         r"OPEN POSITIONS \((\d+)\) — (\d+) of (\d+) stock slots used, "
         r"(\d+) option contracts", report)

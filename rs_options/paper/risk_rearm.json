@@ -1,0 +1,14 @@
+{
+  "_comment": [
+    "Re-arm switch for the spec's 10% drawdown FREEZE (paper/daily.py).",
+    "",
+    "When paper equity falls 10% below its peak, the evening run stops",
+    "opening new trades. Exits keep running. It stays frozen until a",
+    "person decides to resume: set rearmed_on to today's date, as",
+    "\"YYYY-MM-DD\" in quotes, and commit. The peak is then counted from",
+    "that date, so the account starts fresh from where it is.",
+    "",
+    "Leave it null unless you mean to resume. Editable on github.com."
+  ],
+  "rearmed_on": null
+}

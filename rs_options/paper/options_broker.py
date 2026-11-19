@@ -170,6 +170,21 @@ class PaperOptionsBroker(PaperBroker):
         Greeks appear only when the data subscription includes them."""
         url = (f"{DATA_URL}/v1beta1/options/snapshots/"
                f"{urllib.parse.quote(underlying)}?limit=1000")
+        return self._snapshot_quotes(url)
+
+    def contract_quote(self, symbol: str) -> dict:
+        """One contract's quote by OCC symbol, {symbol: {...}} or {}.
+
+        The chain call above returns one page of at most 1,000 contracts
+        and does not follow the next page, so a far-dated contract on a
+        deep chain can be missing from it. An exit that can never find
+        its quote is an exit that never happens; this asks for the
+        contract by name instead."""
+        url = (f"{DATA_URL}/v1beta1/options/snapshots?symbols="
+               f"{urllib.parse.quote(symbol)}")
+        return self._snapshot_quotes(url)
+
+    def _snapshot_quotes(self, url: str) -> dict:
         req = urllib.request.Request(url, headers=self._headers)
         with urllib.request.urlopen(req, timeout=30) as resp:
             payload = json.loads(resp.read())
