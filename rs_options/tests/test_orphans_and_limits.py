@@ -127,7 +127,7 @@ def test_confirmed_exit_books_the_sell_fill():
     assert pos["realized_pl"] == pytest.approx((3.00 - 3.175) * 2 * 100)
     assert SYMBOL not in ledger["options"]
     text = daily.format_option_cycle(([], closed, []), ledger)
-    assert "CLOSED 2x" in text and "confirmed" in text
+    assert "CLOSED 2x" in text and "sold; the broker no longer holds it" in text
 
 
 def test_exit_sells_what_the_broker_holds_not_what_the_book_says():
@@ -225,8 +225,13 @@ STRANDED_2026_11_17 = {
     "PFE", "PFE261218C00031000", "XOM", "XOM261120C00185000"}
 
 
-def test_orphan_list_is_exactly_the_seven_from_the_report():
-    assert set(ORPHAN_CLOSE) == STRANDED_2026_11_17
+# Stock that exercise of the 11-20 calls would deliver (DAL is in the
+# money). Listed so exercise cannot strand shares the way PFE/XOM were.
+EXERCISE_GUARDS = {"DAL", "CVX"}
+
+
+def test_orphan_list_is_the_seven_from_the_report_plus_exercise_guards():
+    assert set(ORPHAN_CLOSE) == STRANDED_2026_11_17 | EXERCISE_GUARDS
     assert SYMBOL not in ORPHAN_CLOSE, \
         "KO 100C is a managed trade (its surplus is sold, not the trade)"
 
@@ -360,10 +365,13 @@ def test_malformed_rearm_file_is_an_error_not_a_silent_unfreeze(tmp_path):
     assert load_rearm_date(str(tmp_path / "absent.json")) is None
 
 
-def test_shipped_rearm_file_is_unset():
+def test_shipped_rearm_file_parses():
+    """Only that it parses: setting a date is exactly what the operator
+    is told to do, and must not turn the suite red."""
     import pathlib
     shipped = pathlib.Path(daily.__file__).parent / "risk_rearm.json"
-    assert load_rearm_date(str(shipped)) is None
+    value = load_rearm_date(str(shipped))
+    assert value is None or len(value) == 10
 
 
 # ── 2b. the gate inside a real run ────────────────────────────────────
@@ -423,7 +431,8 @@ def test_report_names_unmanaged_and_orphaned_positions():
         [], [], [], [], [], ledger)
     assert "stop ?" not in report
     assert "stop-if-underlying <= 95.67" in report
-    assert "PFE  qty 500" in report and "ORPHAN — being closed" in report
+    assert "PFE  qty 500" in report
+    assert "ORPHAN — close NOT sent yet" in report
     assert "ZZZ" in report and "UNMANAGED" in report
     assert "1 unmanaged position(s): ZZZ" in report
 
@@ -450,7 +459,7 @@ def test_digest_surfaces_freeze_orphans_and_unmanaged(tmp_path, monkeypatch):
         "RISK LIMITS: drawdown 10.2% of the 10% freeze (peak $101,858.65 "
         "on 2026-10-30)\n"
         "  ENTRIES BLOCKED — FREEZE: equity is 10.2% below its peak\n"
-        "ORPHANED POSITIONS — CLOSE SENT (7), operator decision\n"
+        "ORPHANED POSITIONS (7 held) — closing, operator decision\n"
         "  WARNING: 1 unmanaged position(s): ZZZ. Nothing in this system\n")
     (reports / "paper_growth.jsonl").write_text(
         '{"date": "2026-11-17", "equity": 93569.32}\n'
@@ -459,7 +468,7 @@ def test_digest_surfaces_freeze_orphans_and_unmanaged(tmp_path, monkeypatch):
     text = notify.digest(datetime(2026, 11, 18, 22, 0, tzinfo=timezone.utc))
     assert "NEW ENTRIES STOPPED: FREEZE" in text
     assert "risk: drawdown 10.2% of the 10% freeze" in text
-    assert "close sent for 7" in text
+    assert "orphaned positions still held: 7 (closing)" in text
     assert "WARNING: 1 position(s) no rule manages" in text
 
 
@@ -529,4 +538,383 @@ def test_unreadable_rearm_file_blocks_entries_but_the_run_completes(
     report = run(broker, breakout_universe(), TODAY)
     assert broker.brackets == []
     assert "OLD" in broker.closed_syms, "exits still run"
-    assert "risk limits unreadable" in report
+    assert "LIMITS UNREADABLE" in report
+
+
+# ══ review findings, 2026-11-18 (adversarial pass on this fix) ════════
+from paper.daily import (ORPHAN_CLOSE_UNTIL, UNFILLED_EXIT, format_orphans,
+                         resolve_gate)
+
+
+def exit_marker(date=SESSION, order_id="s1", reasons=("INVALIDATION",)):
+    return dict(kind="exit", date=date, qty=2, limit=3.1, order_id=order_id,
+                reasons=list(reasons))
+
+
+# 1. An exit the doctrine decided must stick.
+@pytest.mark.parametrize("bars", [ko_bars(96.5), {}],
+                         ids=["underlying-bounced", "bars-missing"])
+def test_a_sent_exit_is_resent_even_if_the_next_close_no_longer_trips(bars):
+    ledger = {"open": {}, "closed": [], "options": {
+        SYMBOL: book_entry(sell_pending=exit_marker())}}
+    broker = OptBroker(positions=held(2))
+    _, _, notes = daily.run_option_cycle(broker, [], bars, NEXT, ledger)
+    assert broker.sold == [(SYMBOL, 2, pytest.approx(3.1))]
+    pending = ledger["options"][SYMBOL]["sell_pending"]
+    assert pending["kind"] == "exit" and pending["date"] == NEXT
+    assert "INVALIDATION" in pending["reasons"]
+
+
+def test_a_target_hit_then_missed_still_sells():
+    ledger = {"open": {}, "closed": [], "options": {SYMBOL: book_entry(
+        sell_pending=exit_marker(reasons=("TARGET",)))}}
+    broker = OptBroker(positions=held(2))
+    daily.run_option_cycle(broker, [], ko_bars(98.0), NEXT, ledger)
+    assert len(broker.sold) == 1
+
+
+# 2. One rejected order must not cost the exits after it.
+def test_a_rejected_sell_does_not_abort_later_exits():
+    other = "KO270115C00102500"
+
+    class Rejecting(OptBroker):
+        def sell_to_close(self, symbol, qty, limit_price):
+            if symbol == SYMBOL:
+                raise RuntimeError("insufficient qty available for order")
+            return super().sell_to_close(symbol, qty, limit_price)
+
+    ledger = {"open": {}, "closed": [], "options": {
+        SYMBOL: book_entry(), other: book_entry()}}
+    broker = Rejecting(positions={**held(2), other: {"qty": "2"}})
+    _, _, notes = daily.run_option_cycle(broker, [], ko_bars(95.0), SESSION,
+                                         ledger)
+    assert broker.sold == [(other, 2, pytest.approx(3.1))]
+    assert any("sell was rejected" in n and "insufficient" in n for n in notes)
+    assert "sell_pending" not in ledger["options"][SYMBOL], \
+        "a rejected sell is not a sent sell"
+
+
+def test_a_rejected_buy_is_a_note_not_a_crash():
+    class NoBuy(OptBroker):
+        def buy_to_open(self, symbol, qty, limit_price):
+            raise RuntimeError("buying power")
+
+    ledger = {"open": {}, "closed": []}
+    _, _, notes = daily.run_option_cycle(NoBuy(), [signal()], {}, SESSION,
+                                         ledger)
+    assert ledger.get("options", {}) == {}
+    assert any("buy rejected" in n for n in notes)
+
+
+# 3. The broker's working orders beat a stale ledger.
+class WithOrders(OptBroker):
+    def __init__(self, open_orders, **kw):
+        super().__init__(**kw)
+        self._open = open_orders
+
+    def orders(self, status="open", symbols=None, limit=50):
+        return self._open if status == "open" else []
+
+
+def test_a_working_buy_at_the_broker_blocks_a_second_buy():
+    """The stale-checkout backup run: the ledger has no record of the
+    first run's buy, but the broker does."""
+    broker = WithOrders([{"symbol": "KO270115C00102500", "side": "buy",
+                          "status": "accepted"}])
+    ledger = {"open": {}, "closed": []}
+    _, _, notes = daily.run_option_cycle(broker, [signal()], {}, SESSION,
+                                         ledger)
+    assert broker.bought == []
+    assert any("already working" in n for n in notes)
+
+
+def test_a_working_sell_at_the_broker_is_not_resent():
+    ledger = {"open": {}, "closed": [], "options": {
+        SYMBOL: book_entry(sell_pending=exit_marker())}}
+    broker = WithOrders([{"symbol": SYMBOL, "side": "sell", "status": "new"}],
+                        positions=held(2))
+    daily.run_option_cycle(broker, [], ko_bars(95.0), NEXT, ledger)
+    assert broker.sold == []
+
+
+def test_orphan_with_a_working_sell_is_not_sold_again():
+    class Both(WithOrders, CloseBroker):
+        pass
+
+    sym = "CVX261120C00220000"
+    broker = Both([{"symbol": sym, "side": "sell", "status": "new"}])
+    ledger = {"open": {}, "closed": [], "options": {}}
+    sent, _ = close_orphans(broker, {sym: {"qty": "1"}}, ledger, SESSION)
+    assert sent == [] and broker.sold == []
+    assert ledger["orphan_closing"][sym] == SESSION
+
+
+def test_a_still_working_entry_order_is_kept_not_dropped():
+    ledger = {"open": {}, "closed": [], "options": {SYMBOL: book_entry(
+        entry_pending=True, entry_order_id="b1", entry_date=SESSION)}}
+    broker = OptBroker(orders={"b1": {"status": "new", "filled_qty": "0"}})
+    daily.run_option_cycle(broker, [signal()], {}, NEXT, ledger)
+    assert SYMBOL in ledger["options"] and broker.bought == []
+
+
+def test_cutover_tonights_legacy_buy_without_the_flag_is_kept():
+    """Old code buys at 21:35, new code runs at 22:10: the record has no
+    entry_pending, but it was bought tonight."""
+    rec = book_entry(entry_date=SESSION)
+    ledger = {"open": {}, "closed": [], "options": {SYMBOL: rec}}
+    broker = OptBroker()
+    _, closed, _ = daily.run_option_cycle(broker, [signal()], {}, SESSION,
+                                          ledger)
+    assert closed == [] and broker.bought == []
+    assert ledger["options"][SYMBOL]["entry_pending"] is True
+
+
+def test_no_entry_on_an_underlying_held_outside_the_book():
+    broker = OptBroker(positions={"KO270115C00097500": {"qty": "2"}})
+    ledger = {"open": {}, "closed": []}
+    _, _, notes = daily.run_option_cycle(broker, [signal()], {}, SESSION,
+                                         ledger)
+    assert broker.bought == []
+    assert any("outside the book" in n for n in notes)
+
+
+# 4. Slots.
+def test_a_stale_exit_whose_resend_failed_does_not_free_a_slot():
+    class NoQuote(OptBroker):
+        def quotes(self, underlying):
+            return {}
+
+    book = {f"T{i}C": book_entry(ticker=f"T{i}") for i in range(daily.MAX_OPEN)}
+    book["T0C"]["sell_pending"] = exit_marker()
+    ledger = {"open": {}, "closed": [], "options": book}
+    broker = NoQuote(positions={s: {"qty": "2"} for s in book})
+    daily.run_option_cycle(broker, [signal()], {}, NEXT, ledger)
+    assert broker.bought == []
+
+
+def test_an_exit_sent_this_session_frees_its_slot():
+    book = {f"T{i}C": book_entry(ticker=f"T{i}") for i in range(daily.MAX_OPEN)}
+    ledger = {"open": {}, "closed": [], "options": book}
+    held_all = {s: {"qty": "2"} for s in book}
+    bars = {f"T{i}": pd.DataFrame({"trade_date": [SESSION],
+                                   "close": [99.0]}) for i in range(8)}
+    bars["T0"] = pd.DataFrame({"trade_date": [SESSION], "close": [90.0]})
+
+    class Q(OptBroker):
+        def quotes(self, underlying):
+            q = super().quotes(underlying)
+            q.update({s: {"bid": 3.0, "ask": 3.2} for s in book})
+            return q
+
+    broker = Q(positions=held_all)
+    daily.run_option_cycle(broker, [signal()], bars, SESSION, ledger)
+    assert [s for s, _, _ in broker.sold] == ["T0C"]
+    assert len(broker.bought) == 1
+
+
+# 5. What a close is called.
+def test_gone_with_the_exit_sell_unfilled_is_not_a_doctrine_close():
+    ledger = {"open": {}, "closed": [], "options": {SYMBOL: book_entry(
+        sell_pending=exit_marker(), sell_order_ids=["s1"])}}
+    broker = OptBroker(orders={"s1": {"status": "expired",
+                                      "filled_qty": "0"}})
+    _, closed, _ = daily.run_option_cycle(broker, [], {}, NEXT, ledger)
+    assert closed[0][3] == UNFILLED_EXIT
+    text = daily.format_option_cycle(([], closed, []), ledger)
+    assert "GONE" in text and "CLOSED" not in text
+
+
+def test_pnl_and_qty_add_up_every_fill_across_resends():
+    ledger = {"open": {}, "closed": [], "options": {SYMBOL: book_entry(
+        qty=1, sell_pending=exit_marker(order_id="s2"),
+        sell_order_ids=["s1", "s2"])}}
+    broker = OptBroker(orders={
+        "s1": {"status": "partially_filled", "filled_qty": "1",
+               "filled_avg_price": "3.00"},
+        "s2": {"status": "filled", "filled_qty": "1",
+               "filled_avg_price": "2.00"}})
+    _, closed, _ = daily.run_option_cycle(broker, [], {}, NEXT, ledger)
+    _, _, pos, _ = closed[0]
+    assert pos["qty"] == 2
+    assert pos["realized_pl"] == pytest.approx((5.00 - 2 * 3.175) * 100)
+    text = daily.format_option_cycle(([], closed, []), ledger)
+    assert "CLOSED 2x" in text
+
+
+# 6. The freeze latches.
+def test_freeze_holds_when_equity_recovers_without_a_rearm():
+    hist_ = hist(("2026-10-30", 101_858.65), ("2026-11-18", 91_600.0))
+    first = account_gate(hist_, 91_600.0, "2026-11-18")
+    assert first["frozen"] and first["frozen_since"] == "2026-11-18"
+    later = account_gate(hist_ + hist(("2026-11-19", 91_700.0)), 91_700.0,
+                         "2026-11-19", frozen_since=first["frozen_since"])
+    assert later["frozen"] and later["blocked"], "9.97% must not unfreeze"
+
+
+def test_rearm_on_or_after_the_freeze_clears_it():
+    hist_ = hist(("2026-10-30", 101_858.65), ("2026-11-18", 91_600.0),
+                 ("2026-11-19", 91_700.0))
+    gate = account_gate(hist_, 91_700.0, "2026-11-19",
+                        rearmed_on="2026-11-19", frozen_since="2026-11-18")
+    assert not gate["frozen"] and gate["frozen_since"] is None
+
+
+def test_resolve_gate_persists_and_clears_the_latch(tmp_path, monkeypatch):
+    monkeypatch.setattr(daily, "REARM_PATH", str(tmp_path / "r.json"))
+    hist_ = hist(("2026-10-30", 101_858.65))
+    ledger = {"open": {}, "closed": []}
+    resolve_gate(ledger, hist_, 91_600.0, "2026-11-18")
+    assert ledger["risk_freeze"] == {"since": "2026-11-18"}
+    (tmp_path / "r.json").write_text('{"rearmed_on": "2026-11-19"}')
+    hist_ += hist(("2026-11-18", 91_600.0), ("2026-11-19", 91_700.0))
+    gate = resolve_gate(ledger, hist_, 91_700.0, "2026-11-19")
+    assert not gate["blocked"] and "risk_freeze" not in ledger
+
+
+# 7. The re-arm value.
+def test_rearm_date_is_normalised(tmp_path):
+    p = tmp_path / "r.json"
+    p.write_text('{"rearmed_on": "20261118"}')
+    assert load_rearm_date(str(p)) == "2026-11-18"
+    p.write_text('{"rearmed_on": 20261118}')
+    with pytest.raises(ValueError):
+        load_rearm_date(str(p))
+
+
+def test_a_future_rearm_date_blocks_and_reports_the_real_drawdown(
+        tmp_path, monkeypatch):
+    monkeypatch.setattr(daily, "REARM_PATH", str(tmp_path / "r.json"))
+    (tmp_path / "r.json").write_text('{"rearmed_on": "2027-11-18"}')
+    hist_ = hist(("2026-10-30", 101_858.65))
+    gate = resolve_gate({"open": {}}, hist_, 80_000.0, "2026-11-19")
+    assert gate["blocked"] and gate["reason"].startswith("LIMITS UNREADABLE")
+    assert gate["drawdown"] == pytest.approx(0.2146, abs=1e-3), \
+        "the drawdown is still measured, never made up"
+
+
+def test_digest_does_not_call_an_unreadable_file_a_spec_limit(
+        tmp_path, monkeypatch):
+    from datetime import datetime, timezone
+
+    import paper.notify as notify
+    reports = tmp_path / "docs" / "reports"
+    reports.mkdir(parents=True)
+    (reports / "paper_trading.txt").write_text(
+        "generated: 2026-11-18\n\nRISK LIMITS: drawdown 8.1% of the 10% "
+        "freeze\n  ENTRIES BLOCKED — LIMITS UNREADABLE: bad date\n")
+    (reports / "paper_growth.jsonl").write_text(
+        '{"date": "2026-11-18", "equity": 93569.32}\n')
+    monkeypatch.chdir(tmp_path)
+    text = notify.digest(datetime(2026, 11, 18, 22, 0, tzinfo=timezone.utc))
+    assert "spec limit reached" not in text
+    assert "could not be read" in text
+
+
+# 8. The orphan decision is bounded, and its report is stable.
+def test_orphan_closes_stop_after_the_decision_window():
+    after = "2027-01-04"
+    assert after > ORPHAN_CLOSE_UNTIL
+    ledger = {"open": {}, "closed": [], "options": {}}
+    broker = CloseBroker()
+    sent, _ = close_orphans(broker, {"PFE": {"qty": "500"}}, ledger, after)
+    assert sent == [] and broker.closed_syms == []
+    report = daily.build_report(
+        after, {"equity": "1", "cash": "1"}, {"PFE": {"qty": "500"}},
+        [], [], [], [], [], ledger)
+    assert "UNMANAGED" in report
+
+
+def test_orphan_stock_close_cancels_its_orders_first():
+    ledger = {"open": {}, "closed": [], "options": {}}
+    broker = CloseBroker()
+    close_orphans(broker, {"PFE": {"qty": "500"}, "XOM": {"qty": "100"}},
+                  ledger, SESSION)
+    assert broker.cancelled == ["PFE", "XOM"]
+    assert broker.closed_syms == ["PFE", "XOM"]
+
+
+def test_orphan_section_reads_the_same_on_both_evening_runs():
+    positions = stranded_positions()
+    ledger = {"open": {}, "closed": [], "options": {}}
+    broker = CloseBroker()
+    broker._positions = positions
+    _, n1 = close_orphans(broker, positions, ledger, SESSION)
+    first = format_orphans(positions, ledger, SESSION, n1)
+    _, n2 = close_orphans(broker, positions, ledger, SESSION)
+    second = format_orphans(positions, ledger, SESSION, n2)
+    assert first == second
+    assert first[0].startswith("ORPHANED POSITIONS (7 held)")
+    assert all("close sent 2026-11-18" in line for line in first[1:])
+
+
+# 9. The run-level wiring the earlier tests never reached.
+class RunOptBroker:
+    """test_paper_daily.FakeBroker plus the options surface, so run()
+    actually enters run_option_cycle."""
+
+    def __init__(self, equity=100_000.0):
+        from tests.test_paper_daily import FakeBroker
+        self._stock = FakeBroker(equity=equity)
+        self.bought = []
+
+    def __getattr__(self, name):
+        return getattr(self._stock, name)
+
+    def option_positions(self):
+        return {}
+
+    def contracts(self, underlying, as_of, limit=200):
+        exp = "2026-09-18"
+        return [{"symbol": f"{underlying}260918C00110000", "type": "call",
+                 "strike_price": "110", "expiration_date": exp,
+                 "open_interest": "900"}]
+
+    def quotes(self, underlying):
+        return {f"{underlying}260918C00110000":
+                {"bid": 2.4, "ask": 2.6, "delta": 0.6}}
+
+    def buy_to_open(self, symbol, qty, limit_price):
+        self.bought.append(symbol)
+        return {"id": "b"}
+
+
+def test_run_level_freeze_blocks_option_buys_too(files_in_tmp):
+    from tests.test_paper_daily import TODAY, breakout_universe
+    files_in_tmp.write_text(json.dumps({"date": "2026-08-13",
+                                        "equity": 120_000.0}) + "\n")
+    broker = RunOptBroker(equity=100_000.0)
+    report = run(broker, breakout_universe(), TODAY)
+    assert broker.bought == [] and broker._stock.brackets == []
+    assert "no option entries — FREEZE" in report
+
+
+def test_run_level_unfrozen_buys_an_option(files_in_tmp):
+    from tests.test_paper_daily import TODAY, breakout_universe
+    broker = RunOptBroker()
+    run(broker, breakout_universe(), TODAY)
+    assert broker.bought, "the wiring test above must be able to fail"
+
+
+def test_run_level_halt_blocks_stock_entries(files_in_tmp):
+    from tests.test_paper_daily import FakeBroker, TODAY, breakout_universe
+    files_in_tmp.write_text(json.dumps({"date": "2026-08-13",
+                                        "equity": 100_000.0}) + "\n")
+    broker = FakeBroker(equity=96_900.0)              # -3.1% on the session
+    report = run(broker, breakout_universe(), TODAY)
+    assert broker.brackets == []
+    assert "skipped NVDA: HALT" in report
+
+
+# 10. The workflow trades on the branch tip.
+def test_workflow_pulls_the_tip_before_trading():
+    import pathlib
+
+    import yaml
+    wf = (pathlib.Path(__file__).resolve().parents[2] / ".github"
+          / "workflows" / "paper_trader.yml")
+    steps = yaml.safe_load(wf.read_text())["jobs"]["daily"]["steps"]
+    names = [s.get("name", s.get("uses", "")) for s in steps]
+    sync = names.index("Sync to the branch tip")
+    trade = names.index("Scan + paper trades + report")
+    assert names.index("actions/checkout@v4") < sync < trade
+    assert "--ff-only" in steps[sync]["run"]

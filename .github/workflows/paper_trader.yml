@@ -59,6 +59,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # A run queued behind another in the concurrency group was created
+      # with that moment's commit — BEFORE the earlier run pushed its
+      # ledger. Every same-session guard (pending buys, sent sells,
+      # orphan closes) lives in that ledger, so trade on the branch tip,
+      # not on the commit the run was created with.
+      - name: Sync to the branch tip
+        run: git pull --ff-only origin "${{ github.ref_name }}"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

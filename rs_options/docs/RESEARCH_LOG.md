@@ -2593,3 +2593,29 @@ restarts the peak from that date (§60 Level 4).
 A dry run against the real 11/17 ledger and positions sent one close
 for each of the seven and a 2-contract surplus sale for KO 100C; the
 same-session backup run sent nothing further.
+
+**Adversarial review before it traded (same change).** A four-lens
+review confirmed defects in the first version of this fix; all are
+fixed and pinned by tests before merge:
+
+- An exit is now **sticky**: a stop or target that fired and whose sell
+  did not fill is re-sent every session until the broker no longer holds
+  the contract, even if the next close no longer trips the rule or the
+  bars are missing. The first version silently dropped it.
+- The **freeze latches** (`ledger["risk_freeze"]`). Recovering to 9.97%
+  no longer lifts it; only a re-arm dated on or after the freeze does.
+  The re-arm date is normalised and a future date is refused
+  (fail-closed), because Python accepts "20261118" and compares wrongly
+  as text.
+- A rejected sell or buy is a note, not an exception that skipped every
+  later exit in the cycle.
+- The broker's **working orders** now gate re-sends and re-buys, and the
+  workflow pulls the branch tip before trading: a backup fire queued
+  behind the first run was checked out at the commit before that run's
+  ledger landed, so every ledger-based guard read stale state.
+- A contract that vanished while its exit sell sat unfilled is labelled
+  "gone without the exit sell filling", never as a doctrine close; P&L
+  and quantity add up every sell sent for it.
+- DAL and CVX stock join the orphan list (DAL's 11-20 call is in the
+  money; exercise would deliver ~400 unmanaged shares), and the whole
+  orphan decision ends 2026-12-31 so it cannot sell future lots.

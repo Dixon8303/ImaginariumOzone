@@ -223,8 +223,12 @@ def test_cycle_exits_on_doctrine_and_keeps_watching_until_filled():
 
     # Next session the broker no longer holds it: NOW it is closed, with
     # the reasons the exit was sent for.
-    gone = FakeOptionsBroker()
-    _, closed, _ = daily.run_option_cycle(gone, [], bars, "2026-08-17",
+    class Gone(FakeOptionsBroker):
+        def order(self, order_id):        # the sell filled at 2.40
+            return {"id": order_id, "status": "filled",
+                    "filled_qty": "2", "filled_avg_price": "2.40"}
+
+    _, closed, _ = daily.run_option_cycle(Gone(), [], bars, "2026-08-17",
                                           ledger)
     assert symbol not in ledger["options"]
     assert any("INVALIDATION" in r for r in closed[0][3])
