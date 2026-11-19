@@ -189,6 +189,16 @@
       "r": -1.813,
       "reason": "stop",
       "ticker": "UNH"
+    },
+    {
+      "entry": 81.671333,
+      "entry_date": "2026-10-27",
+      "exit": 85.037,
+      "exit_date": "2026-11-18",
+      "micro_override": false,
+      "r": 0.532,
+      "reason": "time/other",
+      "ticker": "DAL"
     }
   ],
   "open": {
@@ -219,21 +229,6 @@
       "signal_close": 552.82,
       "stop": 402.1,
       "target": 1004.98
-    },
-    "DAL": {
-      "closing": "2026-11-17",
-      "entry": 81.671333,
-      "entry_cap": 83.0841,
-      "entry_date": "2026-10-27",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "b428c9d3-3291-4253-997d-aec7f5d4140b",
-      "qty": 60,
-      "setup": "H-25",
-      "signal_close": 81.455,
-      "stop": 75.34,
-      "target": 99.8
     },
     "IWM": {
       "entry": 281.569444,
