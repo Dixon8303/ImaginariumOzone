@@ -380,9 +380,14 @@ def files_in_tmp(tmp_path, monkeypatch):
     monkeypatch.setattr(daily, "LEDGER_PATH",
                         str(tmp_path / "paper_ledger.json"))
     monkeypatch.setattr(daily, "REARM_PATH", str(tmp_path / "rearm.json"))
-    from paper import growth_tracker
+    from paper import growth_tracker, option_costs
     log = tmp_path / "paper_growth.jsonl"
     monkeypatch.setattr(growth_tracker, "GROWTH_LOG_PATH", str(log))
+    # run() records option quotes; a test broker that quotes would
+    # otherwise append fake rows to the committed cost record (it did,
+    # in fe25307 — four NVDA rows dated 2026-08-14).
+    monkeypatch.setattr(option_costs, "COSTS_PATH",
+                        str(tmp_path / "option_costs.jsonl"))
     return log
 
 
@@ -918,3 +923,15 @@ def test_workflow_pulls_the_tip_before_trading():
     trade = names.index("Scan + paper trades + report")
     assert names.index("actions/checkout@v4") < sync < trade
     assert "--ff-only" in steps[sync]["run"]
+
+
+def test_the_committed_cost_record_holds_no_test_rows():
+    """Guards the leak above from recurring: the suite must leave the
+    real record alone, and the fixture contract must never appear in it."""
+    import pathlib
+    record = (pathlib.Path(daily.__file__).resolve().parents[1] / "docs"
+              / "reports" / "option_costs.jsonl")
+    rows = [json.loads(line) for line in record.read_text().splitlines()
+            if line.strip()]
+    assert not any(r.get("contract") == "NVDA260918C00110000"
+                   and r.get("as_of") == "2026-08-14" for r in rows)
