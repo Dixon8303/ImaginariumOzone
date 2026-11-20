@@ -31,7 +31,7 @@ EP54,54,Unreleased episode,review,upload,14,15,,,2026-11-18T14:05:12Z
 EP55,55,Mamie Smith — The Record That Changed Everything,published,complete,15,15,2026-11-10T19:00:00Z,POESADFo_eQ,2026-11-17T14:36:35Z
 EP57,57,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:09Z
 EP58,58,Unreleased episode,approved,complete,15,15,,,2026-11-17T10:35:10Z
-EP59,59,Unreleased episode,review,script,9,15,,,2026-11-18T18:05:08Z
+EP59,59,Unreleased episode,running,script,10,15,,,2026-11-20T08:35:09Z
 EP60,60,Unreleased episode,approved,complete,15,15,,,2026-11-17T02:05:58Z
 EP61,61,Unreleased episode,approved,complete,15,15,,,2026-11-17T03:05:10Z
 EP62,62,Unreleased episode,approved,complete,15,15,,,2026-11-17T15:36:12Z
@@ -70,15 +70,15 @@ EP96,96,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
 EP97,97,Unreleased episode,review,script,5,15,,,2026-11-17T02:05:59Z
 EP98,98,Unreleased episode,review,upload,14,15,,,2026-11-18T14:05:12Z
 EP99,99,Unreleased episode,running,assembly,11,15,,,2026-11-19T07:05:09Z
-EP100,100,Unreleased episode,running,generation,10,15,,,2026-11-17T23:35:10Z
-EP101,101,Unreleased episode,running,generation,10,15,,,2026-11-19T23:05:09Z
+EP100,100,Unreleased episode,running,generation,10,15,,,2026-11-20T08:35:09Z
+EP101,101,Unreleased episode,running,assembly,11,15,,,2026-11-20T08:35:09Z
 EP102,102,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T18:35:11Z
 EP103,103,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:10Z
 EP104,104,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:10Z
 EP105,105,Unreleased episode,review,script,5,15,,,2026-11-17T17:35:12Z
 EP106,106,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:10Z
 EP107,107,Unreleased episode,review,script,4,15,,,2026-11-14T08:05:06Z
-EP108,108,Unreleased episode,review,script,4,15,,,2026-11-20T07:35:09Z
+EP108,108,Unreleased episode,failed,script,4,15,,,2026-11-20T08:35:09Z
 EP110,110,Unreleased episode,draft,batch_primer,0,15,,,2026-11-17T03:05:10Z
 EP111,111,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T00:05:13Z
 EP112,112,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T00:05:13Z
@@ -89,4 +89,4 @@ EP116,116,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP117,117,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP118,118,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP119,119,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
-_last_synced,,2026-11-20T07:35:09Z,,,,,,,
+_last_synced,,2026-11-20T08:35:09Z,,,,,,,
