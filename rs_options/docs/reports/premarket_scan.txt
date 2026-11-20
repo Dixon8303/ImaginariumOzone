@@ -1,25 +1,20 @@
-generated: 2026-11-19
+generated: 2026-11-20
 
-PRE-OPEN SCAN — 2026-11-19 (signals from the 2026-11-19 close)
-paper equity: $90,580.40
+PRE-OPEN SCAN — 2026-11-20 (signals from the 2026-11-20 close)
+paper equity: $90,721.08
 
 CANDIDATES FOR TODAY (0):
   none — nothing passed breakout + regime + quality
 
 ORDERS QUEUED FOR THE OPEN (0): none
 
-OPEN POSITIONS (12):
-  AAPL  qty 14  unrealized $-55.99  stop 325.6 / target 421.42
-  AMD  qty 6  unrealized $-424.23  stop 402.1 / target 1004.98
+OPEN POSITIONS (7):
+  AAPL  qty 14  unrealized $-141.25  stop 325.6 / target 421.42
+  AMD  qty 6  unrealized $-810.90  stop 402.1 / target 1004.98
   CVX261120C00220000  qty 1  unrealized $-940.00  stop ? / target ?
-  DAL261120C00080000  qty 4  unrealized $-480.00  stop ? / target ?
-  IWM  qty 18  unrealized $-316.61  stop 276.0 / target 289.48
-  KO  qty 47  unrealized $-134.63  stop 95.67 / target 111.41
-  KO270115C00097500  qty 2  unrealized $-330.00  stop ? / target ?
-  KO270115C00100000  qty 4  unrealized $-584.00  stop ? / target ?
-  PFE  qty 500  unrealized $-1,155.00  stop ? / target ?
-  PFE261218C00031000  qty 15  unrealized $-1,320.00  stop ? / target ?
-  XOM  qty 100  unrealized $-840.50  stop ? / target ?
+  IWM  qty 18  unrealized $-438.65  stop 276.0 / target 289.48
+  KO  qty 47  unrealized $-89.27  stop 95.67 / target 111.41
+  KO270115C00100000  qty 2  unrealized $-192.00  stop ? / target ?
   XOM261120C00185000  qty 2  unrealized $-1,040.00  stop ? / target ?
 
 OPTION POSITIONS (Robinhood): none on file.
