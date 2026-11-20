@@ -1,8 +1,10 @@
-RS paper track — 2026-11-18
-STALE: newest report is 2026-11-18, but 2026-11-19 has already closed. A session may have been skipped — check the trader's run mode, not just its exit code.
+RS paper track — 2026-11-19
 
-equity $92,655.83   (-7.3% from $100,000)
-last session -913.49
+equity $90,616.38   (-9.4% from $100,000)
+last session -2,039.45
+NEW ENTRIES STOPPED: FREEZE (spec limit reached)
+risk: drawdown 11.0% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session -2.2% vs the 3% daily halt
+orphaned positions still held: 7 (closing)
 open 12: 6/8 stock slots, 6 contracts
 signals 0, 0 order(s) placed
 record: 20 closed | win rate 35% | expectancy -0.714R | total -14.29R
