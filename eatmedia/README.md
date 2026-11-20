@@ -295,7 +295,7 @@ The official site for D. Antione Dixon's book *The Path to Greatness*
 
 | File | What it is |
 |---|---|
-| `pathtogreatness/index.html` | The page. Hero, the twelve level gates, look-inside gallery, the opening pages of Level I, the Level I field notebook, the thirty-day tracker, the Completeness Inventory, the pledge, FAQ, the first-readers form. |
+| `pathtogreatness/index.html` | The page. Hero, the twelve level gates, the book's own terms, look-inside gallery, passages from the opening of Level I, the Level I field notebook, the thirty-day tracker, the Completeness Inventory, the pledge, sixteen questions, the release-notice form. |
 | `pathtogreatness/assets/ptg.js` | All behaviour. **The config block at the top is the only thing to edit day to day.** |
 | `pathtogreatness/assets/ptg.css` | The book's own design system: ink `#171A20`, paper `#F6F5F1`, slate `#919EB2`, rose `#A05561`, Cormorant Garamond and EB Garamond. |
 | `pathtogreatness/assets/fonts/` | The two typefaces the book is set in, self-hosted (SIL Open Font License; text in `OFL.txt`). |
@@ -314,20 +314,27 @@ listed in the production `sitemap.xml` only.
 
 | Setting | Now | What it does |
 |---|---|---|
-| `STATUS` | `"prelaunch"` | `"prelaunch"` shows the first-readers email form. `"available"` swaps it for buy buttons and changes the calls to action to "Get the book". |
+| `STATUS` | `"prelaunch"` | `"prelaunch"` shows the release-notice form. `"available"` swaps it for buy buttons, changes the calls to action to "Get the book", and un-hides the lines written for people who own the book (`data-when="available"`). |
 | `BUY_LINKS` | all empty | One full `https://` product URL per format (hardcover, paperback, ebook, audiobook, direct). Empty formats get no button. |
-| `FORM_ACTION` | empty | The Kit form endpoint for the first-readers list (`https://app.kit.com/forms/XXXXXXX/subscriptions`). While empty, the form opens the visitor's own mail app with a ready-made note to `CONTACT_EMAIL`. It does not reuse the What History Buried form, because that one sends the WHB chapter. |
+| `FORM_ACTION` | empty | The Kit form endpoint for this book's list (`https://app.kit.com/forms/XXXXXXX/subscriptions`). **Set this before promoting the page.** While it is empty the form collects nothing: it opens the visitor's own mail app with a ready-made note to `CONTACT_EMAIL`, and the wording on the page says exactly that ("Open my email"). Once the endpoint is pasted in, the script switches the wording to a normal sign-up ("Tell me when it's out", unsubscribe line, privacy link) by itself. It does not reuse the What History Buried form, because that one sends the WHB chapter. |
 | `GA4_MEASUREMENT_ID` | empty | Paste a `G-…` ID to turn analytics on. Empty loads no tracking script at all. Events sent: `cta_click`, `level_open`, `quote_copy`, `quote_card`, `look_inside`, `excerpt_continue`, `fieldwork_save`, `tracker_day`, `inventory_save`, `pledge_sign`, `lead`. |
 
-**When the book goes on sale**, three things change together: set `STATUS` and
-`BUY_LINKS`; rewrite the FAQ answer "When and where can I buy The Path to
-Greatness?" (it appears twice in `index.html`: once in the page and once in the
-`FAQPage` structured data); and add the real ISBN to the `Book` entry in the
-structured data. Bump `dateModified` there too.
+**Order of shipping.** Merge the production pull request first and confirm
+`https://eatmediatv.com/pathtogreatness/` answers. Merge this repo's pull
+request second. The staging copy's canonical link points at production, and a
+canonical whose target does not exist yet is ignored by search engines.
+
+**When the book goes on sale**, these change together: set `STATUS` and
+`BUY_LINKS`; rewrite three FAQ answers ("When and where can I buy…", "What is
+The Elevated Edition?", "Are there reviews…"), each of which appears twice in
+`index.html`, once in the page and once in the `FAQPage` structured data; add
+the real ISBN, publisher, `datePublished` and page count to the `Book` entry in
+the structured data; and change `dateModified`, the visible "Page updated"
+date in the footer, and `<lastmod>` in the production sitemap to the same day.
 
 **Fidelity rule.** Every line quoted from the book carries a `data-q` attribute
 in the HTML (`data-qi` for method names set in different capitals), and each one
-was checked word for word against the manuscript: 225 passages, 0 mismatches.
+was checked word for word against the manuscript: 228 passages, 0 mismatches.
 Page numbers are the printed folios of The Elevated Edition. If the manuscript
 changes, re-check the quoted lines and folios before publishing. Add a quote the
 same way: mark it, then verify it.
@@ -336,12 +343,26 @@ same way: mark it, then verify it.
 statistics, case-study results or research attributions, and it does not say the
 book is "backed by peer-reviewed research". A fact-check of the manuscript found
 that many of those figures cannot be traced to a source. The only outside facts
-on the page are in one FAQ answer (the arrival fallacy and hedonic adaptation)
-and in the dates of three well-known books, each named with its source.
+on the page are in one FAQ answer (the arrival fallacy and the hedonic
+treadmill) and in the dates of three well-known books, each named with its
+source. The thirty day-cards in the tracker use the titles printed in The
+Elevated Edition; three day headings that exist only in an earlier draft are
+not used.
 
 **Private by design.** The notebook, tracker, inventory and pledge save to the
 visitor's own browser (`localStorage`, keys prefixed `ptg.v1.`). Nothing typed
 there leaves the device. The page says so next to each tool.
+
+**Structured data.** One JSON-LD graph: the book (with a
+`disambiguatingDescription`, because other books share the title), the author,
+the organisation, the author's other book and podcast as their own entries, the
+book's own terms as a `DefinedTermSet`, the page, the breadcrumb and the
+questions. The author entry deliberately carries no `sameAs`: add one only for
+pages that are about him (an Amazon author page, IMDb, LinkedIn), never for a
+company or product page.
+
+**If the script fails to load**, the page un-hides itself: every gate and every
+section is readable without JavaScript.
 
 **Internal links.** The home page's "Beyond Production" cards and the "More
 From E.A.T. Media" footer on all three company pages link to `pathtogreatness/`.
