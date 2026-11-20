@@ -475,9 +475,9 @@ window.PTG_CONFIG = {
       x.textAlign = "center";
     }
     spaced("Level " + L.num + "  ·  " + L.sym, 170, 26, "#919eb2", 9);
-    x.save(); x.translate(W / 2 - 60, 230); x.scale(5, 5);
+    x.save(); x.translate(W / 2 - 78, 222); x.scale(6.5, 6.5);
     x.beginPath(); (MARKS[L.mk] || MARKS.mountain)(x);
-    x.strokeStyle = "#919eb2"; x.lineWidth = 1.2; x.lineCap = "round"; x.lineJoin = "round"; x.stroke(); x.restore();
+    x.strokeStyle = "#919eb2"; x.lineWidth = 1; x.lineCap = "round"; x.lineJoin = "round"; x.stroke(); x.restore();
     var size = L.epi.length > 62 ? 68 : 78;
     x.font = "italic 400 " + size + "px 'Cormorant Garamond', Georgia, serif"; x.fillStyle = "#f1f3f6";
     var lines = wrapLines(x, "“" + L.epi + "”", W - 250), lh = size * 1.22, y0 = 690 - (lines.length - 1) * lh / 2 + 40;
