@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-20T18:05:09Z",
+  "last_synced": "2026-11-20T19:05:10Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1551,6 +1551,79 @@
       "video_id": "B-_WpB2iO0o",
       "publish_at": "2026-10-02T18:00:00Z",
       "updated_at": "2026-11-05T18:35:04Z"
+    },
+    {
+      "id": "EP43",
+      "number": 43,
+      "topic": "Freedmans Bank",
+      "mode": "standalone",
+      "status": "published",
+      "stages": [
+        {
+          "name": "batch_primer",
+          "status": "done"
+        },
+        {
+          "name": "topic_scoring",
+          "status": "done"
+        },
+        {
+          "name": "research",
+          "status": "done"
+        },
+        {
+          "name": "outline",
+          "status": "done"
+        },
+        {
+          "name": "script",
+          "status": "done"
+        },
+        {
+          "name": "storyboard",
+          "status": "done"
+        },
+        {
+          "name": "generation",
+          "status": "done"
+        },
+        {
+          "name": "ken_burns",
+          "status": "running"
+        },
+        {
+          "name": "voice_ssml",
+          "status": "done"
+        },
+        {
+          "name": "audio_prod",
+          "status": "done"
+        },
+        {
+          "name": "titles_seo",
+          "status": "done"
+        },
+        {
+          "name": "assembly",
+          "status": "done"
+        },
+        {
+          "name": "qa_gates",
+          "status": "done"
+        },
+        {
+          "name": "shorts",
+          "status": "pending"
+        },
+        {
+          "name": "upload",
+          "status": "done"
+        }
+      ],
+      "gates": {},
+      "video_id": "3A6pt8q06KQ",
+      "publish_at": "2026-11-20T19:00:00Z",
+      "updated_at": "2026-11-20T19:05:09Z"
     },
     {
       "id": "EP44",
