@@ -541,7 +541,7 @@ h2 .kicker{margin-bottom:1.2rem}
 .foot__base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem 2rem;padding-top:1.5rem;font-size:.96rem;color:var(--on-dark-3)}
 
 /* ---------- sticky mobile cta ---------- */
-.dock{position:fixed;z-index:90;left:0;right:0;bottom:0;display:none;grid-template-columns:1fr auto;align-items:center;gap:.9rem;padding:.6rem max(var(--gutter),env(safe-area-inset-left)) calc(.6rem + env(safe-area-inset-bottom));background:rgba(23,26,32,.96);color:var(--on-dark);box-shadow:0 -1px 0 var(--rule-d);transform:translateY(110%);visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s}
+.dock{position:fixed;z-index:90;left:0;right:0;bottom:0;display:none;grid-template-columns:1fr auto;align-items:center;gap:.9rem;padding:.6rem max(var(--gutter),env(safe-area-inset-left)) calc(.6rem + env(safe-area-inset-bottom));background:var(--ink);color:var(--on-dark);box-shadow:0 -1px 0 var(--rule-d-strong);transform:translateY(110%);visibility:hidden;transition:transform .4s var(--ease),visibility 0s .4s}
 .dock.is-on{transform:none;visibility:visible;transition-delay:0s}
 @media (max-height:520px){.dock{display:none!important}}
 .dock p{font:400 1.04rem/1.2 var(--display);color:var(--on-dark-2)}
