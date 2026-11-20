@@ -1,7 +1,7 @@
 generated: 2026-11-19
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-19
-paper equity: $90,616.38   cash: $41,301.61
+paper equity: $90,616.92   cash: $41,301.61
 RISK LIMITS: drawdown 11.0% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session -2.2% vs the 3% daily halt
   ENTRIES BLOCKED — FREEZE since 2026-11-19: equity is 11.0% below its $101,858.65 peak (2026-10-30); the limit is 10% — no new entries until the operator re-arms in paper/risk_rearm.json
 
@@ -31,12 +31,12 @@ ORPHANED POSITIONS (7 held) — closing, operator decision 2026-11-18. Left behi
   note: XOM261120C00185000: no tradable quote — close retried next run
 
 OPEN POSITIONS (12) — 6 of 8 stock slots used, 6 option contracts:
-  AAPL  qty 14  unrealized $-17.07  stop 325.6  target 421.42  since 2026-11-04
-  AMD  qty 6  unrealized $-535.65  stop 402.1  target 1004.98  since 2026-11-11
+  AAPL  qty 14  unrealized $-15.25  stop 325.6  target 421.42  since 2026-11-04
+  AMD  qty 6  unrealized $-519.39  stop 402.1  target 1004.98  since 2026-11-11
   CVX261120C00220000  qty 1  unrealized $-940.00  ORPHAN — close NOT sent yet (operator decision 2026-11-18)
   DAL261120C00080000  qty 4  unrealized $-480.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
-  IWM  qty 18  unrealized $-319.13  stop 276.0  target 289.48  since 2026-10-30
-  KO  qty 47  unrealized $-105.49  stop 95.67  target 111.41  since 2026-11-16
+  IWM  qty 18  unrealized $-326.33  stop 276.0  target 289.48  since 2026-10-30
+  KO  qty 47  unrealized $-115.83  stop 95.67  target 111.41  since 2026-11-16
   KO270115C00097500  qty 2  unrealized $-330.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
   KO270115C00100000  qty 4  unrealized $-584.00  option, stop-if-underlying <= 95.67  since 2026-11-16
   PFE  qty 500  unrealized $-1,140.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
@@ -48,7 +48,6 @@ PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
   holding 1:
     KO270115C00100000  2x @ $3.17  since 2026-11-16  stop-if-underlying <= 95.67  [excess sell sent 2026-11-19, 2x limit 1.68 — not yet filled]
-  note: KO270115C00100000: SELL SENT 2x limit 1.68 — 2 contract(s) over the sized 2. Booked when the broker confirms the position is gone; re-sent each session until then.
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
