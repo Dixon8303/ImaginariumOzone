@@ -17,10 +17,12 @@ window.PTG_CONFIG = {
     direct: ""
   },
 
-  /* Kit (ConvertKit) form endpoint for the first-readers list, in the form
-     https://app.kit.com/forms/XXXXXXX/subscriptions (posts "email_address").
-     Empty = the form opens the visitor's own mail app instead. */
-  FORM_ACTION: "",
+  /* The sign-up endpoint: the Google Apps Script web app that writes each
+     sign-up to the private sheet "The Path to Greatness · First Readers".
+     Paste the Web app URL (it ends in /exec). Setup steps:
+     automation/pathtogreatness-signups/README.md in ImaginariumOzone.
+     Empty = the form falls back to opening the visitor's own mail app. */
+  FORM_ENDPOINT: "",
 
   /* Google Analytics 4 measurement ID (G-XXXXXXXXXX). Empty = no analytics
      script is loaded at all. */
@@ -113,7 +115,7 @@ window.PTG_CONFIG = {
      Header: stuck state, reading progress, mobile menu, current section
      ========================================================================== */
   mod("header", function () {
-    var head = $("#head"), bar = $("#progress"), nav = $("#nav"), btn = $("#menu-btn"), dock = $("#dock");
+    var head = $("#head"), bar = $("#progress"), nav = $("#nav"), btn = $("#menu-btn"), dock = $("#dock"), climb = $("#dock-climb");
     if (!head) return;
     var ticking = false;
     function update() {
@@ -121,10 +123,15 @@ window.PTG_CONFIG = {
       var y = window.scrollY || 0;
       head.classList.toggle("is-stuck", y > 24);
       var max = Math.max(1, doc.documentElement.scrollHeight - window.innerHeight);
-      if (bar) bar.style.transform = "scaleX(" + Math.min(1, y / max).toFixed(4) + ")";
+      var prog = "scaleX(" + Math.min(1, y / max).toFixed(4) + ")";
+      if (bar) bar.style.transform = prog;
+      if (climb) climb.style.transform = prog;
       if (dock) {
-        var get = $("#get"), nearEnd = get && get.getBoundingClientRect().top < window.innerHeight * 0.9;
-        dock.classList.toggle("is-on", y > window.innerHeight * 0.85 && !nearEnd);
+        var vh = window.innerHeight, get = $("#get"), nearEnd = get && get.getBoundingClientRect().top < vh * 0.9;
+        var sac = $("#sacred"), sr = sac && sac.getBoundingClientRect(), still = !!sr && sr.top < vh * 0.7 && sr.bottom > vh * 0.3;
+        var on = y > vh * 0.85 && !nearEnd && !still;
+        dock.classList.toggle("is-on", on);
+        doc.body.classList.toggle("dock-on", on);
       }
     }
     window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
@@ -176,7 +183,7 @@ window.PTG_CONFIG = {
      Reveal on scroll. Content is visible by default; this only adds motion.
      ========================================================================== */
   mod("reveal", function () {
-    var items = $$(".rv");
+    var items = $$(".rv, .rv-list");
     if (reduce || !("IntersectionObserver" in window)) { items.forEach(function (el) { el.classList.add("is-in"); }); return; }
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); } });
@@ -191,11 +198,13 @@ window.PTG_CONFIG = {
      Virtual canvas 1500 x 790; the summit is at (966,119).
      ========================================================================== */
   mod("heroArt", function () {
-    var canvas = $("#ascent-art");
+    var canvas = $("#ascent-art"), over = $("#ascent-route"), mast = $(".mast"), glowEl = $(".mast__glow");
     if (!canvas || !canvas.getContext) return;
     var ctx = canvas.getContext("2d");
     if (!ctx) return;
-    var base = doc.createElement("canvas"), bctx = base.getContext("2d");
+    var base = canvas, bctx = ctx;
+    var octx = over && over.getContext ? over.getContext("2d") : null;
+    if (!octx) { over = canvas; octx = ctx; }
     var seed = 1791, g = bctx, view = { scale: 1, tx: 0, ty: 0, dpr: 1 };
 
     function random() { seed = (Math.imul(1664525, seed) + 1013904223) >>> 0; return seed / 4294967296; }
@@ -283,14 +292,36 @@ window.PTG_CONFIG = {
     function at(t) { var p = upTo(t); return p[p.length - 1]; }
 
     function setView(c, w, h) {
-      var dpr = Math.min(window.devicePixelRatio || 1, 1.75);
+      var small = w < 780, dpr = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 1.75);
       c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
-      var small = w < 780, scale = Math.max(w / 1500, h / 790);
-      view = { dpr: dpr, scale: scale, tx: small ? w * 0.63 - 966 * scale : (w - 1500 * scale) * 0.62, ty: small ? h * 0.2 - 119 * scale : (h - 790 * scale) * 0.42 };
+      var scale = Math.max(w / 1500, h / 790);
+      if (small) {
+        /* phones: the whole route, base camp to summit, sits above the title */
+        scale = Math.max(w / 1500, Math.min(w / 520, h * 0.42 / 520));
+        view = { dpr: dpr, scale: scale, tx: w * 0.56 - 862 * scale, ty: 70 - 104 * scale };
+      } else {
+        view = { dpr: dpr, scale: scale, tx: (w - 1500 * scale) * 0.62, ty: (h - 790 * scale) * 0.42 };
+      }
     }
     function useView(c2d) { c2d.setTransform(view.dpr * view.scale, 0, 0, view.dpr * view.scale, view.dpr * view.tx, view.dpr * view.ty); }
+    /* the route layer covers only the route, the summit glow and the ring (virtual x, y, w, h),
+       so each frame repaints a small layer instead of a second full-screen one */
+    var OB = [700, -50, 440, 712];
+    function placeOver() {
+      if (over === canvas) return;
+      var L = OB[0] * view.scale + view.tx, T = OB[1] * view.scale + view.ty, W = OB[2] * view.scale, H = OB[3] * view.scale;
+      over.style.left = L.toFixed(2) + "px"; over.style.top = T.toFixed(2) + "px";
+      over.style.width = W.toFixed(2) + "px"; over.style.height = H.toFixed(2) + "px";
+      over.width = Math.round(W * view.dpr); over.height = Math.round(H * view.dpr);
+    }
+    function useOver(c2d) {
+      if (over === canvas) { useView(c2d); return; }
+      var k = view.dpr * view.scale;
+      c2d.setTransform(k, 0, 0, k, -OB[0] * k, -OB[1] * k);
+    }
 
-    function paintBase(w, h) {
+    var tail = null;
+    function paintBase(w, h, defer) {
       setView(base, w, h);
       g = bctx; useView(g); seed = 1791;
       var sky = g.createLinearGradient(0, -80, 0, 760);
@@ -325,17 +356,24 @@ window.PTG_CONFIG = {
       ridge([[-900, 700], [-220, 670], [10, 626], [206, 650], [371, 585], [482, 616], [591, 518], [716, 548], [790, 472], [860, 500], [948, 441], [1045, 505], [1150, 551], [1276, 466], [1390, 530], [1510, 450], [1700, 528], [2500, 560]], "rgba(52,62,80,.86)", "#1a202b", 0.14, "rgba(170,184,210,.18)");
       var fg = [[-900, 780], [-300, 752], [120, 710], [240, 730], [385, 660], [537, 678], [652, 617], [745, 638], [850, 561], [945, 580], [1030, 535], [1147, 590], [1255, 566], [1344, 609], [1455, 548], [1623, 575], [1800, 540], [2500, 600]];
       ridge(fg, "#27303e", "#141920", 0.1, "rgba(150,165,192,.14)");
-      for (var i = 0; i < 700; i++) { var px = random() * 1900 - 100, py = yAt(fg, px) + random() * 59; pine(px, py, 2 + random() * 9, "#10141a"); }
-      var dark = [[-900, 740], [-200, 710], [170, 687], [315, 717], [510, 650], [658, 690], [846, 618], [954, 653], [1064, 614], [1248, 674], [1403, 622], [1600, 660], [2500, 700]];
-      ridge(dark, "#171c25", "#0e1116", 0.08, null);
-      for (var j = 0; j < 360; j++) { var fx = random() * 1900 - 150; pine(fx, yAt(dark, fx) + random() * 22, 3 + random() * 12, "#0a0d11"); }
+      /* the forest (about a thousand small strokes, near-black under the overlay) is drawn after first paint */
+      tail = function () {
+        tail = null; g = bctx; useView(g);
+        for (var i = 0; i < 700; i++) { var px = random() * 1900 - 100, py = yAt(fg, px) + random() * 59; pine(px, py, 2 + random() * 9, "#10141a"); }
+        var dark = [[-900, 740], [-200, 710], [170, 687], [315, 717], [510, 650], [658, 690], [846, 618], [954, 653], [1064, 614], [1248, 674], [1403, 622], [1600, 660], [2500, 700]];
+        ridge(dark, "#171c25", "#0e1116", 0.08, null);
+        for (var j = 0; j < 360; j++) { var fx = random() * 1900 - 150; pine(fx, yAt(dark, fx) + random() * 22, 3 + random() * 12, "#0a0d11"); }
+      };
+      if (!defer) tail();
     }
 
-    function frame(t) {
-      /* t: 0 = base camp, 1 = summit reached */
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.drawImage(base, 0, 0);
-      g = ctx; useView(g);
+    function frame(t, rk) {
+      /* t: 0 = base camp, 1 = summit reached; rk: 0..1, the summit ring landing (1 = at rest) */
+      if (rk === undefined) rk = 1;
+      var o = octx;
+      o.setTransform(1, 0, 0, 1, 0, 0);
+      if (o !== bctx) o.clearRect(0, 0, over.width, over.height);
+      g = o; useOver(g);
       var lit = Math.max(0, (t - 0.82) / 0.18);
       if (lit > 0) {
         var dawn = g.createRadialGradient(966, 121, 2, 966, 121, 130);
@@ -347,34 +385,60 @@ window.PTG_CONFIG = {
       for (var n = 0; n <= 13; n++) {
         var nt = n / 13;
         if (nt > t + 0.0001) break;
-        var p = at(nt), camp = n === 0 || n === 3 || n === 7 || n === 12 || n === 13;
-        g.beginPath(); g.arc(p[0], p[1], n === 13 ? 4.6 : camp ? 3.6 : 2.5, 0, 6.2832);
+        var p = at(nt), camp = n === 0 || n === 3 || n === 7 || n === 12 || n === 13, r = n === 13 ? 4.6 : camp ? 3.6 : 2.5;
+        if (t < 1) {
+          /* each camp lights briefly as the walker reaches it */
+          var k = Math.min(1, (t - nt) / 0.06);
+          if (k < 1) { g.beginPath(); g.arc(p[0], p[1], r + (camp ? 12 : 9) * k, 0, 6.2832); g.fillStyle = "rgba(246,214,160," + ((camp ? 0.5 : 0.38) * (1 - k)).toFixed(3) + ")"; g.fill(); }
+        }
+        g.beginPath(); g.arc(p[0], p[1], r, 0, 6.2832);
         g.fillStyle = n === 13 ? "#fbe6bf" : "#ecc88e"; g.fill();
         g.strokeStyle = "rgba(17,21,28,.9)"; g.lineWidth = 1.2; g.stroke();
       }
-      if (t >= 1) { g.beginPath(); g.arc(966, 123, 9.5, 0, 6.2832); g.strokeStyle = "rgba(251,230,191,.55)"; g.lineWidth = 1; g.stroke(); }
+      if (t >= 1) {
+        /* the summit ring: opens wide once, then settles at rest (r 9.5, the resting frame) */
+        var rr, ra;
+        if (rk < 0.55) { var a = 1 - Math.pow(1 - rk / 0.55, 3); rr = 4.6 + 7.4 * a; ra = 0.8 - 0.45 * a; }
+        else { var b2 = (rk - 0.55) / 0.45, eb = b2 * b2 * (3 - 2 * b2); rr = 12 - 2.5 * eb; ra = 0.35 + 0.2 * eb; }
+        g.beginPath(); g.arc(966, 123, rr, 0, 6.2832); g.strokeStyle = "rgba(251,230,191," + ra.toFixed(3) + ")"; g.lineWidth = 1; g.stroke();
+      }
       g.restore();
     }
 
     var walked = false, raf = 0, lastW = 0, lastH = 0;
+    function placeGlow() {
+      if (!glowEl) return;
+      glowEl.style.left = (966 * view.scale + view.tx).toFixed(1) + "px";
+      glowEl.style.top = (121 * view.scale + view.ty).toFixed(1) + "px";
+    }
+    function arrived() { walked = true; placeGlow(); if (mast) mast.classList.add("is-walked"); }
+    function inView() {
+      if (doc.visibilityState && doc.visibilityState !== "visible") return false;
+      var r = canvas.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    }
     function paint(animate) {
       var w = canvas.clientWidth, h = canvas.clientHeight;
       if (!w || !h) return;
       if (w === lastW && Math.abs(h - lastH) < 90) return; /* unchanged (the observer's first call) or the mobile URL bar */
       lastW = w; lastH = h;
       cancelAnimationFrame(raf);
-      paintBase(w, h);
-      canvas.width = base.width; canvas.height = base.height;
-      if (!animate || reduce || walked) { walked = true; frame(1); return; }
-      var start = 0, dur = 2600;
+      var run = animate && !reduce && !walked && inView();
+      paintBase(w, h, run);
+      placeOver();
+      if (!run) { if (tail) tail(); frame(1, 1); arrived(); return; }
+      var start = 0, dur = 2600, settle = 760;
       function step(now) {
         if (!start) start = now;
-        var k = Math.min(1, (now - start) / dur), eased = 1 - Math.pow(1 - k, 3);
-        frame(eased);
-        if (k < 1) raf = requestAnimationFrame(step); else walked = true;
+        var e = now - start, k = Math.min(1, e / dur);
+        if (k < 1) { frame(1 - Math.pow(1 - k, 3)); raf = requestAnimationFrame(step); return; }
+        var s2 = Math.min(1, (e - dur) / settle);
+        frame(1, s2);
+        if (s2 < 1) raf = requestAnimationFrame(step); else arrived();
       }
       frame(0);
       raf = requestAnimationFrame(step);
+      requestAnimationFrame(function () { setTimeout(function () { if (tail) tail(); }, 0); });
     }
     var queued = 0;
     function queue() { clearTimeout(queued); queued = setTimeout(function () { paint(false); }, 180); }
@@ -394,7 +458,11 @@ window.PTG_CONFIG = {
     if (!wrap) return;
     var btns = $$(".lvl__btn", wrap), panels = $$(".lvl__panel", wrap);
     var wide = mq("(min-width: 60.0625em)");
-    var current = 0;
+    var current = 0, seen = {};
+    function fitGate() {
+      /* wide screens: a gate taller than the window scrolls inside itself, and always opens at its plate */
+      if (current && panels[current - 1]) panels[current - 1].scrollTop = 0;
+    }
     function open(n, opts) {
       opts = opts || {};
       var same = current === n;
@@ -404,6 +472,12 @@ window.PTG_CONFIG = {
         panels[i].classList.toggle("is-open", on);
       });
       current = (same && !wide.matches && !opts.force) ? 0 : n;
+      if (current) seen[current] = true;
+      btns.forEach(function (b, i) {
+        b.classList.toggle("is-past", !!current && i + 1 < current);
+        b.classList.toggle("is-seen", !!seen[i + 1] && i + 1 !== current);
+      });
+      fitGate();
       if (current && opts.user) {
         track("level_open", { level: n });
         if (!wide.matches) {
@@ -438,7 +512,8 @@ window.PTG_CONFIG = {
     }
     if (!fromHash()) open(1, { force: true });
     window.addEventListener("hashchange", fromHash);
-    var onWide = function () { if (wide.matches && !current) open(1, { force: true }); };
+    var onWide = function () { if (wide.matches && !current) open(1, { force: true }); fitGate(); };
+
     if (wide.addEventListener) wide.addEventListener("change", onWide); else if (wide.addListener) wide.addListener(onWide);
   });
   /* reveal targets and the gates are both set up: the page may stay in its scripted state */
@@ -512,6 +587,12 @@ window.PTG_CONFIG = {
     spaced("eatmediatv.com/pathtogreatness", 1238, 18, "#8891a1", 5);
     return c;
   }
+  function flash(btn, word) {
+    if (!btn.getAttribute("data-label")) { btn.setAttribute("data-label", btn.textContent); btn.setAttribute("aria-label", btn.textContent); }
+    btn.textContent = word; btn.classList.add("is-done");
+    clearTimeout(btn.__t);
+    btn.__t = setTimeout(function () { btn.textContent = btn.getAttribute("data-label"); btn.classList.remove("is-done"); }, 1600);
+  }
   doc.addEventListener("click", function (ev) {
     var t = ev.target.closest && ev.target.closest("[data-copy],[data-card]");
     if (!t) return;
@@ -519,7 +600,7 @@ window.PTG_CONFIG = {
     if (!L) return;
     if (t.hasAttribute("data-copy")) {
       copyText("“" + L.epi + "” — D. Antione Dixon, The Path to Greatness (Level " + L.num + ")\n" + SITE + "#level-" + n)
-        .then(function () { toast("Line copied"); }, function () { toast("Copy is not available here"); });
+        .then(function () { toast("Line copied"); flash(t, "Copied"); }, function () { toast("Copy is not available here"); });
       track("quote_copy", { level: n });
       return;
     }
@@ -531,7 +612,7 @@ window.PTG_CONFIG = {
           var url = URL.createObjectURL(blob), a = doc.createElement("a");
           a.href = url; a.download = name; doc.body.appendChild(a); a.click(); a.remove();
           setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
-          toast("Card saved");
+          toast("Card saved"); flash(t, "Saved");
         }
         var file = null;
         try { file = new File([blob], name, { type: "image/png" }); } catch (e) { file = null; }
@@ -565,22 +646,41 @@ window.PTG_CONFIG = {
       return;
     }
     var i = 0, opener = null;
-    function show(k) {
+    function show(k, dir) {
       i = (k + pages.length) % pages.length;
-      var p = pages[i];
-      img.src = "assets/img/look/" + p.s + "-960.webp";
+      var p = pages[i], want = i, big = "assets/img/look/" + p.s + "-960.webp", small = "assets/img/look/" + p.s + "-480.webp";
+      img.src = small;
+      var hi = new Image();
+      hi.onload = function () { if (want === i) img.src = big; };
+      hi.src = big;
       img.alt = p.a; cap.textContent = p.c; count.textContent = "Page " + (i + 1) + " of " + pages.length;
+      if (dir && !reduce) {
+        img.classList.remove("is-in-l", "is-in-r"); void img.offsetWidth;
+        img.classList.add(dir > 0 ? "is-in-r" : "is-in-l");
+      }
+    }
+    function grow(from) {
+      if (reduce || !from || !img.animate) return;
+      var r0 = from.getBoundingClientRect(), r1 = img.getBoundingClientRect();
+      if (!r0.width || !r1.width) return;
+      var dx = r0.left - r1.left, dy = r0.top - r1.top, sc = r0.width / r1.width;
+      img.animate([{ transformOrigin: "0 0", transform: "translate(" + dx + "px," + dy + "px) scale(" + sc + ")" }, { transformOrigin: "0 0", transform: "none" }],
+        { duration: 420, easing: "cubic-bezier(.16,1,.3,1)" });
     }
     $$("[data-look]").forEach(function (b) {
-      b.addEventListener("click", function () { opener = b; show(+b.getAttribute("data-look")); root.style.overflow = "hidden"; dlg.showModal(); track("look_inside", { page: pages[i].s }); });
+      b.addEventListener("click", function () {
+        opener = b; show(+b.getAttribute("data-look")); root.style.overflow = "hidden"; dlg.showModal();
+        grow($("img", b));
+        track("look_inside", { page: pages[i].s });
+      });
     });
     $("#lb-close").addEventListener("click", function () { dlg.close(); });
-    $("#lb-prev").addEventListener("click", function () { show(i - 1); });
-    $("#lb-next").addEventListener("click", function () { show(i + 1); });
+    $("#lb-prev").addEventListener("click", function () { show(i - 1, -1); });
+    $("#lb-next").addEventListener("click", function () { show(i + 1, 1); });
     dlg.addEventListener("click", function (ev) { if (ev.target === dlg || ev.target.classList.contains("lightbox__stage") || ev.target.classList.contains("lightbox__in")) dlg.close(); });
     dlg.addEventListener("keydown", function (ev) {
-      if (ev.key === "ArrowLeft") { ev.preventDefault(); show(i - 1); }
-      else if (ev.key === "ArrowRight") { ev.preventDefault(); show(i + 1); }
+      if (ev.key === "ArrowLeft") { ev.preventDefault(); show(i - 1, -1); }
+      else if (ev.key === "ArrowRight") { ev.preventDefault(); show(i + 1, 1); }
     });
     dlg.addEventListener("close", function () { root.style.overflow = ""; if (opener) opener.focus(); });
     var x0 = null;
@@ -588,8 +688,30 @@ window.PTG_CONFIG = {
     dlg.addEventListener("touchend", function (ev) {
       if (x0 === null) return;
       var dx = ev.changedTouches[0].clientX - x0; x0 = null;
-      if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 50) show(i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
     }, { passive: true });
+  });
+  mod("lookRail", function () {
+    var rail = $("#look-rail"), steps = $$("[data-step]");
+    if (!rail || !steps.length) return;
+    function upd() {
+      var max = rail.scrollWidth - rail.clientWidth - 2;
+      steps.forEach(function (b) {
+        var end = +b.getAttribute("data-step") < 0 ? rail.scrollLeft <= 2 : rail.scrollLeft >= max;
+        b.setAttribute("aria-disabled", String(end));
+      });
+    }
+    steps.forEach(function (b) {
+      b.removeAttribute("disabled");
+      b.addEventListener("click", function () {
+        if (b.getAttribute("aria-disabled") === "true") return;
+        rail.scrollBy({ left: +b.getAttribute("data-step") * rail.clientWidth * 0.8, behavior: reduce ? "auto" : "smooth" });
+      });
+    });
+    var tick = false;
+    rail.addEventListener("scroll", function () { if (!tick) { tick = true; requestAnimationFrame(function () { tick = false; upd(); }); } }, { passive: true });
+    window.addEventListener("resize", upd);
+    upd();
   });
 
   /* ==========================================================================
@@ -798,7 +920,7 @@ window.PTG_CONFIG = {
     }
     function renderMeta() {
       var n = completeDays();
-      fill.style.width = (n / 30 * 100).toFixed(2) + "%";
+      fill.style.transform = "scaleX(" + (n / 30).toFixed(4) + ")";
       countEl.textContent = n + " of 30 days complete";
       sinceEl.textContent = state.start ? "Day one: " + niceDate(state.start) : "";
       $$("[data-tally]").forEach(function (el) {
@@ -838,6 +960,8 @@ window.PTG_CONFIG = {
         if (!store.set("tracker", state)) toast("Not saved: storage is unavailable");
         renderDays(); renderMeta();
         if (was < 3 && doneCount(day) === 3) {
+          var arrivedEl = $("[data-day='" + day + "']", daysBox);
+          if (arrivedEl && !reduce) arrivedEl.classList.add("is-arriving");
           track("tracker_day", { day: day });
           toast(day === 30 ? "Thirty days. The summit." : "Day " + day + " complete");
         }
@@ -867,9 +991,16 @@ window.PTG_CONFIG = {
     ["d1", "d30"].forEach(function (k) { if (!plain(data[k]) || !isFinite(+data[k].score)) delete data[k]; });
     function vals() { return ids.map(function (id) { return +form.elements[id].value || 1; }); }
     function sum() { return vals().reduce(function (a, b) { return a + b; }, 0); }
+    function flip(el) { if (reduce || !el) return; el.classList.remove("is-flip"); void el.offsetWidth; el.classList.add("is-flip"); }
     function paint() {
-      ids.forEach(function (id, i) { var o = $("#o" + (i + 1)); if (o) o.textContent = form.elements[id].value; form.elements[id].setAttribute("aria-valuetext", form.elements[id].value + " of 10"); });
-      total.textContent = String(sum());
+      ids.forEach(function (id, i) {
+        var o = $("#o" + (i + 1)), el = form.elements[id], v = el.value;
+        if (o && o.textContent !== v) { o.textContent = v; flip(o); }
+        el.setAttribute("aria-valuetext", v + " of 10");
+        el.style.setProperty("--v", ((v - 1) / 9 * 100).toFixed(1) + "%");
+      });
+      var t = String(sum());
+      if (total.textContent !== t) { total.textContent = t; flip(total.parentNode); }
     }
     function report() {
       var parts = [];
@@ -914,6 +1045,7 @@ window.PTG_CONFIG = {
       store.set("pledge", data);
       if (window.__ptgTracker) window.__ptgTracker.begin(data.date);
       render(); toast("The revolution begins now"); track("pledge_sign", {});
+      if (!reduce) { box.classList.remove("is-stamping"); void box.offsetWidth; box.classList.add("is-stamping"); setTimeout(function () { box.classList.remove("is-stamping"); }, 1400); }
     });
     name.addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); btn.click(); } });
     $("#pledge-print").addEventListener("click", function () { printOnly("print-pledge"); });
@@ -944,55 +1076,238 @@ window.PTG_CONFIG = {
       var h = $("#get-title"); if (h) h.textContent = "Get the book";
       var lab = $("#get-label"); if (lab) lab.textContent = "Available now";
       $$("[data-release-note]").forEach(function (el) { el.textContent = "Available now."; });
-      $$("[data-cta='hero'],[data-cta='band'],[data-cta='nav'],[data-cta='dock']").forEach(function (a) { a.textContent = "Get the book"; });
-      /* lines written for people who already own the book */
+      $$("[data-cta='hero'],[data-cta='excerpt'],[data-cta='nav'],[data-cta='dock']").forEach(function (a) { a.textContent = "Get the book"; });
       $$("[data-when='available']").forEach(function (el) { el.hidden = false; });
       return;
     }
     if (!form) return;
-    var email = form.elements.email_address, trap = form.elements.ptg_field_2, button = $("button[type=submit]", form), fine = $("#signup-fine");
-    function invalid(ev) {
-      ev.preventDefault();
+
+    var email = form.elements.email, trap = form.elements.website, btn = $("#signup-btn"), label = $(".btn__label", btn);
+    var signed = $("#signed"), signedEmail = $("#signed-email"), dlg = $("#thanks"), fine = $("#signup-fine"), promise = $("#get-promise");
+    var LEDE = "Leave your email address. You will hear from D. Antione Dixon when The Elevated Edition is out.";
+    var opened = Date.now(), busy = false, endpoint = isUrl(cfg.FORM_ENDPOINT) ? cfg.FORM_ENDPOINT : "";
+    email.addEventListener("focus", function () { if (!opened) opened = Date.now(); }, { once: true });
+    email.addEventListener("input", function () { email.removeAttribute("aria-invalid"); if (status.getAttribute("data-kind") === "error") status.textContent = ""; });
+
+    /* where this visit came from: first-touch tags are kept for the session */
+    function tags() {
+      var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content"], out = {}, q;
+      try { q = new URLSearchParams(location.search); } catch (e) { q = null; }
+      var saved = {};
+      try { saved = JSON.parse(sessionStorage.getItem("ptg.v1.utm") || "{}") || {}; } catch (e) { saved = {}; }
+      keys.forEach(function (k) { var v = q && q.get(k); out[k] = v ? v.slice(0, 80) : (saved[k] || ""); });
+      try { if (q && keys.some(function (k) { return q.get(k); })) sessionStorage.setItem("ptg.v1.utm", JSON.stringify(out)); } catch (e) { /* storage off */ }
+      return out;
+    }
+    tags();
+
+    function say(msg, kind) { status.textContent = msg; status.setAttribute("data-kind", kind || ""); }
+    function setBusy(on) {
+      busy = on; btn.disabled = on; btn.classList.toggle("is-busy", on);
+      label.textContent = on ? "Adding you…" : "Tell me when it’s out";
+    }
+    function invalid() {
       email.setAttribute("aria-invalid", "true");
-      status.textContent = "That email address does not look complete.";
+      say("That email address does not look complete.", "error");
       email.focus();
     }
-    email.addEventListener("input", function () { email.removeAttribute("aria-invalid"); });
-
-    if (isUrl(cfg.FORM_ACTION)) {
-      /* a list is connected: the form posts to it, and the copy says so */
-      form.action = cfg.FORM_ACTION;
-      if (lede) lede.textContent = "The Elevated Edition has no release date yet. Leave your email address and you will hear when it is out and where to find it.";
-      if (button) button.textContent = "Tell me when it’s out";
-      if (fine) {
-        fine.textContent = "Used for news about this book. Unsubscribe whenever you like. ";
-        var pr = doc.createElement("a"); pr.href = "https://eatmediatv.com/privacy/"; pr.textContent = "Privacy"; fine.appendChild(pr);
-      }
-      form.addEventListener("submit", function (ev) {
-        if (trap && trap.value) { ev.preventDefault(); status.textContent = "That did not go through. Write to " + to + " and you will be added."; return; }
-        if (!email.value || !email.checkValidity()) { invalid(ev); return; }
-        track("lead", { method: "kit" });
-      });
-      return;
+    function showSigned(addr) {
+      root.classList.add("is-joined");
+      if (!signed) return;
+      signedEmail.textContent = addr; signed.hidden = false; form.hidden = true;
+      if (lede) lede.textContent = "You will hear from D. Antione Dixon the day the book is out. The welcome note has the first page of field work.";
     }
-    /* no list connected yet: the form hands the visitor a ready-made email, and says exactly that */
+    var known = store.get("signedup", null);
+    if (plain(known) && typeof known.email === "string" && known.email.indexOf("@") > 0) showSigned(known.email);
+    var change = $("#signed-change");
+    if (change) change.addEventListener("click", function () {
+      signed.hidden = true; form.hidden = false; email.value = ""; email.focus();
+      if (lede) lede.textContent = LEDE;
+    });
+
+    /* ---- the thank-you dialog */
+    var lastFocus = null;
+    function thank(addr, already) {
+      $("#thanks-email") && ($("#thanks-email").textContent = addr);
+      var title = $("#thanks-title"), body = $("#thanks-body");
+      if (already) {
+        title.textContent = "You’re already on the list.";
+        body.textContent = addr + " is signed up. You will hear when the book is out.";
+      } else {
+        title.textContent = "You’re on the list.";
+        body.innerHTML = "";
+        body.appendChild(doc.createTextNode("A welcome note from D. Antione Dixon is on its way to "));
+        var b = doc.createElement("b"); b.textContent = addr; body.appendChild(b);
+        body.appendChild(doc.createTextNode(", with the first page of field work. If it is not in your inbox in a few minutes, look in Promotions or Spam."));
+      }
+      var sheet = $("#join");
+      if (sheet && sheet.open) sheet.close();
+      if (!dlg || typeof dlg.showModal !== "function") { say(already ? addr + " is already on the list." : "You’re on the list. A welcome note is on its way to " + addr + ".", "ok"); return; }
+      lastFocus = doc.activeElement;
+      dlg.classList.remove("is-shown");
+      root.style.overflow = "hidden";
+      dlg.showModal();
+      requestAnimationFrame(function () { requestAnimationFrame(function () { dlg.classList.add("is-shown"); }); });
+      var first = $(".thanks__actions .btn", dlg); if (first) first.focus();
+    }
+    if (dlg) {
+      dlg.addEventListener("click", function (ev) {
+        if (ev.target === dlg || (ev.target.closest && ev.target.closest("[data-close]"))) dlg.close();
+      });
+      dlg.addEventListener("close", function () {
+        root.style.overflow = ""; dlg.classList.remove("is-shown");
+        var target = signed && !signed.hidden ? change : lastFocus;
+        if (target && target.focus && !(target.closest && target.closest("dialog"))) target.focus();
+      });
+      var share = $("#thanks-share");
+      if (share) share.addEventListener("click", function () {
+        var data = { title: "The Path to Greatness", text: "The Path to Greatness by D. Antione Dixon", url: SITE + "?utm_source=share&utm_medium=referral&utm_campaign=ptg_prelaunch" };
+        if (navigator.share) { navigator.share(data).catch(function () { /* dismissed */ }); return; }
+        copyText(data.url).then(function () { toast("Link copied"); }, function () { toast(SITE); });
+      });
+    }
+
+    function payload(addr) {
+      var t = tags();
+      return {
+        email: addr.toLowerCase(), website: trap ? trap.value : "", elapsed: Date.now() - opened,
+        page: location.pathname, referrer: doc.referrer || "",
+        utm_source: t.utm_source, utm_medium: t.utm_medium, utm_campaign: t.utm_campaign, utm_content: t.utm_content,
+        source: form.getAttribute("data-source") || "page form",
+        consent: "News about The Path to Greatness; unsubscribe any time"
+      };
+    }
+    function post(body) {
+      /* text/plain keeps this a simple request: no CORS preflight, which Apps Script cannot answer */
+      var ctl = window.AbortController ? new AbortController() : null;
+      var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 15000);
+      /* Only a reply the page can read counts as saved. An unreadable reply (a sign-in page,
+         a wrong deployment) is treated as a failure, so nobody is thanked for a sign-up that
+         never reached the sheet. */
+      return fetch(endpoint, { method: "POST", body: JSON.stringify(body), redirect: "follow", signal: ctl ? ctl.signal : undefined })
+        .then(function (r) { clearTimeout(timer); if (!r.ok) throw new Error("http " + r.status); return r.json(); })
+        .catch(function (err) { clearTimeout(timer); throw err; });
+    }
+
+    var DOMAINS = ["gmail.com", "yahoo.com", "hotmail.com", "outlook.com", "icloud.com", "aol.com", "me.com", "live.com", "msn.com", "comcast.net", "protonmail.com"];
+    function dist(a, b) {
+      var d = [], i, j;
+      for (i = 0; i <= a.length; i++) { d[i] = [i]; }
+      for (j = 0; j <= b.length; j++) d[0][j] = j;
+      for (i = 1; i <= a.length; i++) for (j = 1; j <= b.length; j++) {
+        var c = a[i - 1] === b[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + c);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+      }
+      return d[a.length][b.length];
+    }
+    function suggest(addr) {
+      var at = addr.lastIndexOf("@");
+      if (at < 1) return "";
+      var dom = addr.slice(at + 1).toLowerCase(), best = "", bd = 3;
+      if (DOMAINS.indexOf(dom) >= 0) return "";
+      DOMAINS.forEach(function (d) { var k = dist(dom, d); if (k < bd) { bd = k; best = d; } });
+      return best && bd <= 2 ? addr.slice(0, at + 1) + best : "";
+    }
+    function offer(addr) {
+      var fix = suggest(addr);
+      if (!fix) return false;
+      status.textContent = "Did you mean ";
+      status.setAttribute("data-kind", "hint");
+      var b = doc.createElement("button");
+      b.type = "button"; b.className = "textbtn"; b.textContent = fix;
+      b.addEventListener("click", function () { email.value = fix; say("", ""); email.focus(); });
+      status.appendChild(b); status.appendChild(doc.createTextNode("?"));
+      return true;
+    }
+    email.addEventListener("blur", function () { var v = (email.value || "").trim(); if (v && !status.getAttribute("data-kind")) offer(v); });
+
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
-      if (trap && trap.value) { status.textContent = "That did not go through. Write to " + to + " and you will be added."; return; }
-      if (!email.value || !email.checkValidity()) { invalid(ev); return; }
-      var subject = "The Path to Greatness: tell me when it is out";
-      var body = "Please tell me when The Path to Greatness is out.\n\nMy address: " + email.value + "\n";
-      status.textContent = "Your mail app should open with a note ready to send. Press send and you will hear back when the book is out.";
-      track("lead", { method: "mailto" });
-      window.location.href = "mailto:" + to + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-      /* nothing opens on a device with no mail app: say what to do instead of leaving silence */
-      setTimeout(function () {
-        status.textContent = "If no mail app opened, write to " + to + " from any account. ";
-        var b = doc.createElement("button");
-        b.type = "button"; b.className = "textbtn"; b.textContent = "Copy the address";
-        b.addEventListener("click", function () { copyText(to).then(function () { toast("Address copied"); }, function () { toast(to); }); });
-        status.appendChild(b);
-      }, 2500);
+      if (busy) return;
+      var addr = (email.value || "").trim();
+      if (!addr || !email.checkValidity() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(addr)) { invalid(); return; }
+
+      if (!endpoint) {
+        /* no endpoint configured yet: hand the visitor a ready-made email */
+        var subject = "The Path to Greatness: tell me when it is out";
+        var mbody = "Please tell me when The Path to Greatness is out.\n\nMy address: " + addr + "\n";
+        say("Your mail app should open with a note ready to send. Press send and you will hear back when the book is out.", "ok");
+        track("lead", { method: "mailto" });
+        window.location.href = "mailto:" + to + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(mbody);
+        return;
+      }
+      if (trap && trap.value) { thank(addr, false); return; }
+
+      say("", ""); setBusy(true);
+      post(payload(addr)).then(function (res) {
+        setBusy(false);
+        if (res && res.ok) {
+          store.set("signedup", { email: addr.toLowerCase(), date: todayISO() });
+          track("lead", { method: "sheet", result: res.status || "added" });
+          form.reset(); opened = Date.now();
+          showSigned(addr.toLowerCase());
+          thank(addr.toLowerCase(), res.status === "already");
+          return;
+        }
+        if (res && res.error === "invalid_email") { invalid(); return; }
+        say("That did not go through. Please try again in a minute. If it keeps failing, write to " + to + ".", "error");
+      }, function () {
+        setBusy(false);
+        say("Your address was not saved. Please try again in a minute. If it keeps failing, write to " + to + ".", "error");
+      });
+    });
+
+    /* until an endpoint is configured, the words match the mail-app fallback */
+    if (!endpoint) {
+      label.textContent = "Open my email";
+      if (lede) lede.textContent = "The Elevated Edition has no release date yet. Send a one-line email and you will get a message back when it is out, saying where to buy it.";
+      if (fine) fine.textContent = "This opens your own mail app with a note to " + to + ". Nothing is sent until you press send.";
+      if (signed && !signed.hidden) { signed.hidden = true; form.hidden = false; }
+      if (promise) promise.hidden = true;
+      root.classList.remove("is-joined");
+    }
+    window.__ptgSignup = { live: !!endpoint, form: form, email: email };
+  });
+
+  /* ==========================================================================
+     Phones: a sign-up button raises the same form in a sheet, keyboard up,
+     instead of a jump to the foot of a long page. Desktop: the jump lands
+     with the cursor in the field.
+     ========================================================================== */
+  mod("join", function () {
+    var S = window.__ptgSignup, sheet = $("#join"), slot = $("#join-slot");
+    if (!S || !S.live || !sheet || !slot || typeof sheet.showModal !== "function") return;
+    var form = S.form, home = doc.createComment("signup"), opener = null;
+    var SOURCES = { hero: "hero", nav: "menu", dock: "bar", excerpt: "excerpt" };
+    form.parentNode.insertBefore(home, form);
+    function close() { if (sheet.open) sheet.close(); }
+    sheet.addEventListener("click", function (ev) {
+      if (ev.target === sheet || (ev.target.closest && ev.target.closest("[data-close]"))) close();
+    });
+    sheet.addEventListener("close", function () {
+      home.parentNode.insertBefore(form, home.nextSibling);
+      form.removeAttribute("data-source");
+      root.style.overflow = "";
+      if (opener && opener.focus && !$("#thanks").open) opener.focus();
+    });
+    doc.addEventListener("click", function (ev) {
+      var a = ev.target.closest && ev.target.closest("a[data-cta][href='#get']");
+      if (!a || root.classList.contains("is-joined") || ev.defaultPrevented || ev.metaKey || ev.ctrlKey) return;
+      var where = SOURCES[a.getAttribute("data-cta")] || a.getAttribute("data-cta");
+      if (mq("(max-width: 60em)").matches) {
+        ev.preventDefault();
+        opener = a;
+        form.setAttribute("data-source", where);
+        slot.appendChild(form);
+        root.style.overflow = "hidden";
+        sheet.showModal();
+        S.email.focus();
+        return;
+      }
+      /* wide screens: let the anchor scroll, then put the cursor in the field */
+      form.setAttribute("data-source", where);
+      setTimeout(function () { try { S.email.focus({ preventScroll: true }); } catch (e) { S.email.focus(); } }, reduce ? 0 : 900);
     });
   });
 })();

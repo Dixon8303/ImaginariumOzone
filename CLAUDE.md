@@ -218,6 +218,8 @@ One workflow, `.github/workflows/pages.yml`, triggered by pushes to `docs/**`,
 
 `site/404.html` is copied to the artifact root; it is the only 404.
 
+Sign-ups on `eatmedia/pathtogreatness/` post to a private Google Sheet through a Google Apps Script web app, and a local n8n workflow sends the welcome email. Code, email and setup live in `automation/pathtogreatness-signups/` (see its README). The page reads the endpoint from `FORM_ENDPOINT` in `assets/ptg.js`; the endpoint URL is not a secret, but the Sheet holds personal data and stays private.
+
 `eatmediatv.com` itself is served by the separate repo `Dixon8303/eat.media`, a
 hand-synced copy of `eatmedia/` with production URLs; this repo's `eatmedia/` is the
 staging mirror at `/eatmedia/`. The book's say-able short links (eatmediatv.com/book,

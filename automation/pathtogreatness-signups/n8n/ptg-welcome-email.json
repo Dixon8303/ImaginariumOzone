@@ -1,0 +1,448 @@
+{
+  "id": "PtgWelcomeMail01",
+  "name": "PTG: Welcome email",
+  "active": false,
+  "nodes": [
+    {
+      "id": "6b1f3c1e-0001-4c0a-9a51-000000000001",
+      "name": "Every 2 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "6b1f3c1e-0002-4c0a-9a51-000000000002",
+      "name": "Get new sign-ups",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        220,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PTG_SHEETS_CREDENTIAL",
+          "name": "Google Sheets account"
+        }
+      },
+      "alwaysOutputData": false,
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1QodevbYpJ7VLTZzdl058YS0sQ1zg99qJ-OioZRi6aDU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Signups",
+          "mode": "name"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "new"
+            }
+          ]
+        },
+        "options": {
+          "returnAllMatches": "returnAllMatches"
+        }
+      }
+    },
+    {
+      "id": "6b1f3c1e-0003-4c0a-9a51-000000000003",
+      "name": "At most 20 per run",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        440,
+        300
+      ],
+      "parameters": {
+        "maxItems": 20
+      }
+    },
+    {
+      "id": "6b1f3c1e-0004-4c0a-9a51-000000000004",
+      "name": "Mark sending",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        660,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PTG_SHEETS_CREDENTIAL",
+          "name": "Google Sheets account"
+        }
+      },
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1QodevbYpJ7VLTZzdl058YS0sQ1zg99qJ-OioZRi6aDU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Signups",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Get new sign-ups').item.json.ID }}",
+            "Status": "sending"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Welcome sent",
+              "displayName": "Welcome sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6b1f3c1e-0005-4c0a-9a51-000000000005",
+      "name": "Send welcome email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        880,
+        300
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PTG_GMAIL_CREDENTIAL",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "sendTo": "={{ $('Get new sign-ups').item.json.Email }}",
+        "subject": "You’re on the list for The Path to Greatness",
+        "emailType": "html",
+        "message": "=<!doctype html>\n<html lang=\"en\" xmlns=\"http://www.w3.org/1999/xhtml\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">\n<meta name=\"x-apple-disable-message-reformatting\">\n<meta name=\"color-scheme\" content=\"light only\">\n<meta name=\"supported-color-schemes\" content=\"light\">\n<title>You’re on the list for The Path to Greatness</title>\n<style>\n  body{margin:0;padding:0;background:#ebeae7;}\n  a{color:#1d2026;}\n  @media (max-width:620px){\n    .px{padding-left:24px!important;padding-right:24px!important;}\n    .h1{font-size:30px!important;line-height:36px!important;}\n    .q{font-size:24px!important;line-height:32px!important;}\n  }\n</style>\n</head>\n<body style=\"margin:0;padding:0;background:#ebeae7;\">\n<div style=\"display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;\">The first page of field work, for while you wait.&#8202;&#847;&#8202;&#847;&#8202;&#847;&#8202;&#847;&#8202;&#847;&#8202;&#847;&#8202;&#847;&#8202;&#847;</div>\n<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"background:#ebeae7;\">\n<tr><td align=\"center\" style=\"padding:28px 12px;\">\n<table role=\"presentation\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"width:100%;max-width:600px;background:#f6f5f1;\">\n\n<tr><td style=\"background:#171a20;\">\n  <a href=\"https://eatmediatv.com/pathtogreatness/?utm_source=welcome_email&utm_medium=email&utm_campaign=ptg_prelaunch&utm_content=header\" style=\"display:block;text-decoration:none;\"><img src=\"https://eatmediatv.com/pathtogreatness/assets/img/email-header.jpg\" width=\"600\" alt=\"The Path to Greatness. An ascent in twelve levels, by D. Antione Dixon.\" style=\"display:block;width:100%;max-width:600px;height:auto;border:0;color:#dfe3ea;font:16px Georgia,serif;background:#171a20;\"></a>\n</td></tr>\n\n<tr><td class=\"px\" style=\"padding:44px 52px 8px;font-family:'EB Garamond',Georgia,'Times New Roman',serif;color:#1d2026;\">\n  <p style=\"margin:0 0 14px;font:600 11px/16px Georgia,serif;letter-spacing:3px;text-transform:uppercase;color:#5c6370;\">The first readers’ list</p>\n  <h1 class=\"h1\" style=\"margin:0 0 20px;font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;font-size:34px;line-height:40px;color:#171a20;\">Thank you for signing up.</h1>\n  <p style=\"margin:0 0 16px;font-size:18px;line-height:29px;\">I will write when <i>The Path to Greatness: An Ascent in Twelve Levels</i> is out and tell you where to get it. Until then you will hear from me rarely, and only with something from the book.</p>\n  <p style=\"margin:0 0 6px;font-size:18px;line-height:29px;\">Every level opens with a question on an otherwise empty page. This is the first one.</p>\n</td></tr>\n\n<tr><td class=\"px\" style=\"padding:22px 52px 26px;\">\n  <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tr>\n    <td style=\"border-left:2px solid #a05561;padding:4px 0 4px 22px;font-family:'Cormorant Garamond',Georgia,serif;\">\n      <p class=\"q\" style=\"margin:0 0 10px;font-style:italic;font-size:27px;line-height:35px;color:#171a20;\">“What if there is nothing to build—only something to uncover?”</p>\n      <p style=\"margin:0;font:600 11px/16px Georgia,serif;letter-spacing:2px;text-transform:uppercase;color:#5c6370;\">Level I, page 13</p>\n    </td>\n  </tr></table>\n</td></tr>\n\n<tr><td class=\"px\" style=\"padding:0 52px 34px;font-family:'EB Garamond',Georgia,serif;color:#1d2026;\">\n  <p style=\"margin:0;font-size:18px;line-height:29px;\">The instruction on the next page: “Stay with that question. Turn the page when it stops being a question and starts being a possibility.”</p>\n</td></tr>\n\n<tr><td class=\"px\" style=\"padding:0 52px 36px;\">\n  <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"background:#fbfaf7;border:1px solid #dcdad3;\">\n  <tr><td style=\"padding:28px 28px 8px;font-family:'EB Garamond',Georgia,serif;color:#1d2026;\">\n    <p style=\"margin:0 0 10px;font:600 11px/16px Georgia,serif;letter-spacing:3px;text-transform:uppercase;color:#a05561;\">Field work · Level I · page 29</p>\n    <p style=\"margin:0 0 2px;font-family:'Cormorant Garamond',Georgia,serif;font-size:25px;line-height:31px;color:#171a20;\">The Daily Archaeological Dig</p>\n    <p style=\"margin:0 0 14px;font-style:italic;font-size:16px;line-height:24px;color:#5c6370;\">Ten minutes · morning</p>\n    <p style=\"margin:0 0 16px;font-size:17px;line-height:27px;\">Each stroke of the brush reveals—it doesn’t add. Answer in writing, plainly.</p>\n  </td></tr>\n  <tr><td style=\"padding:0 28px 6px;font-family:'EB Garamond',Georgia,serif;color:#1d2026;\">\n    <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"font-size:17px;line-height:26px;\">\n      <tr><td valign=\"top\" style=\"width:26px;padding:10px 0;border-top:1px solid #dcdad3;color:#5c6370;\">1</td><td style=\"padding:10px 0;border-top:1px solid #dcdad3;\">One capacity I used today without effort:</td></tr>\n      <tr><td valign=\"top\" style=\"width:26px;padding:10px 0;border-top:1px solid #dcdad3;color:#5c6370;\">2</td><td style=\"padding:10px 0;border-top:1px solid #dcdad3;\">One “flaw” that, seen plainly, is a strength misread:</td></tr>\n      <tr><td valign=\"top\" style=\"width:26px;padding:10px 0;border-top:1px solid #dcdad3;color:#5c6370;\">3</td><td style=\"padding:10px 0;border-top:1px solid #dcdad3;\">One thing I chased this week that I already have in some form:</td></tr>\n      <tr><td valign=\"top\" style=\"width:26px;padding:10px 0;border-top:1px solid #dcdad3;color:#5c6370;\">4</td><td style=\"padding:10px 0;border-top:1px solid #dcdad3;\">What did the culture of manufactured lack try to sell me today?</td></tr>\n      <tr><td valign=\"top\" style=\"width:26px;padding:10px 0;border-top:1px solid #dcdad3;border-bottom:1px solid #dcdad3;color:#5c6370;\">5</td><td style=\"padding:10px 0;border-top:1px solid #dcdad3;border-bottom:1px solid #dcdad3;\">What was revealed—not added—by today’s work?</td></tr>\n    </table>\n  </td></tr>\n  <tr><td style=\"padding:22px 28px 28px;\">\n    <table role=\"presentation\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"><tr><td style=\"background:#171a20;\">\n      <a href=\"https://eatmediatv.com/pathtogreatness/?utm_source=welcome_email&utm_medium=email&utm_campaign=ptg_prelaunch&utm_content=field_work#field-work\" style=\"display:inline-block;padding:15px 24px;font:600 12px/14px Georgia,serif;letter-spacing:2.6px;text-transform:uppercase;color:#f6f5f1;text-decoration:none;\">Answer it on the site</a>\n    </td></tr></table>\n    <p style=\"margin:12px 0 0;font-family:Georgia,serif;font-size:14px;line-height:21px;color:#5c6370;\">Or on paper, as the book intends. On the site your answers stay in your own browser.</p>\n  </td></tr>\n  </table>\n</td></tr>\n\n<tr><td class=\"px\" style=\"padding:0 52px 8px;font-family:'Cormorant Garamond',Georgia,serif;text-align:center;\">\n  <p style=\"margin:0 0 6px;font:600 10px/16px Georgia,serif;letter-spacing:3px;text-transform:uppercase;color:#5c6370;\">Level I · sacred page</p>\n  <p style=\"margin:0 0 30px;font-style:italic;font-size:24px;line-height:32px;color:#171a20;\">“You were never under construction. You were under excavation.”</p>\n</td></tr>\n\n<tr><td class=\"px\" style=\"padding:0 52px 40px;font-family:'EB Garamond',Georgia,serif;color:#1d2026;\">\n  <p style=\"margin:0 0 4px;font-size:18px;line-height:29px;\">D. Antione Dixon</p>\n  <p style=\"margin:0 0 22px;font-size:15px;line-height:23px;color:#5c6370;\">Author of <i>The Path to Greatness</i></p>\n  <p style=\"margin:0;font-size:16px;line-height:26px;color:#383d47;\">P.S. If someone you know reached the goal and still felt unfinished, send them the page: <a href=\"https://eatmediatv.com/pathtogreatness/?utm_source=welcome_email&utm_medium=email&utm_campaign=ptg_prelaunch&utm_content=ps_share\" style=\"color:#1d2026;\">eatmediatv.com/pathtogreatness</a></p>\n</td></tr>\n\n<tr><td class=\"px\" style=\"background:#171a20;padding:26px 52px 30px;font-family:Georgia,serif;font-size:13px;line-height:21px;color:#a8afbd;\">\n  <p style=\"margin:0 0 8px;\">You are getting this because this address was entered at eatmediatv.com/pathtogreatness. If that was not you, or you would rather not hear from me, <a href=\"{{ $('Get new sign-ups').item.json['Unsubscribe link'] }}\" style=\"color:#dfe3ea;\">unsubscribe here</a>.</p>\n  <p style=\"margin:0;color:#8891a1;\">E.A.T. Media · Los Angeles, California</p>\n</td></tr>\n\n</table>\n</td></tr>\n</table>\n</body>\n</html>\n",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "D. Antione Dixon"
+        }
+      }
+    },
+    {
+      "id": "6b1f3c1e-0006-4c0a-9a51-000000000006",
+      "name": "Mark welcomed",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PTG_SHEETS_CREDENTIAL",
+          "name": "Google Sheets account"
+        }
+      },
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1QodevbYpJ7VLTZzdl058YS0sQ1zg99qJ-OioZRi6aDU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Signups",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Get new sign-ups').item.json.ID }}",
+            "Status": "welcomed",
+            "Welcome sent": "={{ $now.setZone('America/Los_Angeles').toFormat('yyyy-MM-dd HH:mm') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Welcome sent",
+              "displayName": "Welcome sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6b1f3c1e-0007-4c0a-9a51-000000000007",
+      "name": "Mark error",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        420
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "PTG_SHEETS_CREDENTIAL",
+          "name": "Google Sheets account"
+        }
+      },
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1QodevbYpJ7VLTZzdl058YS0sQ1zg99qJ-OioZRi6aDU",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Signups",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $('Get new sign-ups').item.json.ID }}",
+            "Status": "error",
+            "Notes": "={{ 'Welcome email failed ' + $now.setZone('America/Los_Angeles').toFormat('yyyy-MM-dd HH:mm') + ': ' + ($json.error && $json.error.message ? $json.error.message : 'unknown error') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Welcome sent",
+              "displayName": "Welcome sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "6b1f3c1e-0008-4c0a-9a51-000000000008",
+      "name": "About this workflow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -40
+      ],
+      "parameters": {
+        "width": 760,
+        "height": 300,
+        "color": 7,
+        "content": "## PTG: Welcome email\nEvery 2 minutes this reads the private sheet **The Path to Greatness · First Readers** (tab Signups). Each row with Status **new** gets the welcome email from the connected Gmail account, then its Status becomes **welcomed** (or **error**, with the reason in Notes).\n\n- To resend to someone, set their Status back to **new** in the sheet.\n- Rows marked **unsubscribed** are never emailed.\n- The email text lives in `automation/pathtogreatness-signups/email/welcome.html` in ImaginariumOzone; rebuild this workflow with `n8n/build_workflow.py` after changing it.\n- Kill switch: switch this workflow off. Sign-ups keep landing in the sheet and will be welcomed when it is back on."
+      }
+    }
+  ],
+  "connections": {
+    "Every 2 minutes": {
+      "main": [
+        [
+          {
+            "node": "Get new sign-ups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get new sign-ups": {
+      "main": [
+        [
+          {
+            "node": "At most 20 per run",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "At most 20 per run": {
+      "main": [
+        [
+          {
+            "node": "Mark sending",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark sending": {
+      "main": [
+        [
+          {
+            "node": "Send welcome email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send welcome email": {
+      "main": [
+        [
+          {
+            "node": "Mark welcomed",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Los_Angeles",
+    "saveDataSuccessExecution": "none",
+    "saveDataErrorExecution": "all",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "pinData": {},
+  "tags": []
+}
