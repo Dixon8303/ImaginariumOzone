@@ -1138,7 +1138,7 @@ window.PTG_CONFIG = {
         body.innerHTML = "";
         body.appendChild(doc.createTextNode("A welcome note from D. Antione Dixon is on its way to "));
         var b = doc.createElement("b"); b.textContent = addr; body.appendChild(b);
-        body.appendChild(doc.createTextNode(", with the first page of field work. If it is not in your inbox in a few minutes, look in Promotions or Spam."));
+        body.appendChild(doc.createTextNode(", with the first page of field work. If you don’t find it in your inbox, look in Promotions or Spam."));
       }
       var sheet = $("#join");
       if (sheet && sheet.open) sheet.close();
