@@ -1,9 +1,9 @@
 generated: 2026-11-20
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-20
-paper equity: $90,804.78   cash: $73,766.04
-RISK LIMITS: drawdown 10.9% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session +0.2% vs the 3% daily halt
-  ENTRIES BLOCKED — FREEZE since 2026-11-19: equity is 10.9% below its $101,858.65 peak (2026-10-30); the limit is 10% — no new entries until the operator re-arms in paper/risk_rearm.json
+paper equity: $90,685.73   cash: $73,766.04
+RISK LIMITS: drawdown 11.0% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session +0.1% vs the 3% daily halt
+  ENTRIES BLOCKED — FREEZE since 2026-11-19: equity is 11.0% below its $101,858.65 peak (2026-10-30); the limit is 10% — no new entries until the operator re-arms in paper/risk_rearm.json
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
   2026-08-24  $100,000.00  ->  2026-11-20  $90,804.78   (-9,195.22, -9.2%)
@@ -22,10 +22,10 @@ PAPER ORDERS PLACED (0):
 TIME EXITS SUBMITTED: IWM
 
 OPEN POSITIONS (5) — 4 of 8 stock slots used, 1 option contracts:
-  AAPL  qty 14  unrealized $-114.23  stop 325.6  target 421.42  since 2026-11-04
-  AMD  qty 6  unrealized $-719.25  stop 402.1  target 1004.98  since 2026-11-11
+  AAPL  qty 14  unrealized $-146.57  stop 325.6  target 421.42  since 2026-11-04
+  AMD  qty 6  unrealized $-809.25  stop 402.1  target 1004.98  since 2026-11-11
   IWM  qty 18  unrealized $-449.27  stop 276.0  target 289.48  since 2026-10-30
-  KO  qty 47  unrealized $-95.62  stop 95.67  target 111.41  since 2026-11-16
+  KO  qty 47  unrealized $-92.33  stop 95.67  target 111.41  since 2026-11-16
   KO270115C00100000  qty 2  unrealized $-210.00  option, stop-if-underlying <= 95.67  since 2026-11-16
 
 PAPER OPTIONS (Alpaca, autonomous):
