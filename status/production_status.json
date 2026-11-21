@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-21T22:35:09Z",
+  "last_synced": "2026-11-21T23:35:10Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2904,7 +2904,7 @@
       "id": "EP65",
       "number": 65,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -2956,11 +2956,11 @@
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -2968,7 +2968,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-21T22:35:09Z"
+      "updated_at": "2026-11-21T23:35:09Z"
     },
     {
       "id": "EP67",
