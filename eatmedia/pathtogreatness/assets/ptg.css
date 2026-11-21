@@ -93,7 +93,7 @@ h2 .kicker{margin-bottom:1.2rem}
 .btn--ghost:hover{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .s--ink .btn--ghost:hover,.mast .btn--ghost:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
 .btn--small{min-height:44px;padding:.55rem 1.05rem;font-size:.72rem;letter-spacing:.2em}
-.link{display:inline-flex;align-items:center;gap:.6rem;padding:.5rem 0;font:italic 400 1.2rem/1.3 var(--display);text-decoration:none;border-bottom:1px solid currentColor}
+.link{display:inline-flex;align-items:center;gap:.6rem;padding:.5rem 0;min-height:44px;font:italic 400 1.2rem/1.3 var(--display);text-decoration:none;border-bottom:1px solid currentColor}
 .link .arrow,.btn .arrow{transition:transform .25s var(--ease-out)}
 .link:hover .arrow,.btn:hover .arrow{transform:translateX(.35rem)}
 .textbtn{background:none;border:0;padding:.55rem 0;min-height:44px;font:500 .74rem/1.2 var(--serif);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-decoration:underline;text-underline-offset:.3em}
@@ -490,14 +490,14 @@ h2 .kicker{margin-bottom:1.2rem}
 .faq{display:grid;grid-template-columns:minmax(0,.75fr) minmax(0,1.5fr);gap:clamp(2rem,6vw,6rem);align-items:start}
 .faq>div:first-child{position:sticky;top:calc(var(--head-h) + 24px)}
 .faq__list{border-top:1px solid var(--rule-strong)}
-.qa{border-bottom:1px solid var(--rule)}
-.qa summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr 1.4rem;gap:1rem;align-items:center;padding:1.15rem 0;min-height:56px}
-.qa summary::-webkit-details-marker{display:none}
-.qa summary h3{font:400 clamp(1.3rem,1.9vw,1.55rem)/1.25 var(--display)}
-.qa summary i{width:1.1rem;height:1.1rem;position:relative;color:var(--rose);justify-self:end}
-.qa summary i::before,.qa summary i::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:currentColor;transition:transform .3s var(--ease)}
-.qa summary i::after{transform:rotate(90deg)}
-.qa[open] summary i::after{transform:rotate(0)}
+:is(.qa,.disc){border-bottom:1px solid var(--rule)}
+:is(.qa,.disc) summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr 1.4rem;gap:1rem;align-items:center;padding:1.15rem 0;min-height:56px}
+:is(.qa,.disc) summary::-webkit-details-marker{display:none}
+:is(.qa,.disc) summary h3{font:400 clamp(1.3rem,1.9vw,1.55rem)/1.25 var(--display)}
+:is(.qa,.disc) summary i{width:1.1rem;height:1.1rem;position:relative;color:var(--rose);justify-self:end}
+:is(.qa,.disc) summary i::before,:is(.qa,.disc) summary i::after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:currentColor;transition:transform .3s var(--ease)}
+:is(.qa,.disc) summary i::after{transform:rotate(90deg)}
+:is(.qa,.disc)[open] summary i::after{transform:rotate(0)}
 .qa__a{padding:0 2.4rem 1.4rem 0;color:var(--text-2);max-width:42rem}
 .qa__a p+p{margin-top:.8em}
 .qa__a .src{font-size:.98rem;color:var(--muted)}
@@ -572,7 +572,7 @@ h2 .kicker{margin-bottom:1.2rem}
 .foot__marks .mark{width:1.1rem;height:1.1rem}
 .foot h2{font:500 .68rem/1.4 var(--serif);letter-spacing:.28em;text-transform:uppercase;color:var(--slate);margin-bottom:.9rem}
 .foot li{padding:.28rem 0}
-.foot a{text-decoration:none;color:var(--on-dark-2);display:inline-block;padding:.2rem 0}
+.foot a{text-decoration:none;color:var(--on-dark-2);display:inline-flex;align-items:center;min-height:44px;padding:.2rem 0}
 .foot a.brand{display:inline-flex;color:var(--on-dark)}
 .foot a:hover{color:#fff;text-decoration:underline}
 .foot__base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.6rem 2rem;padding-top:1.5rem;font-size:.96rem;color:var(--on-dark-3)}
@@ -659,6 +659,11 @@ html{hanging-punctuation:first allow-end last}
   .threshold__stay{animation:still-in linear both;animation-timeline:view();animation-range:entry 40% cover 45%}
   .sacred__line{animation:still-in linear both;animation-timeline:view();animation-range:entry 10% cover 34%}
   .sacred__cap{animation:still-in linear both;animation-timeline:view();animation-range:entry 40% entry 100%}
+}}
+/* phones: the page fills the screen, so the caption has arrived by the time the page is in place
+   (the dock's scroll padding would otherwise keep it out of view) */
+@media (prefers-reduced-motion:no-preference) and (max-width:35em){@supports (animation-timeline:view()){
+  .sacred__cap{animation-range:entry 0% entry 30%}
 }}
 
 /* ---------- rules, not boxes ---------- */
@@ -801,7 +806,7 @@ html{hanging-punctuation:first allow-end last}
 .thanks__q .cap{display:block;margin-bottom:.35rem;font:500 .8rem/1.5 var(--serif);font-style:normal;letter-spacing:.26em;text-transform:uppercase;color:var(--text)}
 
 /* ---------- FAQ ---------- */
-.qa[open] .qa__a{animation:qa-in .32s var(--ease-out)}
+:is(.qa,.disc)[open] .qa__a{animation:qa-in .32s var(--ease-out)}
 @keyframes qa-in{from{opacity:0;transform:translateY(-6px)}}
 
 /* ---------- footer: the full lexicon on the route, then the cover lockup ---------- */
@@ -824,6 +829,8 @@ html{hanging-punctuation:first allow-end last}
   .nav.is-open .btn{margin-top:1.6rem;min-height:52px;padding:.8rem 1.6rem;font-size:.8rem}
   .nav.is-open .menu-btn{position:fixed;top:13px;right:var(--gutter)}
   .head.menu-open{background:var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none}
+  .head.menu-open .wrap{pointer-events:none}
+  .head.menu-open .wrap>*{pointer-events:auto}
 }
 @media (max-width:60em){
   :root{--head-h:64px}
@@ -906,6 +913,7 @@ html{hanging-punctuation:first allow-end last}
 .signup__status[data-kind="hint"]{color:var(--on-dark)}
 .signup__status[data-kind="hint"] .textbtn{color:var(--light);padding:.2rem 0;min-height:0;letter-spacing:.06em;text-transform:none;font:italic 400 1.05rem/1.3 var(--serif)}
 .is-joined [data-cta="excerpt"],.is-joined .dock{display:none!important}
+.is-joined .ask{display:none!important}
 /* the last plate: the book beside the field */
 .get__inner{max-width:44rem}
 .get__book{display:none}
@@ -948,6 +956,8 @@ html{hanging-punctuation:first allow-end last}
   .lvl__panel{max-height:calc(100vh - var(--head-h) - 24px);overflow-y:auto;overscroll-behavior:auto;scrollbar-width:thin;scrollbar-color:var(--slate) transparent;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
   .lvl__panel::-webkit-scrollbar{width:6px}.lvl__panel::-webkit-scrollbar-thumb{background:var(--slate)}
   .lvl__panel .gate{box-shadow:none}
+  .lvl__panel::after{content:"";display:block;position:sticky;bottom:0;height:4.5rem;margin-top:-4.5rem;background:linear-gradient(180deg,rgba(246,245,241,0),var(--paper) 88%);pointer-events:none;opacity:0;transition:opacity .25s}
+  .lvl__panel.is-more::after{opacity:1}
 }
 /* ---------- elevation pass: smaller screens ---------- */
 @media (max-width:60em){
@@ -984,7 +994,238 @@ html{hanging-punctuation:first allow-end last}
   .threshold .ln{display:inline}
   .threshold .hang{margin:0}
   .foot__marks::before{display:none}
-  .sacred__page{min-height:min(70svh,560px)}
+  .sacred__page{min-height:calc(100svh - var(--head-h) - 4rem - 2px)}
+  .pledge__begin{margin-bottom:1.6rem}
+}
+@media (max-width:22.5em){.days{gap:.15rem}}
+
+
+/* ==========================================================================
+   Phone cut and hooks. One block for the reordered page: the reaction check,
+   the inventory up front, the excerpt cliffhanger, the notebook stepper,
+   question rows, the gate counter, disclosures, the asks that follow an action.
+   ========================================================================== */
+
+/* ---------- the ask that follows an action ---------- */
+.ask{margin-top:1.1rem;padding-top:1rem;border-top:1px solid var(--rule);display:flex;flex-wrap:wrap;align-items:center;gap:.7rem 1.2rem}
+.ask p{flex:1 1 15rem;font:italic 400 1.14rem/1.4 var(--display);color:var(--text-2)}
+.s--ink .ask{border-color:var(--rule-d)}
+.s--ink .ask p{color:var(--on-dark-2)}
+@media (prefers-reduced-motion:no-preference){.ask:not([hidden]){animation:rise .5s var(--ease-out)}}
+
+/* ---------- disclosures on ink and on paper ---------- */
+.s--ink :is(.qa,.disc){border-color:var(--rule-d)}
+.s--ink :is(.qa,.disc) summary h3{color:var(--on-dark)}
+.s--ink :is(.qa,.disc) summary i{color:var(--rose-light)}
+.s--ink .qa__a{color:var(--on-dark-2)}
+.disc .qa__a{max-width:none}
+
+/* ---------- threshold: what rises in you ---------- */
+.react{max-width:33rem;margin:2.4rem auto 0;padding-top:2rem;border-top:1px solid var(--rule);text-align:left}
+.react__q{font:italic 400 1.1875rem/1.55 var(--serif);color:var(--text-2)}
+.react__q .label{display:block;margin-top:.45rem;font-style:normal;font-size:.68rem;color:var(--muted)}
+.react__btns{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+.react__btns .btn{flex:1 1 6rem;min-height:48px;padding-inline:.6rem}
+.react__btns .btn[aria-pressed="true"]{color:var(--paper);border-color:var(--ink);background:var(--ink)}
+.react__btns .btn[aria-pressed="true"]::before{transform:scaleX(1)}
+.react__out{margin-top:1.3rem;padding-left:1.1rem;border-left:1px solid var(--rose);font:italic 400 1.42rem/1.38 var(--display);color:var(--text)}
+@media (prefers-reduced-motion:no-preference){.react__out:not([hidden]){animation:rise .5s var(--ease-out)}}
+.threshold__loop{max-width:33rem;margin:1.8rem auto 0;font-size:1.04rem;text-align:left}
+
+/* ---------- who it is for: the inventory comes first ---------- */
+.foryou__intro{margin-top:1.4rem;max-width:30rem}
+@media (min-width:60.0625em){.foryou>div:first-child{position:sticky;top:calc(var(--head-h) + 32px)}}
+.inventory h3 .label{display:block;margin-top:.45rem;font-size:.68rem;letter-spacing:.26em;color:var(--slate)}
+.inv__actions{margin-top:.7rem}
+.inv__fine{margin-top:.8rem;font-size:.98rem}
+
+/* ---------- excerpt: tools in the running head, the cliffhanger, where Level I ends ---------- */
+.sheet__run{align-items:center}
+.sheet__meta{display:flex;flex-wrap:wrap;gap:.2rem 1.4rem}
+.sheet__run .reader__tools{margin:0;flex:none;gap:.4rem}
+.reader{row-gap:2.6rem}
+.reader__next{display:block;max-width:36rem}
+.reader__next .label{display:block;color:var(--muted);margin-bottom:.5rem}
+.reader__acts{margin-top:1.1rem}
+
+/* ---------- field work ---------- */
+.field__intro{margin-top:1.3rem;max-width:30rem}
+.scanbox{margin-top:1.6rem;border-top:1px solid var(--rule)}
+.scanbox .qa__a{padding-right:0}
+.scanbox .scan{margin-top:0}
+.field__stop{grid-column:1/-1;justify-self:center;max-width:34rem;margin-top:clamp(1rem,3vw,2.4rem);text-align:center;font:italic 400 1.3rem/1.45 var(--display);color:var(--text-2)}
+.field__stop .label{display:block;margin-bottom:.45rem;font-style:normal;color:var(--rose)}
+.nb-steps{display:none}
+.notebook__top .mark{position:relative}
+.notebook__top .nb-mark{position:relative;display:inline-grid;place-items:center}
+@media (prefers-reduced-motion:no-preference){
+  .notebook__top.is-saved .nb-mark::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid #c9a46a;pointer-events:none;animation:ring-out .9s var(--ease-out) both}
+}
+
+/* ---------- the ascent: the book's own rule, a counter, question rows ---------- */
+#ascent .s__head [data-q]{font:italic 400 1.3rem/1.4 var(--display);color:var(--on-dark)}
+#ascent .s__head p+p{margin-top:.7rem}
+.gates{margin-top:1rem;color:var(--slate)}
+.gates.is-all{color:var(--light)}
+html:not(.js) .gates,html:not(.js) .react__btns{display:none}
+.lvl__q{display:none}
+.lvl__group{border-bottom:0;padding-bottom:.2rem}
+.lvl__mv{grid-column:1;padding:0 0 .75rem;border-bottom:1px solid var(--rule-d);font:italic 400 1.04rem/1.35 var(--display);color:var(--on-dark-2)}
+.ascent__summit.is-lit{color:var(--light)}
+.ascent__summit.is-lit a{color:var(--light-2)}
+.ascent__summit.is-lit .mark{filter:drop-shadow(0 0 6px rgba(240,207,152,.6))}
+.s--ink .look__rail{background-color:var(--ink-2);background-image:var(--grain-l);border-color:var(--rule-d)}
+.s--ink .pageshot span{color:var(--on-dark-3)}
+.s--ink .pageshot b{color:var(--rose-light)}
+.s--ink .pageshot img{box-shadow:0 1px 0 rgba(0,0,0,.4),0 18px 30px -16px rgba(0,0,0,.75)}
+.s--ink .look__step button,.s--ink .look__step button[aria-disabled="true"]{color:var(--on-dark);border-color:var(--rule-d-strong);background:transparent}
+.s--ink .look__step button:not([aria-disabled="true"]):hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.ascent__more{margin-top:clamp(2rem,4vw,3rem);border-top:1px solid var(--rule-d)}
+.disc .apparatus{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 2rem;border:0}
+.disc .apparatus li{display:grid;grid-template-columns:2rem minmax(0,1fr);column-gap:.9rem;padding:.9rem 0 1rem;border-top:1px solid var(--rule-d)}
+.disc .apparatus li::before{content:none}
+.disc .apparatus li>*{grid-column:2}
+.disc .apparatus .mark{grid-column:1;grid-row:1/span 2;width:1.4rem;height:1.4rem;margin:.1rem 0 0;color:var(--rose-light);stroke-width:1.3}
+.disc .apparatus h4{font:500 1.25rem/1.2 var(--display);color:#fff}
+.disc .apparatus p{margin-top:.2rem;font-size:1rem;line-height:1.5;color:var(--on-dark-2)}
+.disc .climb{margin-top:1.4rem;padding-top:1.2rem;border-color:var(--rule-d)}
+.disc .climb .kicker{margin-bottom:.6rem}
+.disc .climb ol li{border-color:var(--rule-d);font-size:1.04rem;color:var(--on-dark)}
+.disc .climb ol li::before{color:var(--slate)}
+.disc .marks li{border-color:var(--rule-d);color:var(--on-dark-2)}
+.disc .marks .mark{color:var(--slate)}
+.marks__note{margin-top:1rem;font-size:1rem;color:var(--on-dark-2)}
+.disc.terms{margin-top:0;padding-top:0;border-top:0}
+.disc.terms summary h3{margin:0}
+.s--ink .terms dl>div{border-color:var(--rule-d)}
+.s--ink .terms dt{color:#fff}
+.s--ink .terms dd{color:var(--on-dark-2)}
+.s--ink .terms dd span{color:var(--on-dark-3)}
+
+/* ---------- the summit: pyramid, pledge, tracker ---------- */
+.summit__head p.body{font:italic 400 clamp(1.2rem,1.8vw,1.4rem)/1.4 var(--display);color:var(--on-dark)}
+.pyramid__cap{max-width:30rem;margin-inline:auto;font:italic 400 1.14rem/1.45 var(--display);letter-spacing:0;text-transform:none;color:var(--on-dark-2)}
+.pledge__sign .label{display:block;margin-top:.4rem;font-size:.68rem;letter-spacing:.26em;color:var(--muted)}
+.pledge:not(.is-signed) .pledge__seal,.pledge:not(.is-signed) .pledge__next{display:none}
+.pledge .ask{max-width:30rem;margin:1.4rem auto 0;justify-content:center;text-align:center}
+.pledge__actions .btn,.pledge__actions .textbtn{white-space:nowrap}
+.pledge:not(.is-signed) .pledge__begin{margin-top:1.5rem}
+.pledge .ask p{flex-basis:100%}
+.tracker{display:block;max-width:44rem;margin-inline:auto}
+.tracker::before{display:none}
+.inv-mirror{flex:1 1 100%;margin-top:.3rem;color:var(--on-dark-2)}
+.inv-mirror b{font-weight:400;color:var(--light)}
+.inv-mirror a{color:var(--on-dark)}
+
+/* ---------- lineage: three rows, the rest behind a tap ---------- */
+#lineage .s__head .lede{color:var(--text)}
+#lineage .s__head .lede .label{display:block;margin-top:.5rem;font-style:normal;font-size:.68rem;color:var(--muted)}
+#lineage .s__head p+p{margin-top:1rem}
+.lin-rows{border-top:1px solid var(--rule-strong)}
+.lin-rows li{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.2rem 1rem;min-height:56px;padding:.7rem 0;border-bottom:1px solid var(--rule)}
+.lin-rows .label{color:var(--muted)}
+.lin-rows__shift{font:400 clamp(1.35rem,2.2vw,1.8rem)/1.2 var(--display)}
+.lin-rows__shift i{color:var(--muted)}
+.lin-more .qa__a p{font:italic 400 1.18rem/1.45 var(--display);color:var(--text)}
+.lin-more .qa__a p+p{margin-top:.9rem}
+.lin-more .qa__a .label{display:block;margin-bottom:.15rem;font-style:normal;color:var(--muted)}
+.lin-more .qa__a p.cite{margin-top:.35rem;font:400 .96rem/1.4 var(--serif);color:var(--muted)}
+.lineage__note{display:block;max-width:40rem}
+@media (min-width:60.0625em){
+  .lin-rows{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:2.5rem}
+  .lin-rows li{flex-direction:column;align-items:flex-start;justify-content:center;padding:1.1rem 0 1.2rem}
+}
+
+/* ---------- author: the phrase, heard twice ---------- */
+.copy p.author__hook{margin-top:1.8rem;color:var(--rose-deep)}
+.pull{margin:1.2rem 0 0;padding-left:1.3rem;border-left:1px solid var(--rose);font:italic 400 1.45rem/1.42 var(--display);color:var(--text)}
+.pull .cite{display:block;margin-top:.5rem;font:500 .68rem/1.4 var(--serif);letter-spacing:.24em;text-transform:uppercase}
+
+/* ---------- get: the cover at the ask on phones ---------- */
+.get__cover{display:none}
+
+/* ---------- footer ---------- */
+.foot__again{display:inline-flex;align-items:center;gap:.4rem;min-height:44px;font:italic 400 1.12rem/1.3 var(--display);color:var(--on-dark)}
+
+/* ---------- phones ---------- */
+@media (max-width:60em){
+  .s{padding:3.5rem 0}
+  .threshold{padding:4.5rem 0 3.5rem}
+  .h2,.reader__aside .h2,.author h2{font-size:2.05rem;line-height:1.08}
+  .kicker,h2 .kicker{margin-bottom:.5rem}
+  /* the inventory, flat on the ink */
+  .inventory{padding:0;border:0;background:none}
+  .inv__row{padding:.5rem 0 .35rem}
+  .inv__row label{font-size:1.05rem;margin-bottom:.2rem}
+  .inv__row input[type=range]{height:44px;margin-top:0}
+  .inv__total{padding-top:.7rem}
+  /* excerpt */
+  .sheet__run{padding-bottom:.7rem;margin-bottom:1.5rem}
+  .sheet__meta{flex-direction:column;gap:.15rem}
+  .sheet__run .label{letter-spacing:.2em}
+  /* question rows: the level as a label, its threshold question as the line */
+  .lvl__btn{grid-template-columns:2.2rem 1.5rem minmax(0,1fr);grid-template-rows:auto auto;row-gap:.15rem;padding:.7rem 0 .75rem;align-items:start}
+  .lvl__num,.lvl__btn .mark{grid-row:1/3;align-self:center}
+  .lvl__title{grid-column:3;font:500 .7rem/1.2 var(--serif);letter-spacing:.2em;text-transform:uppercase;color:var(--on-dark-3)}
+  .lvl__btn:hover .lvl__title,.lvl__btn[aria-expanded="true"] .lvl__title{transform:none}
+  .lvl__q{display:block;grid-column:3;font:400 1.08rem/1.25 var(--display);color:var(--on-dark)}
+  .lvl__sym,.gate__q{display:none}
+  .lvl__btn::before{left:calc(3.7rem - .5px)}
+  .look__rail{grid-auto-columns:30vw}
+  .disc .apparatus,.disc .climb{grid-template-columns:minmax(0,1fr)}
+  .terms dd span{white-space:normal}
+  /* summit */
+  .phase{padding:.45rem 1rem .5rem}
+  .phase strong{font-size:1.15rem;margin-top:0}
+  .phase em{font-size:.95rem}
+  #pyramid{padding-top:2rem}
+  .pledge{padding:1.4rem 1.2rem}
+  .pledge blockquote{font-size:1.14rem}
+  .pledge__sign{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:.9rem}
+  .pledge__actions{flex-wrap:wrap;gap:.2rem 1rem}
+  .pledge__actions .btn,.pledge__actions .textbtn{letter-spacing:.14em}
+  .summit__head{margin-bottom:1.8rem}
+  .summit__head .mark{width:2.2rem;height:2.2rem;margin-bottom:1rem}
+  .tracker{margin-top:2rem}
+  .lin-rows li{flex-direction:column;align-items:flex-start;justify-content:center}
+  .get .get__body>.mark{display:none}
+  .notebook__actions{gap:.1rem 1.1rem}
+  .look__rail{padding-top:1.2rem;padding-bottom:1.5rem}
+  .pledge blockquote{margin-top:.9rem}
+  .pledge__sign{margin-top:1.3rem}
+  .pledge__sign input,.pledge__sign output{font-size:1.28rem}
+  .pledge__actions{margin-top:1.1rem}
+  /* get */
+  .get__cover{display:block;width:96px;height:auto;margin:0 auto 1.2rem;box-shadow:0 12px 30px rgba(0,0,0,.45)}
+  /* footer */
+  .foot{padding-top:3rem}
+  .foot__lockup{display:none}
+  .foot__grid{grid-template-columns:1fr 1fr;gap:1.2rem}
+  .foot__brand{grid-column:1/-1}
+}
+@media (max-width:35em){
+  .hero__base .label{font-size:.66rem;letter-spacing:.16em}
+}
+/* the notebook stepper: on screen only, so print and no-JS keep every field.
+   Wide screens step through the five prompts and keep the recognition log in view. */
+@media screen{
+  .notebook.is-stepped .nb-item:not(.is-current){display:none}
+  .notebook.is-stepped .nb-steps{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.8rem}
+  .notebook.is-stepped .prompts>.prompt:nth-child(1)::before{content:"1"}
+  .notebook.is-stepped .prompts>.prompt:nth-child(2)::before{content:"2"}
+  .notebook.is-stepped .prompts>.prompt:nth-child(3)::before{content:"3"}
+  .notebook.is-stepped .prompts>.prompt:nth-child(4)::before{content:"4"}
+  .notebook.is-stepped .prompts>.prompt:nth-child(5)::before{content:"5"}
+  .nb-step{flex:1 1 100%;color:var(--muted)}
+  .nb-dots{display:flex;gap:.45rem;margin-right:auto}
+  .nb-dots i{width:8px;height:8px;border-radius:50%;border:1px solid var(--rule-strong)}
+  .nb-dots i.is-filled{background:var(--rose);border-color:var(--rose)}
+  .nb-dots i.is-current{box-shadow:0 0 0 2px var(--page),0 0 0 3px var(--rose)}
+  .nb-steps .btn,.nb-steps .textbtn{min-height:44px}
+  .nb-steps .textbtn{min-width:44px}
+  .nb-steps button[disabled]{opacity:.38;cursor:default;transform:none}
+  .nb-steps .btn--ghost[disabled]:hover{color:inherit}
+  .nb-steps .btn--ghost[disabled]:hover::before{transform:scaleX(0)}
 }
 
 /* ---------- motion & print ---------- */
@@ -1007,25 +1248,38 @@ html{hanging-punctuation:first allow-end last}
   .inv__row input[type=range]::-moz-range-track{background:CanvasText}
   .tracker__bar{background:GrayText}
   .tracker__bar i,.progress{forced-color-adjust:none;background:Highlight}
+  .react__btns .btn[aria-pressed="true"]{forced-color-adjust:none;background:Highlight;color:HighlightText;border-color:Highlight}
 }
 @media print{
   :root{--section:1.6rem}
   body{background:#fff;color:#000;font-size:11.5pt}
-  .head,.dock,.mast__art,.mast::before,.hero__actions,.hero__base,.look,.foot__lockup,.pyramid__route,.signup,.buy,.notebook__actions,.tracker__foot,.pledge__actions,.reader__tools,.toast,.lightbox,.gate__tools,.scrollcue,.get::before,.summit::before,.foot__grid{display:none!important}
+  .skip,.head,.dock,.mast__art,.mast::before,.hero__actions,.hero__base,.look,.foot__lockup,.pyramid__route,.signup,.buy,.notebook__actions,.tracker__foot,.pledge__actions,.nb-steps,.nb-next,.pledge__next,.react__btns,.reader__tools,.toast,.lightbox,.gate__tools,.scrollcue,.get::before,.summit::before,.foot__grid{display:none!important}
   .mast,.s--ink,.summit,.get,.foot{background:#fff!important;color:#000!important}
   .mast{min-height:0}
   .hero{padding:0 0 1rem}
   .hero h1,.hero__thesis,.hero__sub,.hero__eyebrow,.s--ink .h2,.s--ink h3,.summit h2,.get h2,.movement h3,.phase strong,.invest dd,.daycard h4,.inventory h3,.tracker__card h3,.signs li,.check b,.inv__row label{color:#000!important}
+  .mast :not(.kicker),.s--ink :not(.kicker),.summit :not(.kicker),.get :not(.kicker),.foot :not(.kicker){color:#000!important}
   .js .rv,.js .rv-list>*{opacity:1!important;transform:none!important}
+  .threshold__stay,.sacred__line,.sacred__cap{animation:none!important;opacity:1!important}
+  .sacred__cap{position:static!important;margin-top:1.2rem}
+  .lvl__panel::after{display:none}
+  .phase,.lvl__btn,.lvl__btn[aria-expanded="true"]{background:#fff!important;border-color:#999!important;transition:none!important}
+  .phase[aria-pressed="true"]{background:#fff!important;border:2px solid #000!important}
+  .lvl__btn .mark,.lvl__btn[aria-expanded="true"] .mark{background:#fff!important;box-shadow:none!important;filter:none!important}
+  .js .pyramid .phase{opacity:1!important;animation:none!important;transform:none!important}
+  .gates{display:none!important}
   .sacred,.sacred__page{min-height:0!important;padding:1rem 0!important;background:#fff!important}
   .gate__plate{background:#fff!important;color:#000!important;border-bottom:1px solid #999}
   .gate__plate *{color:#000!important}
   .js .lvl__panel:not(.is-open){display:block!important}
-  .ascent{display:block}.lvl{display:block}.lvl__panel{position:static;margin:0 0 1rem}
+  .ascent{display:block}.lvl{display:block}.lvl__panel{position:static;margin:0 0 1rem;max-height:none!important;overflow:visible!important;box-shadow:none!important}
   .gate,.sheet,.notebook,.pledge{box-shadow:none;border:1px solid #999;break-inside:avoid}
+  #sheet{break-inside:auto}#more-excerpt>summary{display:none!important}
   .sheet details>div{display:block}
   details>*{display:block!important}
+  details>summary>i{display:none!important}
   a[href^="http"]::after{content:" (" attr(href) ")";font-size:.8em;word-break:break-all}
+  details::details-content{content-visibility:visible;display:block}
   /* single-item printing: the pledge or the field notebook alone, starting on page one */
   body.print-notebook>:not(main),body.print-pledge>:not(main){display:none!important}
   body.print-notebook main>:not(#field-work),body.print-pledge main>:not(#summit){display:none!important}
@@ -1045,3 +1299,81 @@ html:not(.js) .lvl__btn::before,html:not(.js) .look__step{display:none}
 html:not(.js) .lvl__panel{position:static;margin:.2rem 0 1.4rem}
 html:not(.js) .lvl__btn{cursor:default}
 html:not(.js) .gate__tools,html:not(.js) .reader__tools,html:not(.js) .notebook__actions,html:not(.js) .pledge__actions,html:not(.js) .tracker__foot,html:not(.js) .daycard,html:not(.js) .dock{display:none}
+
+/* ---------- small fixes ---------- */
+.lede:empty{display:none}
+/* the Day 30 link inside the tracker sentence: a taller hit area without moving the line */
+.inv-mirror a{display:inline-block;line-height:22px;padding:11px 0;margin:-11px 0}
+
+/* ==========================================================================
+   Desktop length. The same content as the phone page, laid out so a wide
+   screen is shorter than a phone: tighter section padding, the summit in two
+   columns, the notebook stepping in place, the cliffhanger beside the page.
+   ========================================================================== */
+@media screen and (min-width:60.0625em){
+  :root{--section:clamp(3.75rem,5vw,4.75rem)}
+  .threshold{padding:5rem 0 4rem}
+  .react{margin-top:1.8rem;padding-top:1.5rem}
+  .s__head{margin-bottom:clamp(2rem,3vw,2.75rem)}
+
+  /* who it is for: the five sliders sit closer */
+  .inv{margin-top:.8rem}
+  .inv__row{padding:.62rem 0 .4rem}
+  .inv__row input[type=range]{margin-top:.3rem}
+
+  /* excerpt: the cliffhanger waits at the foot of the heading column, level with the page's end */
+  .reader{grid-template-rows:auto 1fr}
+  .reader .sheet{grid-column:2;grid-row:1/span 2}
+  .reader__aside{grid-column:1;grid-row:1;position:static}
+  .reader__next{grid-column:1;grid-row:2;align-self:end;margin-top:0}
+  .reader__next p{font-size:1.3rem}
+
+  /* field work: one prompt at a time, the log in view, "How to climb" in the heading column */
+  .field{grid-template-columns:minmax(0,.85fr) minmax(0,1.25fr);grid-template-rows:auto 1fr}
+  .field>div:first-child{grid-column:1;grid-row:1}
+  .field .notebook{grid-column:2;grid-row:1/span 2}
+  .field__stop{grid-column:1;grid-row:2;align-self:end;justify-self:start;margin:2rem 0 0;text-align:left}
+  .notebook.is-stepped .notebook__log.nb-item{display:block}
+  .notebook.is-stepped .nb-dots i:last-child{display:none}
+  .notebook.is-stepped .nb-steps{margin:.7rem 0 .2rem}
+  .notebook.is-stepped .nb-step{flex:0 1 auto;margin-right:.4rem}
+  .notebook.is-stepped .nb-dots{margin-right:auto}
+
+  /* the ascent: a tighter list and a lower rail of pages */
+  .lvl__btn{padding-top:.56rem;padding-bottom:.56rem;min-height:44px}
+  .lvl__group{padding-top:1.1rem}
+  .look__rail{grid-auto-columns:clamp(150px,12.4vw,186px);padding-top:1.4rem;padding-bottom:1.6rem}
+  .ascent__more{margin-top:clamp(1.6rem,2.6vw,2.2rem)}
+
+  /* the summit: heading beside the mountain, the pledge beside the thirty days */
+  .summit .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"head pyr" "head cap" "pledge tracker";column-gap:clamp(2.5rem,5vw,5rem);align-items:start}
+  .summit__head{grid-area:head;align-self:center;margin:0;max-width:none}
+  .summit__head .mark{margin-bottom:1.2rem}
+  .summit__head h2{font-size:clamp(2.3rem,3.6vw,3.3rem)}
+  .pyramid{grid-area:pyr;width:100%;max-width:none;padding-top:1.6rem}
+  .pyramid__cap{grid-area:cap;margin-top:1.1rem}
+  .pledge{grid-area:pledge;margin:clamp(2.4rem,3.6vw,3.2rem) 0 0;max-width:none;padding:clamp(1.6rem,2.6vw,2.4rem)}
+  .pledge blockquote{font-size:clamp(1.25rem,1.6vw,1.45rem);margin-top:1rem}
+  .pledge__sign{margin-top:1.5rem}
+  .tracker{grid-area:tracker;margin:clamp(2.4rem,3.6vw,3.2rem) 0 0;max-width:none}
+
+
+  /* lineage: the head carries the book's own line, the rows follow */
+  #lineage .s__head{align-items:start}
+
+  /* footer: the cover in the sign-up above already carries the title and the thesis */
+  .foot__grid{padding-bottom:1.8rem}
+  .foot li{padding:0}
+  .foot__lockup{display:none}
+  .foot__marks{gap:.8rem}
+}
+/* wide screens: the day's three sittings side by side, morning, midday, evening */
+@media screen and (min-width:75em){
+  .checks{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .check{grid-template-columns:1.25rem minmax(0,1fr);align-items:start;column-gap:.6rem;row-gap:.3rem;padding:.7rem .75rem .75rem}
+  .check input{grid-row:1/span 2;margin-top:.12rem}
+  .check b{font-size:1.08rem}
+  .check span{grid-column:2}
+}
+/* touch screens of any width: sliders and the scroll cue get full-size targets */
+@media (pointer:coarse){.inv__row input[type=range]{height:44px}.scrollcue{min-height:44px}}

@@ -84,12 +84,12 @@ window.PTG_CONFIG = {
 
   /* ---- toast */
   var toastEl = $("#toast"), toastTimer = 0;
-  function toast(msg) {
+  function toast(msg, ms) {
     if (!toastEl) return;
     toastEl.textContent = msg;
     toastEl.classList.add("is-on");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { toastEl.classList.remove("is-on"); }, 2600);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("is-on"); }, ms || 1900);
   }
 
   /* ---- analytics: loads only when an ID is configured */
@@ -129,13 +129,16 @@ window.PTG_CONFIG = {
       if (dock) {
         var vh = window.innerHeight, get = $("#get"), nearEnd = get && get.getBoundingClientRect().top < vh * 0.9;
         var sac = $("#sacred"), sr = sac && sac.getBoundingClientRect(), still = !!sr && sr.top < vh * 0.7 && sr.bottom > vh * 0.3;
-        var on = y > vh * 0.85 && !nearEnd && !still;
+        /* an inline ask on screen already offers the same button: one is enough */
+        var asked = $$(".ask:not([hidden]), .reader__acts").some(function (el) { var r = el.getBoundingClientRect(); return r.height > 0 && r.top < vh && r.bottom > 0; });
+        var on = y > vh * 0.85 && !nearEnd && !still && !asked;
         dock.classList.toggle("is-on", on);
         doc.body.classList.toggle("dock-on", on);
       }
     }
     window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
     window.addEventListener("resize", update);
+    doc.addEventListener("ptg:ask", function () { requestAnimationFrame(update); });
     update();
 
     var behind = [$("main"), $(".foot"), dock, $(".brand", head)];
@@ -145,13 +148,14 @@ window.PTG_CONFIG = {
       head.classList.toggle("menu-open", open);
       btn.setAttribute("aria-expanded", String(open));
       btn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      var icon = $("path", btn); if (icon) icon.setAttribute("d", open ? "M6 6l12 12M18 6 6 18" : "M3 7h18M3 12h18M3 17h18");
       doc.body.style.overflow = open ? "hidden" : "";
       behind.forEach(function (el) { if (el) el.inert = open; });
       if (open) { var first = $("a", nav); if (first) first.focus(); }
     }
     if (btn && nav) {
       btn.addEventListener("click", function () { setMenu(!nav.classList.contains("is-open")); });
-      nav.addEventListener("click", function (ev) { if (ev.target.closest("a")) setMenu(false); });
+      nav.addEventListener("click", function (ev) { if (ev.target === nav || ev.target.closest("a")) setMenu(false); });
       nav.addEventListener("keydown", function (ev) {
         if (ev.key !== "Tab" || !nav.classList.contains("is-open")) return;
         var f = $$("a,button", nav), first = f[0], last = f[f.length - 1];
@@ -448,20 +452,61 @@ window.PTG_CONFIG = {
   });
 
   /* ==========================================================================
+     The threshold: what rises in you. Every answer gets the book's own reply,
+     because the book says any reaction is data. Nothing is stored.
+     ========================================================================== */
+  mod("react", function () {
+    var box = $("#react"), line = $("#react-line");
+    if (!box || !line) return;
+    var btns = $$("[data-react]", box);
+    line.hidden = true;
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        btns.forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+        line.hidden = true; void line.offsetWidth; line.hidden = false;
+        /* the reply must land in view, above the bar at the foot of a phone screen. The bar can
+           slide up during this very scroll, so its height is kept clear whenever it is drawn. */
+        var dock = $("#dock"), floor = window.innerHeight - 12;
+        if (dock && dock.offsetHeight > 0 && getComputedStyle(dock).display !== "none") floor = Math.min(floor, window.innerHeight - dock.offsetHeight - 12);
+        var over = line.getBoundingClientRect().bottom - floor;
+        if (over > 0) window.scrollBy({ top: over, behavior: reduce ? "auto" : "smooth" });
+        track("threshold_react", { choice: b.getAttribute("data-react") });
+      });
+    });
+  });
+
+  /* ==========================================================================
      The ascent: twelve gates. One open at a time; deep links (#level-4) work.
      ========================================================================== */
   var LEVELS = [];
   try { LEVELS = JSON.parse($("#ptg-levels").textContent); } catch (e) { LEVELS = []; }
 
+  var ascentReady = false;
   mod("ascent", function () {
     var wrap = $("#levels");
     if (!wrap) return;
     var btns = $$(".lvl__btn", wrap), panels = $$(".lvl__panel", wrap);
     var wide = mq("(min-width: 60.0625em)");
     var current = 0, seen = {};
+    var gatesN = $("#gates-n"), gatesLine = $(".gates"), summitLine = $(".ascent__summit");
+    function countGates() {
+      /* the gate counter: every level opened once counts, and all twelve light the summit line */
+      var k = Object.keys(seen).length;
+      if (gatesN) gatesN.textContent = String(k);
+      if (k >= btns.length) {
+        if (summitLine) summitLine.classList.add("is-lit");
+        if (gatesLine && !gatesLine.classList.contains("is-all")) { gatesLine.classList.add("is-all"); gatesLine.textContent = "All twelve gates opened."; gatesN = null; }
+      }
+    }
+    function moreCue(pn) {
+      /* wide screens: a fade at the foot of a gate that scrolls, until its last line is in view */
+      if (pn) pn.classList.toggle("is-more", wide.matches && pn.scrollHeight - pn.clientHeight - pn.scrollTop > 8);
+    }
+    panels.forEach(function (pn) { pn.addEventListener("scroll", function () { moreCue(pn); }, { passive: true }); });
+    window.addEventListener("resize", function () { if (current) moreCue(panels[current - 1]); });
     function fitGate() {
       /* wide screens: a gate taller than the window scrolls inside itself, and always opens at its plate */
-      if (current && panels[current - 1]) panels[current - 1].scrollTop = 0;
+      if (current && panels[current - 1]) { panels[current - 1].scrollTop = 0; moreCue(panels[current - 1]); }
     }
     function open(n, opts) {
       opts = opts || {};
@@ -472,7 +517,8 @@ window.PTG_CONFIG = {
         panels[i].classList.toggle("is-open", on);
       });
       current = (same && !wide.matches && !opts.force) ? 0 : n;
-      if (current) seen[current] = true;
+      if (current && !opts.auto) seen[current] = true;
+      countGates();
       btns.forEach(function (b, i) {
         b.classList.toggle("is-past", !!current && i + 1 < current);
         b.classList.toggle("is-seen", !!seen[i + 1] && i + 1 !== current);
@@ -510,14 +556,22 @@ window.PTG_CONFIG = {
       if (wide.matches) setTimeout(function () { btns[n - 1].scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); }, 0);
       return true;
     }
-    if (!fromHash()) open(1, { force: true });
+    /* phones start with every gate closed, so the twelve questions read as a list; wide screens open Level I */
+    if (!fromHash() && wide.matches) open(1, { force: true, auto: true });
     window.addEventListener("hashchange", fromHash);
-    var onWide = function () { if (wide.matches && !current) open(1, { force: true }); fitGate(); };
+    var onWide = function () { if (wide.matches && !current) open(1, { force: true, auto: true }); fitGate(); };
 
     if (wide.addEventListener) wide.addEventListener("change", onWide); else if (wide.addListener) wide.addListener(onWide);
+    if (btns[0] && "IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        if (!es.some(function (e) { return e.isIntersecting; })) return;
+        if (wide.matches && current && !seen[current]) { seen[current] = true; countGates(); }
+      }, { threshold: 0.5 }).observe(btns[0]);
+    }
+    ascentReady = true;
   });
   /* reveal targets and the gates are both set up: the page may stay in its scripted state */
-  window.PTG_READY = !!$("#levels .lvl__panel.is-open") || !$("#levels");
+  window.PTG_READY = ascentReady || !$("#levels");
 
   /* ---- quote: copy the line, or save it as a card */
   function levelBy(n) { for (var i = 0; i < LEVELS.length; i++) if (LEVELS[i].n === n) return LEVELS[i]; return null; }
@@ -599,7 +653,7 @@ window.PTG_CONFIG = {
     var n = +(t.getAttribute("data-copy") || t.getAttribute("data-card")), L = levelBy(n);
     if (!L) return;
     if (t.hasAttribute("data-copy")) {
-      copyText("“" + L.epi + "” — D. Antione Dixon, The Path to Greatness (Level " + L.num + ")\n" + SITE + "#level-" + n)
+      copyText("“" + L.epi + "”\nD. Antione Dixon, The Path to Greatness (Level " + L.num + ")\n" + SITE + "#level-" + n)
         .then(function () { toast("Line copied"); flash(t, "Copied"); }, function () { toast("Copy is not available here"); });
       track("quote_copy", { level: n });
       return;
@@ -731,7 +785,13 @@ window.PTG_CONFIG = {
       });
     });
     var more = $("#more-excerpt");
-    if (more) more.addEventListener("toggle", function () { if (more.open) track("excerpt_continue", {}); });
+    if (more) more.addEventListener("toggle", function () {
+      if (!more.open) return;
+      track("excerpt_continue", {});
+      /* the summary hides once open; keep keyboard focus in the passage instead of dropping it to the page */
+      var a = doc.activeElement, first = $("div > p", more);
+      if (first && (!a || a === doc.body || a === $("summary", more))) { first.setAttribute("tabindex", "-1"); first.focus({ preventScroll: true }); }
+    });
   });
 
   /* ==========================================================================
@@ -758,6 +818,11 @@ window.PTG_CONFIG = {
     function sameAs(en, v) { return !!en && fields.every(function (f) { return (en[f] || "") === (v[f] || ""); }); }
     function entryFor(date) { for (var k = 0; k < data.entries.length; k++) if (data.entries[k].date === date) return data.entries[k]; return null; }
     function say(msg) { status.textContent = msg; }
+    var stepTo = null, nbNext = $("#nb-next"), nbTop = $(".notebook__top", form);
+    function savedMoment() {
+      if (nbNext) { nbNext.hidden = false; doc.dispatchEvent(new CustomEvent("ptg:ask")); }
+      if (nbTop) { nbTop.classList.remove("is-saved"); void nbTop.offsetWidth; nbTop.classList.add("is-saved"); }
+    }
 
     function render() {
       list.textContent = "";
@@ -790,6 +855,48 @@ window.PTG_CONFIG = {
     else if (todays) { fill(todays); say("Today’s page is saved. You can keep writing."); }
     render();
 
+    /* one prompt at a time on screen. Phones step through all six fields; wide screens
+       step through the five prompts and keep the recognition log in view under them.
+       Print and no-JS keep every field. */
+    (function stepper() {
+      var items = $$(".prompts .prompt", form).concat($$(".notebook__log", form));
+      var logBox = $(".notebook__log", form), promptsBox = $(".prompts", form), wide = mq("(min-width: 60.0625em)");
+      if (items.length !== fields.length || !logBox || !promptsBox) return;
+      items.forEach(function (it) { it.classList.add("nb-item"); });
+      var box = doc.createElement("div");
+      box.className = "nb-steps";
+      box.innerHTML = '<p class="label nb-step" aria-live="polite">Prompt 1 of 5</p><span class="nb-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><button class="textbtn" type="button" data-nb="-1">Back</button><button class="btn btn--small btn--ghost" type="button" data-nb="1">Next</button>';
+      function place() {
+        if (wide.matches) promptsBox.parentNode.insertBefore(box, promptsBox.nextSibling);
+        else logBox.parentNode.insertBefore(box, logBox.nextSibling);
+      }
+      function last() { return wide.matches ? items.length - 2 : items.length - 1; }
+      place();
+      form.classList.add("is-stepped");
+      var label = $(".nb-step", box), dots = $$(".nb-dots i", box), back = $("[data-nb='-1']", box), next = $("[data-nb='1']", box), at = 0;
+      function paintDots() { fields.forEach(function (f, i) { if (dots[i]) dots[i].classList.toggle("is-filled", !!(form.elements[f].value || "").trim()); }); }
+      function show(k, focus) {
+        at = Math.max(0, Math.min(last(), k));
+        items.forEach(function (it, i) { it.classList.toggle("is-current", i === at); });
+        dots.forEach(function (d, i) { d.classList.toggle("is-current", i === at); });
+        var ta = $("textarea", items[at]);
+        grow(ta); /* a field under display:none could not be measured */
+        label.textContent = at === items.length - 1 ? "The recognition log · p. 30" : "Prompt " + (at + 1) + " of " + (items.length - 1);
+        back.disabled = at === 0; next.disabled = at === last();
+        if (focus && ta) ta.focus();
+      }
+      box.addEventListener("click", function (ev) {
+        var b = ev.target.closest && ev.target.closest("[data-nb]");
+        if (!b || b.disabled) return;
+        show(at + (+b.getAttribute("data-nb")), true);
+      });
+      form.addEventListener("input", paintDots);
+      stepTo = function (k) { show(k, false); paintDots(); };
+      var onWide = function () { place(); show(at, false); };
+      if (wide.addEventListener) wide.addEventListener("change", onWide); else if (wide.addListener) wide.addListener(onWide);
+      show(0, false); paintDots();
+    })();
+
     var draftTimer = 0;
     form.addEventListener("input", function (ev) {
       if (ev.target && ev.target.tagName === "TEXTAREA") grow(ev.target);
@@ -806,19 +913,19 @@ window.PTG_CONFIG = {
       ev.preventDefault();
       clearTimeout(draftTimer);
       var v = values();
-      if (!any(v)) { say("Write a line first."); form.elements.p1.focus(); return; }
+      if (!any(v)) { say("Write a line first."); if (stepTo) stepTo(0); form.elements.p1.focus(); return; }
       v.date = todayISO();
       data.entries = data.entries.filter(function (en) { return en.date !== v.date; });
       data.entries.push(v);
       if (data.entries.length > 400) data.entries = data.entries.slice(-400);
       data.draft = {};
-      if (store.set("notebook", data)) { say("Saved on this device, " + niceDate(v.date) + "."); track("fieldwork_save", {}); }
+      if (store.set("notebook", data)) { say("Saved on this device, " + niceDate(v.date) + "."); track("fieldwork_save", {}); savedMoment(); }
       else say("This browser would not save the page. Download or print it before you leave.");
       render();
     });
     $("#nb-clear").addEventListener("click", function () {
       if (any(values()) && !window.confirm("Clear what is written on this page? Saved earlier pages stay.")) return;
-      fill({}); data.draft = {}; store.set("notebook", data); say("Page cleared."); form.elements.p1.focus();
+      fill({}); data.draft = {}; store.set("notebook", data); say("Page cleared."); if (stepTo) stepTo(0); form.elements.p1.focus();
     });
     $("#nb-print").addEventListener("click", function () { printOnly("print-notebook"); });
     $("#nb-download").addEventListener("click", function () {
@@ -847,25 +954,25 @@ window.PTG_CONFIG = {
   /* [title, practice in one line, printed page]. Titles and wording follow the Elevated Edition, pp. 306-313.
      Days 1, 13 and 19 have no printed day heading there, so each carries the name of its practice. */
   var DAYS = [null,
-    ["The Completeness Inventory", "Morning: rate the five statements beside this card and keep the total as your baseline. At two in the afternoon, ask what you are seeking that you might already have. Evening: write your Day 1 Declaration.", 306],
+    ["The Completeness Inventory", "Morning: rate the five statements in the Completeness Inventory near the top of this page and keep the total as your baseline. At two in the afternoon, ask what you are seeking that you might already have. Evening: write your Day 1 Declaration.", 306],
     ["The Recognition Practices", "The “Already Am” Inventory: list ten things you can do without conscious effort. Tonight, finish the sentence “Today I sought ___ but discovered I already had ___.”", 307],
-    ["The Recognition Practices", "The “Already Am” Inventory again: ten things you can do without conscious effort. When you catch yourself wanting, pause and ask whether you already have it in a form you have not recognized.", 307],
+    ["The Recognition Practices", "The “Already Am” Inventory again: ten things you can do without conscious effort. When you catch yourself wanting, pause and ask if you already have it in a form you have not recognized.", 307],
     ["The Mirror Deepens", "Add the Body Scan for Completeness to the morning: hand on heart, hand on stomach, hand on head.", 307],
     ["The Mirror Deepens", "The Body Scan for Completeness again. Keep the midday check and the evening sentence.", 307],
-    ["Phase 1 Integration", "Weekly assessment: how many times did you catch yourself seeking, and how many times did you recognize having? Milestone: one hour without seeking validation.", 307],
+    ["Phase 1 Integration", "Weekly assessment: how many times did you catch yourself seeking, and how many times did you recognize having? Milestone: one hour without seeking validation.", "307–308"],
     ["Identifying Buried Treasure", "Draw your Buried Treasure Map: a natural talent you downplay, a childhood passion you abandoned, an effortless skill you take for granted.", 308],
     ["The Excavation", "The 10% Expression Experiment: choose one buried quality and express it at ten percent intensity today.", 308],
     ["The Excavation", "The 10% Expression Experiment again. The book’s note: resistance is your treasure map.", 308],
     ["Shadow Recognition", "The Trigger-to-Treasure Process: notice what irritates you in others, find where that quality lives in you, and express it consciously today.", 309],
-    ["Shadow Recognition", "The Trigger-to-Treasure Process again. One percent is enough to find.", 309],
+    ["Shadow Recognition", "The Trigger-to-Treasure Process again. Find it in you, even at 1%.", 309],
     ["Phase 2 Integration", "Weekly assessment: buried qualities discovered, shadows recognized as gold. Milestone: did you express one buried quality publicly?", 309],
     ["The Morning Declaration", "Complete the sentence “I am both ___ AND ___.” Then show both qualities in one conversation today.", 309],
-    ["The Peace Protocol", "When you are triggered, use the S.T.O.P. Method: Stop, Time, Observe, Peace. Three breaths at the end.", 309],
+    ["The Peace Protocol", "When you are triggered, use the S.T.O.P. Method: Stop, Time, Observe, Peace. Three breaths at the end.", "309–310"],
     ["The Peace Protocol", "S.T.O.P. again. The book’s measure is how long it takes you to get from trigger back to peace.", 310],
     ["The Completeness Conversations", "Have one honest conversation using the Kind Truth Framework: recognition, truth, vision.", 310],
     ["The Completeness Conversations", "The Kind Truth Framework again: “I see you…”, “Here’s what I notice…”, “Here’s what’s possible…”", 310],
     ["Phase 3 Integration", "Weekly assessment: opposite qualities integrated, kind truths delivered. Milestone: can you hold opposing qualities without choosing?", 310],
-    ["The Expression Arsenal", "Write ten ways to express your gift in under five minutes. Set a daily alarm and label it EXPRESS NOW.", 310],
+    ["The Expression Arsenal", "Write ten ways to express your gift in under five minutes. Set a daily alarm and label it EXPRESS NOW.", "310–311"],
     ["The Gift Emergency", "When the alarm sounds, do one at once: write 100 words, create for five minutes, or teach someone one thing. No editing.", 311],
     ["The Gift Emergency", "The alarm again. No editing, just expression.", 311],
     ["The Generosity Overflow", "The Three Streams Practice: give something material, something emotional and something energetic today.", 311],
@@ -876,7 +983,7 @@ window.PTG_CONFIG = {
     ["The Mentorship Moment", "The book’s note for these two days: teaching deepens your own understanding.", 312],
     ["The Integration Mastery", "Live one full day as complete: no seeking, no becoming, just being. Document what happens.", 312],
     ["The Integration Mastery", "A second full day as complete: no seeking, no becoming, just being. Document what happens.", 312],
-    ["The Celebration & Continuation", "Retake the inventory and compare it with Day 1. Then choose: repeat the thirty days, guide someone else through them, or design your own.", 312]
+    ["The Celebration & Continuation", "Retake the inventory near the top of this page and compare it with Day 1. Then choose: repeat the thirty days, guide someone else through them, or design your own.", "312–313"]
   ];
 
   mod("summit", function () {
@@ -884,7 +991,7 @@ window.PTG_CONFIG = {
     if (!card) return;
     var daysBox = $("#days"), title = $("#phase-title"), dayLabel = $("#day-label"), dayTitle = $("#day-title"),
         dayText = $("#day-text"), dayWhere = $("#day-where"), fill = $("#tracker-fill"), countEl = $("#tracker-count"),
-        sinceEl = $("#tracker-since"), checks = $$("input[data-slot]", card), phaseBtns = $$(".phase");
+        sinceEl = $("#tracker-since"), checks = $$("input[data-slot]", card), phaseBtns = $$(".phase"), nextBtn = $("#phase-next");
     var state = store.get("tracker", null);
     if (!plain(state) || !plain(state.days)) state = { start: "", days: {} };
     if (typeof state.start !== "string") state.start = "";
@@ -914,7 +1021,7 @@ window.PTG_CONFIG = {
       var D = DAYS[day];
       dayLabel.textContent = "Day " + day + " · " + PHASES[phaseOf(day)].name;
       dayTitle.textContent = D[0]; dayText.textContent = D[1];
-      dayWhere.textContent = "In the book: p. " + D[2] + ".";
+      dayWhere.textContent = "In the book: " + (typeof D[2] === "string" ? "pp. " : "p. ") + D[2] + ".";
       var s = slots(day);
       checks.forEach(function (c, i) { c.checked = !!s[i]; });
     }
@@ -933,6 +1040,7 @@ window.PTG_CONFIG = {
       phase = p;
       phaseBtns.forEach(function (b) { b.setAttribute("aria-pressed", String(+b.getAttribute("data-phase") === p)); });
       title.textContent = "Phase " + p + " · " + PHASES[p].name;
+      if (nextBtn) { nextBtn.hidden = p >= 5; if (p < 5) nextBtn.textContent = "Next: Phase " + (p + 1) + " · " + PHASES[p + 1].name; }
       if (!keepDay) {
         day = PHASES[p].first;
         for (var d = PHASES[p].first; d < PHASES[p].first + 6; d++) { if (doneCount(d) < 3) { day = d; break; } }
@@ -957,7 +1065,7 @@ window.PTG_CONFIG = {
         s[+c.getAttribute("data-slot")] = c.checked ? 1 : 0;
         state.days[day] = s;
         if (!state.start && c.checked) state.start = todayISO();
-        if (!store.set("tracker", state)) toast("Not saved: storage is unavailable");
+        if (!store.set("tracker", state)) toast("Not saved: storage is unavailable", 4000);
         renderDays(); renderMeta();
         if (was < 3 && doneCount(day) === 3) {
           var arrivedEl = $("[data-day='" + day + "']", daysBox);
@@ -966,6 +1074,12 @@ window.PTG_CONFIG = {
           toast(day === 30 ? "Thirty days. The summit." : "Day " + day + " complete");
         }
       });
+    });
+    if (nextBtn) nextBtn.addEventListener("click", function () {
+      if (phase >= 5) return;
+      setPhase(phase + 1);
+      var cur = $("[aria-current='true']", daysBox); if (cur) cur.focus({ preventScroll: true });
+      if (mq("(max-width: 60em)").matches) card.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
     });
     $("#tracker-reset").addEventListener("click", function () {
       if (!completeDays() && !state.start) return;
@@ -1003,25 +1117,39 @@ window.PTG_CONFIG = {
       if (total.textContent !== t) { total.textContent = t; flip(total.parentNode); }
     }
     function report() {
+      var s30 = $("#inv-save30");
+      if (s30) s30.hidden = !data.d1;
       var parts = [];
       if (data.d1) parts.push("Day 1: <b>" + (+data.d1.score) + "/50</b> (" + (niceDate(data.d1.date) || "") + ")");
       if (data.d30) parts.push("Day 30: <b>" + (+data.d30.score) + "/50</b> (" + (niceDate(data.d30.date) || "") + ")");
       var html = parts.join(" → ");
       if (data.d1 && data.d30) {
         var diff = data.d30.score - data.d1.score;
-        html += diff < 0 ? ". " + Math.abs(diff) + " points less seeking." : diff > 0 ? ". " + diff + " points more than Day 1." : ". No change in the total.";
+        html += diff < 0 ? ". " + Math.abs(diff) + " points less seeking." : diff > 0 ? ". " + diff + " points more seeking." : ". No change in the total.";
       }
       saved.innerHTML = html;
+      /* the tracker card further down carries the Day 1 score back to the reader */
+      var mirror = $("#inv-mirror");
+      if (mirror) {
+        mirror.hidden = !data.d1;
+        mirror.innerHTML = data.d1 ? "Your Day 1 inventory: <b>" + (+data.d1.score) + "/50</b>. On Day 30, <a href=\"#inventory\">rate the five statements again</a>." : "";
+      }
     }
     function keep(which) {
       data[which] = { score: sum(), vals: vals(), date: todayISO() };
       if (!store.set("inventory", data)) { saved.textContent = "This browser would not save the score. Write it down: " + sum() + "/50."; return; }
       report(); toast(which === "d1" ? "Day 1 score saved" : "Day 30 score saved"); track("inventory_save", { which: which });
+      if (which === "d1") { var nx = $("#inv-next"); if (nx) { nx.hidden = false; doc.dispatchEvent(new CustomEvent("ptg:ask")); } }
     }
     if (data.d1 && Array.isArray(data.d1.vals) && data.d1.vals.length === 5) ids.forEach(function (id, i) { var v = +data.d1.vals[i]; if (v >= 1 && v <= 10) form.elements[id].value = String(Math.round(v)); });
     form.addEventListener("input", paint);
     form.addEventListener("submit", function (ev) { ev.preventDefault(); keep("d1"); });
-    $("#inv-save30").addEventListener("click", function () { keep("d30"); });
+    $("#inv-save30").addEventListener("click", function () {
+      /* Day 30 is a retake a month on; an early save is allowed, but only on purpose */
+      var d1 = data.d1 && Date.parse(data.d1.date + "T00:00:00"), days = d1 ? Math.round((Date.now() - d1) / 864e5) : 0;
+      if (d1 && days < 29 && !window.confirm("Your Day 1 score is from " + (days < 1 ? "today" : days === 1 ? "yesterday" : days + " days ago") + ". The book has you retake it on Day 30. Save this as Day 30 anyway?")) return;
+      keep("d30");
+    });
     paint(); report();
   });
 
@@ -1040,11 +1168,12 @@ window.PTG_CONFIG = {
     }
     btn.addEventListener("click", function () {
       var v = (name.value || "").trim().slice(0, 80);
-      if (!v) { toast("Sign your name first"); name.focus(); return; }
+      if (!v) { toast("Sign your name first", 4000); name.focus(); return; }
       data = { name: v, date: todayISO() };
       store.set("pledge", data);
       if (window.__ptgTracker) window.__ptgTracker.begin(data.date);
-      render(); toast("The revolution begins now"); track("pledge_sign", {});
+      render(); track("pledge_sign", {});
+      doc.dispatchEvent(new CustomEvent("ptg:ask"));
       if (!reduce) { box.classList.remove("is-stamping"); void box.offsetWidth; box.classList.add("is-stamping"); setTimeout(function () { box.classList.remove("is-stamping"); }, 1400); }
     });
     name.addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); btn.click(); } });
@@ -1076,18 +1205,23 @@ window.PTG_CONFIG = {
       var h = $("#get-title"); if (h) h.textContent = "Get the book";
       var lab = $("#get-label"); if (lab) lab.textContent = "Available now";
       $$("[data-release-note]").forEach(function (el) { el.textContent = "Available now."; });
-      $$("[data-cta='hero'],[data-cta='excerpt'],[data-cta='nav'],[data-cta='dock']").forEach(function (a) { a.textContent = "Get the book"; });
+      $$("[data-cta='hero'],[data-cta='excerpt'],[data-cta='nav'],[data-cta='dock'],.ask a[data-cta]").forEach(function (a) { a.textContent = "Get the book"; });
       $$("[data-when='available']").forEach(function (el) { el.hidden = false; });
       return;
     }
     if (!form) return;
 
-    var email = form.elements.email, trap = form.elements.website, btn = $("#signup-btn"), label = $(".btn__label", btn);
+    var email = form.elements.email, trap = form.elements.ptg_hp || form.elements.website, btn = $("#signup-btn"), label = $(".btn__label", btn);
     var signed = $("#signed"), signedEmail = $("#signed-email"), dlg = $("#thanks"), fine = $("#signup-fine"), promise = $("#get-promise");
-    var LEDE = "Leave your email address. You will hear from D. Antione Dixon when The Elevated Edition is out.";
+    var LEDE = "";
     var opened = Date.now(), busy = false, endpoint = isUrl(cfg.FORM_ENDPOINT) ? cfg.FORM_ENDPOINT : "";
     email.addEventListener("focus", function () { if (!opened) opened = Date.now(); }, { once: true });
-    email.addEventListener("input", function () { email.removeAttribute("aria-invalid"); if (status.getAttribute("data-kind") === "error") status.textContent = ""; });
+    email.addEventListener("input", function () {
+      email.removeAttribute("aria-invalid");
+      var k = status.getAttribute("data-kind");
+      if (k === "error" || k === "hint") { status.textContent = ""; status.setAttribute("data-kind", ""); }
+      if (k === "hint") hinted = "";
+    });
 
     /* where this visit came from: first-touch tags are kept for the session */
     function tags() {
@@ -1115,7 +1249,8 @@ window.PTG_CONFIG = {
       root.classList.add("is-joined");
       if (!signed) return;
       signedEmail.textContent = addr; signed.hidden = false; form.hidden = true;
-      if (lede) lede.textContent = "You will hear from D. Antione Dixon the day the book is out. The welcome note has the first page of field work.";
+      if (lede) lede.textContent = "Your welcome note has Level I’s threshold question. You will hear again when the book is out.";
+      if (promise) promise.hidden = true;
     }
     var known = store.get("signedup", null);
     if (plain(known) && typeof known.email === "string" && known.email.indexOf("@") > 0) showSigned(known.email);
@@ -1123,10 +1258,11 @@ window.PTG_CONFIG = {
     if (change) change.addEventListener("click", function () {
       signed.hidden = true; form.hidden = false; email.value = ""; email.focus();
       if (lede) lede.textContent = LEDE;
+      if (promise && endpoint) promise.hidden = false;
     });
 
     /* ---- the thank-you dialog */
-    var lastFocus = null;
+    var lastFocus = null, leftByLink = false;
     function thank(addr, already) {
       $("#thanks-email") && ($("#thanks-email").textContent = addr);
       var title = $("#thanks-title"), body = $("#thanks-body");
@@ -1138,7 +1274,7 @@ window.PTG_CONFIG = {
         body.innerHTML = "";
         body.appendChild(doc.createTextNode("A welcome note from D. Antione Dixon is on its way to "));
         var b = doc.createElement("b"); b.textContent = addr; body.appendChild(b);
-        body.appendChild(doc.createTextNode(", with the first page of field work. If you don’t find it in your inbox, look in Promotions or Spam."));
+        body.appendChild(doc.createTextNode(", with Level I’s threshold question and field work. If you don’t find it in your inbox, look in Promotions or Spam."));
       }
       var sheet = $("#join");
       if (sheet && sheet.open) sheet.close();
@@ -1152,12 +1288,17 @@ window.PTG_CONFIG = {
     }
     if (dlg) {
       dlg.addEventListener("click", function (ev) {
-        if (ev.target === dlg || (ev.target.closest && ev.target.closest("[data-close]"))) dlg.close();
+        var c = ev.target.closest && ev.target.closest("[data-close]");
+        if (ev.target === dlg || c) { leftByLink = !!(c && c.tagName === "A"); dlg.close(); }
       });
       dlg.addEventListener("close", function () {
         root.style.overflow = ""; dlg.classList.remove("is-shown");
-        var target = signed && !signed.hidden ? change : lastFocus;
-        if (target && target.focus && !(target.closest && target.closest("dialog"))) target.focus();
+        if (leftByLink) { leftByLink = false; return; }
+        var S = window.__ptgSignup || {}, o = S.opener; S.opener = null;
+        var target = o && o.getClientRects().length ? o : (signed && !signed.hidden ? change : lastFocus);
+        if (target && target.focus && !(target.closest && target.closest("dialog"))) {
+          try { target.focus({ preventScroll: true }); } catch (e) { target.focus(); }
+        }
       });
       var share = $("#thanks-share");
       if (share) share.addEventListener("click", function () {
@@ -1181,11 +1322,18 @@ window.PTG_CONFIG = {
       /* text/plain keeps this a simple request: no CORS preflight, which Apps Script cannot answer */
       var ctl = window.AbortController ? new AbortController() : null;
       var timer = setTimeout(function () { if (ctl) ctl.abort(); }, 15000);
-      /* Only a reply the page can read counts as saved. An unreadable reply (a sign-in page,
-         a wrong deployment) is treated as a failure, so nobody is thanked for a sign-up that
-         never reached the sheet. */
+      /* Only a reply the page can read counts as saved, so nobody is thanked for a sign-up that
+         never reached the sheet. A refused or unreadable reply reads "did not go through". A lost
+         connection, a timeout, or a deployment that redirects to a Google sign-in page (the
+         browser blocks it) reads "could not confirm", which stays true in every one of those cases. */
       return fetch(endpoint, { method: "POST", body: JSON.stringify(body), redirect: "follow", signal: ctl ? ctl.signal : undefined })
-        .then(function (r) { clearTimeout(timer); if (!r.ok) throw new Error("http " + r.status); return r.json(); })
+        .then(function (r) {
+          if (!r.ok) { clearTimeout(timer); throw new Error("http " + r.status); }
+          return r.json().then(function (j) { clearTimeout(timer); return j; }, function (e) {
+            clearTimeout(timer);
+            throw (e && e.name === "AbortError") ? e : new Error("unreadable");
+          });
+        })
         .catch(function (err) { clearTimeout(timer); throw err; });
     }
 
@@ -1209,7 +1357,8 @@ window.PTG_CONFIG = {
       DOMAINS.forEach(function (d) { var k = dist(dom, d); if (k < bd) { bd = k; best = d; } });
       return best && bd <= 2 ? addr.slice(0, at + 1) + best : "";
     }
-    function offer(addr) {
+    var hinted = "";
+    function offer(addr, onSubmit) {
       var fix = suggest(addr);
       if (!fix) return false;
       status.textContent = "Did you mean ";
@@ -1217,7 +1366,7 @@ window.PTG_CONFIG = {
       var b = doc.createElement("button");
       b.type = "button"; b.className = "textbtn"; b.textContent = fix;
       b.addEventListener("click", function () { email.value = fix; say("", ""); email.focus(); });
-      status.appendChild(b); status.appendChild(doc.createTextNode("?"));
+      status.appendChild(b); status.appendChild(doc.createTextNode(onSubmit ? "? Press the button again to send it as typed." : "?"));
       return true;
     }
     email.addEventListener("blur", function () { var v = (email.value || "").trim(); if (v && !status.getAttribute("data-kind")) offer(v); });
@@ -1227,12 +1376,15 @@ window.PTG_CONFIG = {
       if (busy) return;
       var addr = (email.value || "").trim();
       if (!addr || !email.checkValidity() || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(addr)) { invalid(); return; }
+      /* a likely typo stops the first press only; the second press sends the address as typed */
+      if (addr !== hinted && suggest(addr)) { hinted = addr; offer(addr, true); return; }
 
       if (!endpoint) {
         /* no endpoint configured yet: hand the visitor a ready-made email */
         var subject = "The Path to Greatness: tell me when it is out";
         var mbody = "Please tell me when The Path to Greatness is out.\n\nMy address: " + addr + "\n";
         say("Your mail app should open with a note ready to send. Press send and you will hear back when the book is out.", "ok");
+        try { status.scrollIntoView({ block: "nearest", behavior: reduce ? "auto" : "smooth" }); } catch (e) { /* old browser */ }
         track("lead", { method: "mailto" });
         window.location.href = "mailto:" + to + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(mbody);
         return;
@@ -1245,23 +1397,28 @@ window.PTG_CONFIG = {
         if (res && res.ok) {
           store.set("signedup", { email: addr.toLowerCase(), date: todayISO() });
           track("lead", { method: "sheet", result: res.status || "added" });
-          form.reset(); opened = Date.now();
+          form.reset();
           showSigned(addr.toLowerCase());
           thank(addr.toLowerCase(), res.status === "already");
           return;
         }
         if (res && res.error === "invalid_email") { invalid(); return; }
         say("That did not go through. Please try again in a minute. If it keeps failing, write to " + to + ".", "error");
-      }, function () {
+      }, function (err) {
         setBusy(false);
-        say("Your address was not saved. Please try again in a minute. If it keeps failing, write to " + to + ".", "error");
+        if (err && /^(http|unreadable)/.test(err.message || "")) {
+          say("That did not go through. Please try again in a minute. If it keeps failing, write to " + to + ".", "error");
+          return;
+        }
+        /* a lost connection or a slow reply: the address may have been saved, and a second try is harmless */
+        say("We could not confirm that your address was saved. Please try again in a minute; signing up twice does no harm. If it keeps failing, write to " + to + ".", "error");
       });
     });
 
     /* until an endpoint is configured, the words match the mail-app fallback */
     if (!endpoint) {
       label.textContent = "Open my email";
-      if (lede) lede.textContent = "The Elevated Edition has no release date yet. Send a one-line email and you will get a message back when it is out, saying where to buy it.";
+      if (lede) lede.textContent = "You will get one reply when the book is out, saying where to buy it.";
       if (fine) fine.textContent = "This opens your own mail app with a note to " + to + ". Nothing is sent until you press send.";
       if (signed && !signed.hidden) { signed.hidden = true; form.hidden = false; }
       if (promise) promise.hidden = true;
@@ -1277,9 +1434,19 @@ window.PTG_CONFIG = {
      ========================================================================== */
   mod("join", function () {
     var S = window.__ptgSignup, sheet = $("#join"), slot = $("#join-slot");
-    if (!S || !S.live || !sheet || !slot || typeof sheet.showModal !== "function") return;
+    function focusLater() { setTimeout(function () { try { S.email.focus({ preventScroll: true }); } catch (e) { S.email.focus(); } }, reduce ? 0 : 900); }
+    if (S && S.email && (!S.live || !sheet || !slot || typeof sheet.showModal !== "function")) {
+      /* no sheet (mail-app mode, or no dialog support): let the anchor scroll, then put the cursor in the field */
+      doc.addEventListener("click", function (ev) {
+        var a = ev.target.closest && ev.target.closest("a[data-cta][href='#get']");
+        if (!a || root.classList.contains("is-joined") || ev.defaultPrevented || ev.metaKey || ev.ctrlKey || !S.form || S.form.hidden) return;
+        focusLater();
+      });
+      return;
+    }
+    if (!S || !sheet || !slot) return;
     var form = S.form, home = doc.createComment("signup"), opener = null;
-    var SOURCES = { hero: "hero", nav: "menu", dock: "bar", excerpt: "excerpt" };
+    var SOURCES = { hero: "hero", nav: "menu", dock: "bar", excerpt: "excerpt", inventory: "inventory", fieldwork: "fieldwork", pledge: "pledge" };
     form.parentNode.insertBefore(home, form);
     function close() { if (sheet.open) sheet.close(); }
     sheet.addEventListener("click", function (ev) {
@@ -1288,8 +1455,12 @@ window.PTG_CONFIG = {
     sheet.addEventListener("close", function () {
       home.parentNode.insertBefore(form, home.nextSibling);
       form.removeAttribute("data-source");
-      root.style.overflow = "";
-      if (opener && opener.focus && !$("#thanks").open) opener.focus();
+      var thanksOpen = !!($("#thanks") && $("#thanks").open);
+      if (!thanksOpen) root.style.overflow = "";
+      if (thanksOpen || !opener) return;
+      /* a button inside the closed menu has no box: hand focus to the menu button instead */
+      var to = opener.getClientRects().length ? opener : $("#menu-btn") || $("#get");
+      if (to && to.focus) { try { to.focus({ preventScroll: true }); } catch (e) { to.focus(); } }
     });
     doc.addEventListener("click", function (ev) {
       var a = ev.target.closest && ev.target.closest("a[data-cta][href='#get']");
@@ -1297,7 +1468,7 @@ window.PTG_CONFIG = {
       var where = SOURCES[a.getAttribute("data-cta")] || a.getAttribute("data-cta");
       if (mq("(max-width: 60em)").matches) {
         ev.preventDefault();
-        opener = a;
+        opener = a; S.opener = a;
         form.setAttribute("data-source", where);
         slot.appendChild(form);
         root.style.overflow = "hidden";
@@ -1307,7 +1478,7 @@ window.PTG_CONFIG = {
       }
       /* wide screens: let the anchor scroll, then put the cursor in the field */
       form.setAttribute("data-source", where);
-      setTimeout(function () { try { S.email.focus({ preventScroll: true }); } catch (e) { S.email.focus(); } }, reduce ? 0 : 900);
+      focusLater();
     });
   });
 })();
