@@ -40,7 +40,8 @@ Status value.
 3. In the function menu choose **setup**, press **Run**, and allow access when Google asks. The log should say "Ready".
 4. **Deploy → New deployment**. Type: **Web app**. Execute as: **Me**. Who has access: **Anyone**. Press **Deploy**.
 5. Copy the **Web app URL** (it ends in `/exec`).
-6. Put it in `FORM_ENDPOINT` at the top of `eatmedia/pathtogreatness/assets/ptg.js` in both repos (or send it to Claude to do). Until it is set, the page falls back to opening the visitor's mail app, and the phone sign-up panel stays off.
+6. In the Apps Script editor open **Project Settings** (gear icon) → **Script properties** → **Add script property**. Property `EXEC_URL`, value: the Web app URL. **Save**. Unsubscribe links in the emails are built from it. Check: open the Web app URL with `?a=health` on the end; it should say `"ok":true` and `"unsubscribe_links":"set"`.
+7. Put it in `FORM_ENDPOINT` at the top of `eatmedia/pathtogreatness/assets/ptg.js` in both repos (or send it to Claude to do). Until it is set, the page falls back to opening the visitor's mail app, and the phone sign-up panel stays off.
 
 To change the code later, paste the new version and use **Deploy → Manage deployments → edit → Version: New version**, so the URL stays the same.
 

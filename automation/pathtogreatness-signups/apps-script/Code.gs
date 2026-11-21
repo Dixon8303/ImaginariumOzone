@@ -52,6 +52,12 @@ function doPost(e) {
           appendNote_(sh, found, 'Signed up again ' + stamp_());
           return json_({ ok: true, status: 'added' });
         }
+        if (status === 'error') {
+          // The welcome email failed earlier: queue it again.
+          sh.getRange(found, 4).setValue('new');
+          appendNote_(sh, found, 'Retried after a new sign-up ' + stamp_());
+          return json_({ ok: true, status: 'added' });
+        }
         return json_({ ok: true, status: 'already' });
       }
 
@@ -91,7 +97,7 @@ function doPost(e) {
 
 function doGet(e) {
   var p = (e && e.parameter) || {};
-  if (p.a === 'health') return json_({ ok: true, sheet: !!sheet_() });
+  if (p.a === 'health') return json_({ ok: true, sheet: !!sheet_(), unsubscribe_links: PropertiesService.getScriptProperties().getProperty('EXEC_URL') ? 'set' : 'EXEC_URL missing' });
   if (p.a === 'unsubscribe') {
     var valid = p.id && p.t && token_(p.id) === p.t;
     return page_(valid ? 'confirm' : 'invalid', p.id || '', p.t || '');
@@ -203,7 +209,9 @@ function token_(id) {
 }
 
 function unsubscribeUrl_(id) {
-  var base = ScriptApp.getService().getUrl();
+  // EXEC_URL (Project Settings > Script properties) is the deployed /exec address. It is set by
+  // hand once after the first deployment, because getUrl() can return the editor-only /dev address.
+  var base = PropertiesService.getScriptProperties().getProperty('EXEC_URL') || ScriptApp.getService().getUrl();
   return base + '?a=unsubscribe&id=' + encodeURIComponent(id) + '&t=' + token_(id);
 }
 
