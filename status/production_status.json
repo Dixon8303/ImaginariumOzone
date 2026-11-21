@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-20T23:35:09Z",
+  "last_synced": "2026-11-21T05:05:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3606,8 +3606,9 @@
     {
       "id": "EP77",
       "number": 77,
-      "topic": "Unreleased episode",
-      "status": "approved",
+      "topic": "George Stinney Jr. — The Youngest Execution in the Modern Era",
+      "mode": "standalone",
+      "status": "published",
       "stages": [
         {
           "name": "batch_primer",
@@ -3667,11 +3668,13 @@
         },
         {
           "name": "upload",
-          "status": "halted"
+          "status": "done"
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T14:36:35Z"
+      "video_id": "473OEwYfiCU",
+      "publish_at": "2026-11-13T19:00:00Z",
+      "updated_at": "2026-11-21T03:35:15Z"
     },
     {
       "id": "EP78",
@@ -5573,7 +5576,7 @@
       "id": "EP105",
       "number": 105,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
@@ -5597,7 +5600,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "failed"
         },
         {
           "name": "generation",
@@ -5605,15 +5608,15 @@
         },
         {
           "name": "ken_burns",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5637,7 +5640,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-17T17:35:12Z"
+      "updated_at": "2026-11-21T05:05:09Z"
     },
     {
       "id": "EP106",
