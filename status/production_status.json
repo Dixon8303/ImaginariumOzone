@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-21T07:35:10Z",
+  "last_synced": "2026-11-21T08:35:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1685,7 +1685,7 @@
         },
         {
           "name": "shorts",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -1693,7 +1693,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-21T07:35:10Z"
+      "updated_at": "2026-11-21T08:35:08Z"
     },
     {
       "id": "EP45",
@@ -4036,7 +4036,7 @@
       "id": "EP83",
       "number": 83,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4084,15 +4084,15 @@
         },
         {
           "name": "assembly",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -4100,7 +4100,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-21T07:35:10Z"
+      "updated_at": "2026-11-21T08:35:09Z"
     },
     {
       "id": "EP84",
@@ -4176,7 +4176,7 @@
       "id": "EP85",
       "number": 85,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -4224,15 +4224,15 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -4240,7 +4240,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-21T06:35:09Z"
+      "updated_at": "2026-11-21T08:35:09Z"
     },
     {
       "id": "EP86",
@@ -5212,7 +5212,7 @@
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -5220,13 +5220,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-21T07:35:10Z"
+      "updated_at": "2026-11-21T08:35:09Z"
     },
     {
       "id": "EP100",
       "number": 100,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5274,15 +5274,15 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -5290,13 +5290,13 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-20T18:05:09Z"
+      "updated_at": "2026-11-21T08:35:09Z"
     },
     {
       "id": "EP101",
       "number": 101,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5344,15 +5344,15 @@
         },
         {
           "name": "assembly",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -5360,7 +5360,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-20T08:35:09Z"
+      "updated_at": "2026-11-21T08:35:09Z"
     },
     {
       "id": "EP102",
