@@ -1,13 +1,13 @@
-generated: 2026-11-19
+generated: 2026-11-20
 
-PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-19
-paper equity: $90,616.92   cash: $41,301.61
-RISK LIMITS: drawdown 11.0% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session -2.2% vs the 3% daily halt
-  ENTRIES BLOCKED — FREEZE since 2026-11-19: equity is 11.0% below its $101,858.65 peak (2026-10-30); the limit is 10% — no new entries until the operator re-arms in paper/risk_rearm.json
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-20
+paper equity: $90,804.78   cash: $73,766.04
+RISK LIMITS: drawdown 10.9% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session +0.2% vs the 3% daily halt
+  ENTRIES BLOCKED — FREEZE since 2026-11-19: equity is 10.9% below its $101,858.65 peak (2026-10-30); the limit is 10% — no new entries until the operator re-arms in paper/risk_rearm.json
 
 ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
-  2026-08-24  $100,000.00  ->  2026-11-19  $90,616.38   (-9,383.62, -9.4%)
-  over 87 calendar days, 57 recorded sessions: 55 with a change, 1 flat.
+  2026-08-24  $100,000.00  ->  2026-11-20  $90,804.78   (-9,195.22, -9.2%)
+  over 88 calendar days, 58 recorded sessions: 56 with a change, 1 flat.
   range so far: $90,616.38 (low) to $101,858.65 (high).
   Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
   Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
@@ -19,35 +19,19 @@ OPTION COST RECORDER: no quotes today (no signals, or the account has no options
 
 PAPER ORDERS PLACED (0):
   none
-ORPHANED POSITIONS (7 held) — closing, operator decision 2026-11-18. Left behind by the option cycle before its exit fix; not booked as trades:
-  CVX261120C00220000  qty 1  close NOT sent yet  (exit sell never filled, then forgotten)
-  DAL261120C00080000  qty 4  close sent 2026-11-19  (exit sell never filled, then forgotten)
-  XOM261120C00185000  qty 2  close NOT sent yet  (exit sell never filled, then forgotten)
-  KO270115C00097500  qty 2  close sent 2026-11-19  (dropped from the book, still held)
-  PFE261218C00031000  qty 15  close sent 2026-11-19  (dropped from the book, still held)
-  PFE  qty 500  close sent 2026-11-19  (shares from an orphaned call expiring in the money)
-  XOM  qty 100  close sent 2026-11-19  (shares from an orphaned call expiring in the money)
-  note: CVX261120C00220000: no tradable quote — close retried next run
-  note: XOM261120C00185000: no tradable quote — close retried next run
+TIME EXITS SUBMITTED: IWM
 
-OPEN POSITIONS (12) — 6 of 8 stock slots used, 6 option contracts:
-  AAPL  qty 14  unrealized $-15.25  stop 325.6  target 421.42  since 2026-11-04
-  AMD  qty 6  unrealized $-519.39  stop 402.1  target 1004.98  since 2026-11-11
-  CVX261120C00220000  qty 1  unrealized $-940.00  ORPHAN — close NOT sent yet (operator decision 2026-11-18)
-  DAL261120C00080000  qty 4  unrealized $-480.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
-  IWM  qty 18  unrealized $-326.33  stop 276.0  target 289.48  since 2026-10-30
-  KO  qty 47  unrealized $-115.83  stop 95.67  target 111.41  since 2026-11-16
-  KO270115C00097500  qty 2  unrealized $-330.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
-  KO270115C00100000  qty 4  unrealized $-584.00  option, stop-if-underlying <= 95.67  since 2026-11-16
-  PFE  qty 500  unrealized $-1,140.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
-  PFE261218C00031000  qty 15  unrealized $-1,320.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
-  XOM  qty 100  unrealized $-771.00  ORPHAN — close sent 2026-11-19 (operator decision 2026-11-18)
-  XOM261120C00185000  qty 2  unrealized $-1,040.00  ORPHAN — close NOT sent yet (operator decision 2026-11-18)
+OPEN POSITIONS (5) — 4 of 8 stock slots used, 1 option contracts:
+  AAPL  qty 14  unrealized $-114.23  stop 325.6  target 421.42  since 2026-11-04
+  AMD  qty 6  unrealized $-719.25  stop 402.1  target 1004.98  since 2026-11-11
+  IWM  qty 18  unrealized $-449.27  stop 276.0  target 289.48  since 2026-10-30
+  KO  qty 47  unrealized $-95.62  stop 95.67  target 111.41  since 2026-11-16
+  KO270115C00100000  qty 2  unrealized $-210.00  option, stop-if-underlying <= 95.67  since 2026-11-16
 
 PAPER OPTIONS (Alpaca, autonomous):
   no option trades today
   holding 1:
-    KO270115C00100000  2x @ $3.17  since 2026-11-16  stop-if-underlying <= 95.67  [excess sell sent 2026-11-19, 2x limit 1.68 — not yet filled]
+    KO270115C00100000  2x @ $3.17  since 2026-11-16  stop-if-underlying <= 95.67
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.

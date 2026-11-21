@@ -231,6 +231,7 @@
       "target": 1004.98
     },
     "IWM": {
+      "closing": "2026-11-20",
       "entry": 281.569444,
       "entry_cap": 284.9574,
       "entry_date": "2026-10-30",
@@ -273,26 +274,12 @@
       "sell_order_ids": [
         "ca6418d1-1a3d-4c4f-96f4-605a1f0e574c"
       ],
-      "sell_pending": {
-        "date": "2026-11-19",
-        "kind": "excess",
-        "limit": 1.68,
-        "order_id": "ca6418d1-1a3d-4c4f-96f4-605a1f0e574c",
-        "qty": 2,
-        "reasons": []
-      },
       "spread_pct": 0.0535,
       "strike": 100.0,
       "ticker": "KO"
     }
   },
-  "orphan_closing": {
-    "DAL261120C00080000": "2026-11-19",
-    "KO270115C00097500": "2026-11-19",
-    "PFE": "2026-11-19",
-    "PFE261218C00031000": "2026-11-19",
-    "XOM": "2026-11-19"
-  },
+  "orphan_closing": {},
   "risk_freeze": {
     "since": "2026-11-19"
   }
