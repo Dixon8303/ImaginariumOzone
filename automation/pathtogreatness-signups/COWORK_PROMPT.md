@@ -13,8 +13,8 @@ nothing beyond what these steps name.
 Names used below
 - Sheet: https://docs.google.com/spreadsheets/d/1QodevbYpJ7VLTZzdl058YS0sQ1zg99qJ-OioZRi6aDU/edit
 - Branch: claude/pathtogreatness-website-upgrade-tadyuv
-- Staging pull request: https://github.com/Dixon8303/ImaginariumOzone/pull/199
-- Production pull request: https://github.com/Dixon8303/eat.media/pull/3
+- Staging pull request: https://github.com/Dixon8303/ImaginariumOzone/pull/200
+- Production pull request: https://github.com/Dixon8303/eat.media/pull/4
 
 Step 1. Deploy the sign-up endpoint (Google Apps Script)
 1. Open the raw code in a new tab and copy all of it:
@@ -47,7 +47,7 @@ Step 3. Merge (ask me first)
 1. Open both pull requests. Show me their titles and confirm each one now lists the endpoint
    commit. Wait for my OK.
 2. After my OK, on each pull request press "Ready for review", then "Merge pull request", then
-   "Confirm merge". Merge the production one (eat.media #3) last.
+   "Confirm merge". Merge the production one (eat.media #4) last.
 3. Open the Actions tab of each repository and wait until the newest run is green. If a run fails
    with an artifact or deploy error, press "Re-run failed jobs" once. If it fails again, stop and
    show me the error.
