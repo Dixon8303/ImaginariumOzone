@@ -64,7 +64,7 @@ sign-up, and switch it on.
 - Sign-ups and their state live in the sheet. The Summary tab counts them.
 - To resend a welcome email, set that row's Status to `new`.
 - Unsubscribe links in the email mark the row `unsubscribed`; n8n never emails those rows.
-- "Signed up from" records which button brought each address: `page form` (the form near the foot of the page), or on phones the button that raised the sign-up panel (`hero`, `menu`, `bar`, `excerpt`). Read it with the UTM columns to see which placement works.
+- "Signed up from" records which button brought each address: `page form` (the form near the foot of the page), or on phones the button that raised the sign-up panel (`hero`, `menu`, `bar`, `excerpt`, `inventory`, `fieldwork`, `pledge`). Read it with the UTM columns to see which placement works.
 - Kill switch: switch the n8n workflow off. Capture keeps working.
 - Limits: consumer Gmail allows roughly 500 sends a day; n8n sends at most 20 every 2 minutes. The endpoint accepts at most 300 new sign-ups an hour as a flood guard.
 
