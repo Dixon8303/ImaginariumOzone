@@ -38,7 +38,7 @@ EP61,61,Unreleased episode,approved,complete,15,15,,,2026-11-17T03:05:10Z
 EP62,62,Unreleased episode,approved,complete,15,15,,,2026-11-17T15:36:12Z
 EP63,63,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
 EP64,64,Unreleased episode,review,script,4,15,,,2026-11-08T13:05:10Z
-EP65,65,Unreleased episode,running,generation,10,15,,,2026-11-21T06:35:09Z
+EP65,65,Unreleased episode,running,qa_gates,12,15,,,2026-11-21T22:35:09Z
 EP67,67,Unreleased episode,running,generation,10,15,,,2026-11-18T10:05:13Z
 EP68,68,Unreleased episode,failed,script,7,15,,,2026-11-18T09:05:08Z
 EP69,69,Unreleased episode,review,script,4,15,,,2026-11-20T12:05:09Z
@@ -53,7 +53,7 @@ EP78,78,Shirley Chisholm — Unbought and Unbossed,published,complete,15,15,2026
 EP79,79,Dred Scott — The Jurisdiction That Unmade a Man,published,complete,15,15,2026-11-17T19:00:00Z,FRTy4WmXsIY,2026-11-17T19:35:35Z
 EP80,80,Unreleased episode,approved,complete,15,15,,,2026-11-17T05:05:16Z
 EP81,81,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T19:35:35Z
-EP82,82,Unreleased episode,running,generation,10,15,,,2026-11-18T08:05:10Z
+EP82,82,Unreleased episode,running,generation,10,15,,,2026-11-21T22:35:09Z
 EP83,83,Unreleased episode,review,upload,14,15,,,2026-11-21T08:35:09Z
 EP84,84,Unreleased episode,review,upload,14,15,,,2026-11-18T14:05:12Z
 EP85,85,Unreleased episode,review,upload,14,15,,,2026-11-21T08:35:09Z
@@ -73,7 +73,7 @@ EP98,98,Unreleased episode,review,upload,14,15,,,2026-11-18T14:05:12Z
 EP99,99,Unreleased episode,approved,complete,15,15,,,2026-11-21T09:35:09Z
 EP100,100,Unreleased episode,review,upload,14,15,,,2026-11-21T08:35:09Z
 EP101,101,Unreleased episode,review,upload,14,15,,,2026-11-21T08:35:09Z
-EP102,102,Unreleased episode,failed,storyboard,8,15,,,2026-11-17T18:35:11Z
+EP102,102,Unreleased episode,running,storyboard,8,15,,,2026-11-21T22:35:09Z
 EP103,103,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:10Z
 EP104,104,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:10Z
 EP105,105,Unreleased episode,failed,script,7,15,,,2026-11-21T06:35:09Z
@@ -90,4 +90,4 @@ EP116,116,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP117,117,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP118,118,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP119,119,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
-_last_synced,,2026-11-21T18:05:09Z,,,,,,,
+_last_synced,,2026-11-21T22:35:09Z,,,,,,,
