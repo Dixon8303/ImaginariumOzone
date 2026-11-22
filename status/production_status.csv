@@ -36,11 +36,11 @@ EP59,59,Unreleased episode,running,script,10,15,,,2026-11-20T08:35:09Z
 EP60,60,Unreleased episode,approved,complete,15,15,,,2026-11-17T02:05:58Z
 EP61,61,Unreleased episode,approved,complete,15,15,,,2026-11-17T03:05:10Z
 EP62,62,Unreleased episode,approved,complete,15,15,,,2026-11-17T15:36:12Z
-EP63,63,Unreleased episode,running,script,4,15,,,2026-11-22T15:05:09Z
+EP63,63,Unreleased episode,running,storyboard,5,15,,,2026-11-22T21:05:14Z
 EP64,64,Unreleased episode,review,script,4,15,,,2026-11-08T13:05:10Z
 EP65,65,Unreleased episode,review,upload,14,15,,,2026-11-21T23:35:09Z
 EP67,67,Unreleased episode,running,generation,10,15,,,2026-11-22T14:05:09Z
-EP68,68,Unreleased episode,failed,script,7,15,,,2026-11-18T09:05:08Z
+EP68,68,Unreleased episode,halted,storyboard,6,15,,,2026-11-22T21:05:14Z
 EP69,69,Unreleased episode,review,script,4,15,,,2026-11-20T12:05:09Z
 EP70,70,Unreleased episode,review,script,4,15,,,2026-11-10T12:35:05Z
 EP71,71,Unreleased episode,review,script,4,15,,,2026-11-15T23:05:12Z
@@ -67,7 +67,7 @@ EP92,92,Unreleased episode,failed,ken_burns,10,15,,,2026-11-17T20:35:11Z
 EP93,93,Unreleased episode,review,upload,14,15,,,2026-11-18T14:05:12Z
 EP94,94,Unreleased episode,running,script,4,15,,,2026-11-22T15:05:09Z
 EP95,95,Unreleased episode,approved,complete,15,15,,,2026-11-17T09:05:14Z
-EP96,96,Unreleased episode,running,script,4,15,,,2026-11-22T15:05:09Z
+EP96,96,Unreleased episode,running,storyboard,5,15,,,2026-11-22T21:05:14Z
 EP97,97,Unreleased episode,review,script,5,15,,,2026-11-17T02:05:59Z
 EP98,98,Unreleased episode,review,upload,14,15,,,2026-11-18T14:05:12Z
 EP99,99,Unreleased episode,approved,complete,15,15,,,2026-11-21T09:35:09Z
@@ -90,4 +90,4 @@ EP116,116,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP117,117,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP118,118,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
 EP119,119,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
-_last_synced,,2026-11-22T19:35:09Z,,,,,,,
+_last_synced,,2026-11-22T21:05:14Z,,,,,,,
