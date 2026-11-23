@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-23T00:05:08Z",
+  "last_synced": "2026-11-23T01:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -3030,7 +3030,7 @@
         },
         {
           "name": "shorts",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -3038,7 +3038,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-23T00:05:08Z"
+      "updated_at": "2026-11-23T01:05:08Z"
     },
     {
       "id": "EP68",
