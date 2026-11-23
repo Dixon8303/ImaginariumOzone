@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-22T23:05:18Z",
+  "last_synced": "2026-11-23T00:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -2974,7 +2974,7 @@
       "id": "EP67",
       "number": 67,
       "topic": "Unreleased episode",
-      "status": "running",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -3022,15 +3022,15 @@
         },
         {
           "name": "assembly",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "upload",
@@ -3038,7 +3038,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-22T23:05:17Z"
+      "updated_at": "2026-11-23T00:05:08Z"
     },
     {
       "id": "EP68",
@@ -4970,7 +4970,7 @@
         },
         {
           "name": "storyboard",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "generation",
@@ -4982,11 +4982,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "titles_seo",
@@ -5010,7 +5010,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-22T21:05:14Z"
+      "updated_at": "2026-11-23T00:05:08Z"
     },
     {
       "id": "EP97",
