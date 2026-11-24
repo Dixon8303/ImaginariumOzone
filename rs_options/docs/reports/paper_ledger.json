@@ -199,6 +199,16 @@
       "r": 0.532,
       "reason": "time/other",
       "ticker": "DAL"
+    },
+    {
+      "entry": 281.569444,
+      "entry_date": "2026-10-30",
+      "exit": 264.540556,
+      "exit_date": "2026-11-23",
+      "micro_override": false,
+      "r": -3.058,
+      "reason": "stop",
+      "ticker": "IWM"
     }
   ],
   "open": {
@@ -229,21 +239,6 @@
       "signal_close": 552.82,
       "stop": 402.1,
       "target": 1004.98
-    },
-    "IWM": {
-      "closing": "2026-11-20",
-      "entry": 281.569444,
-      "entry_cap": 284.9574,
-      "entry_date": "2026-10-30",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "4fd14ffc-6ac6-4ca7-93e1-36dbef9d61b1",
-      "qty": 18,
-      "setup": "H-25",
-      "signal_close": 279.37,
-      "stop": 276.0,
-      "target": 289.48
     },
     "KO": {
       "entry": 98.954468,

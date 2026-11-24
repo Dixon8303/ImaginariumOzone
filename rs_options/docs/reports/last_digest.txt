@@ -1,11 +1,11 @@
-RS paper track — 2026-11-20
+RS paper track — 2026-11-23
 
-equity $90,804.78   (-9.2% from $100,000)
-last session +188.40
+equity $90,902.64   (-9.1% from $100,000)
+last session +97.86
 NEW ENTRIES STOPPED: FREEZE (spec limit reached)
-risk: drawdown 11.0% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session +0.1% vs the 3% daily halt
-open 5: 4/8 stock slots, 1 contracts
+risk: drawdown 10.8% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session +0.1% vs the 3% daily halt
+open 4: 3/8 stock slots, 1 contracts
 signals 0, 0 order(s) placed
-record: 20 closed | win rate 35% | expectancy -0.714R | total -14.29R
+record: 21 closed | win rate 33% | expectancy -0.826R | total -17.35R
 
 https://github.com/Dixon8303/ImaginariumOzone/blob/main/rs_options/docs/reports/paper_trading.txt
