@@ -1,7 +1,7 @@
 generated: 2026-11-24
 
 PRE-OPEN SCAN — 2026-11-24 (signals from the 2026-11-23 close)
-paper equity: $90,934.44
+paper equity: $90,940.02
 
 CANDIDATES FOR TODAY (0):
   none — nothing passed breakout + regime + quality
@@ -9,8 +9,8 @@ CANDIDATES FOR TODAY (0):
 ORDERS QUEUED FOR THE OPEN (0): none
 
 OPEN POSITIONS (4):
-  AAPL  qty 14  unrealized $-31.07  stop 325.6 / target 421.42
-  AMD  qty 6  unrealized $-655.59  stop 402.1 / target 1004.98
+  AAPL  qty 14  unrealized $-31.49  stop 325.6 / target 421.42
+  AMD  qty 6  unrealized $-649.59  stop 402.1 / target 1004.98
   KO  qty 47  unrealized $-122.41  stop 95.67 / target 111.41
   KO270115C00100000  qty 2  unrealized $-342.00  stop ? / target ?
 
