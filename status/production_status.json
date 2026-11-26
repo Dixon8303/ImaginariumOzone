@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-26T00:05:07Z",
+  "last_synced": "2026-11-26T01:35:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -6556,27 +6556,27 @@
       "id": "EP120",
       "number": 120,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -6620,7 +6620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-23T20:05:09Z"
+      "updated_at": "2026-11-26T01:35:08Z"
     },
     {
       "id": "EP121",
