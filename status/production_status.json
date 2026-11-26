@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-26T01:35:08Z",
+  "last_synced": "2026-11-26T02:35:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -6836,27 +6836,27 @@
       "id": "EP124",
       "number": 124,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "failed",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -6900,7 +6900,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-23T20:05:09Z"
+      "updated_at": "2026-11-26T02:35:08Z"
     },
     {
       "id": "EP125",
@@ -6976,27 +6976,27 @@
       "id": "EP126",
       "number": 126,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -7040,7 +7040,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-23T20:05:09Z"
+      "updated_at": "2026-11-26T02:35:08Z"
     },
     {
       "id": "EP127",
