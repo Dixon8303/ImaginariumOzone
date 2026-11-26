@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-26T22:05:09Z",
+  "last_synced": "2026-11-26T23:05:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -6592,11 +6592,11 @@
         },
         {
           "name": "voice_ssml",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "audio_prod",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "titles_seo",
@@ -6620,7 +6620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-26T20:05:09Z"
+      "updated_at": "2026-11-26T23:05:08Z"
     },
     {
       "id": "EP121",
