@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-26T19:06:03Z",
+  "last_synced": "2026-11-26T20:05:09Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -1317,7 +1317,7 @@
         },
         {
           "name": "qa_gates",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "shorts",
@@ -1331,7 +1331,7 @@
       "gates": {},
       "video_id": "GgN8chUsYPM",
       "publish_at": "2026-09-15T14:00:00Z",
-      "updated_at": "2026-11-26T19:06:00Z"
+      "updated_at": "2026-11-26T20:05:08Z"
     },
     {
       "id": "EP39",
@@ -2257,7 +2257,7 @@
         },
         {
           "name": "shorts",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "upload",
@@ -2265,7 +2265,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-26T19:06:01Z"
+      "updated_at": "2026-11-26T20:05:08Z"
     },
     {
       "id": "EP55",
@@ -6136,7 +6136,7 @@
       "id": "EP114",
       "number": 114,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -6156,7 +6156,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -6172,7 +6172,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -6200,7 +6200,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-26T06:05:08Z"
+      "updated_at": "2026-11-26T20:05:09Z"
     },
     {
       "id": "EP115",
@@ -6556,7 +6556,7 @@
       "id": "EP120",
       "number": 120,
       "topic": "Unreleased episode",
-      "status": "review",
+      "status": "running",
       "stages": [
         {
           "name": "batch_primer",
@@ -6576,7 +6576,7 @@
         },
         {
           "name": "script",
-          "status": "running"
+          "status": "done"
         },
         {
           "name": "storyboard",
@@ -6592,7 +6592,7 @@
         },
         {
           "name": "voice_ssml",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "audio_prod",
@@ -6620,7 +6620,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-26T01:35:08Z"
+      "updated_at": "2026-11-26T20:05:09Z"
     },
     {
       "id": "EP121",
