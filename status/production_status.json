@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-26T02:35:08Z",
+  "last_synced": "2026-11-26T03:35:08Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -6906,27 +6906,27 @@
       "id": "EP125",
       "number": 125,
       "topic": "Unreleased episode",
-      "status": "draft",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "topic_scoring",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "research",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "outline",
-          "status": "pending"
+          "status": "done"
         },
         {
           "name": "script",
-          "status": "pending"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -6970,7 +6970,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-23T20:05:09Z"
+      "updated_at": "2026-11-26T03:35:08Z"
     },
     {
       "id": "EP126",
