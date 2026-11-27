@@ -209,24 +209,19 @@
       "r": -3.058,
       "reason": "stop",
       "ticker": "IWM"
+    },
+    {
+      "entry": 353.029286,
+      "entry_date": "2026-11-04",
+      "exit": 357.836429,
+      "exit_date": "2026-11-27",
+      "micro_override": false,
+      "r": 0.175,
+      "reason": "time/other",
+      "ticker": "AAPL"
     }
   ],
   "open": {
-    "AAPL": {
-      "closing": "2026-11-25",
-      "entry": 353.029286,
-      "entry_cap": 356.5461,
-      "entry_date": "2026-11-04",
-      "entry_estimated": false,
-      "fractional": false,
-      "micro_override": false,
-      "order_id": "7b406b2b-de3d-4fcd-ae48-6d2049915e19",
-      "qty": 14,
-      "setup": "H-25",
-      "signal_close": 349.555,
-      "stop": 325.6,
-      "target": 421.42
-    },
     "AMD": {
       "entry": 559.265,
       "entry_cap": 563.8764000000001,

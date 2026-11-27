@@ -1,9 +1,42 @@
-generated: 2026-11-26
+generated: 2026-11-27
 
-PAPER SHADOW TRACK — 2026-11-26
+PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-27
+paper equity: $90,994.04   cash: $83,536.25
+RISK LIMITS: drawdown 10.7% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session +0.1% vs the 3% daily halt
+  ENTRIES BLOCKED — FREEZE since 2026-11-19: equity is 10.7% below its $101,858.65 peak (2026-10-30); the limit is 10% — no new entries until the operator re-arms in paper/risk_rearm.json
 
-No session today (market holiday, or bars not yet published). No scan, no orders, no equity changes.
-Prices below are the last available, not today's.
+ACCOUNT GROWTH — reporting only; sizing is unaffected by this module (docs/RESEARCH_LOG.md 2026-08-24).
+  2026-08-24  $100,000.00  ->  2026-11-27  $90,994.04   (-9,005.96, -9.0%)
+  over 95 calendar days, 62 recorded sessions: 60 with a change, 1 flat.
+  range so far: $90,616.38 (low) to $101,858.65 (high).
+  Equity is at or above $500 — doctrine sizing is active; the micro override is dormant.
+  Most sessions will show no change: this system trades ~25 times a year across the universe, roughly once every 10 trading days. Flat stretches are the expected shape, not a malfunction.
+
+TODAY'S SIGNALS (0):
+  none — no ticker passed breakout + regime + quality
+
+OPTION COST RECORDER: no quotes today (no signals, or the account has no options data subscription). Nothing recorded — a missing quote is not a zero cost.
+
+PAPER ORDERS PLACED (0):
+  none
+
+CLOSED SINCE LAST RUN:
+  AAPL  2026-11-04 -> 2026-11-27  +0.17R  (time/other)
+
+OPEN POSITIONS (3) — 2 of 8 stock slots used, 1 option contracts:
+  AMD  qty 6  unrealized $-820.05  stop 402.1  target 1004.98  since 2026-11-11
+  KO  qty 47  unrealized $-56.61  stop 95.67  target 111.41  since 2026-11-16
+  KO270115C00100000  qty 2  unrealized $-282.00  option, stop-if-underlying <= 95.67  since 2026-11-16
+
+PAPER OPTIONS (Alpaca, autonomous):
+  no option trades today
+  holding 1:
+    KO270115C00100000  2x @ $3.17  since 2026-11-16  stop-if-underlying <= 95.67
 
 OPTION POSITIONS (Robinhood): none on file.
   Add trades to paper/open_options.json to have them reviewed here each day.
+
+CUMULATIVE RECORD: 22 closed | win rate 36% | expectancy -0.781R | total -17.17R
+  significance: n=22 forward trades proves nothing either way (t-stat territory starts around n=50; see mve/significance.py). The forward track's job is verifying execution matches the backtest, not re-proving the edge. Expect losing streaks: at 36% wins, a 4-loss run has ~97% odds over 40 trades — variance, not breakage.
+
+Paper account, fake money, §87 shadow track. Live execution remains co-pilot only — the operator's word, per trade, in Robinhood.
