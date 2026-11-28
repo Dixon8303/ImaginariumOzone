@@ -1,7 +1,7 @@
 generated: 2026-11-27
 
 PAPER SHADOW TRACK — RS-02/H-25 doctrine, as of 2026-11-27
-paper equity: $90,994.04   cash: $83,536.25
+paper equity: $90,989.29   cash: $83,536.25
 RISK LIMITS: drawdown 10.7% of the 10% freeze (peak $101,858.65 on 2026-10-30) | session +0.1% vs the 3% daily halt
   ENTRIES BLOCKED — FREEZE since 2026-11-19: equity is 10.7% below its $101,858.65 peak (2026-10-30); the limit is 10% — no new entries until the operator re-arms in paper/risk_rearm.json
 
@@ -20,12 +20,9 @@ OPTION COST RECORDER: no quotes today (no signals, or the account has no options
 PAPER ORDERS PLACED (0):
   none
 
-CLOSED SINCE LAST RUN:
-  AAPL  2026-11-04 -> 2026-11-27  +0.17R  (time/other)
-
 OPEN POSITIONS (3) — 2 of 8 stock slots used, 1 option contracts:
-  AMD  qty 6  unrealized $-820.05  stop 402.1  target 1004.98  since 2026-11-11
-  KO  qty 47  unrealized $-56.61  stop 95.67  target 111.41  since 2026-11-16
+  AMD  qty 6  unrealized $-808.35  stop 402.1  target 1004.98  since 2026-11-11
+  KO  qty 47  unrealized $-73.06  stop 95.67  target 111.41  since 2026-11-16
   KO270115C00100000  qty 2  unrealized $-282.00  option, stop-if-underlying <= 95.67  since 2026-11-16
 
 PAPER OPTIONS (Alpaca, autonomous):
