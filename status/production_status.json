@@ -1,5 +1,5 @@
 {
-  "last_synced": "2026-11-27T22:35:08Z",
+  "last_synced": "2026-11-28T02:05:07Z",
   "app": "BGF Production Line",
   "episodes": [
     {
@@ -5856,7 +5856,7 @@
       "id": "EP110",
       "number": 110,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -5876,7 +5876,7 @@
         },
         {
           "name": "script",
-          "status": "failed"
+          "status": "running"
         },
         {
           "name": "storyboard",
@@ -5920,7 +5920,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-26T19:06:02Z"
+      "updated_at": "2026-11-28T02:05:07Z"
     },
     {
       "id": "EP111",
@@ -6836,7 +6836,7 @@
       "id": "EP124",
       "number": 124,
       "topic": "Unreleased episode",
-      "status": "failed",
+      "status": "review",
       "stages": [
         {
           "name": "batch_primer",
@@ -6900,7 +6900,7 @@
         }
       ],
       "gates": {},
-      "updated_at": "2026-11-26T02:35:08Z"
+      "updated_at": "2026-11-28T02:05:07Z"
     },
     {
       "id": "EP125",
