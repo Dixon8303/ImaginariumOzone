@@ -80,7 +80,7 @@ EP105,105,Unreleased episode,failed,script,7,15,,,2026-11-21T06:35:09Z
 EP106,106,Unreleased episode,approved,complete,15,15,,,2026-11-18T08:05:10Z
 EP107,107,Unreleased episode,review,script,4,15,,,2026-11-14T08:05:06Z
 EP108,108,Unreleased episode,review,script,4,15,,,2026-11-20T14:05:09Z
-EP110,110,Unreleased episode,review,script,4,15,,,2026-11-28T02:05:07Z
+EP110,110,Unreleased episode,failed,script,4,15,,,2026-11-28T03:05:07Z
 EP111,111,Unreleased episode,review,script,4,15,,,2026-11-20T13:05:09Z
 EP112,112,Unreleased episode,review,script,4,15,,,2026-11-24T21:05:06Z
 EP113,113,Unreleased episode,draft,batch_primer,0,15,,,2026-11-19T01:05:15Z
@@ -94,11 +94,11 @@ EP120,120,Unreleased episode,running,storyboard,7,15,,,2026-11-27T00:05:09Z
 EP121,121,Unreleased episode,draft,batch_primer,0,15,,,2026-11-23T20:05:09Z
 EP122,122,Unreleased episode,draft,batch_primer,0,15,,,2026-11-23T20:05:09Z
 EP123,123,Unreleased episode,draft,batch_primer,0,15,,,2026-11-23T20:05:09Z
-EP124,124,Unreleased episode,review,script,4,15,,,2026-11-28T02:05:07Z
+EP124,124,Unreleased episode,failed,script,4,15,,,2026-11-28T03:05:07Z
 EP125,125,Unreleased episode,review,script,4,15,,,2026-11-26T03:35:08Z
 EP126,126,Unreleased episode,review,script,4,15,,,2026-11-26T02:35:08Z
 EP127,127,Unreleased episode,draft,batch_primer,0,15,,,2026-11-23T20:05:09Z
 EP128,128,Unreleased episode,draft,batch_primer,0,15,,,2026-11-23T20:05:09Z
 EP129,129,Unreleased episode,draft,batch_primer,0,15,,,2026-11-23T20:05:09Z
 EP130,130,Unreleased episode,draft,batch_primer,0,15,,,2026-11-27T22:35:08Z
-_last_synced,,2026-11-28T02:05:07Z,,,,,,,
+_last_synced,,2026-11-28T03:05:07Z,,,,,,,
